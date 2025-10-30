@@ -1,0 +1,33 @@
+# LaTeX generated files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.pdf
+*.dvi
+*.ps
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build directories
+build/
+dist/

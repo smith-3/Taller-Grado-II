@@ -1,0 +1,263 @@
+\chapter{Metodología de Desarrollo}
+
+
+\section{Enfoque Metodológico}
+
+\subsection{Tipo de investigación}
+La presente investigación se enmarca dentro de la modalidad de \textbf{investigación aplicada}, ya que su objetivo principal es el desarrollo de un producto tecnológico funcional —la aplicación móvil \emph{TecnoTime}— que responda a las necesidades reales de los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS. Este enfoque permite validar en un contexto práctico las decisiones de diseño y las soluciones implementadas en el entorno Android .
+
+\subsection{Estrategia de desarrollo}
+Para gestionar el flujo de trabajo y asegurar una entrega continua de valor, se adoptó un enfoque \emph{Kanban adaptado}. Las tareas de análisis, diseño, implementación y pruebas se organizaron en un tablero Kanban con las columnas \emph{Pendiente}, \emph{En progreso} y \emph{Completado}. Esto facilitó:
+
+\begin{itemize}
+  \item \textbf{Visualización del estado de cada tarea:} permite identificar cuellos de botella.
+  \item \textbf{Adaptabilidad:} facilita incorporar cambios de alcance sin replanificar todo el proyecto.
+  \item \textbf{Entrega continua:} posibilita realizar entregas parciales (prototipos, versiones alpha/beta) y obtener retroalimentación temprana .
+\end{itemize}
+
+\subsection{Técnicas de levantamiento de requerimientos}
+La definición de funcionalidades y criterios de éxito de \emph{TecnoTime} se basó en:
+
+\begin{itemize}
+  \item \textbf{Entrevistas semiestructuradas:} realizadas con estudiantes de distintas carreras de la FCyT, para profundizar en sus dificultades al gestionar horarios y en sus expectativas de una herramienta móvil.
+  \item \textbf{Encuestas cuantitativas:} distribuidas a una muestra representativa de alumnos para priorizar las funcionalidades más demandadas (p. ej., acceso offline, sugerencias de horario, notificaciones).
+\end{itemize}
+
+Los resultados de estas técnicas permitieron refinar el alcance inicial, priorizar historias de usuario y validar en etapas tempranas los criterios de usabilidad y utilidad de la aplicación .
+
+
+\section{Etapas del Desarrollo del Proyecto}
+
+\subsection{Análisis de requerimientos y funcionalidades clave}
+En esta fase se consolidaron los requisitos funcionales y no funcionales de \emph{TecnoTime} a partir de:
+\begin{itemize}
+  \item \textbf{Entrevistas semiestructuradas} con estudiantes de distintas carreras de la FCyT, para identificar puntos de dolor en la gestión de horarios y escenarios de uso prioritarios.  
+  \item \textbf{Encuestas cuantitativas} distribuidas a una muestra representativa, que validaron y jerarquizaron funcionalidades clave como el acceso offline, la generación de alertas y la personalización de vistas de horario.  
+\end{itemize}
+Estos insumos se documentaron en un backlog inicial de historias de usuario y en un conjunto de criterios de aceptación que guiaron las etapas siguientes. 
+
+\subsection{Diseño conceptual y técnico}
+Con los requisitos validados, se elaboraron:
+\begin{itemize}
+  \item \textbf{Diagramas de arquitectura} en los que se definieron las capas de presentación, dominio y datos, así como los flujos de sincronización desde la descarga del PDF hasta la persistencia en Room.  
+  \item \textbf{Modelos de datos} (ER y normalización 3FN) que establecieron las tablas, relaciones y enums a implementar en SQLite.  
+  \item \textbf{Prototipos de UI} en Jetpack Compose, que ilustraron la navegación y los principales componentes (calendario, listas de materias, panel de notificaciones).  
+\end{itemize}
+Este diseño se validó iterativamente con estudiantes mediante revisiones de prototipo y se refinó para optimizar la usabilidad y el rendimiento en dispositivos Android. 
+
+\subsection{Implementación móvil (Room, Compose, ViewModels, UseCases)}
+La implementación se organizó por módulos:
+\begin{itemize}
+  \item \textbf{Capa de datos:} entidades Room, DAOs reactivos (\texttt{Flow}), \texttt{@TypeConverters} para enums y tablas de cruce para relaciones N:M.  
+  \item \textbf{Capa de dominio:} modelos puros y \emph{use cases} que encapsulan la lógica de sincronización, selección de materias y generación de horarios.  
+  \item \textbf{Capa de presentación:} pantallas en Jetpack Compose, ViewModels que exponen \texttt{StateFlow<UiState>} y manejan eventos de usuario.  
+  \item \textbf{Inyección de dependencias:} Dagger Hilt para proveer repositorios y utilitarios (PDFBox, Jsoup, WorkManager).  
+\end{itemize}
+La estructura de paquetes y clases clave se muestra en la sección de \texttt{app/src/main/java/com/example/tecnotime/} y se documenta en el informe de estructura del proyecto. 
+
+\subsection{Pruebas funcionales y de usuario}
+Para asegurar la calidad y usabilidad de la aplicación se realizaron:
+\begin{itemize}
+  \item \textbf{Pruebas unitarias} en UseCases y ViewModels, usando JUnit4 y MockK para simular repositorios.  
+  \item \textbf{Pruebas de integración} de DAOs con Room en memoria, validando transacciones y migraciones.  
+  \item \textbf{Pruebas de UI} con Compose Testing y Espresso, que automatizaron flujos críticos (sincronización de horarios, selección de materias).  
+  \item \textbf{Feedback de usuarios reales} en un piloto interno, midiendo satisfacción y detectando ajustes de usabilidad.  
+\end{itemize}
+Se registraron los resultados en reportes de pruebas y se definió un objetivo de cobertura $\geq$ 80 \% en la lógica de negocio. 
+
+\subsection{Despliegue y documentación}
+Finalmente, se prepararon:
+\begin{itemize}
+  \item \textbf{Artefactos de distribución:} generadores de APK de prueba y builds firmadas para instalación interna en laboratorio de la FCyT.  
+  \item \textbf{Manuales de usuario y guía rápida:} documentados en formato PDF, explicando instalación, flujo principal y configuración de notificaciones.  
+  \item \textbf{Documentación técnica:} incluye diagramas de clases, API de UseCases y especificaciones de DAOs, alojada en un repositorio wiki para facilitar mantenimiento y futuras extensiones.  
+\end{itemize}
+Este despliegue y la documentación asociada aseguran que el proyecto pueda mantenerse y evolucionar de forma ordenada. 
+
+\section{Arquitectura General de la Aplicación}
+
+\subsection{Descripción modular}
+La aplicación se organiza en módulos claramente definidos, cada uno con responsabilidad única y desacoplada:
+
+\begin{itemize}
+  \item \textbf{Capa de presentación:} implementada con Jetpack Compose, incluye pantallas y componentes UI que exponen estados mediante ViewModels.
+  \item \textbf{Capa de dominio:} contiene los modelos de negocio puros y los casos de uso (UseCases) que orquestan la lógica principal.
+  \item \textbf{Capa de datos:} compuesta por repositorios, DAOs de Room, mapeadores (Entity–Domain) y conversores de tipos.
+  \item \textbf{Sincronización y parsing:} utiliza \texttt{WorkManager} para tareas periódicas de descarga de PDFs, \texttt{Jsoup} para obtener enlaces y \texttt{PDFBox-Android} para extraer texto.
+\end{itemize}
+
+
+\subsection{Flujo de datos (de PDF al modelo en Room)}
+El recorrido de un horario desde el PDF de la web oficial hasta la base de datos local sigue estos pasos:
+
+\begin{enumerate}
+  \item \textbf{Descarga del PDF:} un \texttt{Worker} de \texttt{WorkManager} recupera el archivo desde la URL de la Facultad.
+  \item \textbf{Extracción de contenido:} \texttt{PDFBox-Android} lee el PDF y devuelve el texto plano.
+  \item \textbf{Parseo:} clases del paquete \texttt{data/remote/pdf} convierten el texto en objetos \texttt{SubjectInfo}.
+  \item \textbf{Mapeo y persistencia:} cada \texttt{SubjectInfo} se transforma en entidades Room mediante mapeadores, y se almacenan a través de DAOs reactivos (\texttt{Flow}).
+  \item \textbf{Exposición a la UI:} los ViewModels recogen los flujos de datos de los repositorios y actualizan la interfaz en Compose.
+\end{enumerate}
+
+
+\subsection{Patrones aplicados}
+Para garantizar mantenibilidad, testabilidad y escalabilidad, se aplican los siguientes patrones:
+
+\begin{itemize}
+  \item \textbf{Clean Architecture:} separación en capas concéntricas (Presentation, Application, Domain, Infrastructure) y principio de inversión de dependencias.
+  \item \textbf{Repository Pattern:} los repositorios implementan interfaces de dominio y ocultan los detalles de Room y del parsing.
+  \item \textbf{MVVM:} ViewModels gestionan el estado UI expuesto a Compose, desacoplando la lógica de negocio de la vista.
+\end{itemize}
+
+\section{Modelo de Datos y Persistencia}
+
+\subsection{Entidades, relaciones y normalización}
+El modelo de datos de \emph{TecnoTime} se diseñó siguiendo principios de normalización hasta la Tercera Forma Normal (3FN). Se definieron las siguientes entidades principales:
+
+\begin{itemize}
+  \item \texttt{Careers}, \texttt{Subjects}, \texttt{SubjectGroups}, \texttt{GroupSchedules}, \texttt{SelectedSubjects}, \texttt{AcademicEvents}, \texttt{Teachers}, \texttt{Classrooms} y \texttt{UserSettings}.
+  \item Relaciones N:M resueltas mediante tablas de cruce como \texttt{career\_subject\_groups} y \texttt{subject\_group\_subjects}, garantizando flexibilidad y evitando redundancias.
+\end{itemize}
+
+Cada atributo depende únicamente de la clave primaria de su tabla, evitando dependencias parciales o transitivas que pudieran generar anomalías de actualización o eliminación .
+
+\subsection{DAOs y acceso a datos reactivo}
+Para cada entidad se implementó un DAO con anotaciones \texttt{@Dao}, \texttt{@Query}, \texttt{@Insert}, \texttt{@Update} y \texttt{@Delete}. Las consultas y listados retornan \texttt{Flow<\dots>} para soportar un acceso a datos completamente reactivo desde la UI. Además, se emplea \texttt{@Transaction} en métodos que combinan varias operaciones para asegurar atomicidad. Por ejemplo, \texttt{GroupScheduleDao.observeAllWithDetails()} expone un flujo de horarios junto con la información de docente y aula asociada .
+
+\subsection{Conversores y almacenamiento de JSON}
+Los enums utilizados en el dominio (\texttt{WeekDay}, \texttt{SubjectStatus}, \texttt{GroupType}, \texttt{AcademicEventType}) se convierten a \texttt{String} y viceversa mediante clases anotadas con \texttt{@TypeConverter}. Además, la entidad \texttt{SelectedSubject} incluye un campo \texttt{links} de tipo JSON (serializado como \texttt{String} en SQLite) para almacenar enlaces y metadatos adicionales sin modificar el esquema relacional .
+
+\subsection{Índices, claves primarias y rendimiento}
+Se definieron claves primarias naturales (como \texttt{code} en \texttt{Subjects}) o sintéticas (autoincrementales) según corresponda. Para optimizar el rendimiento, se crearon índices únicos y compuestos en columnas de búsqueda frecuente y en joins críticos, por ejemplo:
+
+\begin{itemize}
+  \item Índices en \texttt{(career\_code, group\_id)} y \texttt{(subject\_code, group\_id)} para acelerar relaciones N:M.
+  \item Índices únicos en campos \texttt{name} y \texttt{full\_name} para consultas \texttt{LIKE}.
+\end{itemize}
+
+Estos índices reducen la latencia en consultas sobre grandes volúmenes de datos en dispositivos móviles, manteniendo un tiempo de respuesta óptimo sin comprometer significativamente el espacio de almacenamiento .
+
+\section{Arquitectura de la Aplicación Móvil}
+
+\subsection{Capas: presentación, dominio y datos}
+La arquitectura de \emph{TecnoTime} se estructura en tres capas bien definidas:
+\begin{itemize}
+  \item \textbf{Presentación:} UI declarativa construída con Jetpack Compose, compuesta por pantallas y componentes que reflejan el estado provisto por los ViewModels.
+  \item \textbf{Dominio:} modelos de negocio puros y casos de uso (\emph{UseCases}) que encapsulan la lógica de sincronización, selección de materias y generación de horarios.
+  \item \textbf{Datos:} repositorios, DAOs de Room, mapeadores Entity–Domain y conversores de tipos, responsables de la persistencia y recuperación de información local.
+\end{itemize} 
+
+\subsection{Jetpack Compose, Navigation, ViewModel y Flow}
+La capa de presentación aprovecha Jetpack Compose para construir interfaces modulares y reactivas. Navigation Compose gestiona el enrutamiento entre pantallas, mientras que cada ViewModel expone su estado mediante \texttt{StateFlow<UiState>} o \texttt{LiveData}, consumido por la UI con \texttt{collectAsState()}. Kotlin Coroutines y Flow garantizan un flujo de datos asíncrono y no bloqueante entre repositorios y ViewModels, mejorando la capacidad de respuesta y la testabilidad. 
+
+\subsection{Patrón Repository y modularidad}
+Se aplica el Repository Pattern para desacoplar la lógica de dominio de los mecanismos de persistencia: cada repositorio implementa una interfaz definida en la capa de dominio y orquesta las operaciones de los DAOs y mapeadores. La estructura modular del proyecto separa claramente los paquetes \texttt{data/}, \texttt{domain/} y \texttt{presentation/}, facilitando el mantenimiento, la escritura de pruebas unitarias y la incorporación de nuevas funcionalidades sin afectar otras capas. 
+
+
+\section{Tareas en Segundo Plano y Sincronización}
+
+\subsection{Descarga y parseo de PDFs}
+Para garantizar que los horarios estén siempre actualizados, se implementaron componentes en el paquete \texttt{data/remote/pdf} que realizan la obtención y el parseo de los archivos PDF directamente en el dispositivo:
+\begin{itemize}
+  \item \textbf{Jsoup} se utiliza para extraer los enlaces a los PDFs desde la página web oficial de la Facultad.
+  \item \textbf{PDFBox-Android} procesa el contenido de cada PDF y lo convierte a texto plano.
+  \item Los módulos \texttt{PdfDownloader}, \texttt{PdfExtractor} y \texttt{PdfParser} transforman ese texto en objetos \texttt{SubjectInfo}, que luego son mapeados a las entidades de Room para su persistencia local.
+\end{itemize}
+
+
+\subsection{Actualizaciones automáticas con WorkManager}
+La sincronización periódica de los horarios se gestiona mediante \textbf{WorkManager}, definiendo un \texttt{PeriodicWorkRequest} que:
+\begin{itemize}
+  \item Se programa al arrancar la aplicación o tras la elección de una nueva carrera.
+  \item Ejecuta el worker responsable de descargar y parsear los PDFs en un hilo de fondo (Dispatcher.IO).
+  \item Maneja políticas de reintento y back–off exponencial en caso de fallo de red.
+\end{itemize}
+Este enfoque asegura que, incluso si la aplicación no está activa, los horarios se actualicen automáticamente cuando el dispositivo cumpla las restricciones configuradas. 
+
+\subsection{Notificaciones locales}
+Para avisar al usuario antes de cada clase o evento académico, se configura dentro del mismo \texttt{Worker} local notificaciones a través de \textbf{NotificationCompat}. Cada evento se programa según los minutos de antelación definidos en \texttt{SelectedSubject.notifyBeforeMinutes}, generando una notificación que:
+\begin{itemize}
+  \item Muestra el título del evento, hora y ubicación.
+  \item Permite al usuario saltar directamente a la pantalla de detalle en la app.
+  \item Se reutiliza el canal de notificaciones creado al inicializar la aplicación.
+\end{itemize}
+De este modo, \emph{TecnoTime} mantiene al estudiante informado puntualmente sin depender de servicios externos. 
+
+\section{Pruebas Automatizadas}
+
+\subsection{Pruebas unitarias}
+Se implementaron pruebas unitarias para los \emph{UseCases} y los \emph{ViewModels} utilizando JUnit4 y MockK:
+\begin{itemize}
+  \item \textbf{UseCases:} cada caso de uso se probó aislando sus dependencias (repositorios falsos) y validando escenarios de éxito y de error (descarga de PDF, parseo, persistencia).
+  \item \textbf{ViewModels:} se verificó que los estados expuestos (\texttt{StateFlow<UiState>}) cambien correctamente ante distintos eventos de usuario y respuestas del dominio.
+\end{itemize}
+El objetivo fue alcanzar una alta confiabilidad en la lógica de negocio mediante mocks y aserciones de comportamiento .
+
+\subsection{Pruebas de UI}
+Para garantizar la funcionalidad y la experiencia de usuario de la interfaz:
+\begin{itemize}
+  \item \textbf{Compose Testing:} se crearon tests de componentes clave (pantalla de calendario, selección de materias) usando el framework de Test de Compose.
+  \item \textbf{Espresso:} se automatizaron flujos end-to-end (sincronización, notificaciones) en dispositivos/emuladores, validando la interacción con la UI y la navegación.
+\end{itemize}
+Estas pruebas integradas permiten detectar regresiones en el diseño de pantallas y la navegación antes de cada release .
+
+\subsection{Herramientas y cobertura objetivo}
+Se emplearon las siguientes herramientas:
+\begin{itemize}
+  \item \textbf{JUnit4} y \textbf{MockK} para tests unitarios.
+  \item \textbf{AndroidX Test} con Compose Testing y Espresso para UI.
+  \item \textbf{Kover} (o JaCoCo) para medir la cobertura de código.
+\end{itemize}
+Se estableció un objetivo de cobertura mínima del 80\,\% en la lógica de negocio y la capa de presentación, asegurando un nivel de calidad adecuado antes de los despliegues finales .
+
+\section{Herramientas y Tecnologías Utilizadas}
+
+\subsection{Lenguaje y librerías principales}
+El desarrollo de \emph{TecnoTime} se realizó completamente en \textbf{Kotlin}, aprovechando sus características de concisión y seguridad de nulidad. Para gestionar concurrencia y flujos de datos reactivos se utilizan \textbf{Kotlin Coroutines} y \textbf{Flow}. Entre las bibliotecas y frameworks más destacados se incluyen:
+\begin{itemize}
+  \item \textbf{Jetpack Compose} para la construcción de la interfaz de usuario declarativa.
+  \item \textbf{Navigation Compose} para la navegación entre pantallas.
+  \item \textbf{Room (SQLite)} como capa de persistencia local, con DAOs reactivos y soporte para migraciones.
+  \item \textbf{DataStore Preferences} para almacenamiento de configuración de usuario.
+  \item \textbf{WorkManager} para la ejecución de tareas en segundo plano (descarga y parseo de PDFs).
+  \item \textbf{Dagger Hilt} para la inyección de dependencias.
+  \item \textbf{Jsoup} para la extracción de enlaces desde HTML.
+  \item \textbf{PDFBox-Android} para el parseo de contenido de PDF.
+  \item \textbf{Gson} para serialización y deserialización de JSON.
+\end{itemize}
+
+
+\subsection{Plugins de Gradle y configuración de Android}
+La aplicación se construye con \textbf{Gradle Kotlin DSL} y \textbf{Version Catalogs} (archivo \texttt{libs.versions.toml}) para centralizar versiones. Los plugins utilizados incluyen:
+\begin{itemize}
+  \item \texttt{com.android.application}
+  \item \texttt{kotlin-android}
+  \item \texttt{kotlin-parcelize}
+  \item \texttt{kotlin-kapt} / \texttt{ksp}
+  \item \texttt{dagger.hilt.android.plugin}
+  \item \texttt{com.google.devtools.ksp}
+  \item \texttt{com.google.gms.google-services}
+\end{itemize}
+La configuración de compilación define \texttt{compileSdkVersion 35}, \texttt{minSdk 24}, \texttt{targetSdk 35} y orienta la compilación a \textbf{Java/Kotlin 11}. Se habilita \texttt{compose = true} en \texttt{buildFeatures} y se incluyen reglas de ProGuard para optimizar el tamaño del APK y proteger el código. 
+
+\section{Evolución del Proyecto y Decisión Arquitectónica}
+
+\subsection{Migración de backend a móvil puro}
+En las fases iniciales se planteó una arquitectura con backend en NestJS, extracción de datos mediante scraping y persistencia en MongoDB y Redis. Sin embargo, durante el pre-experimento se identificaron dependencias externas críticas y problemas de experiencia offline que llevaron a reorientar el proyecto hacia una solución completamente móvil, donde la descarga y parseo de PDFs, así como el almacenamiento en Room, se realizan de forma local en el dispositivo del usuario .
+
+\subsection{Justificación técnica y ventajas}
+La decisión de migrar a una arquitectura Android puro se sustentó en varias ventajas clave:
+\begin{itemize}
+  \item \textbf{Disponibilidad offline:} los estudiantes pueden consultar y gestionar sus horarios en cualquier momento, incluso sin conexión a internet.
+  \item \textbf{Mantenibilidad reducida:} al eliminar la infraestructura de servidores y cacheo, disminuyen los costos de operación y la superficie de errores.
+  \item \textbf{Simplicidad operativa:} toda la lógica de extracción, parseo y sincronización reside en la app, facilitando despliegues y actualizaciones a través de Google Play o instalaciones directas.
+\end{itemize}
+Estas mejoras redundan en una experiencia de usuario más fluida y en una reducción significativa de la complejidad del proyecto .
+
+\subsection{Lecciones aprendidas y direcciones futuras}
+Este cambio de enfoque permitió extraer las siguientes lecciones:
+\begin{itemize}
+  \item \emph{Offline-first es esencial:} en entornos con conectividad variable, la capacidad de funcionar sin red es un requisito de primer nivel.
+  \item \emph{Menos infraestructura, más foco en UX:} al prescindir de un backend, se dedicó mayor esfuerzo a optimizar la interfaz y el rendimiento local.
+  \item \emph{Flexibilidad para evoluciones:} gracias a la modularidad de MVVM y Clean Architecture, es factible reintegrar un servicio en la nube en el futuro para compartir datos entre dispositivos o implementar copias de seguridad centralizadas.
+\end{itemize}
+Estas direcciones futuras abren la posibilidad de incorporar sincronización multi-dispositivo y funcionalidades colaborativas sin comprometer la simplicidad actual de la aplicación .

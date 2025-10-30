@@ -1,0 +1,39 @@
+\chapter{CONCLUSIONES Y RECOMENDACIONES}
+
+\section*{Conclusiones}
+\vspace{-\baselineskip}
+\begin{enumerate}
+  \item La aplicación móvil \textbf{TecnoTime} responde a una necesidad concreta de los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS: organizar de forma clara, accesible y personalizada sus horarios académicos, a diferencia de soluciones previas como Cappuccino UMSS \cite{cappuccino_umss}.
+
+  \item El desarrollo completo se realizó utilizando exclusivamente \textbf{Android Studio} \cite{android_studio}, bajo una arquitectura \textbf{MVVM} y principios de \textit{Clean Architecture} \cite{pedreira2021, medina2014}, logrando una solución modular, escalable y fácil de mantener.
+
+  \item La app se alimenta directamente de los \textbf{PDFs oficiales} de horarios publicados en el sitio web de la FCyT \cite{horarios_fcyt}, aplicando técnicas de extracción mediante \textit{web scraping} y procesamiento por expresiones regulares, sin necesidad de un backend intermedio.
+
+  \item El modelo de datos está cuidadosamente diseñado y normalizado, abarcando carreras, niveles, materias, grupos, horarios, docentes, aulas y eventos académicos, lo que permite funcionalidades sólidas y coherentes.
+
+  \item La incorporación de una \textbf{base de datos local (Room)} \cite{room_db} permite acceso completamente \textit{offline} y sincronización eficiente, mejorando la experiencia del usuario.
+
+  \item TecnoTime ofrece funcionalidades avanzadas como: generación automática de horarios, selección de materias, sugerencias optimizadas, notificaciones, exportación a PDF e imagen, edición de colores y emojis por grupo, y más. Estas funciones se alinean con las mejores prácticas observadas en aplicaciones de referencia como Smart Timetable \cite{smart_timetable}.
+
+  \item El sistema mantiene un enfoque de independencia total, donde los estudiantes no dependen de validaciones externas ni de infraestructura institucional, y pueden personalizar su entorno académico según sus necesidades, aspecto también valorado en estudios sobre aplicaciones móviles universitarias \cite{campushome_apps, lideres_apps}.
+
+  \item Se cumplió plenamente con los objetivos planteados, entregando una herramienta funcional, adaptable y enfocada en mejorar la organización académica del estudiante universitario.
+\end{enumerate}
+
+\section*{Recomendaciones}
+\vspace{-\baselineskip}
+\begin{enumerate}
+  \item Se recomienda implementar una funcionalidad para \textbf{sincronizar eventos con Google Calendar} \cite{google_calendar}, permitiendo al usuario integrar su vida académica con otros calendarios personales.
+
+  \item Se sugiere ampliar las opciones de \textbf{personalización}, permitiendo mayor variedad de colores, etiquetas, emojis, y estilos visuales para los grupos y materias, adaptándose a las preferencias individuales de cada usuario.
+
+  \item Podría incluirse la posibilidad de \textbf{agregar eventos no académicos}, como reuniones, prácticas, recordatorios personales, manteniendo el foco en la planificación del tiempo dentro del entorno universitario.
+
+  \item En caso de querer extender la aplicación a otras facultades o universidades, se recomienda crear una \textbf{tabla de facultades y carreras}, y establecer una estructura común de URLs o sitios donde cada unidad académica publique sus propios archivos PDF de horarios \cite{fcyt_umss}.
+
+  \item Es importante mantener actualizada la lógica de extracción de datos (scraping) ante posibles cambios en el formato o ubicación de los horarios oficiales en la página web de la FCyT \cite{horarios_fcyt}.
+
+  \item Se aconseja seguir realizando pruebas de experiencia de usuario (UX) y adaptaciones según la retroalimentación, especialmente al finalizar cada semestre académico, cuando los horarios cambian y los estudiantes dependen más de la herramienta.
+
+  \item Finalmente, se recomienda continuar documentando claramente el código fuente, las estructuras de datos y los flujos principales, para facilitar la contribución de otros desarrolladores y la evolución natural del proyecto.
+\end{enumerate}

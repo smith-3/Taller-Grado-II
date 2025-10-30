@@ -1,0 +1,50 @@
+\documentclass[12pt]{report}
+
+% Ajustes de bibliografía
+\renewcommand{\bibname}{Bibliografía} % Por si algún estilo usa \bibname
+\usepackage[natbibapa]{apacite}
+
+% Paquetes y estilo
+\input{base/packages}
+\input{base/style}
+
+\begin{document}
+
+    % Portada (sin numeración visible)
+    \pagenumbering{gobble}
+    \input{sections/00_front_page}
+    \clearpage
+
+    % Dedicatoria y agradecimientos
+    \input{sections/00_dedicatoria_agradecimientos}
+    \clearpage
+
+    % Comienzo de numeración normal
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
+
+    % Índices
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+    \listoffigures
+    \listoftables
+    % \lstlistoflistings
+
+    \clearpage
+
+    % Capítulos
+    \input{sections/01_introduction}
+    \input{sections/02_marco_teorico}
+    \input{sections/03_area_aplicacion}
+    \input{sections/04_metodologia}
+    \input{sections/05_conclusiones}
+
+    % Bibliografía
+    \bibliographystyle{apacite}
+    \bibliography{bibliografia}
+
+    % Anexos (opcional)
+    % \appendix
+    % \input{sections/07_anexos}
+
+\end{document}

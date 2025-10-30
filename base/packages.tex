@@ -1,0 +1,53 @@
+% Codificación y lenguaje
+\usepackage[utf8]{inputenc}    % Codificación de entrada
+\usepackage[T1]{fontenc}       % Codificación de salida
+\usepackage[spanish]{babel}    % Idioma
+
+% Tipografía similar a Arial (Helvetica)
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Márgenes (mover a style.tex)
+% \usepackage{geometry}
+
+% Interlineado y párrafos
+\usepackage{setspace}          % Espaciado entre líneas
+\usepackage{parskip}           % Espacio entre párrafos sin sangría
+
+% Tablas y colores
+\usepackage{array}
+\usepackage{colortbl}
+
+% Figuras
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{justification=centering, font=small, labelfont=bf}
+\usepackage{subfigure}
+\usepackage{float}
+
+% Hipervínculos
+\usepackage[bookmarks,breaklinks,colorlinks=true,allcolors=blue]{hyperref}
+% \usepackage[bookmarks,breaklinks,colorlinks=false]{hyperref}
+
+\usepackage{url}
+
+% Bibliografía estilo numerado
+\AtBeginDocument{
+  \renewcommand{\bibsection}{\chapter{\bibname}}
+}
+
+% Listados de código
+\usepackage{listings}
+\usepackage{inconsolata}
+
+% Utilidades
+\usepackage{titlesec}
+\usepackage{eso-pic}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{amsmath}
+\usepackage{eurosym}
+\setlength{\marginparwidth}{2cm}
+\usepackage{todonotes}
+\usepackage{csquotes}
+\usepackage{rotating}
+

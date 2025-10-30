@@ -1,0 +1,70 @@
+% 03_area_aplicacion.tex
+
+\chapter{Área de Aplicación}
+\label{chap:area_aplicacion}
+
+\section{Contexto Institucional}
+La Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS) es la unidad académica responsable de formar profesionales en 19 carreras, entre ellas Ingeniería Informática e Ingeniería de Sistemas. Cada semestre, la FCyT coordina la asignación de horarios para miles de estudiantes de pregrado y posgrado mediante el sistema web \emph{Cappuccino}, desarrollado por la Sociedad Científica de Estudiantes de Sistemas e Informática . Aunque \emph{Cappuccino} proporciona una vista general de los horarios, adolece de varias deficiencias: su interfaz no es responsiva, obliga a una conexión constante y carece de mecanismos de alerta o personalización, lo que disminuye la eficiencia del proceso y la satisfacción de los usuarios .
+
+\section{Usuarios Objetivo}
+Los destinatarios de \emph{TecnoTime} son los estudiantes regulares de la FCyT, típicamente de 18 a 25 años, con alta dependencia de dispositivos Android (versión mínima Android 10, API 29; ideal API 34). Estos usuarios requieren:
+\begin{itemize}
+  \item \textbf{Consulta offline:} acceso a sus horarios sin conexión, para zonas de baja cobertura o interrupciones de red .
+  \item \textbf{Configuración personalizada:} selección dinámica de materias y grupos según la inscripción o retiro semestral .
+  \item \textbf{Alertas previas:} notificaciones móviles configurables antes de cada clase o examen .
+  \item \textbf{Interfaz nativa:} experiencia fluida y coherente con los lineamientos de diseño de Android moderno (Jetpack Compose + MVVM) .
+\end{itemize}
+
+\section{Problemática Actual}
+Un diagnóstico de la experiencia de los estudiantes evidencia los siguientes problemas críticos:
+\begin{enumerate}
+  \item \emph{Dependencia de conexión:} la versión web requiere Internet permanente, lo que impide la consulta en aulas sin cobertura o durante cortes programados .
+  \item \emph{Ausencia de notificaciones:} no existen alertas automáticas para el inicio de clases, cambios de salón o recordatorios de exámenes .
+  \item \emph{Interfaz no adaptativa:} el sistema no está optimizado para pantallas pequeñas, forzando zoom y desplazamientos constantes .
+  \item \emph{Falta de optimización:} no se facilitan sugerencias de secuencia de clases que minimicen tiempos muertos o desplazamientos .
+  \item \emph{Exportación limitada:} no permite generar PDF, imágenes o respaldos compartibles de los horarios, lo que dificulta la colaboración entre compañeros .
+\end{enumerate}
+Estos déficits no solo impacto en la productividad, sino que aumentan el riesgo de errores al inscribir materias en conflicto.
+
+\section{Justificación de la Solución}
+\emph{TecnoTime} se propone como solución integral a las carencias identificadas, ofreciendo:
+\begin{itemize}
+  \item \textbf{Operación offline:} almacenamiento local en Room/SQLite para consulta continua sin red .
+  \item \textbf{Notificaciones configurables:} alertas programables con antelación ajustable para cada evento académico .
+  \item \textbf{Interfaz nativa Android:} Jetpack Compose y MVVM garantizan una navegación fluida y coherente con las guías de Material Design .
+  \item \textbf{Sugerencias inteligentes:} algoritmos basados en grafos que optimizan la secuencia de clases, reduciendo huecos y desplazamientos .
+  \item \textbf{Exportación versátil:} generación de horarios en PDF, imagen o JSON para compartir y respaldar fácilmente .
+\end{itemize}
+Con estas capacidades, \emph{TecnoTime} incrementa la autonomía del estudiante y disminuye el tiempo dedicado a la configuración manual.
+
+\section{Impacto Esperado}
+La adopción de \emph{TecnoTime} en la FCyT-UMSS busca:
+\begin{itemize}
+  \item Reducir en un 50 \% el tiempo de configuración manual de horarios.
+  \item Disminuir choques de materias durante el proceso de inscripción.
+  \item Aumentar la puntualidad y asistencia mediante alertas oportunas.
+  \item Mejorar la satisfacción estudiantil, evaluable en encuestas de usabilidad.
+  \item Facilitar la colaboración y el intercambio de horarios entre pares.
+\end{itemize}
+
+\section{Entorno Técnico}
+El sistema se compone de:
+\begin{description}
+  \item[Cliente Android:] desarrollo en Kotlin con Jetpack Compose y arquitectura MVVM; persistencia local con Room/SQLite .
+  \item[API RESTful:] servidor en NestJS (Node.js), con MongoDB para datos centrales y Redis para cacheo de consultas frecuentes .
+  \item[Scraping de horarios:] módulo en backend que emplea Axios y Cheerio para extraer y procesar PDF desde el portal FCyT, garantizando datos actualizados .
+  \item[Comunicación:] Retrofit en el cliente para consumo de JSON y sincronización bidireccional eficiente.
+\end{description}
+
+\section{Alcance y Limitaciones}
+De conformidad con la guía de la FCyT-UMSS, esta versión de \emph{TecnoTime} se circunscribe a:
+\begin{itemize}
+  \item \textbf{Cobertura:} únicamente las 19 carreras de la FCyT-UMSS .
+  \item \textbf{Plataforma:} dispositivos Android (API 29+); no incluye iOS ni PWA.
+  \item \textbf{Eventos:} gestión exclusiva de clases y exámenes; sin actividades personales.
+  \item \textbf{Distribución:} entrega interna; no se publicará en Google Play.
+  \item \textbf{Sincronización externa:} sin integración con calendarios externos en esta fase.
+\end{itemize}
+Este enfoque asegura un producto enfocado, estable y alineado con las normas de presentación de la FCyT .
+
+% FIN DE 03_area_aplicacion.tex

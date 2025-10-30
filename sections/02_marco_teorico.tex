@@ -1,0 +1,334 @@
+\chapter{MARCO TEÓRICO}
+
+\section{Fundamentos sobre Gestión Académica y Horarios Universitarios}
+
+La \emph{gestión académica} se define como el conjunto de procesos y herramientas destinados a planificar, ejecutar y controlar las actividades formativas de una institución educativa. Dentro de este ámbito, la \emph{planificación de horarios} cobra especial relevancia, ya que de su correcta organización dependen la eficiencia en el uso del tiempo de estudiantes y docentes, la optimización de recursos (aulas, laboratorios) y la calidad de la experiencia educativa.
+
+En el contexto universitario, el \emph{problema de generación de horarios} es un problema clásico de \emph{timetabling} en investigación operativa, catalogado como NP–difícil. Consiste en asignar un conjunto de clases (asignaturas y grupos) a franjas horarias y espacios físicos, cumpliendo restricciones duras (sin solapamientos, disponibilidad de aulas y docentes) y, de ser posible, optimizando criterios blandos (minimizar tiempos muertos, equilibrar carga diaria). Existen algoritmos basados en \emph{coloración de grafos}, algoritmos genéticos y heurísticas específicas que abordan este problema, aunque la complejidad crece rápidamente con el tamaño de la población estudiantil y la variedad de carreras.
+
+En la Facultad de Ciencias y Tecnología de la UMSS, los horarios académicos se publican semestralmente en formato PDF en un portal web institucional. Esta estrategia presenta varias limitaciones:
+
+\begin{itemize}
+  \item \textbf{Rigidez y falta de personalización:} el estudiante no puede adaptar el horario a sus necesidades.
+  \item \textbf{Acceso limitado:} la consulta en dispositivos móviles requiere descarga y lectura de PDF, con experiencia de usuario deficiente.
+  \item \textbf{Ausencia de alertas y sincronización:} no existe mecanismo para detectar conflictos tras inscripciones o cambios.
+\end{itemize}
+
+Estos desafíos motivan el desarrollo de soluciones móviles especializadas que permitan organizar, consultar y optimizar horarios de forma dinámica y offline.
+
+\section{Sistemas de Información Académicos}
+
+Los \emph{sistemas de información académicos} (SIA) son plataformas que soportan procesos de gestión de estudiantes, docentes y recursos. Se pueden clasificar en:
+
+\begin{description}
+  \item[ERP/SIS empresariales:] integran múltiples módulos (inscripciones, finanzas, horarios), pero suelen ser monolíticos y costosos de personalizar.
+  \item[Sistemas modulares:] permiten añadir o quitar componentes según necesidad, favoreciendo la escalabilidad.
+  \item[Aplicaciones móviles especializadas:] diseñadas para tareas concretas (gestión de horarios, notificaciones), con experiencia de usuario optimizada.
+\end{description}
+
+En la UMSS, el sistema \emph{Cappuccino} (S.C.E.S.I.) es un ejemplo de SIA web centrado en generación de horarios, pero carece de adaptabilidad móvil y capacidades de personalización. Por otro lado, aplicaciones comerciales como \emph{Smart Timetable} o \emph{MyStudyLife} ofrecen funciones avanzadas: sugerencias automáticas, alertas, sincronización en la nube y exportación en múltiples formatos. Sin embargo, dependen de servicios externos y requieren configuración previa.
+
+\section{Arquitectura y Principios de Diseño}
+
+Para garantizar que \emph{TecnoTime} sea mantenible, extensible y testeable, se ha diseñado una única sección que integra arquitecturas, patrones y buenas prácticas:
+
+\subsection{Clean Architecture}
+
+\begin{itemize}
+  \item \textbf{Capas concéntricas (Onion):}
+    \begin{itemize}
+      \item \emph{Presentación:} UI (Jetpack Compose), ViewModels y navegación.
+      \item \emph{Aplicación (Use Cases):} orquesta la lógica de negocio pura.
+      \item \emph{Dominio:} entidades y contratos (repositorios), sin dependencias externas.
+      \item \emph{Infraestructura:} implementaciones concretas (Room, DAOs, mapeadores, servicios de red).
+    \end{itemize}
+  \item \textbf{Principio de Dependencia:} los detalles dependen de abstracciones, no al revés.
+  \item \textbf{Beneficios:} aislamiento de la lógica, facilidad de pruebas unitarias y migraciones tecnológicas.
+\end{itemize}
+
+\subsection{MVVM y Programación Reactiva}
+
+\begin{itemize}
+  \item \textbf{Model–View–ViewModel:}
+    \begin{itemize}
+      \item \emph{View:} declarativa con Compose, sin lógica de negocio.
+      \item \emph{ViewModel:} expone \texttt{StateFlow<UiState>} o \texttt{LiveData}, coordina casos de uso.
+      \item \emph{Model:} entidades de dominio o DTOs.
+    \end{itemize}
+  \item \textbf{Reactividad:} Coroutines \& Flow, uso de \texttt{collectAsState()} para enlazar UI.
+  \item \textbf{Testabilidad:} ViewModels probados con mocks de casos de uso.
+\end{itemize}
+
+\subsection{Acceso a Datos: Repository \& DAO Pattern}
+
+\begin{itemize}
+  \item \textbf{Repository Pattern:}
+    \begin{itemize}
+      \item Implementa interfaces de dominio.
+      \item Orquesta DAOs (Room), mapeadores y servicios de sincronización.
+    \end{itemize}
+  \item \textbf{DAO Pattern:}
+    \begin{itemize}
+      \item \texttt{@Dao}: \texttt{@Query}, \texttt{@Insert}, \texttt{@Update}, \texttt{@Delete}.
+      \item \texttt{Flow} para consultas reactivas, \texttt{@Transaction} para transacciones.
+      \item “Eliminación lógica” con flag \texttt{isActive}.
+    \end{itemize}
+  \item \textbf{Ventajas:} desacopla lógica de negocio y persistencia, facilita fakes en testing.
+\end{itemize}
+
+\subsection{Patrón Strategy para Scheduling}
+
+\begin{itemize}
+  \item Encapsula algoritmos como \texttt{\detokenize{MinimizeGaps}}, \texttt{\detokenize{PrioritizeTeachers}}, entre otros.
+  \item La clase \texttt{\detokenize{ScheduleStrategyFactory}} selecciona estrategias según preferencias del usuario.
+  \item Permite extender criterios sin modificar el núcleo del \emph{scheduler}.
+\end{itemize}
+
+
+\subsection{Navegación Declarativa}
+
+\begin{itemize}
+  \item \emph{Single Activity} con Navigation Compose (\texttt{NavHost}, \texttt{NavController}).
+  \item Flujos unidireccionales: \texttt{UiState} → View → eventos → ViewModel.
+  \item Coherencia de estado y transiciones simplificadas.
+\end{itemize}
+
+\subsection{Tareas en Segundo Plano}
+
+\begin{itemize}
+  \item \texttt{WorkManager} con \texttt{PeriodicWorkRequest}, back–off exponencial y restricciones.
+  \item Workers notifican a la UI vía casos de uso y actualizan la base local.
+\end{itemize}
+
+\subsection{Domain–Driven Design (DDD) y Principios SOLID}
+
+\begin{itemize}
+  \item \textbf{DDD:}
+    \begin{itemize}
+      \item \emph{Ubiquitous Language}: terminología compartida.
+      \item \emph{Bounded Contexts}: módulo de sincronización PDF desacoplado.
+    \end{itemize}
+  \item \textbf{SOLID:}
+    \begin{enumerate}
+      \item SRP: responsabilidad única.
+      \item OCP: abierto a extensión, cerrado a modificación.
+      \item LSP: substituibilidad de implementaciones.
+      \item ISP: interfaces específicas y ligeras.
+      \item DIP: inversión de dependencias entre dominio y datos.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Manejo de Concurrencia y Recursos}
+
+\begin{itemize}
+  \item \texttt{viewModelScope} y structured concurrency.
+  \item \texttt{Dispatchers.IO} para E/S, \texttt{Dispatchers.Default} para cómputo intensivo.
+  \item Trabajo periódico con WorkManager que sobrevive a reinicios.
+\end{itemize}
+
+\subsection{Pruebas Automatizadas}
+
+\begin{itemize}
+  \item \textbf{Unit Tests:} JUnit4, MockK/Mockito para casos de uso y ViewModels.
+  \item \textbf{UI Tests:} Espresso \& Compose Testing.
+  \item Cobertura objetivo $\geq$ 80\% en la lógica de negocio.
+\end{itemize}
+
+\section{Tecnologías y Herramientas Utilizadas}
+
+El desarrollo de \emph{TecnoTime} se apoya en un ecosistema completamente nativo Android, organizado en varias categorías:
+
+\subsection{Sistema de Construcción y Plugins}
+\begin{itemize}
+  \item \textbf{Gradle Kotlin DSL \& Version Catalogs:} uso de archivos \texttt{libs.versions.toml} para gestionar versiones centralizadas.
+  \item \textbf{Plugins principales:} 
+  \begin{flushleft}
+  \raggedright
+  \texttt{\detokenize{
+    com.android.application,
+    kotlin-android,
+    kotlin-parcelize,
+    kotlin-kapt/ksp,
+    dagger.hilt.android.plugin,
+    com.google.devtools.ksp,
+    com.google.gms.google-services
+  }}
+  \end{flushleft}
+\end{itemize}
+
+
+\subsection{Configuración Android}
+\begin{itemize}
+  \item \textbf{compileSdkVersion 35, minSdk 24, targetSdk 35:} compatibilidad con dispositivos modernos.
+  \item \textbf{Java \& Kotlin 11:} compilación dirigida a JVM 11.
+  \item \textbf{Build Features:} \texttt{compose = true}, reglas de \texttt{proguardFiles}.
+\end{itemize}
+
+\subsection{Lenguaje y Coroutines}
+\begin{itemize}
+  \item \textbf{Kotlin:} sintaxis concisa, seguridad de nulidad.
+  \item \textbf{Coroutines \& Flow:} manejo no bloqueante de E/S, streaming reactivo (\texttt{StateFlow}, \texttt{SharedFlow}).
+\end{itemize}
+
+\subsection{Interfaz de Usuario}
+\begin{itemize}
+  \item \textbf{Jetpack Compose \& Material3:} UI declarativa, theming dinámico.
+  \item \textbf{Navigation Compose:} enrutamiento Declarativo.
+  \item \textbf{Accompanist:} \texttt{systemuicontroller}, \texttt{pagers}, \texttt{permissions}.
+  \item \textbf{Coil:} carga eficiente de imágenes.
+\end{itemize}
+
+\subsection{Persistencia y Configuración}
+\begin{itemize}
+  \item \textbf{Room (SQLite):} DAOs reactivas usando \mbox{\texttt{Flow}}, migraciones automáticas y transacciones atómicas mediante \mbox{\texttt{@Transaction}}.
+  \item \textbf{DataStore Preferences:} configuración persistente y reactiva para \emph{UserSettings}.
+\end{itemize}
+
+\subsection{Red, Scraping y PDF}
+\begin{itemize}
+  \item \textbf{Jsoup:} extracción de enlaces y metadatos.
+  \item \textbf{PDFBox-Android:} parseo de contenido PDF.
+  \item \textbf{html-to-pdf-convertor:} generación de informes HTML a PDF.
+\end{itemize}
+
+\subsection{Generación y Exportación de Documentos}
+\begin{itemize}
+  \item \textbf{JExcelAPI (jxl):} exportación a Excel.
+  \item \textbf{Canvas \& Compose:} generación de imágenes de horario.
+  \item \textbf{Gson:} serialización JSON.
+  \item \textbf{ThreeTenABP:} APIs de fecha y hora.
+\end{itemize}
+
+\subsection{Notificaciones y Tareas en Segundo Plano}
+\begin{itemize}
+  \item \textbf{NotificationCompat:} generación de notificaciones locales previas a eventos.
+\end{itemize}
+
+\subsection{Pruebas}
+\begin{itemize}
+  \item \textbf{JUnit4:} pruebas unitarias de casos de uso y ViewModels.
+  \item \textbf{Espresso \& Compose UI Tests:} pruebas de integración de la UI.
+\end{itemize}
+
+\section{Modelo de Datos y Entidades}
+
+El diseño de la base de datos de \emph{TecnoTime} responde a principios de modelado conceptual, normalización y eficiencia en la persistencia local. A continuación se detalla el enfoque teórico y las decisiones de diseño adoptadas.
+
+\subsection{Modelado Conceptual de Datos}
+
+Antes de pasar al esquema relacional, se definió un modelo entidad–relación (E/R) para capturar las \emph{entidades} y sus \emph{asociaciones}:
+
+\begin{itemize}
+  \item \textbf{Carrera (\texttt{Careers}):} representa cada carrera universitaria, con atributos de metadatos y sincronización.
+  \item \textbf{Asignatura (\texttt{Subjects}):} contiene código, nombre, nivel y estado (electiva o activa).
+  \item \textbf{Grupo de asignatura (\texttt{SubjectGroups}):} refleja la división de cada asignatura en grupos, con modalidad (teoría/práctica) y estado lógico.
+  \item \textbf{Horario de grupo (\texttt{GroupSchedules}):} vincula cada grupo con día, hora, aula y docente.
+  \item \textbf{Selección del estudiante (\texttt{SelectedSubjects}):} almacena la elección del usuario, con atributos de notificación, color y emoji.
+  \item \textbf{Eventos académicos (\texttt{AcademicEvents}):} registros de exámenes, presentaciones u otros eventos vinculados a una selección.
+  \item \textbf{Docentes y Aulas (\texttt{Teachers}, \texttt{Classrooms}):} catálogos auxiliares para enriquecer los horarios.
+  \item \textbf{Preferencias de usuario (\texttt{UserSettings}):} configuración de la aplicación (formato de hora, tema, etc.).
+\end{itemize}
+
+Las relaciones N:M (\emph{muchos a muchos}) entre carreras, asignaturas y grupos se resolvieron con \emph{tablas de cruce} que garantizan flexibilidad y permiten escalar a nuevas asociaciones sin redundancia.
+
+\subsection{Normalización y Tercera Forma Normal (3FN)}
+
+Para evitar anomalías de \emph{inserción}, \emph{actualización} o \emph{eliminación}, el esquema se normalizó hasta Tercera Forma Normal:
+
+\begin{enumerate}
+  \item \textbf{Primera Forma Normal (1FN):} cada tabla almacena valores atómicos, sin listas ni estructuras anidadas.
+  \item \textbf{Segunda Forma Normal (2FN):} se eliminan dependencias parciales asegurando que cada atributo dependa de toda la clave primaria.
+  \item \textbf{Tercera Forma Normal (3FN):} se eliminan dependencias transitivas, de modo que ningún atributo no clave dependa de otro atributo no clave.
+\end{enumerate}
+
+Por ejemplo, la información de docentes y aulas se separó en tablas independientes (\texttt{Teachers}, \texttt{Classrooms}) y se asocia mediante claves foráneas en \texttt{GroupSchedules}, evitando duplicación de texto y facilitando la gestión de cambios.
+
+\subsection{Integridad Referencial y Claves}
+
+\begin{itemize}
+  \item \textbf{Claves primarias (PK):} cada tabla tiene un identificador único—natural (\texttt{code} en \texttt{Subjects}) o sintético (\texttt{id} autoincremental).
+  \item \textbf{Claves foráneas (FK):} garantizan que solo existan referencias válidas entre tablas. Se usan restricciones \texttt{ON DELETE CASCADE} o \texttt{SET NULL} según el caso.
+  \item \textbf{Índices únicos y compuestos:} se definieron índices en columnas de búsqueda frecuente (p.ej. \texttt{(career\_code, group\_id)}) y en campos \texttt{UNIQUE} para acelerar consultas y mantener la unicidad.
+\end{itemize}
+
+\subsection{Implementación en SQLite con Room}
+
+Room abstrae el acceso a SQLite ofreciendo:
+
+\begin{itemize}
+  \item \textbf{DAOs reactivos:} operaciones CRUD y consultas basadas en \texttt{Flow<…>}, que simplifican el diseño de interfaces reactivas.
+  \item \textbf{Migraciones y validación de esquemas:} Room comprueba en tiempo de compilación el cumplimiento del modelo, reduciendo errores en producción.
+  \item \textbf{Transacciones atómicas:} el uso de anotaciones \texttt{@Transaction} asegura consistencia al ejecutar varias operaciones relacionadas.
+\end{itemize}
+
+SQLite garantiza propiedades \emph{ACID} (Atomicidad, Consistencia, Aislamiento, Durabilidad), fundamentales para preservar la integridad de datos en escenarios de concurrencia y fallos inesperados.
+
+\subsection{Conversión de Tipos y Almacenamiento de JSON}
+
+Para adaptar tipos de dominio a representaciones en la base de datos:
+
+\begin{itemize}
+  \item \textbf{Enums a \texttt{String}:} \texttt{@TypeConverter} convierte valores de \texttt{SubjectStatus}, \texttt{WeekDay}, \texttt{GroupType} y \texttt{AcademicEventType} a su nombre (\texttt{name()}) y viceversa.
+  \item \textbf{Campos JSON:} la columna \texttt{links} en \texttt{SelectedSubjects} almacena objetos JSON serializados, permitiendo extensibilidad (enlaces externos, metadatos) sin alterar el esquema relacional.
+\end{itemize}
+
+Este enfoque mantiene el modelo de dominio limpio y desacoplado de la forma de persistencia.
+
+\subsection{Índices y Rendimiento}
+
+Se crearon índices en:
+
+\begin{itemize}
+  \item \texttt{career\_code}, \texttt{subject\_code}, \texttt{group\_id}: para acelerar joins en filtros por carrera o materia.
+  \item Campos de búsqueda (\texttt{name}, \texttt{full\_name}): índices únicos que optimizan consultas \texttt{LIKE}.
+\end{itemize}
+
+Los índices reducen considerablemente el tiempo de respuesta en dispositivos móviles con grandes volúmenes de datos, a costa de un ligero aumento en espacio y tiempo de escritura.
+
+\section{Comparación con la Idea Inicial y Evolución del Proyecto}
+
+En la fase de planteamiento original de \emph{TecnoTime} se propuso una arquitectura clásica de microservicio:
+
+\begin{itemize}
+  \item \textbf{Backend en NestJS:} un servidor Node.js modular, encargado de coordinar la extracción de datos, exponer una API RESTful y orquestar la persistencia.
+  \item \textbf{Web scraping con Axios \& Cheerio:} para descargar y parsear los PDFs de horarios desde el portal de la Facultad, centralizando el proceso de extracción en el servidor.
+  \item \textbf{Persistencia en MongoDB + Redis:} MongoDB como repositorio NoSQL de documentos semiestructurados, y Redis como capa de cacheo para acelerar consultas repetidas.
+\end{itemize}
+
+Esta propuesta inicial ofrecía ventajas teóricas —como delegar toda la lógica de datos en un único punto de control y posibilitar futuras integraciones web—, pero al avanzar en el pre–experimento y las primeras iteraciones se detectaron varias complicaciones:
+
+\begin{itemize}
+  \item \emph{Dependencias externas complejas:} mantener un servidor, monitorear despliegues y gestionar variables de entorno incrementaba la carga operativa.
+  \item \emph{Inconsistencia en el scraping:} cada nuevo cambio en el HTML de la web institucional rompía el scraper en NestJS, generando fallos de sincronización.
+  \item \emph{Necesidad de conexión constante:} la aplicación dependía del backend para todo acceso a horarios, penalizando la experiencia offline de los estudiantes.
+  \item \emph{Latencia y escalabilidad:} ante picos de descarga (inscripciones masivas), Redis podía saturarse y el servidor requería escalado horizontal.
+\end{itemize}
+
+Ante estos retos, se adoptó un giro decisivo hacia una \emph{solución totalmente móvil y offline–first}, donde:
+
+\begin{itemize}
+  \item La descarga de PDF se realiza directamente en el dispositivo del usuario.
+  \item El parseo y estructuración de datos ocurren \emph{in situ} utilizando bibliotecas Android (Jsoup para HTML, PDFBox para lectura de PDF).
+  \item La persistencia se delega completamente a Room (SQLite), eliminando la necesidad de servidores intermedios.
+\end{itemize}
+
+\subsection*{Ventajas de la Migración a Móvil Puro}
+
+\begin{enumerate}
+  \item \textbf{Autonomía y Alta Disponibilidad:} el estudiante puede consultar y organizar sus horarios sin depender de red ni servidores externos.
+  \item \textbf{Robustez y Simplicidad Operativa:} al reducir la infraestructura a solo la app Android, disminuye la superficie de fallos y los costes de mantenimiento.
+  \item \textbf{Experiencia de Usuario Óptima:} interfaz nativa con Jetpack Compose, tiempos de respuesta inmediatos y capacidad de uso en modo avión o en zonas de baja cobertura.
+  \item \textbf{Mantenibilidad Local:} toda la lógica de extracción, mapeo y sincronización está contenida en el dispositivo, facilitando pruebas, depuración y despliegues.
+\end{enumerate}
+
+\subsection*{Lecciones Aprendidas y Futuras Direcciones}
+
+Este cambio de rumbo reveló varias lecciones clave:
+
+\begin{itemize}
+  \item \emph{Menos infraestructura = más foco en la UX:} al eliminar el backend, el equipo dedicó más tiempo a optimizar la experiencia de la app.
+  \item \emph{Offline–First como requisito real:} en entornos académicos con conectividad irregular, la capacidad offline no es un extra, sino una necesidad fundamental.
+  \item \emph{Flexibilidad para evolutivos futuros:} la arquitectura modular de MVVM y Clean Architecture permite, en el futuro, reintroducir opcionalmente un backend o servicio en la nube (por ejemplo, Firebase) para compartir horarios entre dispositivos o almacenar copias de seguridad centralizadas.
+\end{itemize}
+
+En resumen, la evolución de un sistema distribuido con servidor a una \emph{solución cliente–único} demuestra un enfoque pragmático, centrado en las necesidades reales del usuario universitario y en la simplificación de la cadena de valor tecnológica. Esta trayectoria ha permitido a \emph{TecnoTime} consolidarse como una aplicación ligera, confiable y preparada para futuras extensiones (sincronización multi–dispositivo, analíticas de uso, colaboración entre estudiantes) sin sacrificar la experiencia básica de gestión de horarios.  
