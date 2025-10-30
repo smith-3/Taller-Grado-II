@@ -1,334 +1,328 @@
 \chapter{MARCO TEÓRICO}
 
-\section{Fundamentos sobre Gestión Académica y Horarios Universitarios}
+\section{Fundamentos y Definición del Problema}
 
-La gestión académica se define como el conjunto de procesos y herramientas destinados a planificar, ejecutar y controlar las actividades formativas de una institución educativa. Dentro de este ámbito, la planificación de horarios cobra especial relevancia, ya que de su correcta organización dependen la eficiencia en el uso del tiempo de estudiantes y docentes, la optimización de recursos (aulas, laboratorios) y la calidad de la experiencia educativa.
+La gestión académica comprende procesos y herramientas para planificar, ejecutar y controlar actividades formativas. En este contexto, la planificación de horarios (\emph{academic timetabling}) es un problema central: asignar clases (asignaturas y grupos) a franjas horarias y espacios cumpliendo restricciones duras (no solapamiento, disponibilidad de aulas y docentes) y optimizando criterios blandos (minimizar tiempos muertos, balancear carga diaria, preferencia de docentes).
 
-En el contexto universitario, el problema de generación de horarios es un problema clásico de timetabling en investigación operativa, catalogado como NP–difícil. Consiste en asignar un conjunto de clases (asignaturas y grupos) a franjas horarias y espacios físicos, cumpliendo restricciones duras (sin solapamientos, disponibilidad de aulas y docentes) y, de ser posible, optimizando criterios blandos (minimizar tiempos muertos, equilibrar carga diaria). Existen algoritmos basados en coloración de grafos, algoritmos genéticos y heurísticas específicas que abordan este problema, aunque la complejidad crece rápidamente con el tamaño de la población estudiantil y la variedad de carreras.
+Desde la perspectiva de la investigación operativa, el timetabling universitario es típicamente un problema NP–difícil. La complejidad combinatoria crece exponencialmente con el número de materias y grupos, por lo que se emplean estrategias de búsqueda con poda y heurísticas de evaluación multi–criterio \cite{babaei2015-survey,kristiansen2013-survey}.
 
-En la Facultad de Ciencias y Tecnología de la UMSS, los horarios académicos se publican semestralmente en formato PDF en un portal web institucional. Esta estrategia presenta varias limitaciones:
+En la Facultad de Ciencias y Tecnología de la UMSS, los horarios se publican semestralmente en formato PDF en el portal institucional \cite{horarios_fcyt}. Este formato limita la personalización, complica la consulta móvil y no provee alertas ni verificación automática de conflictos. Estas limitaciones motivan soluciones móviles especializadas que soporten organización dinámica, validación de conflictos y funcionamiento offline.
 
+\section{Formalización Matemática del Problema para un Usuario}
+
+El caso de TecnoTime está centrado en un único estudiante: se selecciona el mejor conjunto de grupos para sus materias, sin modelar múltiples estudiantes ni capacidades institucionales. Por ello se usa un modelo de \emph{selección de grupos} más simple que el institucional.
+
+\subsection*{Modelo de Selección de Grupos}
 \begin{itemize}
-  \item Rigidez y falta de personalización: el estudiante no puede adaptar el horario a sus necesidades.
-  \item Acceso limitado: la consulta en dispositivos móviles requiere descarga y lectura de PDF, con experiencia de usuario deficiente.
-  \item Ausencia de alertas y sincronización: no existe mecanismo para detectar conflictos tras inscripciones o cambios.
+  \item Conjuntos: materias del usuario \(C\). Para cada materia \(c\), su conjunto de grupos ofertados \(G(c)\). Días \(W\) y franjas temporales \(T\) (para definir solapes).
+  \item Variable de decisión binaria: \(y_{c,g}=1\) si el usuario elige el grupo \(g\in G(c)\) para la materia \(c\); en otro caso, \(0\).
+  \item Horarios preexistentes: cada par \((c,g)\) tiene un conjunto de intervalos temporales \(\text{sched}(c,g)\) (día, inicio, fin) obtenido del PDF.
 \end{itemize}
 
-Estos desafíos motivan el desarrollo de soluciones móviles especializadas que permitan organizar, consultar y optimizar horarios de forma dinámica y offline.
+Restricciones duras (usuario):
+\begin{align}
+  &\text{Una opción por materia: } \forall c\in C:\ \sum_{g\in G(c)} y_{c,g} \;=\; 1 \\[-2pt]
+  &\text{Sin solapes: } \forall (c_1,g_1)\neq(c_2,g_2):\ \big(\text{overlap}(\text{sched}(c_1,g_1),\,\text{sched}(c_2,g_2))\big) \Rightarrow y_{c_1,g_1}+y_{c_2,g_2}\;\le\;1
+\end{align}
 
-\section{Sistemas de Información Académicos}
+Restricciones blandas (preferencias del usuario): minimizar huecos intra–día, ajustar n.º de días activos y priorizar docentes favoritos.
 
-Los sistemas de información académicos (SIA) son plataformas que soportan procesos de gestión de estudiantes, docentes y recursos. Se pueden clasificar en:
+Función objetivo multi–criterio (suma ponderada) \cite{deb2001-moo,charnes1961-gp}:
+\begin{equation}
+  \min_{y}\ F(y)= \sum_{k} w_k\, \phi_k(y),\quad w_k\ge 0
+\end{equation}
 
-\begin{description}
-  \item[\normalfont ERP/SIS empresariales:] integran múltiples módulos (inscripciones, finanzas, horarios), pero suelen ser monolíticos y costosos de personalizar.
-  \item[\normalfont Sistemas modulares:] permiten añadir o quitar componentes según necesidad, favoreciendo la escalabilidad.
-  \item[\normalfont Aplicaciones móviles especializadas:] diseñadas para tareas concretas (gestión de horarios, notificaciones), con experiencia de usuario optimizada.
-\end{description}
+\subsection*{Tabla de Notación} \label{tab:notacion-uctp}
+\begin{table}[H]
+  \centering
+  \small
+\begin{tabular}{>{\bfseries}m{2.6cm} m{7.4cm} m{3cm}}
+    \hline
+    Símbolo & Significado & Dominio \\
+    \hline
+    $C,G,D,R,T,W$ & Conjuntos de materias, grupos, docentes, aulas, franjas, días & Finito \\
+    $y_{c,g}$ & Selección de grupo para materia $c$ & $\{0,1\}$ \\
+    $\text{sched}(c,g)$ & Conjunto de intervalos (d\'\i a, inicio, fin) & $\mathcal{I}$ \\
+    $\text{overlap}(\cdot,\cdot)$ & Predicado de solape temporal & $\{\text{true,false}\}$ \\
+    $\text{doc}(c,g)$ & Docente del grupo $g$ de $c$ & $-$ \\
+    $\text{calendar}(t)$ & Slot a (d\'\i a, inicio, fin) & $W\times \mathbb{T}$ \\
+    $\phi_k(y)$ & Penalización del criterio $k$ & $\mathbb{R}_{\ge 0}$ \\
+    $w_k$ & Peso del criterio $k$ & $\mathbb{R}_{\ge 0}$ \\
+    \hline
+  \end{tabular}
+  \caption{Notación básica para la formalización del UCTP. Completar según el caso de estudio.}
+\end{table}
 
-En la UMSS, el sistema Cappuccino (S.C.E.S.I.) es un ejemplo de SIA web centrado en generación de horarios, pero carece de adaptabilidad móvil y capacidades de personalización. Por otro lado, aplicaciones comerciales como Smart Timetable o MyStudyLife ofrecen funciones avanzadas: sugerencias automáticas, alertas, sincronización en la nube y exportación en múltiples formatos. Sin embargo, dependen de servicios externos y requieren configuración previa.
+\subsection*{Tabla de Restricciones (enfoque usuario)}
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{>{\bfseries}m{2.0cm} m{7.1cm} m{4.3cm} m{2.0cm}}
+    \hline
+    Tipo & Descripción & Formalización (borrador) & Fuente de dato \\
+    \hline
+    Dura & Una opción por materia & $\forall c:\ \sum_{g\in G(c)} y_{c,g}=1$ & Materias del usuario \\
+    Dura & No solape entre grupos & $y_{c_1,g_1}+y_{c_2,g_2}\le 1$ si $overlap$ & Horarios ofertados \\
+    Blanda & Minimizar gaps & $\sum\text{minutos\_vac\'\i os}(y)$ & Preferencias \\
+    Blanda & Ajustar d\'\i as activos & $\sum\mathbf{1}[\text{d\'\i a con clases}]$ & Preferencias \\
+    Blanda & Docentes favoritos & $\sum \mathbf{1}[\neg favorito]$ & Preferencias \\
+    \hline
+  \end{tabular}
+  \caption{Clasificación de restricciones duras y blandas. Adaptar a la instancia real.}
+\end{table}
 
-\section{Arquitectura y Principios de Diseño}
+\section{Representación de Datos Académicos}
 
-Para garantizar que TecnoTime sea mantenible, extensible y testeable, se ha diseñado una única sección que integra arquitecturas, patrones y buenas prácticas:
+Un modelo de datos consistente es condición para expresar restricciones y evaluar soluciones. A nivel conceptual (E/R) se consideran las siguientes entidades y asociaciones: Carrera, Nivel, Asignatura, Grupo, Horario de Grupo, Docente, Aula, Selección del Estudiante y Eventos Académicos. Las relaciones N:M entre Carrera–Nivel, Carrera–Grupo y Asignatura–Grupo se resuelven con tablas de cruce para evitar redundancia y habilitar consultas eficientes \cite{chen1976-er,codd1971-3nf}.
 
-\subsection{Clean Architecture}
-
+Principios teóricos aplicados:
 \begin{itemize}
-  \item Capas concéntricas (Onion):
-    \begin{itemize}
-      \item Presentación: UI (Jetpack Compose), ViewModels y navegación.
-      \item Aplicación (Use Cases): orquesta la lógica de negocio pura.
-      \item Dominio: entidades y contratos (repositorios), sin dependencias externas.
-      \item Infraestructura: implementaciones concretas (Room, DAOs, mapeadores, servicios de red).
-    \end{itemize}
-  \item Principio de Dependencia: los detalles dependen de abstracciones, no al revés.
-  \item Beneficios: aislamiento de la lógica, facilidad de pruebas unitarias y migraciones tecnológicas.
+  \item Normalización hasta 3FN para evitar anomalías de inserción, actualización y eliminación.
+  \item Integridad referencial mediante claves foráneas con políticas \emph{CASCADE} o \emph{SET NULL} según opcionalidad.
+  \item Índices compuestos en claves de búsqueda frecuentes (p.ej. \texttt{(subject\_code, group\_id)}), como soporte para restricciones y validaciones.
 \end{itemize}
 
-\subsection{MVVM y Programación Reactiva}
+A nivel lógico, los ORMs modernos (p.ej., Room) proveen DAOs tipadas y validación de esquemas en tiempo de compilación \cite{room_db}. Estas herramientas no constituyen metodología de desarrollo en este capítulo, sino sustento tecnológico del modelo de datos que hace posible la expresión de restricciones y la evaluación de soluciones.
 
+\subsection*{Diagrama ER}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{images/diagram_er.png}
+  \caption{Diagrama ER del dominio académico.}
+  \label{fig:er}
+\end{figure}
+
+\subsection*{Tabla de Entidades e Índices (resumen)}
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{>{\bfseries}m{2.6cm} m{5.5cm} m{4.7cm}}
+    \hline
+    Entidad & Claves (PK/FK) & Índices / Notas \\
+    \hline
+    Materia & PK: code & UNIQUE(code), b\'usqueda por nombre \\
+    Grupo & PK: id, FK: subject\_code, level\_id & UNIQUE(subject\_code, group\_id) \\
+    HorarioGrupo & PK: id, FK: group\_id, teacher\_id, classroom\_id & (teacher\_id, day, start), (classroom\_id, day, start) \\
+    Docente & PK: id & UNIQUE(full\_name) \\
+    Aula & PK: id & UNIQUE(name) \\
+    Selección & PK: id, FK: subject/group & Preferencias, color, emoji \\
+    \hline
+  \end{tabular}
+  \caption{Resumen de entidades, claves e índices (completar/ajustar).}
+\end{table}
+
+\section{Fundamentos Algorítmicos para la Generación de Horarios}
+
+La generación de horarios puede formalizarse como un problema de búsqueda combinatoria con evaluación multi–objetivo. Dos componentes teóricos son fundamentales: el mecanismo de exploración de combinaciones y la función de evaluación.
+
+\subsection{Exploración: Búsqueda con Retroceso (Backtracking)}
+
+El backtracking explora sistemáticamente combinaciones de grupos por materia. La poda temprana descarta ramas que violan restricciones duras (solapamientos, disponibilidad de docente/aula). Esta técnica garantiza cobertura del espacio factible a costa de complejidad exponencial en el peor caso; la poda y el ordenamiento heurístico de variables y valores reducen el espacio efectivo \cite{golomb1965-backtrack}.
+
+\subsection*{Pseudocódigo de Backtracking (borrador)}
+\begin{lstlisting}[language={},basicstyle=\ttfamily\small]
+func generarHorarios(candidatos, estrategia, N):
+    mejores = []
+    def backtrack(i, parcial):
+        if i == len(candidatos):
+            score = estrategia(parcial)
+            insertar_ordenado(mejores, (parcial, score), N)
+            return
+        for opcion in candidatos[i]:
+            if cumple_duras(parcial + opcion):   # poda temprana
+                backtrack(i+1, parcial + opcion)
+    backtrack(0, [])
+    return extraer_horarios(mejores)
+\end{lstlisting}
+
+\subsection*{Diagrama de flujo del algoritmo (TikZ)}
+\begin{figure}[H]
+  \centering
+  \resizebox{\linewidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=10mm,
+    every node/.style={font=\small},
+    box/.style={rectangle, draw, rounded corners, align=center, minimum width=38mm, minimum height=7mm},
+    decision/.style={diamond, draw, aspect=2, align=center, inner sep=1pt}
+  ]
+    \shorthandoff{< >}% desactiva guillemets de babel en este entorno
+    \node[box] (start) {Ordenar materias (MRV)};
+    \node[box, below=of start] (pick) {Seleccionar materia i};
+    \node[box, below=of pick] (iter) {Iterar grupos (LCV)};
+    \node[decision, below=of iter] (hard) {Cumple\newline duras?};
+    \node[box, below left=13mm and 18mm of hard] (prune) {Poda y retroceso};
+    \node[box, below right=13mm and 18mm of hard] (add) {Agregar a parcial};
+    \node[decision, below=20mm of add] (done) {i = |C|?};
+    \node[box, below right=13mm and 18mm of done] (eval) {Evaluar y mantener\newline Top-N};
+    \node[box, below left=13mm and 18mm of done] (advance) {i \(\leftarrow\) i+1};
+
+    \draw (start) -- (pick);
+    \draw (pick) -- (iter);
+    \draw (iter) -- (hard);
+    \draw (hard.west) -- ++(-10mm,0) |- (prune);
+    \draw (hard.east) -- ++(10mm,0) |- (add);
+    \draw (add) -- (done);
+    \draw (done.east) -- ++(10mm,0) |- (eval);
+    \draw (done.west) -- ++(-10mm,0) |- (advance);
+    \draw (advance) |- (iter);
+  \end{tikzpicture}}
+  \caption{Flujo de backtracking con MRV/LCV, poda de duras y mantenimiento de Top-N.}
+\end{figure}
+
+\subsection{Evaluación: Heurísticas y Multi–criterio}
+
+El sistema de evaluación asigna una puntuación a un horario completo según múltiples objetivos blandos. Criterios típicos, coherentes con las necesidades del dominio, incluyen:
 \begin{itemize}
-  \item Model–View–ViewModel:
-    \begin{itemize}
-      \item View: declarativa con Compose, sin lógica de negocio.
-      \item ViewModel: expone \texttt{StateFlow<UiState>} o \texttt{LiveData}, coordina casos de uso.
-      \item Model: entidades de dominio o DTOs.
-    \end{itemize}
-  \item Reactividad: Coroutines \& Flow, uso de \texttt{collectAsState()} para enlazar UI.
-  \item Testabilidad: ViewModels probados con mocks de casos de uso.
+  \item Minimizar huecos entre clases por día (\emph{gaps}).
+  \item Minimizar días sin clases cuando el usuario prefiere concentración.
+  \item Penalizar conflictos si no están permitidos; tolerarlos si el usuario lo acepta de forma explícita.
+  \item Priorizar docentes marcados como favoritos.
 \end{itemize}
 
-\subsection{Acceso a Datos: Repository \& DAO Pattern}
+Una forma general es una combinación lineal ponderada de estrategias específicas (\emph{Composite Strategy}), lo que habilita ajuste de preferencias del usuario sin redefinir el algoritmo de búsqueda \cite{deb2001-moo,charnes1961-gp}.
 
+\subsection*{Tabla de Métricas y Pesos}
+\begin{table}[H]
+  \centering
+  \small
+  \resizebox{\linewidth}{!}{%%
+  \begin{tabular}{>{\bfseries}m{2.6cm} m{5.0cm} m{2.1cm} m{2.8cm} m{1.6cm}}
+    \hline
+    Métrica & Fórmula (bosquejo) & Rango & Interpretación & Peso $w_k$ \\
+    \hline
+    Conflictos & $\infty$ si hay solapamientos, $0$ si no & $\{0,\infty\}$ & Cr\'\i tico (prohibido) & 1.0 \\
+    Gaps (min) & $\sum\limits_{d\in W}\sum\limits_{i} \max(0, s_{i+1}-e_i)$ & $[0,600]$ & Menor es mejor & 1.0 \\
+    Docentes no fav. & $\sum \mathbf{1}[\neg favorito]$ & $[0,n]$ & Penaliza no favoritos & 1.0 \\
+    D\'\i as vac\'\i os & $\sum\limits_{d\in W} \mathbf{1}[|clases(d)|=0]$ & $[0,6]$ & Preferible menos & 0.5 \\
+    \hline
+  \end{tabular}%%
+  }
+  \caption{Métricas de evaluación y pesos (ajustar y normalizar según preferencia).}
+\end{table}
+
+\noindent Función objetivo global de ejemplo:
+\begin{equation}
+  F(H)=1.0\cdot\text{conflicts}(H)+1.0\cdot\text{gaps}(H)+1.0\cdot\text{teachers}(H)+0.5\cdot\text{days}(H)
+\end{equation}
+
+\section{Complejidad y Relación Teórica}
+
+El UCTP es \emph{NP–dif\'\i cil} \cite{babaei2015-survey,kristiansen2013-survey}. La exploración por backtracking tiene complejidad \(O(b^d)\), donde \(b\) es el factor de ramificación (grupos por materia) y \(d\) la profundidad (número de materias). La poda y heur\'\i sticas como MRV y LCV reducen el espacio efectivo \cite{golomb1965-backtrack}. El problema se relaciona con coloreo de grafos (clases como nodos, slots como colores) y scheduling por intervalos.
+
+\subsection*{L\'inea de tiempo (TikZ) y c\'alculo de gaps}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=3mm,y=6mm, every node/.style={font=\small}]
+    \shorthandoff{< >}% desactiva guillemets de babel en este entorno
+    % Eje de tiempo 08:00 a 16:00 (ajustado a ancho)
+    \draw (0,0) -- (40,0) node[below right]{Hora};
+    \foreach \x/\h in {0/08:00,10/10:00,20/12:00,30/14:00,40/16:00}
+      \draw (\x,0.2) -- (\x,-0.2) node[below]{\h};
+    % Bloques de clase de la mini-instancia (Martes 10-12 y 14-16)
+    \filldraw[fill=blue!20,draw=blue] (10,0.6) rectangle (20,1.6);
+    \node at (15,1.9) {Clase 10:00–12:00};
+    \filldraw[fill=green!20,draw=green!60!black] (30,0.6) rectangle (40,1.6);
+    % ticks principales hasta 16:00 ya agregados
+    \node at (35,1.9) {Clase 14:00–16:00};
+    % Gap indicado
+    \draw[red,thick] (20,1.1) -- (30,1.1);
+    \node[above,red] at (25,1.1) {gap = 120 min};
+  \end{tikzpicture}
+  \caption{Ejemplo de c\'alculo de gaps intra–d\'ia (Martes: 10–12 y 14–16).}
+\end{figure}
+
+\section{Patrones y Principios de Arquitectura de Software}
+
+Las decisiones de arquitectura se fundamentan en teoría de diseño de software, con impacto directo sobre mantenibilidad, escalabilidad y testabilidad, sin entrar en metodologías de proceso.
+
+\subsection{Clean Architecture y MVVM}
+
+Clean Architecture separa responsabilidades en capas concéntricas (Presentación, Dominio, Datos), de modo que los detalles dependen de abstracciones. MVVM aporta un patrón de separación de la lógica de presentación de la UI. Estos enfoques reducen acoplamiento, facilitan pruebas y permiten evolucionar componentes sin afectar la lógica de negocio \cite{pedreira2021comparativa, medina2014, martin2017-cleanarch}.
+
+\subsection{Repository, DAO y Principio de Inversión de Dependencias}
+
+El patrón Repository abstrae el acceso a datos; los DAOs tipados proveen operaciones declarativas. El Principio de Inversión de Dependencias (DIP) garantiza que la capa de dominio no dependa de detalles de infraestructura. Este andamiaje teórico permite sustituir fuentes de datos (locales o remotas) sin impacto en la lógica central.
+
+\subsection{Patrón Strategy para Evaluación de Horarios}
+
+El patrón Strategy encapsula criterios de evaluación (\emph{minimizar gaps}, \emph{priorizar docentes}, etc.) bajo una interfaz común, habilitando su composición y extensión sin modificar el generador de combinaciones. Esta separación favorece pruebas unitarias de cada criterio y mezcla de preferencias del usuario \cite{gamma1995-patterns,fowler2002-peaa}.
+
+\subsection{Notificaciones y Trabajo Diferido}
+
+Las notificaciones locales y el trabajo diferido en segundo plano son conceptos de plataforma que respaldan recordatorios oportunos de clases y eventos. Su inclusión en el marco teórico se justifica por su función como mecanismo de entrega de información contextual y por los modelos de ejecución diferida de sistemas operativos móviles.
+
+\section{Obtención de Datos: Web Scraping y Parsing de PDF}
+
+Como fuente oficial de información, la FCyT publica horarios en PDF \cite{horarios_fcyt}. Para llevar estos datos a un modelo estructurado, se recurre a técnicas de web scraping y parsing:
 \begin{itemize}
-  \item Repository Pattern:
-    \begin{itemize}
-      \item Implementa interfaces de dominio.
-      \item Orquesta DAOs (Room), mapeadores y servicios de sincronización.
-    \end{itemize}
-  \item DAO Pattern:
-    \begin{itemize}
-      \item \texttt{@Dao}: \texttt{@Query}, \texttt{@Insert}, \texttt{@Update}, \texttt{@Delete}.
-      \item \texttt{Flow} para consultas reactivas, \texttt{@Transaction} para transacciones.
-      \item “Eliminación lógica” con flag \texttt{isActive}.
-    \end{itemize}
-  \item Ventajas: desacopla lógica de negocio y persistencia, facilita fakes en testing.
+  \item Extracción de enlaces y metadatos desde páginas HTML institucionales.
+  \item Descarga de PDFs y lectura de contenido para extraer asignaturas, grupos, docentes, aulas y franjas horarias.
+  \item Limpieza, validación y normalización de datos para persistencia local y consulta eficiente.
 \end{itemize}
 
-\subsection{Patrón Strategy para Scheduling}
+Aspectos teóricos relevantes incluyen: límites éticos y legales del scraping institucional, manejo de cambios en el origen (robustez a variaciones de formato), y trazabilidad de la fuente \cite{mitchell2018-scraping,smith2007-tesseract}.
 
+\subsection*{Pipeline de datos (TikZ)}
+\begin{figure}[H]
+  \centering
+  \resizebox{\linewidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=10mm,
+    every node/.style={font=\small},
+    stage/.style={rectangle, draw, align=center, minimum width=36mm, minimum height=7mm}
+  ]
+    \shorthandoff{< >}% desactiva guillemets de babel en este entorno
+    \node[stage] (nweb) {Web\newline (HTML/PDF)};
+    \node[stage, right=20mm of nweb] (nparse) {Extracci\'on\newline (scraping/parsing)};
+    \node[stage, right=20mm of nparse] (nclean) {Limpieza\newline y normalizaci\'on};
+    \node[stage, below=12mm of nclean] (ner) {Modelo ER};
+    \node[stage, left=20mm of ner] (ngen) {Generaci\'on\newline (backtracking)};
+    \node[stage, left=20mm of ngen] (neval) {Evaluaci\'on\newline (m\'etricas y pesos)};
+    \node[stage, below=12mm of ngen] (nres) {Horarios\newline candidatos};
+
+    \draw (nweb) -- (nparse);
+    \draw (nparse) -- (nclean);
+    \draw (nclean) -- (ner);
+    \draw (ner) -- (ngen);
+    \draw (ngen) -- (neval);
+    \draw (ngen) -- (nres);
+    \draw (neval) -- (nres);
+  \end{tikzpicture}}
+  \caption{Flujo de datos: desde la fuente institucional hasta horarios evaluados.}
+\end{figure}
+
+\section*{Mini-instancia de ejemplo (para figuras/tablas)}
+\noindent\textbf{Dataset de ejemplo:} 3 materias con 2 grupos cada una.
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{l l l l l l l r}
+    \hline
+    Materia & Grupo & Docente & D\'\i a & Inicio & Fin & Aula & Cap. \\
+    \hline
+    MAT1 & G1 & P\'erez  & Lunes     & 08:00 & 10:00 & A101 & 30 \\
+    MAT1 & G2 & L\'opez  & Martes    & 10:00 & 12:00 & A102 & 25 \\
+    MAT2 & G1 & P\'erez  & Lunes     & 10:00 & 12:00 & A101 & 30 \\
+    MAT2 & G2 & Garc\'\i a & Mi\'ercoles & 08:00 & 10:00 & A103 & 40 \\
+    MAT3 & G1 & L\'opez  & Martes    & 14:00 & 16:00 & A102 & 25 \\
+    MAT3 & G2 & Garc\'\i a & Jueves    & 10:00 & 12:00 & A103 & 40 \\
+    \hline
+  \end{tabular}
+  \caption{Mini-conjunto para ilustrar conflictos y c\'alculo de m\'etricas.}
+\end{table}
+
+\noindent\textbf{C\'alculo de m\'etricas (ejemplo):}
 \begin{itemize}
-  \item Encapsula algoritmos como \texttt{\detokenize{MinimizeGaps}}, \texttt{\detokenize{PrioritizeTeachers}}, entre otros.
-  \item La clase \texttt{\detokenize{ScheduleStrategyFactory}} selecciona estrategias según preferencias del usuario.
-  \item Permite extender criterios sin modificar el núcleo del scheduler.
+  \item Horario A: (MAT1-G1, MAT2-G1, MAT3-G1). Gaps: 120 min (Martes). D\'\i as activos: 2. Docentes no fav.: 1 (L\'opez). Score: $0 + 120 + 1 + 0.5\cdot(6-2) = 123$.
+  \item Horario B: (MAT1-G2, MAT2-G2, MAT3-G2). Gaps: 120 min. D\'\i as activos: 3. Docentes no fav.: 2. Score: $0 + 120 + 2 + 0.5\cdot(6-3) = 123.5$.
 \end{itemize}
 
+\section{Estado del Arte y Referentes}
 
-\subsection{Navegación Declarativa}
+En el ámbito local, el sistema Cappuccino (S.C.E.S.I.) ofrece organización de horarios vía web, con alcance institucional pero sin personalización móvil avanzada \cite{cappuccino_umss}. En el ámbito internacional/comercial, aplicaciones como Smart Timetable incorporan generación de horarios, recordatorios y sincronización en la nube \cite{smart_timetable}. Asimismo, existen soluciones institucionales de timetabling de mayor escala, como UniTime y FET, que atienden el problema a nivel institucional con restricciones y alcances distintos al enfoque personal \cite{unitime-ref,fet-ref}.
 
-\begin{itemize}
-  \item Single Activity con Navigation Compose (\texttt{NavHost}, \texttt{NavController}).
-  \item Flujos unidireccionales: \texttt{UiState} → View → eventos → ViewModel.
-  \item Coherencia de estado y transiciones simplificadas.
-\end{itemize}
+Este estado del arte evidencia la pertinencia de combinar: optimización de horarios centrada en el usuario, soporte offline, notificaciones y exportación/compartición de resultados, dentro de una arquitectura mantenible.
 
-\subsection{Tareas en Segundo Plano}
+\section{Síntesis}
 
-\begin{itemize}
-  \item \texttt{WorkManager} con \texttt{PeriodicWorkRequest}, back–off exponencial y restricciones.
-  \item Workers notifican a la UI vía casos de uso y actualizan la base local.
-\end{itemize}
-
-\subsection{Domain–Driven Design (DDD) y Principios SOLID}
-
-\begin{itemize}
-  \item DDD:
-    \begin{itemize}
-      \item Ubiquitous Language: terminología compartida.
-      \item Bounded Contexts: módulo de sincronización PDF desacoplado.
-    \end{itemize}
-  \item SOLID:
-    \begin{enumerate}
-      \item SRP: responsabilidad única.
-      \item OCP: abierto a extensión, cerrado a modificación.
-      \item LSP: substituibilidad de implementaciones.
-      \item ISP: interfaces específicas y ligeras.
-      \item DIP: inversión de dependencias entre dominio y datos.
-    \end{enumerate}
-\end{itemize}
-
-\subsection{Manejo de Concurrencia y Recursos}
-
-\begin{itemize}
-  \item \texttt{viewModelScope} y structured concurrency.
-  \item \texttt{Dispatchers.IO} para E/S, \texttt{Dispatchers.Default} para cómputo intensivo.
-  \item Trabajo periódico con WorkManager que sobrevive a reinicios.
-\end{itemize}
-
-\subsection{Pruebas Automatizadas}
-
-\begin{itemize}
-  \item Unit Tests: JUnit4, MockK/Mockito para casos de uso y ViewModels.
-  \item UI Tests: Espresso \& Compose Testing.
-  \item Cobertura objetivo $\geq$ 80\% en la lógica de negocio.
-\end{itemize}
-
-\section{Tecnologías y Herramientas Utilizadas}
-
-El desarrollo de TecnoTime se apoya en un ecosistema completamente nativo Android, organizado en varias categorías:
-
-\subsection{Sistema de Construcción y Plugins}
-\begin{itemize}
-  \item Gradle Kotlin DSL \& Version Catalogs: uso de archivos \texttt{libs.versions.toml} para gestionar versiones centralizadas.
-  \item Plugins principales: 
-  \begin{flushleft}
-  \justify
-  \texttt{\detokenize{
-    com.android.application,
-    kotlin-android,
-    kotlin-parcelize,
-    kotlin-kapt/ksp,
-    dagger.hilt.android.plugin,
-    com.google.devtools.ksp,
-    com.google.gms.google-services
-  }}
-  \end{flushleft}
-\end{itemize}
-
-
-\subsection{Configuración Android}
-\begin{itemize}
-  \item compileSdkVersion 35, minSdk 24, targetSdk 35: compatibilidad con dispositivos modernos.
-  \item Java \& Kotlin 11: compilación dirigida a JVM 11.
-  \item Build Features: \texttt{compose = true}, reglas de \texttt{proguardFiles}.
-\end{itemize}
-
-\subsection{Lenguaje y Coroutines}
-\begin{itemize}
-  \item Kotlin: sintaxis concisa, seguridad de nulidad.
-  \item Coroutines \& Flow: manejo no bloqueante de E/S, streaming reactivo (\texttt{StateFlow}, \texttt{SharedFlow}).
-\end{itemize}
-
-\subsection{Interfaz de Usuario}
-\begin{itemize}
-  \item Jetpack Compose \& Material3: UI declarativa, theming dinámico.
-  \item Navigation Compose: enrutamiento Declarativo.
-  \item Accompanist: \texttt{systemuicontroller}, \texttt{pagers}, \texttt{permissions}.
-  \item Coil: carga eficiente de imágenes.
-\end{itemize}
-
-\subsection{Persistencia y Configuración}
-\begin{itemize}
-  \item Room (SQLite): DAOs reactivas usando \mbox{\texttt{Flow}}, migraciones automáticas y transacciones atómicas mediante \mbox{\texttt{@Transaction}}.
-  \item DataStore Preferences: configuración persistente y reactiva para UserSettings.
-\end{itemize}
-
-\subsection{Red, Scraping y PDF}
-\begin{itemize}
-  \item Jsoup: extracción de enlaces y metadatos.
-  \item PDFBox-Android: parseo de contenido PDF.
-  \item html-to-pdf-convertor: generación de informes HTML a PDF.
-\end{itemize}
-
-\subsection{Generación y Exportación de Documentos}
-\begin{itemize}
-  \item JExcelAPI (jxl): exportación a Excel.
-  \item Canvas \& Compose: generación de imágenes de horario.
-  \item Gson: serialización JSON.
-  \item ThreeTenABP: APIs de fecha y hora.
-\end{itemize}
-
-\subsection{Notificaciones y Tareas en Segundo Plano}
-\begin{itemize}
-  \item NotificationCompat: generación de notificaciones locales previas a eventos.
-\end{itemize}
-
-\subsection{Pruebas}
-\begin{itemize}
-  \item JUnit4: pruebas unitarias de casos de uso y ViewModels.
-  \item Espresso \& Compose UI Tests: pruebas de integración de la UI.
-\end{itemize}
-
-\section{Modelo de Datos y Entidades}
-
-El diseño de la base de datos de TecnoTime responde a principios de modelado conceptual, normalización y eficiencia en la persistencia local. A continuación se detalla el enfoque teórico y las decisiones de diseño adoptadas.
-
-\subsection{Modelado Conceptual de Datos}
-
-Antes de pasar al esquema relacional, se definió un modelo entidad–relación (E/R) para capturar las entidades y sus asociaciones:
-
-\begin{itemize}
-  \item Carrera (\texttt{Careers):} representa cada carrera universitaria, con atributos de metadatos y sincronización.
-  \item Asignatura (\texttt{Subjects):} contiene código, nombre, nivel y estado (electiva o activa).
-  \item Grupo de asignatura (\texttt{SubjectGroups):} refleja la división de cada asignatura en grupos, con modalidad (teoría/práctica) y estado lógico.
-  \item Horario de grupo (\texttt{GroupSchedules):} vincula cada grupo con día, hora, aula y docente.
-  \item Selección del estudiante (\texttt{SelectedSubjects):} almacena la elección del usuario, con atributos de notificación, color y emoji.
-  \item Eventos académicos (\texttt{AcademicEvents):} registros de exámenes, presentaciones u otros eventos vinculados a una selección.
-  \item Docentes y Aulas (\texttt{Teachers, \texttt{Classrooms}):} catálogos auxiliares para enriquecer los horarios.
-  \item Preferencias de usuario (\texttt{UserSettings):} configuración de la aplicación (formato de hora, tema, etc.).
-\end{itemize}
-
-Las relaciones N:M (muchos a muchos) entre carreras, asignaturas y grupos se resolvieron con tablas de cruce que garantizan flexibilidad y permiten escalar a nuevas asociaciones sin redundancia.
-
-\subsection{Normalización y Tercera Forma Normal (3FN)}
-
-Para evitar anomalías de inserción, actualización o eliminación, el esquema se normalizó hasta Tercera Forma Normal:
-
-\begin{enumerate}
-  \item Primera Forma Normal (1FN): cada tabla almacena valores atómicos, sin listas ni estructuras anidadas.
-  \item Segunda Forma Normal (2FN): se eliminan dependencias parciales asegurando que cada atributo dependa de toda la clave primaria.
-  \item Tercera Forma Normal (3FN): se eliminan dependencias transitivas, de modo que ningún atributo no clave dependa de otro atributo no clave.
-\end{enumerate}
-
-Por ejemplo, la información de docentes y aulas se separó en tablas independientes (\texttt{Teachers}, \texttt{Classrooms}) y se asocia mediante claves foráneas en \texttt{GroupSchedules}, evitando duplicación de texto y facilitando la gestión de cambios.
-
-\subsection{Integridad Referencial y Claves}
-
-\begin{itemize}
-  \item Claves primarias (PK): cada tabla tiene un identificador único—natural (\texttt{code} en \texttt{Subjects}) o sintético (\texttt{id} autoincremental).
-  \item Claves foráneas (FK): garantizan que solo existan referencias válidas entre tablas. Se usan restricciones \texttt{ON DELETE CASCADE} o \texttt{SET NULL} según el caso.
-  \item Índices únicos y compuestos: se definieron índices en columnas de búsqueda frecuente (p.ej. \texttt{(career\_code, group\_id)}) y en campos \texttt{UNIQUE} para acelerar consultas y mantener la unicidad.
-\end{itemize}
-
-\subsection{Implementación en SQLite con Room}
-
-Room abstrae el acceso a SQLite ofreciendo:
-
-\begin{itemize}
-  \item DAOs reactivos: operaciones CRUD y consultas basadas en \texttt{Flow<…>}, que simplifican el diseño de interfaces reactivas.
-  \item Migraciones y validación de esquemas: Room comprueba en tiempo de compilación el cumplimiento del modelo, reduciendo errores en producción.
-  \item Transacciones atómicas: el uso de anotaciones \texttt{@Transaction} asegura consistencia al ejecutar varias operaciones relacionadas.
-\end{itemize}
-
-SQLite garantiza propiedades ACID (Atomicidad, Consistencia, Aislamiento, Durabilidad), fundamentales para preservar la integridad de datos en escenarios de concurrencia y fallos inesperados.
-
-\subsection{Conversión de Tipos y Almacenamiento de JSON}
-
-Para adaptar tipos de dominio a representaciones en la base de datos:
-
-\begin{itemize}
-  \item Enums a \texttt{String:} \texttt{@TypeConverter} convierte valores de \texttt{SubjectStatus}, \texttt{WeekDay}, \texttt{GroupType} y \texttt{AcademicEventType} a su nombre (\texttt{name()}) y viceversa.
-  \item Campos JSON: la columna \texttt{links} en \texttt{SelectedSubjects} almacena objetos JSON serializados, permitiendo extensibilidad (enlaces externos, metadatos) sin alterar el esquema relacional.
-\end{itemize}
-
-Este enfoque mantiene el modelo de dominio limpio y desacoplado de la forma de persistencia.
-
-\subsection{Índices y Rendimiento}
-
-Se crearon índices en:
-
-\begin{itemize}
-  \item \texttt{career\_code}, \texttt{subject\_code}, \texttt{group\_id}: para acelerar joins en filtros por carrera o materia.
-  \item Campos de búsqueda (\texttt{name}, \texttt{full\_name}): índices únicos que optimizan consultas \texttt{LIKE}.
-\end{itemize}
-
-Los índices reducen considerablemente el tiempo de respuesta en dispositivos móviles con grandes volúmenes de datos, a costa de un ligero aumento en espacio y tiempo de escritura.
-
-\section{Comparación con la Idea Inicial y Evolución del Proyecto}
-
-En la fase de planteamiento original de TecnoTime se propuso una arquitectura clásica de microservicio:
-
-\begin{itemize}
-  \item Backend en NestJS: un servidor Node.js modular, encargado de coordinar la extracción de datos, exponer una API RESTful y orquestar la persistencia.
-  \item Web scraping con Axios \& Cheerio: para descargar y parsear los PDFs de horarios desde el portal de la Facultad, centralizando el proceso de extracción en el servidor.
-  \item Persistencia en MongoDB + Redis: MongoDB como repositorio NoSQL de documentos semiestructurados, y Redis como capa de cacheo para acelerar consultas repetidas.
-\end{itemize}
-
-Esta propuesta inicial ofrecía ventajas teóricas —como delegar toda la lógica de datos en un único punto de control y posibilitar futuras integraciones web—, pero al avanzar en el pre–experimento y las primeras iteraciones se detectaron varias complicaciones:
-
-\begin{itemize}
-  \item Dependencias externas complejas: mantener un servidor, monitorear despliegues y gestionar variables de entorno incrementaba la carga operativa.
-  \item Inconsistencia en el scraping: cada nuevo cambio en el HTML de la web institucional rompía el scraper en NestJS, generando fallos de sincronización.
-  \item Necesidad de conexión constante: la aplicación dependía del backend para todo acceso a horarios, penalizando la experiencia offline de los estudiantes.
-  \item Latencia y escalabilidad: ante picos de descarga (inscripciones masivas), Redis podía saturarse y el servidor requería escalado horizontal.
-\end{itemize}
-
-Ante estos retos, se adoptó un giro decisivo hacia una solución totalmente móvil y offline–first, donde:
-
-\begin{itemize}
-  \item La descarga de PDF se realiza directamente en el dispositivo del usuario.
-  \item El parseo y estructuración de datos ocurren in situ utilizando bibliotecas Android (Jsoup para HTML, PDFBox para lectura de PDF).
-  \item La persistencia se delega completamente a Room (SQLite), eliminando la necesidad de servidores intermedios.
-\end{itemize}
-
-\subsection*{Ventajas de la Migración a Móvil Puro}
-
-\begin{enumerate}
-  \item Autonomía y Alta Disponibilidad: el estudiante puede consultar y organizar sus horarios sin depender de red ni servidores externos.
-  \item Robustez y Simplicidad Operativa: al reducir la infraestructura a solo la app Android, disminuye la superficie de fallos y los costes de mantenimiento.
-  \item Experiencia de Usuario Óptima: interfaz nativa con Jetpack Compose, tiempos de respuesta inmediatos y capacidad de uso en modo avión o en zonas de baja cobertura.
-  \item Mantenibilidad Local: toda la lógica de extracción, mapeo y sincronización está contenida en el dispositivo, facilitando pruebas, depuración y despliegues.
-\end{enumerate}
-
-\subsection*{Lecciones Aprendidas y Futuras Direcciones}
-
-Este cambio de rumbo reveló varias lecciones clave:
-
-\begin{itemize}
-  \item Menos infraestructura = más foco en la UX: al eliminar el backend, el equipo dedicó más tiempo a optimizar la experiencia de la app.
-  \item Offline–First como requisito real: en entornos académicos con conectividad irregular, la capacidad offline no es un extra, sino una necesidad fundamental.
-  \item Flexibilidad para evolutivos futuros: la arquitectura modular de MVVM y Clean Architecture permite, en el futuro, reintroducir opcionalmente un backend o servicio en la nube (por ejemplo, Firebase) para compartir horarios entre dispositivos o almacenar copias de seguridad centralizadas.
-\end{itemize}
-
-En resumen, la evolución de un sistema distribuido con servidor a una solución cliente–único demuestra un enfoque pragmático, centrado en las necesidades reales del usuario universitario y en la simplificación de la cadena de valor tecnológica. Esta trayectoria ha permitido a TecnoTime consolidarse como una aplicación ligera, confiable y preparada para futuras extensiones (sincronización multi–dispositivo, analíticas de uso, colaboración entre estudiantes) sin sacrificar la experiencia básica de gestión de horarios.
+El marco teórico de TecnoTime se apoya en: (i) la formalización del timetabling académico como problema NP–difícil y la aplicación de búsqueda con poda más evaluación multi–criterio; (ii) un modelo de datos normalizado que expresa entidades y restricciones del dominio; (iii) patrones de arquitectura (Clean Architecture, MVVM, Repository, Strategy) que reducen acoplamiento y habilitan extensibilidad; y (iv) técnicas de scraping/parsing que conectan la fuente institucional de datos con el modelo estructurado. Estas bases conceptuales justifican y guían las decisiones técnicas del proyecto, sin constituir metodología de desarrollo, y dejan abiertos frentes de investigación bibliográfica específicos para consolidar citas canónicas donde se marcó “investigar y completar”.
