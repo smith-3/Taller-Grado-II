@@ -44,23 +44,38 @@ Por otra parte, está el establecer un formato base de documento que reduzca sus
 
 ### Formato de página
 - **Tamaño**: Carta (21.59 cm x 27.94 cm)
-- **Márgenes**: Izquierdo 3 cm, derecho 2 cm, superior 2 cm, inferior 2 cm
-- **Numeración**: En el pié de página, centrado
+- **Márgenes**:
+  - Anverso (lado derecho): Izquierdo 3 cm, derecho 2 cm, superior 2 cm, inferior 2 cm
+  - Reverso (lado izquierdo): Izquierdo 2 cm, derecho 3 cm, superior 2 cm, inferior 2 cm
+- **Numeración**: En el pié de página, centrado, solo el número
+- **Impresión**: Anverso y reverso. "Todo Inicio" (capítulos, dedicatoria, etc.) debe estar en página impar (anverso). La numeración del documento inicia en 1 desde el Capítulo I.
 
 ### Formato de figuras
 - Toda figura o cuadro debe indicar en la parte inferior del recuadro: el número, la descripción y la fuente (Ej. Figura 5. Diagrama de Casos de Uso. Elaboración propia).
 - La figura deberá estar centrada y con recuadro.
+- **Numeración**: Puede realizarse de dos formas:
+  - Por documento: Figura 5: Diagrama de Casos de Uso. Fuente: Elaboración propia.
+  - Por capítulo: Figura 2.1: Diagrama de Casos de Uso. Fuente: Elaboración propia.
+- **Ejemplos adicionales**: Figura 2: Triángulo. Fuente: Arias, 2010.
+- **Requisitos**: Claridad y calidad en la resolución de la figura.
 
 ## 3. NUMERO DE HOJAS E IMPRESIÓN
 - El número total de hojas se establece en máximo 80 hojas, aproximadamente 160 páginas, contándose desde la carátula del documento.
 - La impresión de los documentos deberán ser hechos en anverso y reverso.
 - La información referenciada en el documento como ser: planos, diagramas, esquemas, imágenes, cuestionarios u otros, podrán ser almacenados en un DVD que estará anexado en la tapa posterior del documento.
+- **Reglas adicionales**: "Todo Inicio" (capítulos, dedicatoria, etc.) debe estar en página impar (anverso). La numeración del documento inicia en 1 desde el Capítulo I (lado derecho/anverso).
 
 ## 4. CONTENIDO
+
+### Estructura General
 Los Trabajos de Grado deberán tener la siguiente estructura general:
 - Carátula del documento, 1 hoja.
-- Dedicatoria y agradecimientos, 1 hoja.
-- Índice de contenido, índice de figuras y cuadros, 1 hoja.
+- Dedicatoria, 1 hoja.
+- Agradecimientos, 1 hoja.
+- Índice de Contenido, 2 hojas.
+- Índice de Figuras, 1 hoja.
+- Índice de Cuadros, 1 hoja.
+- Índice de Tablas, 1 hoja.
 - Ficha resumen del trabajo, 1 hoja.
 - Capítulo I: Introducción, máximo 6 páginas (3 hojas).
 - Capítulo II: Marco Teórico o Referencial, máximo 10 páginas (5 hojas).
@@ -71,9 +86,17 @@ Los Trabajos de Grado deberán tener la siguiente estructura general:
 - Anexos, máximo 12 páginas (6 hojas).
 - DVD de Anexos (opcional): planos, diagramas, fotos, imágenes, esquemas, cuestionarios, código fuente, pruebas, etc.
 
+### Reglas Específicas por Capítulo
+- **Capítulo I: Introducción**: Solo debe contener información del perfil del proyecto. Actualmente, la introducción ya incluye el contenido del perfil y está completa.
+- **Capítulo II: Marco Teórico o Referencial**: Solo debe incluir teoría relacionada directamente con el título del proyecto de grado, no metodología de desarrollo. Es fundamental documentar cada mención con bibliografía correspondiente. Al modificar este capítulo, siempre verificar que la bibliografía esté actualizada y completa.
+- **Capítulo III: Área de aplicación**: Debe contener el estudio de campo o comparativo relacionado con la aplicación del proyecto.
+- **Capítulo IV: Metodología o Desarrollo del Proyecto**: Es la documentación del proceso de desarrollo, no descripción teórica. Debe registrar: introducción, fase 1, fase 2, etc. Los requerimientos deben presentarse en al menos 2 puntos. Debe ser directo a las fases sin explicar teoría de metodología u otra cosa teórica, enfocándose directamente en lo que se está haciendo.
+- **Capítulo V: Conclusiones y Recomendaciones**: Basado en los objetivos específicos del Capítulo I, se deben extraer dos conclusiones por cada requerimiento específico, incluyendo observaciones, aprendizajes, etc.
+
 ## 5. PRESENTACIÓN
 Los documentos presentados deberán ser empastados en color azul con el mismo diseño de la carátula del documento en la tapa, según formato establecido en la FCyT.
 
+### Detalles de la Carátula
 La carátula deberá contener:
 - Logo de la UMSS en la parte superior izquierda
 - Logo de la Facultad de Ciencias y Tecnología en la parte superior derecha
@@ -83,10 +106,12 @@ La carátula deberá contener:
 - Presentado por: Nombre completo del estudiante.
 - Tutor: Nombre del tutor indicando su grado académico.
 - Lugar, por defecto Cochabamba - Bolivia
-- Mes y año de la presentación
+- Mes y año de la presentación (correspondiente a la defensa pública del proyecto)
+
+**Nota**: Este formato de carátula está disponible en Classroom en formato PDF y DOCX.
 
 ## 6. DVD TRABAJO DE GRADO
-El DVD de Trabajo de Grado es un requisito del área de Kardex de la Facultad y que es elaborado por el estudiante para su Defensa Pública, este requisito se mantiene según el formato establecido en la Facultad de Ciencias y Tecnología.
+El DVD de Trabajo de Grado es un requisito del área de Kardex de la Facultad y que es elaborado por el estudiante para su Defensa Pública, este requisito se mantiene según el formato establecido en la Facultad de Ciencias y Tecnología. Solicitar el contenido del mismo en Secretaría de las carreras de Informática-Sistemas y/o revisar la página de la FCyT o la Página Oficial de las Carreras de Informática-Sistemas.
 
 ---
 

@@ -16,16 +16,29 @@
 \usepackage{titlesec}
 
 \titleformat{\chapter}[block]
-  {\normalfont\bfseries\Large\centering} % Arial-like, mayúsculas, centrado
+  {\normalfont\bfseries\fontsize{12}{18}\selectfont\centering} % Arial-like, mayúsculas, centrado
   {\thechapter.}{1em}{\MakeUppercase}
 
 \titlespacing*{\chapter}{0pt}{0pt}{20pt}
 
 \titleformat{\section}[block]
-  {\normalfont\bfseries\large\raggedright} % Arial-like, subtítulo
-  {\thesection.}{1em}{}
+  {\normalfont\bfseries\fontsize{12}{18}\selectfont\raggedright} % Arial-like, subtítulo
+  {\thesection.}{1em}{\MakeUppercase}
 
 \titlespacing*{\section}{0pt}{12pt}{6pt}
+
+% --- Configuraciones para subtítulos ---
+\titleformat{\subsection}[block]
+  {\normalfont\bfseries\fontsize{11}{17}\selectfont\raggedright}
+  {\thesubsection.}{1em}{\MakeUppercase}
+
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+\titleformat{\subsubsection}[block]
+  {\normalfont\bfseries\fontsize{11}{17}\selectfont\raggedright}
+  {\thesubsubsection.}{1em}{\MakeUppercase}
+
+\titlespacing*{\subsubsection}{0pt}{12pt}{6pt}
 
 % --- Interlineado y párrafos ---
 \setstretch{1.0}             % interlineado sencillo
