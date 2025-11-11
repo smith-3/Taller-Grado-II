@@ -1,263 +1,408 @@
-\chapter{Metodología de Desarrollo}
+% 04_metodologia.tex
 
-\emergencystretch=1em
-\section{Enfoque Metodológico}
+\chapter{Metodología y Desarrollo}
+\label{chap:metodologia}
 
-\subsection{Tipo de investigación}
-La presente investigación se enmarca dentro de la modalidad de investigación aplicada, ya que su objetivo principal es el desarrollo de un producto tecnológico funcional —la aplicación móvil TecnoTime— que responda a las necesidades reales de los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS. Este enfoque permite validar en un contexto práctico las decisiones de diseño y las soluciones implementadas en el entorno Android .
-
-\subsection{Estrategia de desarrollo}
-Para gestionar el flujo de trabajo y asegurar una entrega continua de valor, se adoptó un enfoque Kanban adaptado. Las tareas de análisis, diseño, implementación y pruebas se organizaron en un tablero Kanban con las columnas Pendiente, En progreso y Completado. Esto facilitó:
-
+\section{Metodología seleccionada}
+% 4.1: Solo nombre y número de fases, sin teoría
+Proceso iterativo--incremental con 6 fases:
 \begin{itemize}
-  \item Visualización del estado de cada tarea: permite identificar cuellos de botella.
-  \item Adaptabilidad: facilita incorporar cambios de alcance sin replanificar todo el proyecto.
-  \item Entrega continua: posibilita realizar entregas parciales (prototipos, versiones alpha/beta) y obtener retroalimentación temprana .
+  \item Fase 1: Análisis y Planificación
+  \item Fase 2: Diseño
+  \item Fase 3: Implementación
+  \item Fase 4: Pruebas
+  \item Fase 5: Despliegue y CI/CD
+  \item Fase 6: Mantenimiento y Mejoras
 \end{itemize}
 
-\subsection{Técnicas de levantamiento de requerimientos}
-La definición de funcionalidades y criterios de éxito de TecnoTime se basó en:
+\section{Fase 1: Análisis y Planificación}
+\subsection*{Objetivo}
+Consolidar requisitos funcionales y no funcionales derivados del Capítulo III; definir reglas de negocio, restricciones, supuestos, casos de uso y la trazabilidad inicial.
 
+\subsection*{Catálogo de requisitos funcionales (RF)}
+% Fichas individuales por requisito funcional
+% Definición de entorno para fichas (usa tabularx)
+\begin{requisitoficha}
+\textbf{ID} & RF-001 \\
+\textbf{Título} & Scraping y parsing de datos académicos \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Obtener carreras, niveles, materias, grupos y horarios desde el portal oficial y PDFs, estructurando datos para su uso interno. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-001: Se extraen códigos, nombres y URL de PDF por carrera.
+  \item CA-002: Del PDF se obtienen grupo, tipo, docente, día, hora y aula.
+\end{itemize} \\
+\textbf{Dependencias} & RB-001, RB-002, RST-001 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-002 \\
+\textbf{Título} & Selección jerárquica carrera→nivel→materia→grupo \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Permitir navegar jerárquicamente para conformar el conjunto de materias y grupos y persistir la selección. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-003: Se muestra jerarquía y estado de disponibilidad.
+  \item CA-004: La selección persiste localmente.
+\end{itemize} \\
+\textbf{Dependencias} & RB-003, RNF-003 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-003 \\
+\textbf{Título} & Generación de horarios candidatos sin conflictos \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Generar N horarios candidatos usando backtracking y estrategias de evaluación. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-005: Sin solapamientos cuando “aceptar conflictos” = falso.
+  \item CA-006: Resultados ordenados por puntaje (mejor primero).
+\end{itemize} \\
+\textbf{Dependencias} & RB-001, RB-004, RNF-002 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-004 \\
+\textbf{Título} & Configuración de criterios de generación \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Configurar minimizar huecos, minimizar días, priorizar docentes favoritos, aceptar conflictos y número de resultados. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-007: Los parámetros influyen en la estrategia compuesta.
+  \item CA-008: Los resultados reflejan los criterios seleccionados.
+\end{itemize} \\
+\textbf{Dependencias} & RB-005, RNF-002 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-005 \\
+\textbf{Título} & Visualización semanal y detalles \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Mostrar horario semanal por días con color/emoji por materia y detalles de grupo, aula y docente. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-009: La vista por días ordena bloques por hora de inicio.
+  \item CA-010: Colores/emojis se asocian de forma determinística por materia.
+\end{itemize} \\
+\textbf{Dependencias} & RNF-001 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-006 \\
+\textbf{Título} & Edición manual y eventos académicos \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Cambiar grupo, agregar/eliminar materias y crear eventos personales. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-011: Cambiar grupo valida conflictos antes de aplicar.
+  \item CA-012: Eventos se integran en la vista semanal.
+\end{itemize} \\
+\textbf{Dependencias} & RB-004 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-007 \\
+\textbf{Título} & Exportación en múltiples formatos \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Exportar horario a Excel, PDF, imagen y JSON. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-013: La exportación incluye materia, grupo, día, hora, aula y docente.
+  \item CA-014: El JSON preserva datos suficientes para importación.
+\end{itemize} \\
+\textbf{Dependencias} & RNF-004 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-008 \\
+\textbf{Título} & Importación desde JSON \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Importar horarios compartidos, validar compatibilidad y fusionar sin duplicados. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-015: Validación de esquema y versión antes de importar.
+  \item CA-016: Fusión sin duplicados con datos existentes.
+\end{itemize} \\
+\textbf{Dependencias} & RB-003, RNF-004 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-009 \\
+\textbf{Título} & Notificaciones de clases y eventos \\
+\textbf{Prioridad} & Must \\
+\textbf{Descripción} & Notificaciones con anticipación configurable para clases y eventos, con ejecución en segundo plano. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-017: Si habilitado y dentro del umbral, se muestra notificación.
+  \item CA-018: Programación diferida se ejecuta en background.
+\end{itemize} \\
+\textbf{Dependencias} & RNF-005 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-010 \\
+\textbf{Título} & Sincronización multi-dispositivo y backup \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Sincronizar datos entre dispositivos y habilitar backups locales. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-019: Cambios locales se reflejan en otros dispositivos.
+  \item CA-020: Exportación y restauración JSON funcionan offline.
+\end{itemize} \\
+\textbf{Dependencias} & RST-002 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-011 \\
+\textbf{Título} & Actualización automática de datos \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Verificar periódicamente cambios en la oferta y actualizar, notificando al usuario. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-021: Al cambiar la versión de datos, se refrescan y marca última sincronización.
+  \item CA-022: Se emite notificación de actualización exitosa.
+\end{itemize} \\
+\textbf{Dependencias} & RB-006, RNF-002 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-012 \\
+\textbf{Título} & Recordar carrera y materias aprobadas \\
+\textbf{Prioridad} & Should \\
+\textbf{Descripción} & Persistir carrera seleccionada y estado de aprobación para filtrar materias pendientes. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-023: El estado de aprobación se refleja en filtros de selección.
+  \item CA-024: Se recuerda la carrera activa al volver a la aplicación.
+\end{itemize} \\
+\textbf{Dependencias} & RB-003 \\
+\end{requisitoficha}
+
+\begin{requisitoficha}
+\textbf{ID} & RF-013 \\
+\textbf{Título} & Profesores favoritos y priorización \\
+\textbf{Prioridad} & Could \\
+\textbf{Descripción} & Permitir marcar docentes favoritos e incorporar la preferencia en la evaluación de horarios. \\
+\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
+  \item CA-025: Penalización para docentes no favoritos cuando la opción esté activa.
+\end{itemize} \\
+\textbf{Dependencias} & RB-007 \\
+\end{requisitoficha}
+
+\subsection*{Requerimientos no funcionales (RNF)}
+\textbf{ID:} RNF-001\\
+\textbf{Categoría:} Usabilidad\\
+\textbf{Criterio:} La vista semanal ordena por hora y utiliza codificación visual (colores/emojis) consistente y legible.\\
+
+\textbf{ID:} RNF-002\\
+\textbf{Categoría:} Rendimiento\\
+\textbf{Criterio:} Debe generar al menos 5 horarios candidatos en menos de 5 segundos para 5–8 materias en un dispositivo Android de referencia (API 29).\\
+
+\textbf{ID:} RNF-003\\
+\textbf{Categoría:} Compatibilidad\\
+\textbf{Criterio:} Compatibilidad con Android minSdk 24 y targetSdk 35.\\
+
+\textbf{ID:} RNF-004\\
+\textbf{Categoría:} Portabilidad/Interoperabilidad\\
+\textbf{Criterio:} Exportación/Importación en formato JSON con esquema estable y validación de versión.\\
+
+\textbf{ID:} RNF-005\\
+\textbf{Categoría:} Fiabilidad\\
+\textbf{Criterio:} Las notificaciones programadas deben ejecutarse aun con la aplicación en segundo plano o tras reinicio del dispositivo.\\
+
+\subsection*{Reglas de negocio (RB)}
+\textbf{ID:} RB-001\\ \textbf{Regla:} \texttt{startTime < endTime} para cada sesión.\\
+\textbf{ID:} RB-002\\ \textbf{Regla:} Docente y aula pueden ser nulos; no bloquean el alta de horarios.\\
+\textbf{ID:} RB-003\\ \textbf{Regla:} Unicidad de \texttt{Subject.code} y de \texttt{(subjectCode, groupId)}.\\
+\textbf{ID:} RB-004\\ \textbf{Regla:} Prohibir solapamientos salvo \textit{aceptar conflictos}=true.\\
+\textbf{ID:} RB-005\\ \textbf{Regla:} La evaluación compuesta refleja preferencias del usuario.\\
+\textbf{ID:} RB-006\\ \textbf{Regla:} Verificar cambios de oferta con una periodicidad predefinida y notificar.\\
+\textbf{ID:} RB-007\\ \textbf{Regla:} Priorizar docentes marcados como favoritos.\\
+
+\subsection*{Restricciones (RST)}
+\textbf{ID:} RST-001\\ \textbf{Restricción:} Dependencia de estructura de PDFs oficiales; variaciones pueden requerir ajustar parsing.\\
+\textbf{ID:} RST-002\\ \textbf{Restricción:} Requiere conectividad para sincronización remota y scraping.\\
+\textbf{ID:} RST-003\\ \textbf{Restricción:} Plataforma objetivo Android (sin iOS/PWA en alcance inicial).\\
+
+\subsection*{Supuestos (SUP)}
+\textbf{ID:} SUP-001\\ \textbf{Supuesto:} Disponibilidad de PDFs y página oficial con estructura estable por semestre.\\
+\textbf{ID:} SUP-002\\ \textbf{Supuesto:} Adopción mayoritaria de Android en la población objetivo.\\
+
+\subsection*{Casos de uso (UC) resumidos}
+% Caso de uso (resumido)
+\textbf{ID:} UC-001\\ \textbf{Actor:} Sistema\\ \textbf{Objetivo:} Scraping y parsing de datos académicos\\ \textbf{Flujo básico:} Conecta a UMSS → extrae URLs PDF → descarga → parsea → persiste\\ \textbf{Pre/Post:} Datos estructurados en BD\\
+
+\textbf{ID:} UC-002\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Generar horarios optimizados\\ \textbf{Flujo básico:} Configura parámetros → ejecuta generación → revisa candidatos → aplica\\ \textbf{Pre/Post:} Horario aplicado\\
+
+\textbf{ID:} UC-003\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Configurar notificaciones previas a clase\\ \textbf{Flujo básico:} Abre configuración → define anticipación → guarda\\ \textbf{Pre/Post:} Preferencia persistida; tareas programadas\\
+
+\textbf{ID:} UC-004\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Seleccionar carrera/nivel/materias/grupos\\ \textbf{Flujo básico:} Navega jerarquía y selecciona\\ \textbf{Pre/Post:} Materias/grupos persistidos\\
+
+\textbf{ID:} UC-005\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Visualizar y editar horario\\ \textbf{Flujo básico:} Abre pantalla principal → vista semanal → cambia grupo o añade evento\\ \textbf{Pre/Post:} Horario actualizado\\
+
+\textbf{ID:} UC-006\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Exportar/Importar horario\\ \textbf{Flujo básico:} Elige formato → exporta → comparte; importa JSON → valida → fusiona\\ \textbf{Pre/Post:} Archivo generado/horario integrado\\
+
+\textbf{ID:} UC-007\\ \textbf{Actor:} Sistema\\ \textbf{Objetivo:} Sincronización/Auto-actualización\\ \textbf{Flujo básico:} Detecta cambios → actualiza datos → notifica\\ \textbf{Pre/Post:} Datos actualizados\\
+
+\subsection*{Diccionario de datos esencial}
+Entidades y campos esenciales: Carrera (código, nombre, URL, fecha de actualización), Nivel (id, nombre), Materia (código, nombre, estados: aprobada, optativa, activa), Grupo (materia, nivel, id de grupo, tipo, modalidad, estado), Horario de grupo (día, inicio, fin, aula, docente, estado), Docente (nombre completo, favorito), Aula (id, nombre). Reglas de unicidad y claves foráneas aseguran integridad referencial.
+
+\subsection*{Trazabilidad inicial RQ→UC→Artefactos→Pruebas}
 \begin{itemize}
-  \item Entrevistas semiestructuradas: realizadas con estudiantes de distintas carreras de la FCyT, para profundizar en sus dificultades al gestionar horarios y en sus expectativas de una herramienta móvil.
-  \item Encuestas cuantitativas: distribuidas a una muestra representativa de alumnos para priorizar las funcionalidades más demandadas (p. ej., acceso offline, sugerencias de horario, notificaciones).
+  \item RF-001 → UC-001 → Artefacto: Obtención y normalización de datos → Pruebas: TC-004, TC-005
+  \item RF-002 → UC-004 → Artefacto: Flujo de selección jerárquica → Pruebas: TC-010, TC-011
+  \item RF-003, RF-004 → UC-002 → Artefacto: Generador y evaluación de horarios → Pruebas: TC-001, TC-002
+  \item RF-005 → UC-005 → Artefacto: Visualización semanal → Pruebas: TC-008, TC-012
+  \item RF-006 → UC-005 → Artefacto: Edición y eventos → Pruebas: TC-013
+  \item RF-007, RF-008 → UC-006 → Artefacto: Exportación/Importación → Pruebas: TC-009, TC-014
+  \item RF-009 → UC-003 → Artefacto: Notificaciones programadas e inmediatas → Pruebas: TC-006
+  \item RF-010, RF-011 → UC-007 → Artefacto: Sincronización y auto-actualización → Pruebas: TC-007
+  \item RF-012 → UC-004 → Artefacto: Persistencia de carrera y aprobadas → Pruebas: TC-015
+  \item RF-013 → UC-002 → Artefacto: Priorización de docentes favoritos → Pruebas: TC-016
 \end{itemize}
 
-Los resultados de estas técnicas permitieron refinar el alcance inicial, priorizar historias de usuario y validar en etapas tempranas los criterios de usabilidad y utilidad de la aplicación .
-
-
-\section{Etapas del Desarrollo del Proyecto}
-
-\subsection{Análisis de requerimientos y funcionalidades clave}
-En esta fase se consolidaron los requisitos funcionales y no funcionales de TecnoTime a partir de:
+\subsection*{Catálogo de pruebas (TC) resumido}
 \begin{itemize}
-  \item Entrevistas semiestructuradas con estudiantes de distintas carreras de la FCyT, para identificar puntos de dolor en la gestión de horarios y escenarios de uso prioritarios.  
-  \item Encuestas cuantitativas distribuidas a una muestra representativa, que validaron y jerarquizaron funcionalidades clave como el acceso offline, la generación de alertas y la personalización de vistas de horario.  
-\end{itemize}
-Estos insumos se documentaron en un backlog inicial de historias de usuario y en un conjunto de criterios de aceptación que guiaron las etapas siguientes. 
-
-\subsection{Diseño conceptual y técnico}
-Con los requisitos validados, se elaboraron:
-\begin{itemize}
-  \item Diagramas de arquitectura en los que se definieron las capas de presentación, dominio y datos, así como los flujos de sincronización desde la descarga del PDF hasta la persistencia en Room.  
-  \item Modelos de datos (ER y normalización 3FN) que establecieron las tablas, relaciones y enums a implementar en SQLite.  
-  \item Prototipos de UI en Jetpack Compose, que ilustraron la navegación y los principales componentes (calendario, listas de materias, panel de notificaciones).  
-\end{itemize}
-Este diseño se validó iterativamente con estudiantes mediante revisiones de prototipo y se refinó para optimizar la usabilidad y el rendimiento en dispositivos Android. 
-
-\subsection{Implementación móvil (Room, Compose, ViewModels, UseCases)}
-La implementación se organizó por módulos:
-\begin{itemize}
-  \item Capa de datos: entidades Room, DAOs reactivos (\texttt{Flow}), \texttt{@TypeConverters} para enums y tablas de cruce para relaciones N:M.
-  \item Capa de dominio: modelos puros y use cases que encapsulan la lógica de sincronización, selección de materias y generación de horarios.
-  \item Capa de presentación: pantallas en Jetpack Compose, ViewModels que exponen \texttt{StateFlow<UiState>} y manejan eventos de usuario.
-  \item Inyección de dependencias: Dagger Hilt para proveer repositorios y utilitarios (PDFBox, Jsoup, WorkManager).  
-\end{itemize}
-La estructura de paquetes y clases clave se muestra en la sección de \path{app/src/main/java/com/example/tecnotime/} y se documenta en el informe de estructura del proyecto.
-
-\subsection{Pruebas funcionales y de usuario}
-Para asegurar la calidad y usabilidad de la aplicación se realizaron:
-\begin{itemize}
-  \item Pruebas unitarias en UseCases y ViewModels, usando JUnit4 y MockK para simular repositorios.  
-  \item Pruebas de integración de DAOs con Room en memoria, validando transacciones y migraciones.  
-  \item Pruebas de UI con Compose Testing y Espresso, que automatizaron flujos críticos (sincronización de horarios, selección de materias).  
-  \item Feedback de usuarios reales en un piloto interno, midiendo satisfacción y detectando ajustes de usabilidad.  
-\end{itemize}
-Se registraron los resultados en reportes de pruebas y se definió un objetivo de cobertura $\geq$ 80 \% en la lógica de negocio. 
-
-\subsection{Despliegue y documentación}
-Finalmente, se prepararon:
-\begin{itemize}
-  \item Artefactos de distribución: generadores de APK de prueba y builds firmadas para instalación interna en laboratorio de la FCyT.  
-  \item Manuales de usuario y guía rápida: documentados en formato PDF, explicando instalación, flujo principal y configuración de notificaciones.  
-  \item Documentación técnica: incluye diagramas de clases, API de UseCases y especificaciones de DAOs, alojada en un repositorio wiki para facilitar mantenimiento y futuras extensiones.  
-\end{itemize}
-Este despliegue y la documentación asociada aseguran que el proyecto pueda mantenerse y evolucionar de forma ordenada. 
-
-\section{Arquitectura General de la Aplicación}
-
-\subsection{Descripción modular}
-La aplicación se organiza en módulos claramente definidos, cada uno con responsabilidad única y desacoplada:
-
-\begin{itemize}
-  \item Capa de presentación: implementada con Jetpack Compose, incluye pantallas y componentes UI que exponen estados mediante ViewModels.
-  \item Capa de dominio: contiene los modelos de negocio puros y los casos de uso (UseCases) que orquestan la lógica principal.
-  \item Capa de datos: compuesta por repositorios, DAOs de Room, mapeadores (Entity–Domain) y conversores de tipos.
-  \item Sincronización y parsing: utiliza \texttt{WorkManager} para tareas periódicas de descarga de PDFs, \texttt{Jsoup} para obtener enlaces y \texttt{PDFBox-Android} para extraer texto.
+  \item TC-001: Evaluación de huecos mínimos devuelve 0 para horarios sin huecos.
+  \item TC-002: Estrategia compuesta refleja parámetros de minimización y priorización.
+  \item TC-004: Parsing de línea de horario simple extrae todos los campos.
+  \item TC-005: El parser soporta formatos de grupo y día variados.
+  \item TC-006: Notificación inmediata/programada respeta anticipación configurada.
+  \item TC-007: Auto-actualización respeta periodicidad y actualiza marcadores.
+  \item TC-008: La vista semanal ordena por hora y por día.
+  \item TC-009: Exportación/Importación JSON mantiene integridad (round-trip).
+  \item TC-010: Selección jerárquica persiste decisión de carrera.
+  \item TC-011: Selección de nivel/materia/grupo refleja disponibilidad.
+  \item TC-012: Visualización muestra color/emoji determinístico por materia.
+  \item TC-013: Cambio de grupo detecta y evita conflictos.
+  \item TC-014: Exportación PDF/imagen contiene cabecera y bloques correctos.
+  \item TC-015: Filtrado por materias aprobadas excluye asignaturas completadas.
+  \item TC-016: Priorización de docentes favorece favoritos en los resultados.
 \end{itemize}
 
-
-\subsection{Flujo de datos (de PDF al modelo en Room)}
-El recorrido de un horario desde el PDF de la web oficial hasta la base de datos local sigue estos pasos:
-
-\begin{enumerate}
-  \item Descarga del PDF: un \texttt{Worker} de \texttt{WorkManager} recupera el archivo desde la URL de la Facultad.
-  \item Extracción de contenido: \texttt{PDFBox-Android} lee el PDF y devuelve el texto plano.
-  \item Parseo: clases del paquete \texttt{data/re\-mote/pdf} convierten el texto en objetos \texttt{Sub\-ject\-In\-fo}.
-  \item Mapeo y persistencia: cada \texttt{SubjectInfo} se transforma en entidades Room mediante mapeadores, y se almacenan a través de DAOs reactivos (\texttt{Flow}).
-  \item Exposición a la UI: los ViewModels recogen los flujos de datos de los repositorios y actualizan la interfaz en Compose.
-\end{enumerate}
-
-
-\subsection{Patrones aplicados}
-Para garantizar mantenibilidad, testabilidad y escalabilidad, se aplican los siguientes patrones:
-
+\subsection*{Entregables de la fase}
 \begin{itemize}
-  \item Clean Architecture: separación en capas concéntricas (Presentation, Application, Domain, Infrastructure) y principio de inversión de dependencias.
-  \item Repository Pattern: los repositorios implementan interfaces de dominio y ocultan los detalles de Room y del parsing.
-  \item MVVM: ViewModels gestionan el estado UI expuesto a Compose, desacoplando la lógica de negocio de la vista.
+  \item Catálogo RF/RNF/RB/RST/SUP.
+  \item Casos de uso (UC-001..UC-007).
+  \item Trazabilidad inicial RQ→UC→Artefactos→Pruebas.
 \end{itemize}
 
-\section{Modelo de Datos y Persistencia}
+\section{Fase 2: Diseño}
+\subsection*{Objetivo}
+Definir arquitectura, modelos de datos, flujos de UI y mapeo RF→componentes con base en ADRs y artefactos existentes.
 
-\subsection{Entidades, relaciones y normalización}
-El modelo de datos de TecnoTime se diseñó siguiendo principios de normalización hasta la Tercera Forma Normal (3FN). Se definieron las siguientes entidades principales:
+% (Sin listado de entradas; a continuación se documenta el diseño aplicado)
 
+\subsection*{Decisiones arquitectónicas}
 \begin{itemize}
-  \item \texttt{Careers}, \texttt{Subjects}, \texttt{Sub\-ject\-Groups}, \texttt{Group\-Sche\-dules}, \texttt{Se\-lected\-Sub\-jects}, \texttt{Aca\-de\-mic\-Events}, \texttt{Teachers}, \texttt{Classrooms} y \texttt{User\-Set\-tings}.
-  \item Relaciones N:M resueltas mediante tablas de cruce como \texttt{ca\-reer\_sub\-ject\_groups} y \texttt{sub\-ject\_group\_sub\-jects}, garantizando flexibilidad y evitando redundancias.
+\item Clean Architecture con capas de Presentación, Dominio y Datos.
+\item Estrategias de evaluación con patrón Strategy y combinación compuesta según preferencias.
+\item Persistencia relacional con relaciones many-to-many y repositorios.
+\item Inyección de dependencias y ejecución en segundo plano para tareas periódicas.
 \end{itemize}
 
-Cada atributo depende únicamente de la clave primaria de su tabla, evitando dependencias parciales o transitivas que pudieran generar anomalías de actualización o eliminación .
-
-\subsection{DAOs y acceso a datos reactivo}
-Para cada entidad se implementó un DAO con anotaciones \texttt{@Dao}, \texttt{@Query}, \texttt{@Insert}, \texttt{@Update} y \texttt{@Delete}. Las consultas y listados retornan \texttt{Flow<\dots>} para soportar un acceso a datos completamente reactivo desde la UI. Además, se emplea \texttt{@Transaction} en métodos que combinan varias operaciones para asegurar atomicidad. Por ejemplo, \texttt{GroupScheduleDao.observeAllWithDetails()} expone un flujo de horarios junto con la información de docente y aula asociada .
-
-\subsection{Conversores y almacenamiento de JSON}
-Los enums utilizados en el dominio (\texttt{Week\-Day}, \texttt{Sub\-ject\-Sta\-tus}, \texttt{Group\-Type}, \texttt{Aca\-de\-mic\-Event\-Type}) se convierten a \texttt{String} y viceversa mediante clases anotadas con \texttt{@TypeConverter}. Además, la entidad \texttt{Se\-lected\-Sub\-ject} incluye un campo \texttt{links} de tipo JSON (serializado como \texttt{String} en SQLite) para almacenar enlaces y metadatos adicionales sin modificar el esquema relacional .
-
-\subsection{Índices, claves primarias y rendimiento}
-Se definieron claves primarias naturales (como \texttt{code} en \texttt{Subjects}) o sintéticas (autoincrementales) según corresponda. Para optimizar el rendimiento, se crearon índices únicos y compuestos en columnas de búsqueda frecuente y en joins críticos, por ejemplo:
-
+\subsection*{Modelos y flujos}
 \begin{itemize}
-  \item Índices en \texttt{(ca\-reer\_code, group\_id)} y \texttt{(sub\-ject\_code, group\_id)} para acelerar relaciones N:M.
-  \item Índices únicos en campos \texttt{name} y \texttt{full\_name} para consultas \texttt{LIKE}.
+\item Modelo ER: Carrera, Materia, Nivel, Grupo, Horario de Grupo, Docente, Aula y tablas de asociación.
+\item Flujos UI: bienvenida, configuración inicial, selección jerárquica, generación y resultados.
 \end{itemize}
 
-Estos índices reducen la latencia en consultas sobre grandes volúmenes de datos en dispositivos móviles, manteniendo un tiempo de respuesta óptimo sin comprometer significativamente el espacio de almacenamiento .
-
-\section{Arquitectura de la Aplicación Móvil}
-
-\subsection{Capas: presentación, dominio y datos}
-La arquitectura de TecnoTime se estructura en tres capas bien definidas:
+\subsection*{Mapeo RF→Componentes}
 \begin{itemize}
-  \item Presentación: UI declarativa construída con Jetpack Compose, compuesta por pantallas y componentes que reflejan el estado provisto por los ViewModels.
-  \item Dominio: modelos de negocio puros y casos de uso (UseCases) que encapsulan la lógica de sincronización, selección de materias y generación de horarios.
-  \item Datos: repositorios, DAOs de Room, mapeadores Entity–Domain y conversores de tipos, responsables de la persistencia y recuperación de información local.
-\end{itemize} 
-
-\subsection{Jetpack Compose, Navigation, ViewModel y Flow}
-La capa de presentación aprovecha Jetpack Compose para construir interfaces modulares y reactivas. Navigation Compose gestiona el enrutamiento entre pantallas, mientras que cada ViewModel expone su estado mediante \texttt{State\-Flow<Ui\-State>} o \texttt{LiveData}, consumido por la UI con \texttt{col\-lect\-As\-State()}. Kotlin Coroutines y Flow garantizan un flujo de datos asíncrono y no bloqueante entre repositorios y ViewModels, mejorando la capacidad de respuesta y la testabilidad.
-
-\subsection{Patrón Repository y modularidad}
-Se aplica el Repository Pattern para desacoplar la lógica de dominio de los mecanismos de persistencia: cada repositorio implementa una interfaz definida en la capa de dominio y orquesta las operaciones de los DAOs y mapeadores. La estructura modular del proyecto separa claramente los paquetes \path{data/}, \path{domain/} y \path{presentation/}, facilitando el mantenimiento, la escritura de pruebas unitarias y la incorporación de nuevas funcionalidades sin afectar otras capas.
-
-
-\section{Tareas en Segundo Plano y Sincronización}
-
-\subsection{Descarga y parseo de PDFs}
-Para garantizar que los horarios estén siempre actualizados, se implementaron componentes en el paquete \path{data/remote/pdf} que realizan la obtención y el parseo de los archivos PDF directamente en el dispositivo:
-\begin{itemize}
-  \item Jsoup se utiliza para extraer los enlaces a los PDFs desde la página web oficial de la Facultad.
-  \item PDFBox-Android procesa el contenido de cada PDF y lo convierte a texto plano.
-  \item Los módulos \texttt{Pdf\-Down\-loader}, \texttt{Pdf\-Ex\-trac\-tor} y \texttt{Pdf\-Par\-ser} transforman ese texto en objetos \texttt{Sub\-ject\-In\-fo}, que luego son mapeados a las entidades de Room para su persistencia local.
+  \item RF-001 → Servicios de obtención y parsing de datos.
+  \item RF-002, RF-012 → Repositorios y pantallas de selección.
+  \item RF-003, RF-004, RF-013 → Generador de horarios y estrategias de evaluación.
+  \item RF-005, RF-006 → Vista semanal y componentes de edición/calendario.
+  \item RF-007, RF-008 → Módulos de exportación e importación.
+  \item RF-009 → Servicio de notificaciones y tareas programadas.
+  \item RF-010, RF-011 → Casos de uso de sincronización automática y preferencias.
 \end{itemize}
 
-
-\subsection{Actualizaciones automáticas con WorkManager}
-La sincronización periódica de los horarios se gestiona mediante WorkManager, definiendo un \texttt{PeriodicWorkRequest} que:
+\subsection*{Entregables}
 \begin{itemize}
-  \item Se programa al arrancar la aplicación o tras la elección de una nueva carrera.
-  \item Ejecuta el worker responsable de descargar y parsear los PDFs en un hilo de fondo (Dispatcher.IO).
-  \item Maneja políticas de reintento y back–off exponencial en caso de fallo de red.
-\end{itemize}
-Este enfoque asegura que, incluso si la aplicación no está activa, los horarios se actualicen automáticamente cuando el dispositivo cumpla las restricciones configuradas. 
-
-\subsection{Notificaciones locales}
-Para avisar al usuario antes de cada clase o evento académico, se configura dentro del mismo \texttt{Worker} local notificaciones a través de NotificationCompat. Cada evento se programa según los minutos de antelación definidos en \texttt{SelectedSubject.notifyBeforeMinutes}, generando una notificación que:
-\begin{itemize}
-  \item Muestra el título del evento, hora y ubicación.
-  \item Permite al usuario saltar directamente a la pantalla de detalle en la app.
-  \item Se reutiliza el canal de notificaciones creado al inicializar la aplicación.
-\end{itemize}
-De este modo, TecnoTime mantiene al estudiante informado puntualmente sin depender de servicios externos.
-
-\section{Pruebas Automatizadas}
-
-\subsection{Pruebas unitarias}
-Se implementaron pruebas unitarias para los UseCases y los ViewModels utilizando JUnit4 y MockK:
-\begin{itemize}
-  \item UseCases: cada caso de uso se probó aislando sus dependencias (repositorios falsos) y validando escenarios de éxito y de error (descarga de PDF, parseo, persistencia).
-  \item ViewModels: se verificó que los estados expuestos (\texttt{State\-Flow<Ui\-State>}) cambien correctamente ante distintos eventos de usuario y respuestas del dominio.
-\end{itemize}
-El objetivo fue alcanzar una alta confiabilidad en la lógica de negocio mediante mocks y aserciones de comportamiento .
-
-\subsection{Pruebas de UI}
-Para garantizar la funcionalidad y la experiencia de usuario de la interfaz:
-\begin{itemize}
-  \item Compose Testing: se crearon tests de componentes clave (pantalla de calendario, selección de materias) usando el framework de Test de Compose.
-  \item Espresso: se automatizaron flujos end-to-end (sincronización, notificaciones) en dispositivos/emuladores, validando la interacción con la UI y la navegación.
-\end{itemize}
-Estas pruebas integradas permiten detectar regresiones en el diseño de pantallas y la navegación antes de cada release .
-
-\subsection{Herramientas y cobertura objetivo}
-Se emplearon las siguientes herramientas:
-\begin{itemize}
-  \item JUnit4 y MockK para tests unitarios.
-  \item AndroidX Test con Compose Testing y Espresso para UI.
-  \item Kover (o JaCoCo) para medir la cobertura de código.
-\end{itemize}
-Se estableció un objetivo de cobertura mínima del 80\,\% en la lógica de negocio y la capa de presentación, asegurando un nivel de calidad adecuado antes de los despliegues finales .
-
-\section{Herramientas y Tecnologías Utilizadas}
-
-\subsection{Lenguaje y librerías principales}
-El desarrollo de TecnoTime se realizó completamente en Kotlin, aprovechando sus características de concisión y seguridad de nulidad. Para gestionar concurrencia y flujos de datos reactivos se utilizan Kotlin Coroutines y Flow. Entre las bibliotecas y frameworks más destacados se incluyen:
-\begin{itemize}
-  \item Jetpack Compose para la construcción de la interfaz de usuario declarativa.
-  \item Navigation Compose para la navegación entre pantallas.
-  \item Room (SQLite) como capa de persistencia local, con DAOs reactivos y soporte para migraciones.
-  \item DataStore Preferences para almacenamiento de configuración de usuario.
-  \item WorkManager para la ejecución de tareas en segundo plano (descarga y parseo de PDFs).
-  \item Dagger Hilt para la inyección de dependencias.
-  \item Jsoup para la extracción de enlaces desde HTML.
-  \item PDFBox-Android para el parseo de contenido de PDF.
-  \item Gson para serialización y deserialización de JSON.
+  \item Diagrama de arquitectura y capas.
+  \item Decisiones de diseño y motivaciones.
+  \item Modelo ER y relaciones clave.
 \end{itemize}
 
+\section{Fase 3: Implementación}
+\subsection*{Objetivo}
+Construir los módulos priorizando los RF Must/Should y habilitar evidencias verificables.
 
-\subsection{Plugins de Gradle y configuración de Android}
-La aplicación se construye con Gradle Kotlin DSL y Version Catalogs (archivo \path{libs.versions.toml}) para centralizar versiones. Los plugins utilizados incluyen:
+\subsection*{Funcionalidades por RF}
 \begin{itemize}
-  \item \texttt{com.android.application}
-  \item \texttt{kotlin-android}
-  \item \texttt{kotlin-parcelize}
-  \item \texttt{kotlin-kapt} / \texttt{ksp}
-  \item \texttt{dagger.hilt.android.plugin}
-  \item \texttt{com.google.devtools.ksp}
-  \item \texttt{com.google.gms.google-services}
+  \item RF-001 Scraping/Parsing: Implementado.
+  \item RF-002 Selección jerárquica: Implementado.
+  \item RF-003/004 Generación y criterios: Implementado.
+  \item RF-005 Visualización semanal: Implementado.
+  \item RF-006 Edición/eventos: Parcial (pendiente consolidar comandos de edición y eventos avanzados).
+  \item RF-007/008 Exportación/Importación: Parcial (pendiente validación de compatibilidad entre versiones).
+  \item RF-009 Notificaciones: Implementado.
+  \item RF-010/011 Sincronización/AutoSync: Implementado.
+  \item RF-012 Recordar carrera/aprobadas: Implementado.
+  \item RF-013 Profesores favoritos: Implementado.
 \end{itemize}
-La configuración de compilación define \texttt{compileSdkVersion 35}, \texttt{minSdk 24}, \texttt{targetSdk 35} y orienta la compilación a Java/Kotlin 11. Se habilita \texttt{compose = true} en \texttt{buildFeatures} y se incluyen reglas de ProGuard para optimizar el tamaño del APK y proteger el código. 
 
-\section{Evolución del Proyecto y Decisión Arquitectónica}
-
-\subsection{Migración de backend a móvil puro}
-En las fases iniciales se planteó una arquitectura con backend en NestJS, extracción de datos mediante scraping y persistencia en MongoDB y Redis. Sin embargo, durante el pre-experimento se identificaron dependencias externas críticas y problemas de experiencia offline que llevaron a reorientar el proyecto hacia una solución completamente móvil, donde la descarga y parseo de PDFs, así como el almacenamiento en Room, se realizan de forma local en el dispositivo del usuario .
-
-\subsection{Justificación técnica y ventajas}
-La decisión de migrar a una arquitectura Android puro se sustentó en varias ventajas clave:
+\subsection*{Cobertura RF: estado}
 \begin{itemize}
-  \item Disponibilidad offline: los estudiantes pueden consultar y gestionar sus horarios en cualquier momento, incluso sin conexión a internet.
-  \item Mantenibilidad reducida: al eliminar la infraestructura de servidores y cacheo, disminuyen los costos de operación y la superficie de errores.
-  \item Simplicidad operativa: toda la lógica de extracción, parseo y sincronización reside en la app, facilitando despliegues y actualizaciones a través de Google Play o instalaciones directas.
+  \item Implementado: RF-001, RF-002, RF-003, RF-004, RF-005, RF-009, RF-010, RF-011, RF-012, RF-013
+  \item Parcial: RF-006, RF-007, RF-008 \,(ver acciones siguientes)
 \end{itemize}
-Estas mejoras redundan en una experiencia de usuario más fluida y en una reducción significativa de la complejidad del proyecto .
 
-\subsection{Lecciones aprendidas y direcciones futuras}
-Este cambio de enfoque permitió extraer las siguientes lecciones:
+\subsection*{Entregables}
 \begin{itemize}
-  \item Offline-first es esencial: en entornos con conectividad variable, la capacidad de funcionar sin red es un requisito de primer nivel.
-  \item Menos infraestructura, más foco en UX: al prescindir de un backend, se dedicó mayor esfuerzo a optimizar la interfaz y el rendimiento local.
-  \item Flexibilidad para evoluciones: gracias a la modularidad de MVVM y Clean Architecture, es factible reintegrar un servicio en la nube en el futuro para compartir datos entre dispositivos o implementar copias de seguridad centralizadas.
+  \item Módulos de obtención de datos, generación de horarios, notificaciones y sincronización operativos.
 \end{itemize}
-Estas direcciones futuras abren la posibilidad de incorporar sincronización multi-dispositivo y funcionalidades colaborativas sin comprometer la simplicidad actual de la aplicación .
+
+\section{Fase 4: Pruebas}
+\subsection*{Estrategia y cobertura}
+\begin{itemize}
+  \item Pirámide de testing con énfasis en unitarios de algoritmos, integración de repositorios y pruebas de UI en flujos críticos.
+  \item Cobertura orientada a criterios de aceptación (CA) y casos de uso (UC) prioritarios.
+\end{itemize}
+
+\subsection*{Matriz RF→TC (criterios de aceptación)}
+\begin{itemize}
+  \item RF-001 → TC-004, TC-005: Parsing correcto y robusto ante variaciones.
+  \item RF-003 → TC-001: Cálculo de huecos; TC-002: Estrategia compuesta correcta.
+  \item RF-004 → TC-002: Parámetros reflejados en la evaluación.
+  \item RF-005 → TC-008: Orden por hora en vista semanal; TC-012: codificación visual consistente.
+  \item RF-009 → TC-006: Notificaciones inmediatas/programadas respetan anticipación.
+  \item RF-010/011 → TC-007: Auto-actualización periódica con notificación.
+  \item RF-007/008 → TC-009, TC-014: Round-trip JSON y contenido correcto en exportación.
+\end{itemize}
+
+\subsection*{Resultados y hallazgos}
+\begin{itemize}
+  \item Algoritmos: estrategias y backtracking verificados con pruebas unitarias.
+  \item Parsing: pruebas de resistencia ante variaciones de formato.
+  \item UI: plan de pruebas para selección y visualización completado; ejecución en progreso.
+  \item Exportación/Importación: verificación de integridad y compatibilidad en ejecución.
+\end{itemize}
+
+\section{Fase 5: Despliegue y CI/CD}
+\subsection*{Pipeline y distribución}
+\begin{itemize}
+  \item Configuración de build (min/target SDK, flavors, ofuscación y reducción de recursos).
+  \item Integración continua: ejecución de pruebas unitarias, de integración y de UI.
+  \item Publicación: empaquetado de APK/AAB y despliegue en canales de distribución.
+\end{itemize}
+
+\subsection*{Checklist de release}
+\begin{itemize}
+  \item Todos los tests pasan; cobertura mínima de 75\%.
+  \item Artefactos firmados y notas de versión actualizadas.
+  \item Validaciones de calidad estática sin advertencias críticas.
+\end{itemize}
+
+\subsection*{Entregables}
+\begin{itemize}
+  \item Pipeline CI/CD operativo con políticas de calidad y publicación.
+\end{itemize}
+
+\section{Fase 6: Mantenimiento y Mejoras}
+\subsection*{Retroalimentación e iteraciones}
+\begin{itemize}
+  \item Próximas mejoras: sincronización periódica en background y configuración de intervalo.
+  \item Deuda técnica: fortalecer pruebas de UI en selección/visualización; completar pruebas de exportación/importación.\\ Acción: implementar \textit{TC-008}, \textit{TC-009}.
+  \item Riesgos operativos: cambios en formatos PDF (RST-001) → mantener parser y pruebas de regresión.
+\end{itemize}
+
+\subsection*{Próximos pasos}
+\begin{itemize}
+  \item Benchmark de rendimiento en dispositivo objetivo (RNF-002).
+  \item Telemetría de generación y scraping para monitoreo y mejora continua.
+\end{itemize}
+
+\section*{Cierre del capítulo}
+Se ejecutó un proceso iterativo–incremental en seis fases, generando un catálogo completo y trazable de requisitos, decisiones de diseño coherentes, implementación de componentes clave y una estrategia de pruebas y despliegue integrada. La preparación para el Capítulo V contempla síntesis de logros por fase, hallazgos de pruebas y recomendaciones de mejora continua.
+
+% FIN DE 04_metodologia.tex
