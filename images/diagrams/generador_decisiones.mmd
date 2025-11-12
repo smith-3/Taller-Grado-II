@@ -1,0 +1,15 @@
+flowchart LR
+    A[Start] --> B[Order]
+    B --> C[Pick subject]
+    C --> D[Pick group]
+    D --> E{Conflict?}
+    E -->|No| F[Prune]
+    E -->|Yes| G[Penalty]
+    F --> C
+    G --> H[Add]
+    D --> H
+    H --> I{Target?}
+    I -->|No| C
+    I -->|Yes| J[Evaluate]
+    J --> K[Top‑K]
+    K --> L[Next]

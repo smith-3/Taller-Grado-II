@@ -1,0 +1,19 @@
+C4Container
+title Arquitectura General TecnoTime - Capa Container
+
+Person(user, "Usuario", "Usuario de la aplicación móvil")
+
+Container_Boundary(app, "TecnoTime App") {
+    Container(presentation, "Presentation Layer", "Compose UI", "Pantallas: HomeScreen, GenerateScheduleConfigScreen, SettingsScreen, etc.")
+    Container(domain, "Domain Layer", "Use Cases & Business Logic", "GenerateSchedulesUseCase, ScheduleGeneratorUseCase, etc.")
+    Container(data, "Data Layer", "Room DB & Repositories", "AppDatabase, CareerRepository, GroupScheduleRepository, etc.")
+}
+
+Container_Ext(web_scraper, "Web Scraper Service", "Ktor/Retrofit", "Servicio externo para scraping de horarios")
+Container_Ext(pdf_parser, "PDF Parser Service", "External API", "Servicio para parsing de PDFs")
+
+Rel(user, presentation, "Interacción UI")
+Rel(presentation, domain, "Invoca use cases")
+Rel(domain, data, "Accede a datos locales")
+Rel(domain, web_scraper, "Sincroniza datos remotos")
+Rel(domain, pdf_parser, "Procesa PDFs offline")

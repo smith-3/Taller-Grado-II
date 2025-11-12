@@ -1,0 +1,8 @@
+flowchart TD
+    A[Open app] --> B{Cache available?}
+    B -->|Yes| C[Use local data]
+    B -->|No| D[Initial load]
+    C --> E{Freshness check}
+    D --> E
+    E -->|Fresh| F[Generate offline]
+    E -->|Stale| G[Suggest manual update]

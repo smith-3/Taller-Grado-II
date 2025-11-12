@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant U as Usuario
+    participant GS as GenerateScheduleConfigScreen
+    participant VM as GenerateScheduleViewModel
+    participant UC as GenerateSchedulesUseCase
+    participant SF as ScheduleStrategyFactory
+    participant STRAT as ScheduleGenerationStrategy
+    participant REPO as Repositories (Group, Schedule, etc.)
+    participant OUT as Output (Lista de horarios)
+
+    U->>GS: Configura parámetros (obligatorias, flags)
+    GS->>VM: onGenerateClicked(params)
+    VM->>UC: invoke(existing, params)
+    UC->>SF: createStrategy(params)
+    SF->>STRAT: new Strategy()
+    STRAT->>REPO: getAvailableSubjects()
+    REPO-->>STRAT: Lista de materias disponibles
+    STRAT->>STRAT: buildCandidateSelections()
+    STRAT->>REPO: getGroupSchedules()
+    REPO-->>STRAT: Horarios de grupos
+    STRAT->>STRAT: generateCombinations()
+    STRAT->>STRAT: scoreAndFilter()
+    STRAT-->>UC: Lista de opciones válidas
+    UC-->>VM: Lista de DayEnrolledSchedules
+    VM-->>GS: Actualizar UI con resultados
+    GS-->>U: Mostrar opciones generadas

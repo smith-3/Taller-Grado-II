@@ -1,0 +1,46 @@
+mindmap
+  root((TecnoTime: Marco Teórico))
+    Academic Timetabling Problem (ATP)
+      NP-difícil
+      Espacio de soluciones exponencial
+      FCyT–UMSS: horarios oficiales en PDF
+    Formalización como CSP
+      Variables: materias/grupos
+      Dominios: slots (día, inicio, fin)
+      Hard constraints: sin choques, ventanas válidas
+      Soft constraints: minimizar gaps, docentes favoritos, balance básico
+      Objetivo multi-criterio: suma ponderada
+    Modelo conceptual (domain/model)
+      Entidades: Carrera, Nivel, Materia, Grupo, Horario, Docente, Aula, Usuario, Preferencias
+      Relaciones: Materia→Grupo→Horario; Grupo→Docente/Aula
+    Generación de horarios (domain/usecase)
+      Backtracking top‑k (ScheduleGenerator)
+      Evaluación compuesta (Composite Strategy)
+      Estrategias: AcceptConflicts, MinimizeGaps, PrioritizeTeachers
+      Preferencias: obligatorias, favoritas, permitir choques
+    Offline‑first (data/local|remote)
+      Cache local (Room)
+      Freshness check (SyncPreferences)
+      AutoSync con CircuitBreaker + ExponentialBackoff
+      Fallback: importación PDF (PdfDownloader/Parser)
+    Interoperabilidad (JSON + WhatsApp)
+      Exportar/Importar horario
+      Evitar duplicados; sincronizar carrera si falta
+      Esquema conceptual y meta.version
+    Notificaciones y Widget
+      Canales y anticipación configurable
+      Workers NotifyWorker y scheduling
+      Widget: horario del día
+    IA on‑device (Simón)
+      Mensajes motivacionales y recordatorios
+      Modelo descargable opcional; privacidad/latencia
+    UX relevante
+      Onboarding: preferencias y favoritos
+      Edición con preview y confirmaciones
+      Compartir e interoperar
+    Propiedades no funcionales
+      Rendimiento, tamaño de app, resiliencia, mantenibilidad, compatibilidad
+    Síntesis
+      ATP→CSP + heurísticas
+      Offline‑first + interoperabilidad
+      Notificaciones + IA + UX

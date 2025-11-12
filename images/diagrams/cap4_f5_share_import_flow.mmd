@@ -1,0 +1,28 @@
+flowchart TD
+    A[Usuario selecciona compartir/importar] --> B{¿Exportar o Importar?}
+    B -->|Exportar| C[Generar JSON shareable]
+    B -->|Importar| D[Seleccionar archivo JSON]
+    
+    C --> E[Incluir carreras, subjects, entries]
+    E --> F[Mostrar diálogo compartir]
+    
+    D --> G[Leer archivo JSON]
+    G --> H[Parsear ShareableScheduleDto]
+    H --> I{¿Validaciones pasan?}
+    
+    I -->|No| J[Mostrar errores]
+    J --> K[Duplicados encontrados]
+    J --> L[Materias ya inscritas]
+    J --> M[Carrera distinta]
+    
+    M --> N{¿Solicitar sincronizar carrera?}
+    N -->|Sí| O[Habilitar carrera faltante]
+    N -->|No| P[Cancelar importación]
+    
+    I -->|Sí| Q[Importar entries válidos]
+    Q --> R[Actualizar SelectedSubjects]
+    R --> S[Mostrar resultado importación]
+    
+    O --> Q
+    K --> Q
+    L --> Q

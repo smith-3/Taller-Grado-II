@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant U as Usuario
+    participant AI as AiIntroScreen
+    participant VM as AiManagementViewModel
+    participant SIMON as SimonScheduler
+    participant MOTIV as SimonMotivationalScheduler
+    participant OBS as ClassReminderSyncObserver
+    participant NOTIF as NotificationService
+
+    U->>AI: Activa recordatorios IA
+    AI->>VM: enableAiReminders()
+    VM->>SIMON: scheduleClassReminders()
+    SIMON->>OBS: registerObserver()
+    OBS->>OBS: Monitor cambios de horario
+    
+    OBS->>OBS: Detecta clase próxima
+    OBS->>SIMON: onClassReminder()
+    SIMON->>MOTIV: generateMotivationalMessage()
+    MOTIV->>NOTIF: scheduleNotification()
+    NOTIF->>U: Mostrar notificación motivacional
+    
+    OBS->>OBS: Detecta cambio de horario
+    OBS->>SIMON: onScheduleChanged()
+    SIMON->>NOTIF: cancelOldReminders()
+    SIMON->>NOTIF: scheduleNewReminders()

@@ -1,0 +1,18 @@
+classDiagram
+    class ShareableScheduleJSON {
+      +careers
+      +subjects
+      +groups
+      +teachers
+      +classrooms
+      +entries
+    }
+    class Entry {
+      +selectedSubject
+      +schedule
+      +subject
+      +group
+      +teacher?
+      +classroom?
+    }
+    ShareableScheduleJSON --> Entry

@@ -1,0 +1,83 @@
+classDiagram
+    %% ENTIDADES PRINCIPALES DEL DOMINIO ACADÉMICO (TecnoTime)
+
+    class Career {
+        +String code
+        +String name
+        +Boolean isEnabled
+        +Level[] levels
+    }
+
+    class Level {
+        +Int id
+        +String name
+        +Subject[] subjects
+    }
+
+    class Subject {
+        +String code
+        +String name
+        +Int credits
+        +Boolean isApproved
+        +Group[] groups
+    }
+
+    class Group {
+        +Long id
+        +String groupName
+        +String type
+        +String modality
+        +GroupSchedule[] schedules
+        +Long subjectId
+    }
+
+    class GroupSchedule {
+        +Long id
+        +Long groupId
+        +String day        %% WeekDay simplificado
+        +String startTime  %% LocalTime como String
+        +String endTime
+        +Boolean isActive
+    }
+
+    class Teacher {
+        +Long id
+        +String fullName
+        +Boolean isFavorite
+    }
+
+    class Classroom {
+        +Long id
+        +String name
+    }
+
+    class UserSettings {
+        +Long id
+        +String userName
+        +Boolean use24Hours
+        +Boolean showWeekend
+        +Boolean showFreeDays
+        +Boolean themeDark
+        +Boolean isFirstLaunch
+    }
+
+    class SelectedSubject {
+        +Long id
+        +Long groupId
+        +String color
+        +String emoji
+    }
+
+    %% RELACIONES ENTRE ENTIDADES
+
+    Career "1" o-- "many" Level : contains
+    Level "1" o-- "many" Subject : contains
+    Subject "1" o-- "many" Group : offers
+    Group "1" o-- "many" GroupSchedule : schedules
+
+    GroupSchedule "1" --> "1" Teacher : taught_by
+    GroupSchedule "1" --> "1" Classroom : held_in
+
+    SelectedSubject "1" --> "1" Group : selects
+
+    UserSettings "1" ..> "*" SelectedSubject : preferences

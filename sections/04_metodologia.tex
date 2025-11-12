@@ -1,408 +1,531 @@
-% 04_metodologia.tex
-
-\chapter{Metodología y Desarrollo}
+\chapter{METODOLOGÍA Y DESARROLLO DEL PROYECTO}
 \label{chap:metodologia}
 
-\section{Metodología seleccionada}
-% 4.1: Solo nombre y número de fases, sin teoría
-Proceso iterativo--incremental con 6 fases:
+Este capítulo documenta la aplicación práctica de la metodología sobre \emph{TecnoTime}: fases ejecutadas, actividades, artefactos y evidencias en el repositorio. Se excluyen contenidos del SRS y del área de aplicación, ya tratados en capítulos previos.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_arq_general.png}
+  \caption{Arquitectura general de referencia (presentación, dominio, datos) y servicios transversales. Fuente: elaboración propia.}
+  \label{fig:cap4_arq_general}
+\end{figure}
+
+% ----------------------------------------------------------------------
+\section{Metodología adoptada y fases}
+Se adoptó un proceso iterativo–incremental con prototipado evolutivo, organizado en once fases: F1) Datos institucionales, F2) Modelo de dominio, F3) Generador de horarios, F4) Prioridad sin conexión, F5) Interoperabilidad (JSON), F6) UX/Onboarding/\emph{widget}, F7) Recordatorios e IA, F8) Exportaciones, F9) Pruebas y validación, F10) Seguridad y privacidad, F11) Empaque y despliegue. La priorización (Android-first, prioridad sin conexión, compartir por mensajería y recordatorios) se justificó con hallazgos de la \texttt{Encuesta.md} (n $\approx$ 125), sin análisis estadístico.
+
+% ----------------------------------------------------------------------
+\section{MAPA DE FASES (F1–F11) Y TABLA DE TRAZABILIDAD}
+Para dar transparencia al proceso, se desglosan 11 fases. La Tabla~\ref{tab:cap4_trazabilidad_fases} resume entradas, salidas y módulos; las subsecciones detallan actividades, decisiones y artefactos.
+
+\begin{table}[H]
+  \centering
+\caption{Trazabilidad de fases a módulos y salidas verificables. Fuente: elaboración propia.}
+  \label{tab:cap4_trazabilidad_fases}
+  \footnotesize
+  \begin{tabular}{|p{1.0cm}|p{3.5cm}|p{5.0cm}|p{5.0cm}|}
+    \hline
+    \textbf{Fase} & \textbf{Objetivo} & \textbf{Entradas/Actividades} & \textbf{Salidas (artefactos/módulos)} \\
+    \hline
+    F1 & Ingesta PDF a BD & Descarga, parseo, normalización, \emph{freshness}, backoff/CB & \texttt{data/remote/pdf/*}, \texttt{data/local/*}, \texttt{AutoSyncUseCase} \\
+    \hline
+    F2 & Modelo de dominio & Entidades, reglas, claves/índices, mappers & \texttt{domain/model/*}, \texttt{data/local/entity/*}, \texttt{data/mapper/*} \\
+    \hline
+    F3 & Generador de horarios & Backtracking+MRV/LCV, estrategia compuesta, top-N & \texttt{ScheduleGenerator}, \texttt{GenerateSchedulesUseCaseImpl} \\
+    \hline
+    F4 & Offline-first & Caché Room, freshness, backoff, fallback PDF & \texttt{di/AppModule.kt}, \texttt{domain/util/*} \\
+    \hline
+    F5 & Interoperabilidad JSON & Share/Import, validaciones, intent filter & \texttt{GenerateShareableScheduleJsonUseCase}, \texttt{ImportSharedScheduleUseCase} \\
+    \hline
+    F6 & UX end-to-end & Onboarding, selección, edición segura, widget & \texttt{presentation/*}, \texttt{widget/*} \\
+    \hline
+    F7 & Recordatorios e IA & Canales, workers, IA on-device (opt-in) & \texttt{application/infrastructure/notification/*}, \texttt{domain/simon/*} \\
+    \hline
+    F8 & Exportaciones & Imagen/PDF/Excel con bloqueos y confirmaciones & Casos de uso de export, pantallas de envío \\
+    \hline
+    F9 & QA/Validacion & Piramide de tests, E2E manuales, no-regresion & Suite de pruebas (TC-001..016) \\
+    \hline
+    F10 & Seguridad/Privacidad & Min-data, permisos mínimos, IA local & Políticas en código y ajustes \\
+    \hline
+    F11 & Empaque/Release & SDKs, shrinking, firma, notas de version & \texttt{app/build.gradle.kts}, \textit{release checklist} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% ============================
+\subsection{F1 — Datos institucionales: Ingestión y normalización (PDF$\rightarrow$BD)}
+\textbf{Objetivo.} Transformar los horarios oficiales (PDF) en un \textbf{modelo estructurado local} robusto, evitando saturar la fuente institucional.
+
+\paragraph{Flujo detallado.}
+\begin{enumerate}
+  \item \textbf{Descubrimiento de fuentes}: crawling liviano de páginas institucionales para URLs PDF por carrera/periodo.
+  \item \textbf{Descarga controlada}: colas de descarga con \emph{rate limit} y \textbf{exponential backoff} ($t_{n}= \min(t_{\max}, t_{0}\cdot 2^n)$) ante fallos; \textbf{circuit breaker} (\emph{open} tras $k$ fallos consecutivos por $\Delta t$).
+  \item \textbf{Parseo}: extracción de materias, códigos, niveles, grupos, docentes, aulas y bloques (día, inicio, fin); limpieza y normalización.
+  \item \textbf{Persistencia}: DAOs Room con índices compuestos (\texttt{(subject\_code, group\_id)}), claves foráneas y políticas de \textit{ON CONFLICT}.
+  \item \textbf{Freshness}: marcas de estampa (\textit{last\_sync}, \textit{source\_etag/last-modified}) para decidir re-sincronización.
+  \item \textbf{Fallback}: \textit{import} manual de PDF oficial por carrera desde almacenamiento local si el origen está caído.
+\end{enumerate}
+
+\paragraph{Decisiones.}
+Parser tolerante (variantes de cabeceras/días), \textbf{idempotencia} al re-parsar, y \textbf{trazabilidad} del origen (campos \texttt{source\_career}, \texttt{source\_period}).
+
+\paragraph{Actividades ejecutadas.}
+Descubrimiento y descarga con limitación de tasa; extracción y normalización de materias/grupos/horas/aulas; persistencia en Room; marcado de frescura; configuración de reintentos con \emph{backoff}/cortacircuito; opción de importación manual por PDF.
+
+\paragraph{Criterios de aceptación.}
+Datos persistidos por carrera/nivel/materia/grupo; fecha de última actualización visible; no hay intentos continuos ante fallos (los reintentos se limitan).
+
+\paragraph{Riesgos y mitigaciones.}
+Cambio de formato/ubicación del PDF (extractor flexible y sincronización manual); caída del origen (caché local y reintentos espaciados); saturación del servidor (cortacircuito + \emph{backoff}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f1_flujo_datos.png}
+  \caption{Ingesta/normalización con verificación de frescura, backoff y cortacircuito. Fuente: elaboración propia.}
+  \label{fig:cap4_f1}
+\end{figure}
+
+% ============================
+\subsection{F2 — Modelado del dominio (entidades, reglas, mapeo)}
+\textbf{Entidades principales.} \textit{Career, Level, Subject, Group, GroupSchedule, Teacher, Classroom, SelectedSubject, UserSettings, Reminder}.
+
+\paragraph{Reglas de integridad.}
 \begin{itemize}
-  \item Fase 1: Análisis y Planificación
-  \item Fase 2: Diseño
-  \item Fase 3: Implementación
-  \item Fase 4: Pruebas
-  \item Fase 5: Despliegue y CI/CD
-  \item Fase 6: Mantenimiento y Mejoras
+  \item \textbf{Unicidad} de \texttt{Subject.code} y del par \texttt{(subject\_code, group\_id)}.
+  \item \textbf{Temporal}: \texttt{startTime < endTime} para cada \textit{GroupSchedule}.
+  \item \textbf{Referencial}: \textit{GroupSchedule} a \textit{Group} a \textit{Subject/Level/Career}; \textit{Group} referencia \textit{Teacher}/\textit{Classroom} (nulos permitidos).
 \end{itemize}
 
-\section{Fase 1: Análisis y Planificación}
-\subsection*{Objetivo}
-Consolidar requisitos funcionales y no funcionales derivados del Capítulo III; definir reglas de negocio, restricciones, supuestos, casos de uso y la trazabilidad inicial.
+\paragraph{Diccionario mínimo (extracto).}
+\begin{itemize}
+  \item \texttt{Subject}\,: \texttt{code}, \texttt{name}, \texttt{levelId}, \texttt{careerId}, \texttt{isOptional}, \texttt{isApproved}.
+  \item \texttt{Group}\,: \texttt{subjectCode}, \texttt{groupId}, \texttt{teacherId?}, \texttt{classroomId?}, \texttt{status}.
+  \item \texttt{GroupSchedule}\,: \texttt{groupId}, \texttt{day}, \texttt{start}, \texttt{end}.
+  \item \texttt{SelectedSubject}\,: selección usuario + \texttt{color}, \texttt{emoji}.
+\end{itemize}
 
-\subsection*{Catálogo de requisitos funcionales (RF)}
-% Fichas individuales por requisito funcional
-% Definición de entorno para fichas (usa tabularx)
-\begin{requisitoficha}
-\textbf{ID} & RF-001 \\
-\textbf{Título} & Scraping y parsing de datos académicos \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Obtener carreras, niveles, materias, grupos y horarios desde el portal oficial y PDFs, estructurando datos para su uso interno. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-001: Se extraen códigos, nombres y URL de PDF por carrera.
-  \item CA-002: Del PDF se obtienen grupo, tipo, docente, día, hora y aula.
-\end{itemize} \\
-\textbf{Dependencias} & RB-001, RB-002, RST-001 \\
-\end{requisitoficha}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f2_modelo_dominio.png}
+  \caption{Modelo de dominio (clases y relaciones principales). Fuente: elaboración propia.}
+  \label{fig:cap4_f2}
+\end{figure}
 
-\begin{requisitoficha}
-\textbf{ID} & RF-002 \\
-\textbf{Título} & Selección jerárquica carrera→nivel→materia→grupo \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Permitir navegar jerárquicamente para conformar el conjunto de materias y grupos y persistir la selección. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-003: Se muestra jerarquía y estado de disponibilidad.
-  \item CA-004: La selección persiste localmente.
-\end{itemize} \\
-\textbf{Dependencias} & RB-003, RNF-003 \\
-\end{requisitoficha}
+\paragraph{Actividades ejecutadas.}
+Levantamiento de entidades y relaciones desde el código; alineación entre entidades de dominio y entidades Room; revisión de mapeadores.
 
-\begin{requisitoficha}
-\textbf{ID} & RF-003 \\
-\textbf{Título} & Generación de horarios candidatos sin conflictos \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Generar N horarios candidatos usando backtracking y estrategias de evaluación. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-005: Sin solapamientos cuando “aceptar conflictos” = falso.
-  \item CA-006: Resultados ordenados por puntaje (mejor primero).
-\end{itemize} \\
-\textbf{Dependencias} & RB-001, RB-004, RNF-002 \\
-\end{requisitoficha}
+\paragraph{Criterios de aceptación.}
+Cobertura de casos de uso del generador y de exportación/importación; consistencia entre identificadores y relaciones (carrera–nivel–materia–grupo).
 
-\begin{requisitoficha}
-\textbf{ID} & RF-004 \\
-\textbf{Título} & Configuración de criterios de generación \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Configurar minimizar huecos, minimizar días, priorizar docentes favoritos, aceptar conflictos y número de resultados. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-007: Los parámetros influyen en la estrategia compuesta.
-  \item CA-008: Los resultados reflejan los criterios seleccionados.
-\end{itemize} \\
-\textbf{Dependencias} & RB-005, RNF-002 \\
-\end{requisitoficha}
+\paragraph{Riesgos y mitigaciones.}
+Desalineación dominio/Room (revisión cruzada y pruebas de carga desde PDFs); ambigüedad en claves (unicidad por código y referencias cruzadas).
 
-\begin{requisitoficha}
-\textbf{ID} & RF-005 \\
-\textbf{Título} & Visualización semanal y detalles \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Mostrar horario semanal por días con color/emoji por materia y detalles de grupo, aula y docente. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-009: La vista por días ordena bloques por hora de inicio.
-  \item CA-010: Colores/emojis se asocian de forma determinística por materia.
-\end{itemize} \\
-\textbf{Dependencias} & RNF-001 \\
-\end{requisitoficha}
+% ============================
+\subsection{F3 — Generador de horarios (restricciones, heurísticas y UI)}
+\textbf{Problema.} Seleccionar \textbf{un grupo por materia} respetando restricciones \textbf{duras} (no solapes) y optimizando \textbf{blandas}: minimizar \emph{gaps}, priorizar \textit{favorite teachers}, balance básico semanal, \textit{mandatory subjects}.
 
-\begin{requisitoficha}
-\textbf{ID} & RF-006 \\
-\textbf{Título} & Edición manual y eventos académicos \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Cambiar grupo, agregar/eliminar materias y crear eventos personales. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-011: Cambiar grupo valida conflictos antes de aplicar.
-  \item CA-012: Eventos se integran en la vista semanal.
-\end{itemize} \\
-\textbf{Dependencias} & RB-004 \\
-\end{requisitoficha}
+\paragraph{Parámetros de generación (UI).}
+\begin{itemize}
+  \item \textbf{Target de materias} (máx. 20) y \textbf{N de horarios} a producir (máx. 25).
+  \item \textbf{Flags}: \texttt{acceptConflicts}, \texttt{minimizeGaps}, \texttt{prioritizeTeachers}.
+  \item \textbf{Obligatorias}: lista seleccionada por nivel; si excede el target, el excedente se relaja a opcional.
+\end{itemize}
 
-\begin{requisitoficha}
-\textbf{ID} & RF-007 \\
-\textbf{Título} & Exportación en múltiples formatos \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Exportar horario a Excel, PDF, imagen y JSON. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-013: La exportación incluye materia, grupo, día, hora, aula y docente.
-  \item CA-014: El JSON preserva datos suficientes para importación.
-\end{itemize} \\
-\textbf{Dependencias} & RNF-004 \\
-\end{requisitoficha}
+\paragraph{Estrategia.}
+\begin{enumerate}
+  \item Orden con menos valores restantes (MRV): primero materias con menos grupos viables.
+  \item Exploración de menor costo restante (LCV): probar primero los grupos con mayor promesa (docentes favoritos, huecos bajos).
+  \item \textbf{Poda temprana}: descartar parcial con solape si \texttt{acceptConflicts=false}.
+  \item \textbf{Evaluación compuesta}: $F(H)=\alpha\cdot\text{gaps}+\beta\cdot\text{no\_favorites}+\gamma\cdot\text{days\_spread}+\delta\cdot\text{conflicts}$.
+  \item \textbf{Top-$N$}: mantener los mejores $N$ horarios; \textbf{aplicar} \textit{completo} o \textit{parcial}.
+\end{enumerate}
 
-\begin{requisitoficha}
-\textbf{ID} & RF-008 \\
-\textbf{Título} & Importación desde JSON \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Importar horarios compartidos, validar compatibilidad y fusionar sin duplicados. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-015: Validación de esquema y versión antes de importar.
-  \item CA-016: Fusión sin duplicados con datos existentes.
-\end{itemize} \\
-\textbf{Dependencias} & RB-003, RNF-004 \\
-\end{requisitoficha}
+\paragraph{Pseudocódigo.}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+generate(params):
+  mandatory, optional <- splitByUserSelection()
+  strategy <- StrategyFactory.create(params.flags, userPreferences)
+  best <- TopN(params.nSchedules)
+  expand <- expandCandidates(mandatory, optional, params.targetSubjects)
 
-\begin{requisitoficha}
-\textbf{ID} & RF-009 \\
-\textbf{Título} & Notificaciones de clases y eventos \\
-\textbf{Prioridad} & Must \\
-\textbf{Descripción} & Notificaciones con anticipación configurable para clases y eventos, con ejecución en segundo plano. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-017: Si habilitado y dentro del umbral, se muestra notificación.
-  \item CA-018: Programación diferida se ejecuta en background.
-\end{itemize} \\
-\textbf{Dependencias} & RNF-005 \\
-\end{requisitoficha}
+  backtrack(i=0, partial=[]):
+    if i == len(expand):
+      score <- strategy.evaluate(partial)
+      best.add(partial, score)
+      return
+    for g in orderByLCV(expand[i], strategy):
+      if params.acceptConflicts or noHardOverlap(partial, g):
+        backtrack(i+1, partial + g)
 
-\begin{requisitoficha}
-\textbf{ID} & RF-010 \\
-\textbf{Título} & Sincronización multi-dispositivo y backup \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Sincronizar datos entre dispositivos y habilitar backups locales. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-019: Cambios locales se reflejan en otros dispositivos.
-  \item CA-020: Exportación y restauración JSON funcionan offline.
-\end{itemize} \\
-\textbf{Dependencias} & RST-002 \\
-\end{requisitoficha}
+  backtrack()
+  return best.results()
+\end{lstlisting}
 
-\begin{requisitoficha}
-\textbf{ID} & RF-011 \\
-\textbf{Título} & Actualización automática de datos \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Verificar periódicamente cambios en la oferta y actualizar, notificando al usuario. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-021: Al cambiar la versión de datos, se refrescan y marca última sincronización.
-  \item CA-022: Se emite notificación de actualización exitosa.
-\end{itemize} \\
-\textbf{Dependencias} & RB-006, RNF-002 \\
-\end{requisitoficha}
+\paragraph{Interacción de banderas (casuística real).}
+\begin{itemize}
+  \item \textbf{Priorizar docentes} sin \textbf{aceptar choques}: se eligen favoritos sólo si respetan no solape.
+  \item \textbf{Ambas ON}: se admiten choques penalizados; casos extremos para el usuario experto.
+  \item \textbf{Obligatorias} $>$ target: el exceso pasa a \emph{opcionales} con prioridad.
+\end{itemize}
 
-\begin{requisitoficha}
-\textbf{ID} & RF-012 \\
-\textbf{Título} & Recordar carrera y materias aprobadas \\
-\textbf{Prioridad} & Should \\
-\textbf{Descripción} & Persistir carrera seleccionada y estado de aprobación para filtrar materias pendientes. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-023: El estado de aprobación se refleja en filtros de selección.
-  \item CA-024: Se recuerda la carrera activa al volver a la aplicación.
-\end{itemize} \\
-\textbf{Dependencias} & RB-003 \\
-\end{requisitoficha}
+\paragraph{Criterios de aceptación.}
+Sin solapamientos por defecto; generación de $N$ resultados configurables; parámetros influyen en el orden y contenido; aplicación completa/parcial actualiza selección local.
 
-\begin{requisitoficha}
-\textbf{ID} & RF-013 \\
-\textbf{Título} & Profesores favoritos y priorización \\
-\textbf{Prioridad} & Could \\
-\textbf{Descripción} & Permitir marcar docentes favoritos e incorporar la preferencia en la evaluación de horarios. \\
-\textbf{Criterios de aceptación} & \begin{itemize}[leftmargin=*]
-  \item CA-025: Penalización para docentes no favoritos cuando la opción esté activa.
-\end{itemize} \\
-\textbf{Dependencias} & RB-007 \\
-\end{requisitoficha}
+\paragraph{Riesgos y mitigaciones.}
+Explosión combinatoria (poda por progresión y priorización por nivel); preferencias contradictorias (reglas de desempate y mensajes claros en UI); datos incompletos (refresco de datos antes de generar).
 
-\subsection*{Requerimientos no funcionales (RNF)}
-\textbf{ID:} RNF-001\\
-\textbf{Categoría:} Usabilidad\\
-\textbf{Criterio:} La vista semanal ordena por hora y utiliza codificación visual (colores/emojis) consistente y legible.\\
+\paragraph{UI de resultados.}
+\begin{itemize}
+  \item Lista \textit{Lun..Sáb} con \textit{cards} por bloque: hora inicio/fin, materia, grupo, aula, nivel, docente.
+  \item \textbf{Switch} por materia (selección parcial); al cambiar selección se re-genera la cohorte de horarios.
+  \item \textbf{Acciones}: \textit{Parcial} (aplica sólo seleccionadas), \textit{Completo} (aplica todo el horario).
+  \item \textbf{Vista semanal} por horario generado; navegación izq./der. entre resultados 1..N.
+\end{itemize}
 
-\textbf{ID:} RNF-002\\
-\textbf{Categoría:} Rendimiento\\
-\textbf{Criterio:} Debe generar al menos 5 horarios candidatos en menos de 5 segundos para 5–8 materias en un dispositivo Android de referencia (API 29).\\
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f3_decisiones_generador.png}
+  \caption{Decisiones del generador y mantenimiento de Top-N. Fuente: elaboración propia.}
+  \label{fig:cap4_f3}
+\end{figure}
 
-\textbf{ID:} RNF-003\\
-\textbf{Categoría:} Compatibilidad\\
-\textbf{Criterio:} Compatibilidad con Android minSdk 24 y targetSdk 35.\\
+% ============================
+\subsection{F4 — Arquitectura \emph{offline-first} y sincronización responsable}
+\paragraph{Objetivo.} Usabilidad plena con conectividad intermitente y \textbf{protección de la fuente} institucional.
 
-\textbf{ID:} RNF-004\\
-\textbf{Categoría:} Portabilidad/Interoperabilidad\\
-\textbf{Criterio:} Exportación/Importación en formato JSON con esquema estable y validación de versión.\\
+\paragraph{Componentes.}
+\begin{itemize}
+  \item \textbf{Caché Room}: carreras, niveles, materias, grupos, horarios y preferencias.
+  \item \textbf{Freshness Gate}: si hay red, se valida frescura \emph{antes} de generar; si \emph{stale}, \textit{sync}.
+  \item \textbf{Retry/backoff} y \textbf{circuit breaker}: evitan martillar el origen cuando está lento/caído.
+  \item \textbf{Fallback PDF manual}: import por carrera cuando el sitio está fuera de línea.
+\end{itemize}
 
-\textbf{ID:} RNF-005\\
-\textbf{Categoría:} Fiabilidad\\
-\textbf{Criterio:} Las notificaciones programadas deben ejecutarse aun con la aplicación en segundo plano o tras reinicio del dispositivo.\\
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f4_offline_first.png}
+  \caption{Caché local, verificación de frescura y sincronización con backoff/cortacircuito. Fuente: elaboración propia.}
+  \label{fig:cap4_f4}
+\end{figure}
 
+\paragraph{Actividades ejecutadas.}
+Integración del verificador de conectividad; sincronización automática condicionada; bloqueo temporal de generación durante sincronización; aplicación de \emph{backoff} y cortacircuito.
+
+\paragraph{Criterios de aceptación.}
+Generación bloqueada mientras se sincroniza; operación con datos locales cuando no hay internet; reintentos espaciados cuando el origen falla.
+
+\paragraph{Riesgos y mitigaciones.}
+Reintentos excesivos (\emph{backoff} con límites); inconsistencias temporales (fecha de última actualización y reintento manual).
+
+% ============================
+\subsection{F5 — Interoperabilidad y colaboración (JSON, WhatsApp)}
+\paragraph{Escenarios.}
+\begin{itemize}
+  \item \textbf{Enviar copia}: JSON total o \textbf{parcial} (selector con \textit{Limpiar/Todo}, \textit{Cancelar/Compartir}); confirmación de exportación.
+  \item \textbf{Importar desde WhatsApp}: \textit{intent} para abrir con la app; lista de materias con validaciones:
+  \begin{enumerate}
+    \item Si la materia ya se encuentra inscrita, se bloquea su selección (mensaje “ya inscrita”).
+    \item Si la carrera difiere, se propone \textbf{sincronizar} esa carrera e integrar la selección.
+  \end{enumerate}
+\end{itemize}
+
+\paragraph{Esquema JSON (resumen).}
+\texttt{careers}, \texttt{subjects}, \texttt{groups}, \texttt{teachers}, \texttt{classrooms}, \texttt{entries} (bloques de horario con referencias); \texttt{meta.version}, \texttt{meta.generatedAt}, \texttt{origin.career/period}. Idempotencia y compatibilidad hacia atrás (\emph{backward compatible}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f5_share_import_flow.png}
+  \caption{Exportar/importar JSON con validaciones y fusión parcial/total. Fuente: elaboración propia.}
+  \label{fig:cap4_f5}
+\end{figure}
+
+\paragraph{Actividades ejecutadas.}
+Generación de JSON compartible; selector de materias a compartir; validación de esquema/versión; importación con fusión sin duplicados y aviso ante carrera distinta.
+
+\paragraph{Criterios de aceptación.}
+JSON válido según esquema/versión; importación rechaza entradas inválidas; fusión preserva selección existente; se solicita sincronizar carrera cuando difiere.
+
+\paragraph{Riesgos y mitigaciones.}
+Deriva del esquema (versionado y validación previa); incompatibilidades entre carreras (verificación de carrera y sincronización asistida).
+
+% ============================
+\subsection{F6 — UX aplicada: Onboarding, ajustes, agregar/editar, widget}
+\paragraph{Onboarding (\textit{progressive disclosure}).}
+\begin{enumerate}
+  \item \textbf{Bienvenida + permisos}.
+  \item \textbf{Nombre} (personalización e IA).
+  \item \textbf{Ajustes generales}: formato 24/12h, mostrar fines de semana, resaltar días sin clases; \textit{tema claro/oscuro}.
+  \item \textbf{Sincroniza tus carreras}: listado de $\sim$20 carreras; selección por usuario.
+  \item \textbf{Revisar progreso}: \textit{cards} por nivel con círculo de progreso (\% materias marcadas).
+  \item \textbf{IA Simon (opt-in)}: aviso de tamano de modelo (~ 229\,MB); elegir conexion (Datos/Wi-Fi).
+  \item \textbf{Recordatorios}: \textit{anticipación} (por defecto \textbf{10 min}) y tipos (\textit{clases}/\textit{motivacionales}).
+  \item \textbf{Docentes favoritos}: listado con estrella para \textit{prioritization later}.
+\end{enumerate}
+El \textbf{onboarding} sólo se muestra la primera vez; después la app abre en \textit{Home}.
+
+\paragraph{Home y navegación.}
+\begin{itemize}
+  \item \textbf{Deslizamiento} izq./der. por días; \textbf{selector de fecha} (abre calendario para saltar a un día, p.\,ej., 22/11).
+  \item \textbf{Acciones principales}: \textit{Agregar materia} y \textit{Generar horario} (botón flotante).
+  \item \textbf{Botón semanal} (arriba derecha) y \textbf{Ajustes} (arriba izquierda).
+\end{itemize}
+
+\paragraph{Agregar materia (flujo guiado).}
+\begin{enumerate}
+  \item \textbf{Seleccionar nivel} $\rightarrow$ \textbf{Materia} (lista por nivel).
+  \item \textbf{Seleccionar grupo} con \textbf{preview} de días/horas (p.\,ej., Mar 09:45–11:15; Mié 08:15–09:45); \textbf{Confirmar}.
+  \item \textbf{Color} (paleta circular) y \textbf{Emoji} (incluye botón \textit{Al azar}).
+  \item \textbf{Crear}: retorna al Home con las tarjetas en los días correspondientes.
+\end{enumerate}
+
+\paragraph{Edición desde Home.}
+\begin{itemize}
+  \item \textbf{Editar grupo}: cambiar a otro grupo (con preview y confirmar); ajustar color/emoji.
+  \item \textbf{Finalizar materia}: diálogo \textit{Aprobado}/\textit{Abandonar} (impacta en generación futura).
+\end{itemize}
+
+\paragraph{Widget.}
+Widget con el día actual, deslizamiento de días y \textit{cards} de próximas clases (mismos colores/emojis).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f6_journey_ui.png}
+  \caption{Journey de UI: bienvenida, configuración, agregar/editar y componente de acceso rápido (widget). Fuente: elaboración propia.}
+  \label{fig:cap4_f6}
+\end{figure}
+
+\paragraph{Actividades ejecutadas.}
+Implementación de pantallas de bienvenida y configuración; flujo jerárquico de agregar materia con vista previa; edición de grupo/color/emoji; integración del componente de acceso rápido (\emph{widget}).
+
+\paragraph{Criterios de aceptación.}
+Disminución de pasos para armar horario; vista previa antes de aplicar cambios; el componente (\emph{widget}) muestra el horario del día con navegación de días.
+
+\paragraph{Riesgos y mitigaciones.}
+Sobrecarga de opciones (onboarding progresivo y valores por defecto); inconsistencia visual (diseño consistente en Compose).
+
+% ============================
+\subsection{F7 — Recordatorios y IA on–device ("Simón")}
+\paragraph{Recordatorios.}
+\begin{itemize}
+  \item \textbf{Anticipación}: horas/minutos configurables; por defecto 10\,min.
+  \item \textbf{Canales}: \texttt{classes} (obligatorio) y \texttt{motivation} (opcional).
+  \item \textbf{Programación}: \textit{WorkManager} con ventanas adecuadas y reintentos si el SO difiere tareas.
+\end{itemize}
+
+\paragraph{IA (opt-in).}
+\begin{itemize}
+  \item \textbf{Descarga de modelo}: el usuario elige \textit{Wi-Fi} o \textit{Datos}; indicador de progreso; opción \textit{Eliminar modelo}.
+  \item \textbf{Toggles}: “Usar Simón para mis recordatorios” y “Mensajes motivacionales”.
+  \item \textbf{Privacidad}: generacion local; sin envio de datos personales.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f7_secuencia_ia_recordatorios.png}
+  \caption{Secuencia IA/recordatorios: descarga, inicialización, programación y notificación. Fuente: elaboración propia.}
+  \label{fig:cap4_f7}
+\end{figure}
+
+\paragraph{Actividades ejecutadas.}
+Programación de notificaciones con WorkManager; estilos y acciones; activación/descarga del modelo IA bajo control del usuario; generación de mensajes motivacionales.
+
+\paragraph{Criterios de aceptación.}
+Notificaciones mostradas antes de la clase según anticipación; persistencia tras reinicio; IA desactivada por defecto y descargable; posibilidad de eliminar el modelo.
+
+\paragraph{Riesgos y mitigaciones.}
+Consumo de almacenamiento (descarga bajo demanda y opción de eliminación); notificaciones excesivas (configuración de umbrales y silencios).
+
+% ============================
+\subsection{F8 — Exportaciones (imagen, PDF, Excel)}
+\paragraph{Reglas de flujo.}
+\begin{itemize}
+  \item Siempre hay \textbf{diálogo de confirmación}; si no hay materias, el flujo se \textbf{bloquea} con mensaje explicativo.
+  \item \textbf{Imagen/PDF/Excel}: se genera y se entrega al \textit{Share sheet} (WhatsApp frecuente).
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_f8_export_flow.png}
+  \caption{Exportación con validaciones y confirmaciones. Fuente: elaboración propia.}
+  \label{fig:cap4_f8}
+\end{figure}
+
+\paragraph{Actividades ejecutadas.}
+Composición del horario a imagen/PDF/Excel; selección de destino; validación de precondiciones (materias existentes).
+
+\paragraph{Criterios de aceptación.}
+Exportación bloqueada si no hay materias; archivos contienen materia, grupo, día, hora, aula y docente.
+
+\paragraph{Riesgos y mitigaciones.}
+Falta de permisos o espacio (uso de \texttt{DocumentFile} y validaciones previas de espacio disponible).
+
+% ============================
+\subsection{F9 — Pruebas y Validación (Quality Assurance)}
+\paragraph{Pirámide de testing.}
+\begin{itemize}
+  \item \textbf{Unitarias}: evaluaciones de \emph{gaps}/favoritos, parsing robusto, utilidades de calendario (orden, solapes).
+  \item \textbf{Integración}: repositorios Room + casos de uso (generar, sincronizar, export/import).
+  \item \textbf{UI/E2E}: flujos críticos (onboarding, agregar/editar, generar y aplicar, compartir/abrir JSON).
+\end{itemize}
+
+\paragraph{Casos de prueba (extracto ampliado).}
+\begin{itemize}
+  \item \textbf{TC-001}: \textit{gaps}=0 en horarios contiguos por día; \textbf{TC-002}: \emph{composite strategy} refleja flags.
+  \item \textbf{TC-004/005}: parser soporta formatos de día y grupo alternos (Lun/Lunes; Gp/Grupo).
+  \item \textbf{TC-006}: notificación respeta anticipación y canal.
+  \item \textbf{TC-007}: \textit{AutoSync} honra periodicidad y marca \textit{last\_sync}.
+  \item \textbf{TC-008}: vista semanal ordena por hora ascendente y respeta formato 24/12h.
+  \item \textbf{TC-009/014}: \textit{round-trip} JSON y contenido correcto en PDF/imagen (cabecera, bloques).
+  \item \textbf{TC-012}: codificación visual \textbf{determinística} (color/emoji) por materia.\footnote{En UI se ofrece “Al azar” para emoji; internamente se recomienda \emph{seeded hashing} para persistir identidad visual entre sesiones.}
+  \item \textbf{TC-013}: cambio de grupo detecta y evita conflictos salvo \texttt{acceptConflicts=true}.
+  \item \textbf{TC-016}: favoritos elevan la calificación respecto a alternativas equivalentes.
+\end{itemize}
+
+% ============================
+\subsection{F10 — Seguridad y privacidad}
+\begin{itemize}
+  \item \textbf{Datos mínimos}: nombre (personalización), selección de materias/grupos (en local).
+  \item \textbf{Permisos mínimos}: notificaciones; almacenamiento solo para exportaciones/importación.
+  \item \textbf{IA local}: \textit{opt-in}, descarga controlada, eliminación disponible, sin telemetría obligatoria.
+\end{itemize}
+
+\paragraph{Actividades ejecutadas.}
+Revisión de permisos estrictamente necesarios; almacenamiento en preferencias y BD locales; controles para descargar/eliminar el modelo de IA.
+
+\paragraph{Criterios de aceptación.}
+La aplicación opera con permisos mínimos; no se suben datos personales; la IA funciona enteramente en el dispositivo si está activa.
+
+\paragraph{Riesgos y mitigaciones.}
+Exposición accidental de datos (revisión de permisos y rutas de exportación); uso involuntario de IA (configuración explícita y reversible).
+
+% ============================
+\subsection{F11 — Empaque, compatibilidad y release}
+\begin{itemize}
+  \item \textbf{SDKs}: \texttt{minSdk=24}, \texttt{target/compileSdk=35}.
+  \item \textbf{Tamaño}: binario objetivo $< 30$\,MB sin IA; modelo IA $\sim$200–230\,MB (opcional).
+  \item \textbf{Optimización}: reducción de código y recursos; splits por ABI cuando aplica.
+  \item \textbf{Release}: compilaciones reproducibles, firma, notas de versión, pruebas verdes y despliegue progresivo.
+\end{itemize}
+
+\paragraph{Actividades ejecutadas.}
+Configuración de variantes \texttt{debug/release}; habilitación de reducción en \texttt{release}; verificación de compatibilidad de SDK.
+
+\paragraph{Criterios de aceptación.}
+Compilación exitosa en \texttt{release}; reducción de tamaño activa; compatibilidad con dispositivos API 24–35.
+
+\paragraph{Riesgos y mitigaciones.}
+Incremento de tamaño por dependencias (revisión de librerías y reducción); incompatibilidades de SDK (pruebas en dispositivos/AVDs objetivo).
+
+% ----------------------------------------------------------------------
+\section{REGLAS DE NEGOCIO, RESTRICCIONES Y SUPUESTOS}
 \subsection*{Reglas de negocio (RB)}
-\textbf{ID:} RB-001\\ \textbf{Regla:} \texttt{startTime < endTime} para cada sesión.\\
-\textbf{ID:} RB-002\\ \textbf{Regla:} Docente y aula pueden ser nulos; no bloquean el alta de horarios.\\
-\textbf{ID:} RB-003\\ \textbf{Regla:} Unicidad de \texttt{Subject.code} y de \texttt{(subjectCode, groupId)}.\\
-\textbf{ID:} RB-004\\ \textbf{Regla:} Prohibir solapamientos salvo \textit{aceptar conflictos}=true.\\
-\textbf{ID:} RB-005\\ \textbf{Regla:} La evaluación compuesta refleja preferencias del usuario.\\
-\textbf{ID:} RB-006\\ \textbf{Regla:} Verificar cambios de oferta con una periodicidad predefinida y notificar.\\
-\textbf{ID:} RB-007\\ \textbf{Regla:} Priorizar docentes marcados como favoritos.\\
+\begin{enumerate}[label=RB-\arabic*]
+  \item \texttt{startTime < endTime} para cada sesión.
+  \item Unicidad de \texttt{Subject.code} y de \texttt{(subjectCode, groupId)}.
+  \item \textbf{No solapes} por defecto; los choques sólo son válidos si \texttt{acceptConflicts=true}.
+  \item Docente y aula pueden ser nulos y no bloquean la selección.
+  \item Las \textbf{obligatorias} se intentan incluir todas; si superan el target, el excedente se relaja a opcional.
+  \item Los \textbf{favoritos} aportan bonificación en la evaluación.
+  \item \textbf{Freshness before generation}: si hay red, validar frescura y sincronizar antes de generar.
+\end{enumerate}
 
 \subsection*{Restricciones (RST)}
-\textbf{ID:} RST-001\\ \textbf{Restricción:} Dependencia de estructura de PDFs oficiales; variaciones pueden requerir ajustar parsing.\\
-\textbf{ID:} RST-002\\ \textbf{Restricción:} Requiere conectividad para sincronización remota y scraping.\\
-\textbf{ID:} RST-003\\ \textbf{Restricción:} Plataforma objetivo Android (sin iOS/PWA en alcance inicial).\\
+\begin{enumerate}[label=RST-\arabic*]
+  \item Dependencia de estructura de PDFs institucionales; cambios requieren ajustar parsing.
+  \item Requiere conectividad para sincronización; operación offline para consulta/generación local.
+  \item Plataforma objetivo Android; iOS fuera de alcance inicial.
+\end{enumerate}
 
 \subsection*{Supuestos (SUP)}
-\textbf{ID:} SUP-001\\ \textbf{Supuesto:} Disponibilidad de PDFs y página oficial con estructura estable por semestre.\\
-\textbf{ID:} SUP-002\\ \textbf{Supuesto:} Adopción mayoritaria de Android en la población objetivo.\\
+\begin{enumerate}[label=SUP-\arabic*]
+  \item Disponibilidad regular de PDFs por carrera/semestre.
+  \item Predominancia Android en la población objetivo.
+  \item Uso social de WhatsApp para intercambio de horarios (soporte JSON).
+\end{enumerate}
 
-\subsection*{Casos de uso (UC) resumidos}
-% Caso de uso (resumido)
-\textbf{ID:} UC-001\\ \textbf{Actor:} Sistema\\ \textbf{Objetivo:} Scraping y parsing de datos académicos\\ \textbf{Flujo básico:} Conecta a UMSS → extrae URLs PDF → descarga → parsea → persiste\\ \textbf{Pre/Post:} Datos estructurados en BD\\
+% ----------------------------------------------------------------------
+\section{CASOS DE USO (DETALLADOS)}
+\subsection*{UC-001 — Scraping y Parsing de Datos Académicos}
+\textbf{Actor:} Sistema. \textbf{Objetivo:} mantener datos locales actualizados.\\
+\textbf{Pre:} conectividad disponible \emph{o} PDF local provisto. \textbf{Post:} BD local consistente.\\
+\textbf{Flujo básico:} descubrir URLs $\rightarrow$ descargar con \emph{rate limit} $\rightarrow$ parsear $\rightarrow$ normalizar $\rightarrow$ persistir $\rightarrow$ marcar \textit{last\_sync}.\\
+\textbf{Excepciones:} origen caído $\rightarrow$ \emph{backoff} y \textit{open circuit}; sugerir \textit{import} manual de PDF.
 
-\textbf{ID:} UC-002\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Generar horarios optimizados\\ \textbf{Flujo básico:} Configura parámetros → ejecuta generación → revisa candidatos → aplica\\ \textbf{Pre/Post:} Horario aplicado\\
+\subsection*{UC-002 — Generar Horarios Optimizados}
+\textbf{Actor:} Estudiante. \textbf{Objetivo:} obtener N horarios candidatos.\\
+\textbf{Pre:} selección de materias/flags. \textbf{Post:} lista de N horarios + vista semanal.\\
+\textbf{Flujo básico:} setear parámetros $\rightarrow$ generar $\rightarrow$ revisar $\rightarrow$ aplicar parcial/completo.\\
+\textbf{Alternos:} \texttt{acceptConflicts=true} (choques penalizados).
 
-\textbf{ID:} UC-003\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Configurar notificaciones previas a clase\\ \textbf{Flujo básico:} Abre configuración → define anticipación → guarda\\ \textbf{Pre/Post:} Preferencia persistida; tareas programadas\\
+\subsection*{UC-003 — Configurar Notificaciones}
+\textbf{Actor:} Estudiante. \textbf{Objetivo:} recibir avisos previos a clase.\\
+\textbf{Flujo:} abrir ajustes $\rightarrow$ definir anticipación (default 10\,min) $\rightarrow$ guardar.
 
-\textbf{ID:} UC-004\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Seleccionar carrera/nivel/materias/grupos\\ \textbf{Flujo básico:} Navega jerarquía y selecciona\\ \textbf{Pre/Post:} Materias/grupos persistidos\\
+\subsection*{UC-004 — Seleccionar Carrera/Nivel/Materia/Grupo}
+\textbf{Actor:} Estudiante. \textbf{Objetivo:} construir carga.\\
+\textbf{Flujo:} jerarquía con \textbf{preview} de grupo $\rightarrow$ confirmar.
 
-\textbf{ID:} UC-005\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Visualizar y editar horario\\ \textbf{Flujo básico:} Abre pantalla principal → vista semanal → cambia grupo o añade evento\\ \textbf{Pre/Post:} Horario actualizado\\
+\subsection*{UC-005 — Exportar/Importar Horario}
+\textbf{Actor:} Estudiante. \textbf{Objetivo:} compartir/clonar.\\
+\textbf{Export:} Imagen/PDF/Excel o JSON (total/parcial). \textbf{Import:} abrir JSON, validar duplicados, sincronizar carrera si difiere, fusionar.
 
-\textbf{ID:} UC-006\\ \textbf{Actor:} Estudiante\\ \textbf{Objetivo:} Exportar/Importar horario\\ \textbf{Flujo básico:} Elige formato → exporta → comparte; importa JSON → valida → fusiona\\ \textbf{Pre/Post:} Archivo generado/horario integrado\\
-
-\textbf{ID:} UC-007\\ \textbf{Actor:} Sistema\\ \textbf{Objetivo:} Sincronización/Auto-actualización\\ \textbf{Flujo básico:} Detecta cambios → actualiza datos → notifica\\ \textbf{Pre/Post:} Datos actualizados\\
-
-\subsection*{Diccionario de datos esencial}
-Entidades y campos esenciales: Carrera (código, nombre, URL, fecha de actualización), Nivel (id, nombre), Materia (código, nombre, estados: aprobada, optativa, activa), Grupo (materia, nivel, id de grupo, tipo, modalidad, estado), Horario de grupo (día, inicio, fin, aula, docente, estado), Docente (nombre completo, favorito), Aula (id, nombre). Reglas de unicidad y claves foráneas aseguran integridad referencial.
-
-\subsection*{Trazabilidad inicial RQ→UC→Artefactos→Pruebas}
+% ----------------------------------------------------------------------
+\section{MÉTRICAS (KPIS) Y OBSERVABILIDAD}
 \begin{itemize}
-  \item RF-001 → UC-001 → Artefacto: Obtención y normalización de datos → Pruebas: TC-004, TC-005
-  \item RF-002 → UC-004 → Artefacto: Flujo de selección jerárquica → Pruebas: TC-010, TC-011
-  \item RF-003, RF-004 → UC-002 → Artefacto: Generador y evaluación de horarios → Pruebas: TC-001, TC-002
-  \item RF-005 → UC-005 → Artefacto: Visualización semanal → Pruebas: TC-008, TC-012
-  \item RF-006 → UC-005 → Artefacto: Edición y eventos → Pruebas: TC-013
-  \item RF-007, RF-008 → UC-006 → Artefacto: Exportación/Importación → Pruebas: TC-009, TC-014
-  \item RF-009 → UC-003 → Artefacto: Notificaciones programadas e inmediatas → Pruebas: TC-006
-  \item RF-010, RF-011 → UC-007 → Artefacto: Sincronización y auto-actualización → Pruebas: TC-007
-  \item RF-012 → UC-004 → Artefacto: Persistencia de carrera y aprobadas → Pruebas: TC-015
-  \item RF-013 → UC-002 → Artefacto: Priorización de docentes favoritos → Pruebas: TC-016
+  \item \textbf{TTS (Time To Schedule)}: minutos hasta horario base sin choques.
+  \item \textbf{Gaps/día}: minutos vacíos promedio por día (tras aplicar).
+  \item \textbf{Adopción JSON}: \% de usuarios con export/import exitoso.
+  \item \textbf{Widget usage}: aperturas del widget / aperturas totales.
+  \item \textbf{On-time reminders}: \% notificaciones abiertas antes de clase.
 \end{itemize}
 
-\subsection*{Catálogo de pruebas (TC) resumido}
+% ----------------------------------------------------------------------
+\section{RIESGOS Y MITIGACIONES}
+\begin{table}[H]
+  \centering
+  \caption{Riesgos con probabilidad (P) e impacto (I) y acciones}
+  \label{tab:cap4_riesgos}
+  \small
+  \begin{tabular}{|p{6.5cm}|c|c|p{7.8cm}|}
+    \hline
+    Riesgo & P & I & Mitigación \\
+    \hline
+    Cambios en PDFs (formato/ubicación) & M & A & Parser tolerante; pruebas de regresión; import manual por PDF \\
+    \hline
+    Caída/latencia de origen & M & M & Backoff + cortacircuito; caché local; diferir sincronización \\
+    \hline
+    Conectividad intermitente & A & M & Offline-first real; \emph{retry policy} y \emph{freshness gate} \\
+    \hline
+    Dispositivos de baja gama & M & M & Optimizar consultas y UI; IA opcional; cargas perezosas \\
+    \hline
+    Rechazo de IA & M & B & Mantener IA como \emph{add-on} desactivable; experiencia intacta sin IA \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------
+\section{CHECKLIST DE RELEASE Y CI/CD}
 \begin{itemize}
-  \item TC-001: Evaluación de huecos mínimos devuelve 0 para horarios sin huecos.
-  \item TC-002: Estrategia compuesta refleja parámetros de minimización y priorización.
-  \item TC-004: Parsing de línea de horario simple extrae todos los campos.
-  \item TC-005: El parser soporta formatos de grupo y día variados.
-  \item TC-006: Notificación inmediata/programada respeta anticipación configurada.
-  \item TC-007: Auto-actualización respeta periodicidad y actualiza marcadores.
-  \item TC-008: La vista semanal ordena por hora y por día.
-  \item TC-009: Exportación/Importación JSON mantiene integridad (round-trip).
-  \item TC-010: Selección jerárquica persiste decisión de carrera.
-  \item TC-011: Selección de nivel/materia/grupo refleja disponibilidad.
-  \item TC-012: Visualización muestra color/emoji determinístico por materia.
-  \item TC-013: Cambio de grupo detecta y evita conflictos.
-  \item TC-014: Exportación PDF/imagen contiene cabecera y bloques correctos.
-  \item TC-015: Filtrado por materias aprobadas excluye asignaturas completadas.
-  \item TC-016: Priorización de docentes favorece favoritos en los resultados.
+  \item Pruebas verdes; cobertura objetivo $>\,75\%$ en módulos críticos.
+  \item Lint/estático sin \textit{critical issues}.
+  \item Binario $< 30$\,MB (sin IA); notas de versión; firma y \emph{rollout} progresivo.
 \end{itemize}
 
-\subsection*{Entregables de la fase}
-\begin{itemize}
-  \item Catálogo RF/RNF/RB/RST/SUP.
-  \item Casos de uso (UC-001..UC-007).
-  \item Trazabilidad inicial RQ→UC→Artefactos→Pruebas.
-\end{itemize}
-
-\section{Fase 2: Diseño}
-\subsection*{Objetivo}
-Definir arquitectura, modelos de datos, flujos de UI y mapeo RF→componentes con base en ADRs y artefactos existentes.
-
-% (Sin listado de entradas; a continuación se documenta el diseño aplicado)
-
-\subsection*{Decisiones arquitectónicas}
-\begin{itemize}
-\item Clean Architecture con capas de Presentación, Dominio y Datos.
-\item Estrategias de evaluación con patrón Strategy y combinación compuesta según preferencias.
-\item Persistencia relacional con relaciones many-to-many y repositorios.
-\item Inyección de dependencias y ejecución en segundo plano para tareas periódicas.
-\end{itemize}
-
-\subsection*{Modelos y flujos}
-\begin{itemize}
-\item Modelo ER: Carrera, Materia, Nivel, Grupo, Horario de Grupo, Docente, Aula y tablas de asociación.
-\item Flujos UI: bienvenida, configuración inicial, selección jerárquica, generación y resultados.
-\end{itemize}
-
-\subsection*{Mapeo RF→Componentes}
-\begin{itemize}
-  \item RF-001 → Servicios de obtención y parsing de datos.
-  \item RF-002, RF-012 → Repositorios y pantallas de selección.
-  \item RF-003, RF-004, RF-013 → Generador de horarios y estrategias de evaluación.
-  \item RF-005, RF-006 → Vista semanal y componentes de edición/calendario.
-  \item RF-007, RF-008 → Módulos de exportación e importación.
-  \item RF-009 → Servicio de notificaciones y tareas programadas.
-  \item RF-010, RF-011 → Casos de uso de sincronización automática y preferencias.
-\end{itemize}
-
-\subsection*{Entregables}
-\begin{itemize}
-  \item Diagrama de arquitectura y capas.
-  \item Decisiones de diseño y motivaciones.
-  \item Modelo ER y relaciones clave.
-\end{itemize}
-
-\section{Fase 3: Implementación}
-\subsection*{Objetivo}
-Construir los módulos priorizando los RF Must/Should y habilitar evidencias verificables.
-
-\subsection*{Funcionalidades por RF}
-\begin{itemize}
-  \item RF-001 Scraping/Parsing: Implementado.
-  \item RF-002 Selección jerárquica: Implementado.
-  \item RF-003/004 Generación y criterios: Implementado.
-  \item RF-005 Visualización semanal: Implementado.
-  \item RF-006 Edición/eventos: Parcial (pendiente consolidar comandos de edición y eventos avanzados).
-  \item RF-007/008 Exportación/Importación: Parcial (pendiente validación de compatibilidad entre versiones).
-  \item RF-009 Notificaciones: Implementado.
-  \item RF-010/011 Sincronización/AutoSync: Implementado.
-  \item RF-012 Recordar carrera/aprobadas: Implementado.
-  \item RF-013 Profesores favoritos: Implementado.
-\end{itemize}
-
-\subsection*{Cobertura RF: estado}
-\begin{itemize}
-  \item Implementado: RF-001, RF-002, RF-003, RF-004, RF-005, RF-009, RF-010, RF-011, RF-012, RF-013
-  \item Parcial: RF-006, RF-007, RF-008 \,(ver acciones siguientes)
-\end{itemize}
-
-\subsection*{Entregables}
-\begin{itemize}
-  \item Módulos de obtención de datos, generación de horarios, notificaciones y sincronización operativos.
-\end{itemize}
-
-\section{Fase 4: Pruebas}
-\subsection*{Estrategia y cobertura}
-\begin{itemize}
-  \item Pirámide de testing con énfasis en unitarios de algoritmos, integración de repositorios y pruebas de UI en flujos críticos.
-  \item Cobertura orientada a criterios de aceptación (CA) y casos de uso (UC) prioritarios.
-\end{itemize}
-
-\subsection*{Matriz RF→TC (criterios de aceptación)}
-\begin{itemize}
-  \item RF-001 → TC-004, TC-005: Parsing correcto y robusto ante variaciones.
-  \item RF-003 → TC-001: Cálculo de huecos; TC-002: Estrategia compuesta correcta.
-  \item RF-004 → TC-002: Parámetros reflejados en la evaluación.
-  \item RF-005 → TC-008: Orden por hora en vista semanal; TC-012: codificación visual consistente.
-  \item RF-009 → TC-006: Notificaciones inmediatas/programadas respetan anticipación.
-  \item RF-010/011 → TC-007: Auto-actualización periódica con notificación.
-  \item RF-007/008 → TC-009, TC-014: Round-trip JSON y contenido correcto en exportación.
-\end{itemize}
-
-\subsection*{Resultados y hallazgos}
-\begin{itemize}
-  \item Algoritmos: estrategias y backtracking verificados con pruebas unitarias.
-  \item Parsing: pruebas de resistencia ante variaciones de formato.
-  \item UI: plan de pruebas para selección y visualización completado; ejecución en progreso.
-  \item Exportación/Importación: verificación de integridad y compatibilidad en ejecución.
-\end{itemize}
-
-\section{Fase 5: Despliegue y CI/CD}
-\subsection*{Pipeline y distribución}
-\begin{itemize}
-  \item Configuración de build (min/target SDK, flavors, ofuscación y reducción de recursos).
-  \item Integración continua: ejecución de pruebas unitarias, de integración y de UI.
-  \item Publicación: empaquetado de APK/AAB y despliegue en canales de distribución.
-\end{itemize}
-
-\subsection*{Checklist de release}
-\begin{itemize}
-  \item Todos los tests pasan; cobertura mínima de 75\%.
-  \item Artefactos firmados y notas de versión actualizadas.
-  \item Validaciones de calidad estática sin advertencias críticas.
-\end{itemize}
-
-\subsection*{Entregables}
-\begin{itemize}
-  \item Pipeline CI/CD operativo con políticas de calidad y publicación.
-\end{itemize}
-
-\section{Fase 6: Mantenimiento y Mejoras}
-\subsection*{Retroalimentación e iteraciones}
-\begin{itemize}
-  \item Próximas mejoras: sincronización periódica en background y configuración de intervalo.
-  \item Deuda técnica: fortalecer pruebas de UI en selección/visualización; completar pruebas de exportación/importación.\\ Acción: implementar \textit{TC-008}, \textit{TC-009}.
-  \item Riesgos operativos: cambios en formatos PDF (RST-001) → mantener parser y pruebas de regresión.
-\end{itemize}
+% ----------------------------------------------------------------------
+\section{LECCIONES APRENDIDAS Y TRABAJO FUTURO}
+\subsection*{Lecciones}
+La \textbf{poda por hard constraints} y la \textbf{priorización por nivel} reducen drásticamente el espacio de búsqueda sin sacrificar calidad. El \textbf{JSON compartible} habilita colaboración real (\textit{WhatsApp-first}). El \textbf{widget} incrementa consultas diarias. \textbf{Offline-first} mitiga ansiedad ante caídas del origen.
 
 \subsection*{Próximos pasos}
-\begin{itemize}
-  \item Benchmark de rendimiento en dispositivo objetivo (RNF-002).
-  \item Telemetría de generación y scraping para monitoreo y mejora continua.
-\end{itemize}
+Filtros por aula/docente en UI, eventos externos (tareas/exámenes), telemetría \textit{opt-in} para refinar ranking de horarios, \textbf{benchmark} de rendimiento por dispositivo objetivo, y ampliación de pruebas de UI para export/import.
 
-\section*{Cierre del capítulo}
-Se ejecutó un proceso iterativo–incremental en seis fases, generando un catálogo completo y trazable de requisitos, decisiones de diseño coherentes, implementación de componentes clave y una estrategia de pruebas y despliegue integrada. La preparación para el Capítulo V contempla síntesis de logros por fase, hallazgos de pruebas y recomendaciones de mejora continua.
+% ----------------------------------------------------------------------
+\section*{SÍNTESIS}
+Se operó con un enfoque \textbf{iterativo–incremental} enfocado en uso real, respaldado por una \textbf{arquitectura limpia (Clean Architecture)} y una infraestructura \textbf{prioridad sin conexión (offline-first)}. El núcleo algorítmico (\emph{backtracking} + heurísticas compuestas) respeta restricciones duras y preferencias del usuario. La interoperabilidad JSON y los recordatorios (con IA en dispositivo opcional) completan el conjunto funcional. La trazabilidad RQ$\rightarrow$RF$\rightarrow$UC$\rightarrow$Artefactos$\rightarrow$Tests asegura alineación entre problema, implementación y verificación.
 
-% FIN DE 04_metodologia.tex
+% -------------------- NOTA DE IMÁGENES --------------------
+% Las figuras referenciadas se asumen disponibles en images/diagrams/:
+% cap4_arq_general.png, cap4_f1_flujo_datos.png, cap4_f2_modelo_dominio.png,
+% cap4_f3_decisiones_generador.png, cap4_f4_offline_first.png,
+% cap4_f5_share_import_flow.png, cap4_f6_journey_ui.png,
+% cap4_f7_secuencia_ia_recordatorios.png, cap4_f8_export_flow.png

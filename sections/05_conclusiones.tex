@@ -1,41 +1,137 @@
 \chapter{CONCLUSIONES Y RECOMENDACIONES}
 
-\emergencystretch=1em
+% Evita overfull en párrafos largos
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.15}
 
-\section{Conclusiones}
+\section{CONCLUSIONES}
 
 \begin{enumerate}
-  \item La aplicación móvil TecnoTime responde a una necesidad concreta de los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS: organizar de forma clara, accesible y personalizada sus horarios académicos, a diferencia de soluciones previas como Cappuccino UMSS \cite{cappuccino_umss}.
-
-  \item El desarrollo completo se realizó utilizando exclusivamente Android Studio \cite{android_studio}, bajo una arquitectura MVVM y principios de Clean Architecture \cite{pedreira2021comparativa, medina2014}, logrando una solución modular, escalable y fácil de mantener.
-
-  \item La app se alimenta directamente de los PDFs oficiales de horarios publicados en el sitio web de la FCyT \cite{horarios_fcyt}, aplicando técnicas de extracción mediante web scraping y procesamiento por expresiones regulares, sin necesidad de un backend intermedio.
-
-  \item El modelo de datos está cuidadosamente diseñado y normalizado, abarcando carreras, niveles, materias, grupos, horarios, docentes, aulas y eventos académicos, lo que permite funcionalidades sólidas y coherentes.
-
-  \item La incorporación de una base de datos local (Room) \cite{room_db} permite acceso completamente offline y sincronización eficiente, mejorando la experiencia del usuario.
-
-  \item TecnoTime ofrece funcio\-nalidades avanzadas como: generación automática de horarios, selección de materias, sugerencias opti\-mizadas, notificaciones, exportación a PDF e imagen, edición de colores y emojis por grupo, y más. Estas funciones se alinean con las mejores prácticas observadas en aplicaciones de refe\-rencia como Smart Timetable \cite{smart_timetable}.
-
-  \item El sistema mantiene un enfoque de inde\-pendencia total, donde los estudiantes no dependen de validaciones externas ni de infraestructura ins\-titucional, y pueden perso\-nalizar su entorno académico según sus necesidades, aspecto también valorado en estudios sobre aplicaciones móviles universitarias \cite{campushome_apps, lideres_apps}.
-
-  \item Se cumplió plenamente con los objetivos planteados, entregando una herramienta funcional, adaptable y enfocada en mejorar la organización académica del estudiante universitario.
+  \item La aplicación móvil \textbf{TecnoTime} responde a una necesidad concreta de los estudiantes de la FCyT--UMSS: organizar horarios académicos de forma clara, accesible y personalizable, superando limitaciones del sistema web Cappuccino \cite{cappuccino_umss}.
+  \item El desarrollo se realizó en entorno Android con arquitectura \textbf{MVVM} y principios de \textbf{Clean Architecture} \cite{martin2017-cleanarch}, logrando modularidad, escalabilidad y mantenibilidad.
+  \item La aplicación consume \textbf{PDFs oficiales} publicados por la FCyT \cite{horarios_fcyt} mediante extracción y análisis robustos, sin requerir un servicio intermedio.
+  \item El \textbf{modelo de datos} normalizado integra carreras, niveles, materias, grupos, horarios, docentes y aulas, lo que habilita validaciones y consultas coherentes.
+  \item El uso de \textbf{Room} \cite{room_db} permite operación con prioridad sin conexión (\textit{offline-first}) y sincronización eficiente, lo que favorece la experiencia de uso.
+  \item TecnoTime ofrece funcionalidades avanzadas: generación de horarios (sin choques por defecto), heurísticas de optimización (huecos, favoritos), notificaciones, exportación (PDF/imagen/Excel) y personalización visual; alineadas con prácticas de aplicaciones de referencia como \textit{Smart Timetable} \cite{smart_timetable}.
+  \item El sistema promueve \textbf{independencia operativa} (menor dependencia de infraestructura institucional en tiempo real) y \textbf{personalización} del entorno académico.
+  \item Se cumplieron los objetivos planteados, entregando una herramienta funcional, adaptable y centrada en la organización académica del estudiante.
 \end{enumerate}
 
-\section{Recomendaciones}
+\section{EVIDENCIAS DE CUMPLIMIENTO DE OBJETIVOS}
+
+\begin{table}[htbp]
+\centering
+\caption{Objetivos generales y específicos con evidencias. Fuente: elaboración propia.}
+\label{tab:5-1}
+\small
+\begin{tabular}{|p{0.28\textwidth}|p{0.42\textwidth}|p{0.22\textwidth}|}
+\hline
+\textbf{Objetivo} & \textbf{Evidencias} & \textbf{Fuente} \\
+\hline
+Objetivo General: Desarrollar una aplicación móvil para la gestión de horarios académicos en la FCyT--UMSS. 
+& Repositorio con código (\textit{TecnoTime}); pruebas unitarias/integración (TC--001..016); preferencia reportada por Android. 
+& \cite{horarios_fcyt,cappuccino_umss,smart_timetable} \\
+\hline
+OE1: Organización personalizada de horarios exclusivamente académicos (FCyT). 
+& Selección de materias/grupos con vista previa; widget de consulta; sin mezcla con eventos personales. 
+& \cite{horarios_fcyt} \\
+\hline
+OE2: Ajuste manual según inscripción; widget; guardado local. 
+& Flujo nivel$\rightarrow$materia$\rightarrow$grupo con \textit{preview}; widget en inicio; persistencia Room. 
+& \cite{room_db} \\
+\hline
+OE3: Descarga e intercambio en múltiples formatos. 
+& Exportación a imagen/PDF/Excel/JSON; importación JSON (total/parcial); validación de duplicados; uso social (WhatsApp). 
+& \cite{smart_timetable} \\
+\hline
+OE4: Sugerencias optimizadas reduciendo huecos. 
+& Backtracking con MRV/LCV y evaluación compuesta (huecos, favoritos, días) manteniendo Top--N. 
+& \cite{babaei2015-survey,kristiansen2013-survey} \\
+\hline
+OE5: UX móvil clara e intuitiva. 
+& Onboarding progresivo; vista semanal/diaria; deslizamiento por días; formato 24/12\,h; personalización visual. 
+& \cite{smart_timetable} \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{APORTES DEL PROYECTO}
+
+\begin{table}[htbp]
+\centering
+\caption{Aportes a módulos y su impacto. Fuente: elaboración propia.}
+\label{tab:5-2}
+\small
+\begin{tabular}{|p{0.28\textwidth}|p{0.42\textwidth}|p{0.22\textwidth}|}
+\hline
+\textbf{Aporte} & \textbf{Módulos/Capacidades} & \textbf{Impacto esperado/observado} \\
+\hline
+Aplicación móvil \textit{TecnoTime} 
+& F1: Ingesta PDF$\rightarrow$BD; F2: Modelo de dominio; F3: Generador (backtracking+heurísticas); F4: Prioridad sin conexión (caché, frescura, backoff/cortacircuito); F5: Interoperabilidad JSON; F6: UX integral; F7: Recordatorios \& IA; F8: Exportaciones; F9: Aseguramiento de calidad; F10: Seguridad/Privacidad; F11: Empaque/Release. 
+& Reducción del tiempo para construir horarios sin choques (TTS $< 5$ min); disminución de huecos diarios; adopción de intercambio JSON; resiliencia en modo sin conexión. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{LIMITACIONES Y MITIGACIONES}
+
+\begin{table}[htbp]
+\centering
+\caption{Limitaciones del proyecto, mitigaciones y estado. Fuente: elaboración propia.}
+\label{tab:5-3}
+\small
+\begin{tabular}{|p{0.36\textwidth}|p{0.44\textwidth}|p{0.12\textwidth}|}
+\hline
+\textbf{Limitación} & \textbf{Mitigación} & \textbf{Estado} \\
+\hline
+Enfoque en carreras de FCyT--UMSS (no otras facultades/universidades). 
+& Diseño modular para extensión futura (URLs y parsers por unidad académica). 
+& Mitigado \\
+\hline
+Disponibilidad sólo en Android; sin iOS/escritorio. 
+& Predominancia Android; app nativa optimizada. 
+& Mitigado \\
+\hline
+No publicación en Play Store (distribución interna). 
+& Gestión directa por desarrolladores/facultad. 
+& Mitigado \\
+\hline
+Exclusión de eventos personales. 
+& Enfoque académico evita dilución funcional. 
+& Mitigado \\
+\hline
+Dependencia de estructura/ubicación de PDFs institucionales. 
+& Parser tolerante; pruebas de regresión; importación manual de PDF. 
+& Implementado \\
+\hline
+Conectividad requerida solo para sincronizar (consulta y generación en modo sin conexión habilitadas). 
+& Caché local; verificación de frescura; \textit{backoff} exponencial y cortacircuito; mecanismo de respaldo (\textit{fallback}) por PDF. 
+& Implementado \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{RECOMENDACIONES}
 
 \begin{enumerate}
-  \item Se recomienda implementar una funcionalidad para sincronizar eventos con Google Calendar \cite{google_calendar}, permitiendo al usuario integrar su vida académica con otros calendarios personales.
+  \item Integrar sincronización opcional con calendarios externos (por ejemplo, Google Calendar) manteniendo control de privacidad.
+  \item Ampliar personalización visual (paletas, etiquetas, emojis, estilos) por materia/grupo.
+  \item Permitir agregar eventos no académicos (reuniones, prácticas) sin perder el foco académico.
+  \item Parametrizar orígenes PDF para facilitar extensión a otras unidades académicas usando la misma arquitectura \cite{horarios_fcyt}.
+  \item Mantener el parser actualizado ante cambios de formato/ubicación en la web oficial \cite{horarios_fcyt}.
+  \item Ejecutar ciclos de pruebas de UX al cierre de cada semestre para recoger retroalimentación y ajustar.
+  \item Continuar documentando código, estructuras y flujos clave para facilitar contribuciones y evolución del proyecto.
+\end{enumerate}
 
-  \item Se sugiere ampliar las opciones de perso\-nalización, permitiendo mayor variedad de colores, etiquetas, emojis, y estilos visuales para los grupos y materias, adaptándose a las pre\-ferencias individuales de cada usuario.
+\section{TRABAJO FUTURO}
 
-  \item Podría incluirse la posi\-bilidad de agregar eventos no académicos, como reuniones, prácticas, reco\-rdatorios personales, manteniendo el foco en la planificación del tiempo dentro del entorno universitario.
-
-  \item En caso de querer extender la aplicación a otras facultades o universidades, se recomienda crear una tabla de facultades y carreras, y establecer una es\-tructura común de URLs o sitios donde cada unidad aca\-démica publique sus propios archivos PDF de horarios \cite{fcyt_umss}.
-
-  \item Es im\-portante mantener actualizada la lógica de extracción de datos (scraping) ante posibles cambios en el formato o ubi\-cación de los horarios oficiales en la página web de la FCyT \cite{horarios_fcyt}.
-
-  \item Se aconseja seguir realizando pruebas de ex\-pe\-rien\-cia de usua\-rio (UX) y adaptaciones según la re\-tro\-ali\-men\-ta\-ción, especialmente al finalizar cada semestre académico, cuando los horarios cambian y los estudiantes dependen más de la herramienta.
-
-  \item Finalmente, se recomienda continuar docu\-mentando claramente el código fuente, las es\-tructuras de datos y los flujos principales, para faci\-litar la contribución de otros desa\-rrolladores y la evo\-lución natural del proyecto.
+\begin{enumerate}
+  \item Extender a iOS/escritorio (evaluar frameworks multiplataforma).
+  \item Integrar IA avanzada para sugerencias basadas en historial/afinidad y patrones de uso.
+  \item Colaboración en tiempo real para horarios grupales (proyectos/equipos).
+  \item Notificaciones con contexto (ubicación, clima) preservando privacidad.
+  \item Explorar integración con sistemas institucionales (backend oficial) para sincronización directa.
+  \item Estudios longitudinales de impacto (asistencia, gestión del tiempo).
+  \item Versión web ligera para consulta desde navegadores.
+  \item Gamificación (logros, rachas) para fomentar uso sostenido.
 \end{enumerate}

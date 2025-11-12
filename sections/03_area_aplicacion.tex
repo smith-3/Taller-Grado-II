@@ -1,133 +1,329 @@
-% 03_area_aplicacion.tex
-
-\chapter{Área de Aplicación}
+\chapter{ÁREA DE APLICACIÓN}
 \label{chap:area_aplicacion}
 
-% Nota de edición:
-% Este capítulo se estructura para cumplir Estructura.md: describir el proceso manual (AS-IS),
-% el estudio de campo y la información del dominio necesaria. Los detalles técnicos profundos
-% (arquitectura, librerías, patrones) se tratan en el Capítulo IV (Metodología/Desarrollo).
+Este capítulo describe el contexto real de uso de la solución propuesta: el dominio institucional, la población objetivo, los procesos actuales (estado actual, AS-IS) y los procesos propuestos (estado futuro, TO-BE), así como los datos y restricciones propias del área. No se detalla la metodología ni el diseño técnico; esos contenidos se desarrollan en capítulos posteriores. La intención es situar el problema en su entorno operativo y establecer límites y criterios de evaluación vinculados al uso real.
 
-\section{Contexto y alcance del área}
-% Describir brevemente FCyT–UMSS, publicación semestral de horarios por carrera y cómo los estudiantes
-% usan Capuchino durante inscripción. Dejar claro el alcance del área: desde publicación oficial
-% hasta consulta diaria del estudiante.
-\textbf{TODO:} Contexto institucional (FCyT--UMSS), dinámica de inscripción, rol de Capuchino.
+\section{DOMINIO Y CONTEXTO INSTITUCIONAL}
 
-\section{Proceso manual actual (AS-IS: Capuchino)}
-% Detallar el flujo real que realiza un estudiante usando Capuchino: bandeja de carreras,
-% navegación por niveles, materias y grupos; visualización semanal a la derecha; selección/deselección.
-% Incluir apoyos informales (grupos de WhatsApp) y qué produce el flujo (PDF/captura).
+La Facultad de Ciencias y Tecnología (FCyT) de la Universidad Mayor de San Simón (UMSS) administra semestralmente la oferta académica de aproximadamente veinte carreras de grado. Los horarios oficiales se publican en el portal institucional principalmente en formato PDF, organizados por carrera y periodo. 
+
+Durante los periodos de inscripción, la comunidad estudiantil utiliza de forma intensiva herramientas web como Capuchino para consultar la oferta de grupos, verificar choques y construir horarios preliminares. Fuera de estas ventanas, el uso disminuye, pero persiste la necesidad de:
+\begin{itemize}
+  \item Consultar el horario personal de manera rápida en el día a día.
+  \item Ajustar materias y grupos ante cambios institucionales o personales.
+  \item Coordinar con pares mediante canales informales (principalmente WhatsApp).
+\end{itemize}
+
+En este escenario, \emph{TecnoTime} se plantea como una aplicación móvil nativa Android, con prioridad sin conexión (\emph{offline-first}), diseñada para complementar el ecosistema actual. Su ámbito cubre desde la preparación previa al proceso de inscripción hasta el seguimiento cotidiano del horario del estudiante durante el semestre.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/diagrams/area_actores.png}
+  \caption{Mapa conceptual de actores y entorno de operación. Fuente: elaboración propia.}
+  \label{fig:area_actores}
+\end{figure}
+
+% ----------------------------------------------------------------------
+\section{POBLACIÓN OBJETIVO Y ACTORES}
+
+\subsection*{Actores principales y secundarios}
+
+\textbf{Actor principal}: estudiantes de la FCyT, de distintos semestres, turnos y carreras, que construyen, consultan y ajustan sus horarios.
+
+\textbf{Actores secundarios}:
+\begin{itemize}
+  \item Personal administrativo responsable de publicar y actualizar los horarios oficiales en PDF.
+  \item Docentes y tutores, cuya asignación a grupos influye en las preferencias de los estudiantes.
+\end{itemize}
+
+\subsection*{Evidencia cuantitativa del contexto}
+
+A partir de una encuesta aplicada a estudiantes de FCyT (n $\approx$ 125) se obtienen hallazgos relevantes para el área de aplicación:
+\begin{itemize}
+  \item Predominio de dispositivos Android (por encima del 90\%), con presencia minoritaria de iOS.
+  \item Uso de Capuchino concentrado en el periodo de inscripción: cerca de la mitad reporta usarlo sólo en inscripciones y una porción similar varias veces por semestre.
+  \item Más del 80\% utiliza grupos de WhatsApp para compartir y confirmar información de horarios, grupos y docentes.
+  \item Principales demandas para una futura aplicación móvil:
+    \begin{itemize}
+      \item Horarios actualizados automáticamente.
+      \item Funcionamiento sin conexión.
+      \item Recordatorios de clases.
+      \item Capacidad de compartir el horario con compañeros.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{images/diagrams/area_graficos_encuesta.png}
+  \caption{Resumen gráfico de resultados de la encuesta (uso, dispositivo y demandas). Fuente: encuesta aplicada a estudiantes de la FCyT (n $\approx$ 125).}
+  \label{fig:area_graficos_encuesta}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Actores y necesidades clave en el área de aplicación. Fuente: elaboración propia.}
+  \label{tab:actores_necesidades}
+  \small
+  \begin{tabular}{|p{3.2cm}|p{4.2cm}|p{4.2cm}|p{4.2cm}|}
+    \hline
+    Actor & Objetivos & Problemas actuales & Aporte potencial de TecnoTime \\
+    \hline
+    Estudiante FCyT &
+    Construir horario sin choques; consultar fácilmente; adaptarse a cambios &
+    Repetir selección carrera/nivel/materia; caídas en inscripción; dependencia total de conexión; dificultad para compartir &
+    Generación de horarios sin choques por defecto; caché local; compartir/importar horario; recordatorios y componente de acceso rápido (widget) \\
+    \hline
+    Docente/Tutor &
+    Coordinar mejor con estudiantes &
+    Comunicación fragmentada; cambios informales &
+    Horarios más claros; menor ambigüedad en grupos y horarios \\
+    \hline
+    Administrativo &
+    Difundir oferta vigente oportunamente &
+    Cambios de última hora; formato rígido en PDF &
+    Integración desde PDFs; actualización automática hacia estudiantes sin sobrecarga manual \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------
+\section{PROCESO ACTUAL (AS-IS): CAPUCHINO + PDFS + WHATSAPP}
+
 \subsection{Acceso y navegación}
-\textbf{TODO:} Describir la ``bandeja'' con todas las carreras, selección de carrera $\rightarrow$ nivel $\rightarrow$ materia $\rightarrow$ grupo.
+En el flujo actual, el estudiante:
+\begin{enumerate}
+  \item Ingresa al sitio web (por ejemplo, Capuchino) desde un navegador.
+  \item Selecciona secuencialmente carrera, nivel, materia y grupo.
+  \item Repite el proceso para cada modificación o comparación.
+\end{enumerate}
+
+Esta navegación jerárquica implica múltiples pasos y resulta poco cómoda en pantallas pequeñas. La herramienta no recuerda el contexto del usuario entre sesiones.
 
 \subsection{Selección y visualización del horario}
-\textbf{TODO:} Explicar la vista semanal (días/horas) y cómo aparecen los bloques al elegir grupos. Indicar selección/deselección.
-
-\subsection{Apoyos informales y salida del proceso}
-\textbf{TODO:} Mencionar uso de WhatsApp u otros medios para confirmar opciones. Resultado típico: PDF o captura compartible.
-
-\subsection{Limitaciones observadas}
+El sistema muestra los grupos seleccionados en una vista de horario semanal. El estudiante:
 \begin{itemize}
-  \item No responsivo en móviles; experiencia pobre en smartphone.
-  \item No recuerda carrera ni materias aprobadas; se repite el proceso en cada visita.
-  \item Sin notificaciones ni acompañamiento tras la inscripción (útil solo en la ventana de inscripción).
-  \item Sin actualización personalizada automática para el estudiante.
+  \item Activa/desactiva grupos para evitar choques.
+  \item Exporta su horario mediante captura de pantalla o PDF.
 \end{itemize}
 
-\section{Problemas y oportunidades}
-% Sintetizar el problema central y las oportunidades de mejora.
-\textbf{TODO:} Problema central (vacío posinscripción); oportunidades (experiencia móvil, personalización, actualización, recordatorios).
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{images/diagrams/area_asis_proceso.png}
+  \caption{Esquema del proceso AS-IS con Capuchino y PDFs. Fuente: elaboración propia.}
+  \label{fig:asis_proceso}
+\end{figure}
 
-\section{Estudio de campo (plan)}
-% Este capítulo contiene el plan del estudio que sustenta requerimientos. Los resultados se reportarán más adelante.
-\subsection{Objetivo}
-\textbf{TODO:} Medir uso/satisfacción de Capuchino y necesidad de app móvil complementaria.
-
-\subsection{Población y muestra}
-\textbf{TODO:} Estudiantes FCyT (Android mayoritario); criterios de inclusión y tamaño muestral.
-
-\subsection{Método e instrumento}
-\textbf{TODO:} Encuesta estructurada (frecuencia de uso, dispositivo, satisfacción, pain points, interés en app).
-
-\subsection{Variables y dimensiones}
-\textbf{TODO:} Usabilidad móvil, persistencia de datos, necesidad de notificaciones, actualización de horarios, posinscripción.
-
-\subsection{Consideraciones}
-\textbf{TODO:} La app no reemplaza Capuchino; lo complementa. Consideraciones éticas y de anonimato.
-
-\section{Información del dominio}
-% Estructurar los datos que requiere el software, su origen y reglas de integridad.
-\subsection{Entidades y catálogos}
+\subsection{Apoyos informales}
+La coordinación y validación se completa en canales no oficiales:
 \begin{itemize}
-  \item Carreras: código, nombre, URL del PDF oficial, fecha de actualización.
-  \item Niveles: identificadores jerárquicos (p.\,ej., ``A'', ``1er semestre'').
-  \item Materias: código único, nombre, estados (aprobada, optativa, activa).
-  \item Grupos: por materia/nivel; id de grupo, tipo (T/TP/P/L), modalidad, estado.
-  \item Horarios de grupo: día, hora inicio/fin, aula, docente, estado.
-  \item Docentes: nombre completo, preferencia (favorito).
-  \item Aulas: identificador alfanumérico único (p.\,ej., ``B-201'').
+  \item Envío de capturas de pantalla.
+  \item Preguntas en grupos de WhatsApp sobre choques, docentes y aulas.
 \end{itemize}
 
-\subsection{Reglas de negocio y restricciones}
+\subsection{Limitaciones identificadas}
 \begin{itemize}
-  \item No solapamiento en horario individual; $\text{inicio} < \text{fin}$.
-  \item Unicidad: código de materia; $($materia, grupo$)$; id de aula.
-  \item Consistencia jerárquica: el grupo pertenece a una materia y a un nivel de una carrera.
-  \item Disponibilidad: solo grupos activos generan sesiones.
+  \item Experiencia deficiente en dispositivos móviles (interfaz no adaptada).
+  \item No se recuerdan carrera, historial de materias aprobadas ni preferencias.
+  \item Enfoque limitado a la etapa de inscripción; el horario resultante no se integra a la rutina diaria.
+  \item Dependencia de conexión constante para consultar la oferta.
+  \item Actualizaciones tardías o inconsistentes en horarios y aulas percibidas por los estudiantes.
 \end{itemize}
 
-\subsection{Casos especiales}
+Estas brechas definen el \emph{área de oportunidad} para una solución complementaria.
+
+% ----------------------------------------------------------------------
+\section{PROCESOS PROPUESTOS (TO-BE) CON TECNOTIME}
+
+\subsection{Visión general}
+\emph{TecnoTime} aborda los puntos críticos del estado actual (AS-IS) mediante procesos diseñados para:
 \begin{itemize}
-  \item Cambio de aula/horario (reposiciones, avisos tardíos).
-  \item Datos incompletos en fuente oficial (docente/aula nulos).
-  \item Conflictos aceptados explícitamente por el usuario para análisis.
+  \item Reducir pasos repetitivos al construir y ajustar horarios.
+  \item Mantener el horario accesible y útil durante todo el semestre.
+  \item Integrarse con prácticas reales: uso de WhatsApp, consulta móvil rápida, trabajo sin conexión.
 \end{itemize}
 
-\subsection{Diccionario de datos esencial}
-% Enumerar campos mínimos por entidad (clave para implementación en Cap. IV).
-\textbf{TODO:} Completar con campos pactados por entidad (Carrera, Materia, Grupo, Horario, Docente, Aula) y su fuente.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{images/diagrams/area_tobe_proceso.png}
+  \caption{Proceso TO-BE con TecnoTime: generación, sincronización y uso cotidiano. Fuente: elaboración propia.}
+  \label{fig:area_tobe}
+\end{figure}
 
-\section{Requerimientos funcionales (derivados)}
+\subsection{Flujos típicos del usuario}
+
+\paragraph{Construcción de horario sin choques.}
+El estudiante selecciona materias candidatas; la aplicación genera propuestas sin choques por defecto, con posibilidad de:
 \begin{itemize}
-  \item Consulta \emph{offline} del horario y datos seleccionados.
-  \item Recordar carrera y materias aprobadas; filtrado de materias pendientes.
-  \item Generación de horarios candidatos sin conflictos; criterios (minimizar huecos, priorizar docentes).
-  \item Notificaciones previas a clases y gestión de eventos académicos.
-  \item Asistente ``Simón'' (IA) para notificaciones motivacionales/personalizadas. % Detalle técnico en Cap. IV
-  \item Actualización automática desde la fuente oficial y alerta de cambios.
-  \item Exportación/compartición (PDF/imagen/JSON) e importación de horarios compartidos.
+  \item Marcar docentes favoritos.
+  \item Minimizar tiempos muertos.
+  \item Fijar materias obligatorias.
+  \item Aceptar choques sólo si se configura explícitamente.
 \end{itemize}
 
-\section{Requerimientos no funcionales}
+\paragraph{Importar y compartir horarios (JSON).}
+El horario puede:
 \begin{itemize}
-  \item Usabilidad móvil y accesibilidad; compatibilidad Android (API objetivo y mínima).
-  \item Operación \emph{offline} confiable y rendimiento en dispositivo.
-  \item Privacidad y manejo responsable de datos del estudiante.
+  \item Exportarse como imagen, PDF o en formato JSON para intercambio.
+  \item Compartirse por mensajería (por ejemplo, WhatsApp).
+  \item Importarse desde un JSON recibido para clonar total o parcialmente la configuración.
 \end{itemize}
 
-\section{Alcances y exclusiones}
+\paragraph{Gestión dinámica de materias.}
+El usuario puede:
 \begin{itemize}
-  \item Alcances: estudiantes FCyT; clases y exámenes oficiales; plataforma Android.
-  \item Exclusiones: inscripción directa; reemplazo de Capuchino; iOS/PWA inicial; funciones administrativas.
+  \item Agregar materias manualmente (nivel $\rightarrow$ materia $\rightarrow$ grupo con vista previa).
+  \item Cambiar de grupo y registrar el estado final de la materia (aprobada o abandonada).
 \end{itemize}
 
-\section{Supuestos y riesgos}
+\paragraph{Recordatorios y componente de acceso rápido (\emph{widget}).}
 \begin{itemize}
-  \item Supuestos: disponibilidad y estructura estable de PDFs oficiales; adopción Android en la comunidad.
-  \item Riesgos: cambios de formato; retrasos de publicación; datos incompletos; aceptación del componente de IA.
+  \item Configurar recordatorios con anticipación ajustable para próximas clases.
+  \item Consultar el horario del día mediante un componente de acceso rápido (\emph{widget}) en la pantalla principal.
+  \item Activar de forma opcional un asistente (Simón) basado en inteligencia artificial (IA) para mensajes motivacionales contextualizados.
 \end{itemize}
 
-\section{Métricas e impacto esperado}
-% Proponer indicadores para evaluar beneficios.
-\textbf{TODO:} Tiempo de armado de horario, reducción de conflictos, tasa de asistencia (vía recordatorios), satisfacción de usabilidad.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{images/diagrams/area_user_journey.png}
+  \caption{Journey resumido del estudiante con TecnoTime. Fuente: elaboración propia.}
+  \label{fig:area_journey}
+\end{figure}
 
-\section{Trazabilidad}
-% Relacionar problemas observados con requerimientos y métricas.
-\textbf{TODO:} Tabla o texto que mapee: problema $\rightarrow$ requerimiento $\rightarrow$ métrica.
+\begin{table}[H]
+  \centering
+  \caption{Escenarios frecuentes en el TO-BE. Fuente: elaboración propia.}
+  \label{tab:escenarios}
+  \small
+  \begin{tabular}{|p{3.2cm}|p{3.6cm}|p{6.0cm}|p{3.0cm}|}
+    \hline
+    Escenario & Disparador & Pasos clave & Resultado \\
+    \hline
+    Armar horario & Inicio de semestre & Seleccionar materias, generar propuestas, elegir opción & Horario base sin choques \\
+    \hline
+    Importar JSON & Mensaje recibido & Abrir JSON, revisar materias, aplicar parcial/total & Horario alineado con pares \\
+    \hline
+    Agregar materia & Cambio de carga & Nivel $\rightarrow$ materia $\rightarrow$ grupo (preview) & Materia añadida al horario \\
+    \hline
+    Editar grupo & Cambio de preferencia & Seleccionar nuevo grupo, validar choques & Grupo actualizado \\
+    \hline
+    Recordatorios & Preferencia & Fijar anticipación, activar/desactivar IA & Avisos antes de cada clase \\
+    \hline
+    Consulta rápida & Día a día & Ver componente de acceso rápido (widget) con horario vigente & Información inmediata \\
+    \hline
+  \end{tabular}
+\end{table}
 
-\section{Referencias y anexos}
-% Recordatorio de incluir citas a documentos oficiales (PDFs/portal) y anexar capturas/diagramas si corresponde.
-\textbf{TODO:} Citas y anexos conforme a normas de la FCyT.
+% ----------------------------------------------------------------------
+\section{INFORMACIÓN DEL DOMINIO Y REGLAS DEL ÁREA}
 
-% FIN DE 03_area_aplicacion.tex
+\subsection{Entidades y catálogos relevantes}
+
+En el área de aplicación se identifican entidades clave:
+\begin{itemize}
+  \item \textbf{Carrera}: identificador, nombre, enlace al PDF oficial, fecha de actualización.
+  \item \textbf{Nivel}: identificador jerárquico (p.\,ej., ``Nivel A'', ``1er semestre'').
+  \item \textbf{Materia}: código único, nombre, tipo (obligatoria/optativa), estado (aprobada, pendiente).
+  \item \textbf{Grupo}: número o código, tipo de clase (teoría/práctica/laboratorio), modalidad, estado.
+  \item \textbf{Horario de grupo}: día, hora de inicio, hora de fin, aula, docente.
+  \item \textbf{Docente}: nombre completo, posible marcación como favorito.
+  \item \textbf{Aula}: identificador alfanumérico (por ejemplo, ``B-201'').
+  \item \textbf{Selección del estudiante}: materias y grupos elegidos, color, emoji, preferencias asociadas.
+\end{itemize}
+
+\subsection{Reglas de negocio y casos especiales}
+
+\begin{itemize}
+  \item Para el horario individual, no se permiten solapamientos, salvo que el usuario habilite explícitamente la aceptación de choques.
+  \item Unicidad de códigos de materia y consistencia jerárquica entre carrera, nivel, materia y grupo.
+  \item Consideración de datos incompletos: grupos con aula o docente pendientes pueden existir y actualizarse posteriormente.
+  \item Cambios tardíos de horario o aula deben poder reflejarse mediante actualizaciones desde la fuente oficial o sincronización manual de PDFs.
+\end{itemize}
+
+Estas reglas describen el comportamiento esperado en el área de aplicación; su formalización operativa se desarrolla en el capítulo de requisitos.
+
+% ----------------------------------------------------------------------
+\section{DATOS Y FLUJO DE INFORMACIÓN EN EL ÁREA}
+
+La fuente autorizada de información son los horarios oficiales en PDF publicados por la FCyT. A partir de ello, el área de aplicación considera:
+
+\begin{itemize}
+  \item \textbf{Ingreso de datos}: descarga de PDFs y extracción estructurada de la oferta de materias, grupos y bloques.
+  \item \textbf{Almacenamiento local}: mantenimiento de un caché persistente en el dispositivo del estudiante.
+  \item \textbf{Actualización}: verificación de frescura de datos y sincronización responsable (sin saturar el servidor), con reintentos espaciados.
+  \item \textbf{Intercambio social}: uso de archivos JSON autocontenidos para compartir horarios entre estudiantes, compatibles con importación selectiva.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\textwidth]{images/diagrams/area_flujo_datos.png}
+  \caption{Flujo de datos en el área de aplicación: fuente oficial, caché local e intercambio social. Fuente: elaboración propia.}
+  \label{fig:area_flujo_datos}
+\end{figure}
+
+% ----------------------------------------------------------------------
+\section{ALCANCES, LÍMITES Y RIESGOS DEL ÁREA}
+
+\subsection*{Alcances}
+\begin{itemize}
+  \item Estudiantes de la FCyT que requieren construir, mantener y consultar su horario.
+  \item Uso de dispositivos Android como plataforma principal.
+  \item Integración con horarios oficiales publicados en PDF.
+  \item Soporte a intercambio de horarios mediante archivos JSON y medios de mensajería.
+  \item Recordatorios de clases, preferencias de usuario y consulta rápida mediante componente de acceso rápido (widget).
+\end{itemize}
+
+\subsection*{Límites}
+\begin{itemize}
+  \item No reemplaza los sistemas oficiales de inscripción ni la responsabilidad institucional sobre los horarios.
+  \item No se modela capacidad de aulas ni asignación global a nivel institucional.
+  \item No se garantiza cobertura de horarios de verano/invierno si no se dispone de fuente oficial fiable.
+  \item Soporte inicial enfocado en Android; otras plataformas quedan como trabajo futuro.
+\end{itemize}
+
+\subsection*{Riesgos y mitigaciones}
+
+\begin{table}[H]
+  \centering
+  \caption{Riesgos del área de aplicación y estrategias de mitigación. Fuente: elaboración propia.}
+  \label{tab:riesgos_area}
+  \small
+  \begin{tabular}{|p{6.5cm}|p{9.5cm}|}
+    \hline
+    Riesgo & Mitigación propuesta \\
+    \hline
+    Cambios en el formato o ubicación de los PDFs oficiales &
+    Diseñar un proceso de extracción flexible y actualizable; permitir sincronización manual desde nuevos PDFs. \\
+    \hline
+    Retrasos o errores en la publicación de horarios &
+    Mostrar fecha de última actualización; permitir que el usuario mantenga su caché local mientras se resuelve la inconsistencia. \\
+    \hline
+    Conectividad intermitente o limitada &
+    Mantener operación con prioridad sin conexión (\emph{offline-first}) con datos locales y sincronización diferida. \\
+    \hline
+    Saturación de la fuente oficial &
+    Implementar estrategias de reintento con espera progresiva y límites de frecuencia para acceso automatizado. \\
+    \hline
+    Baja adopción del componente de IA &
+    Mantener Simón como módulo opcional, transparente y controlado por el usuario, sin afectar el núcleo de la aplicación. \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------
+\section{CRITERIOS DE ÉXITO E IMPACTO ESPERADO}
+
+Dentro del área de aplicación, el impacto esperado de \emph{TecnoTime} incluye:
+\begin{itemize}
+  \item Reducción del tiempo y pasos necesarios para construir un horario sin choques respecto al proceso AS-IS.
+  \item Mayor continuidad de uso más allá del periodo de inscripción (consulta diaria efectiva).
+  \item Disminución de errores por choques no detectados, gracias a validaciones automáticas.
+  \item Uso extendido de mecanismos de compartición estructurada (archivos JSON) en lugar de sólo capturas.
+  \item Aprovechamiento de recordatorios y del componente de acceso rápido (widget) para mejorar la organización académica personal.
+\end{itemize}
+
+Estos criterios orientan la evaluación posterior del sistema y vinculan directamente el área de aplicación con los requisitos y la solución propuesta.
+
+% ----------------------------------------------------------------------
+\section*{SÍNTESIS}
+
+El área de aplicación de \emph{TecnoTime} se sitúa en la intersección entre la oferta académica oficial de la FCyT–UMSS, las prácticas actuales de consulta mediante Capuchino y PDFs, y los canales informales de coordinación estudiantil. La existencia de picos de uso, repetición de pasos, dependencia de conexión y ausencia de herramientas móviles personalizadas conforma un espacio claro para una solución complementaria: una aplicación Android con prioridad sin conexión (\emph{offline-first}), capaz de generar y mantener horarios personalizados, integrarse con la dinámica social de los estudiantes y apoyarse en datos oficiales sin sustituir a los sistemas institucionales. Este contexto delimita, justifica y orienta los requisitos que se desarrollan en los capítulos siguientes.
