@@ -1,137 +1,27 @@
 \chapter{CONCLUSIONES Y RECOMENDACIONES}
 
-% Evita overfull en párrafos largos
+% Afinar cortes de línea y tablas
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 
-\section{CONCLUSIONES}
-
 \begin{enumerate}
-  \item La aplicación móvil \textbf{TecnoTime} responde a una necesidad concreta de los estudiantes de la FCyT--UMSS: organizar horarios académicos de forma clara, accesible y personalizable, superando limitaciones del sistema web Cappuccino \cite{cappuccino_umss}.
-  \item El desarrollo se realizó en entorno Android con arquitectura \textbf{MVVM} y principios de \textbf{Clean Architecture} \cite{martin2017-cleanarch}, logrando modularidad, escalabilidad y mantenibilidad.
-  \item La aplicación consume \textbf{PDFs oficiales} publicados por la FCyT \cite{horarios_fcyt} mediante extracción y análisis robustos, sin requerir un servicio intermedio.
-  \item El \textbf{modelo de datos} normalizado integra carreras, niveles, materias, grupos, horarios, docentes y aulas, lo que habilita validaciones y consultas coherentes.
-  \item El uso de \textbf{Room} \cite{room_db} permite operación con prioridad sin conexión (\textit{offline-first}) y sincronización eficiente, lo que favorece la experiencia de uso.
-  \item TecnoTime ofrece funcionalidades avanzadas: generación de horarios (sin choques por defecto), heurísticas de optimización (huecos, favoritos), notificaciones, exportación (PDF/imagen/Excel) y personalización visual; alineadas con prácticas de aplicaciones de referencia como \textit{Smart Timetable} \cite{smart_timetable}.
-  \item El sistema promueve \textbf{independencia operativa} (menor dependencia de infraestructura institucional en tiempo real) y \textbf{personalización} del entorno académico.
-  \item Se cumplieron los objetivos planteados, entregando una herramienta funcional, adaptable y centrada en la organización académica del estudiante.
-\end{enumerate}
+\setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\section{EVIDENCIAS DE CUMPLIMIENTO DE OBJETIVOS}
+\item \textbf{(OG)} Se comprobó el objetivo general: \emph{TecnoTime} satisface la necesidad de organizar horarios académicos de forma clara, accesible y personalizable para estudiantes de la FCyT--UMSS, reduciendo pasos y errores frente al flujo web vigente (p.\,ej., Cappuccino \cite{cappuccino_umss}) y favoreciendo su uso cotidiano más allá del periodo de inscripción.
 
-\begin{table}[htbp]
-\centering
-\caption{Objetivos generales y específicos con evidencias. Fuente: elaboración propia.}
-\label{tab:5-1}
-\small
-\begin{tabular}{|p{0.28\textwidth}|p{0.42\textwidth}|p{0.22\textwidth}|}
-\hline
-\textbf{Objetivo} & \textbf{Evidencias} & \textbf{Fuente} \\
-\hline
-Objetivo General: Desarrollar una aplicación móvil para la gestión de horarios académicos en la FCyT--UMSS. 
-& Repositorio con código (\textit{TecnoTime}); pruebas unitarias/integración (TC--001..016); preferencia reportada por Android. 
-& \cite{horarios_fcyt,cappuccino_umss,smart_timetable} \\
-\hline
-OE1: Organización personalizada de horarios exclusivamente académicos (FCyT). 
-& Selección de materias/grupos con vista previa; widget de consulta; sin mezcla con eventos personales. 
-& \cite{horarios_fcyt} \\
-\hline
-OE2: Ajuste manual según inscripción; widget; guardado local. 
-& Flujo nivel$\rightarrow$materia$\rightarrow$grupo con \textit{preview}; widget en inicio; persistencia Room. 
-& \cite{room_db} \\
-\hline
-OE3: Descarga e intercambio en múltiples formatos. 
-& Exportación a imagen/PDF/Excel/JSON; importación JSON (total/parcial); validación de duplicados; uso social (WhatsApp). 
-& \cite{smart_timetable} \\
-\hline
-OE4: Sugerencias optimizadas reduciendo huecos. 
-& Backtracking con MRV/LCV y evaluación compuesta (huecos, favoritos, días) manteniendo Top--N. 
-& \cite{babaei2015-survey,kristiansen2013-survey} \\
-\hline
-OE5: UX móvil clara e intuitiva. 
-& Onboarding progresivo; vista semanal/diaria; deslizamiento por días; formato 24/12\,h; personalización visual. 
-& \cite{smart_timetable} \\
-\hline
-\end{tabular}
-\end{table}
+\item \textbf{(OE4)} La generación por defecto de horarios sin choques, junto con la evaluación \emph{multicriterio} (huecos, docentes favoritos y días activos), produjo soluciones de calidad en tiempos compatibles con la ejecución \emph{on-device}. Ello permitió mantener el enfoque en el caso de uso individual, respetando restricciones duras y optimizando preferencias blandas.
 
-\section{APORTES DEL PROYECTO}
+\item \textbf{(OE3)} La exportación/importación en formatos imagen/PDF/Excel y el archivo estructurado (JSON) habilitaron coordinación entre pares por mensajería con menor riesgo de transcripción y mejor trazabilidad. Esta interoperabilidad facilita reproducir, comparar y adoptar configuraciones de horario en contextos reales de curso.
 
-\begin{table}[htbp]
-\centering
-\caption{Aportes a módulos y su impacto. Fuente: elaboración propia.}
-\label{tab:5-2}
-\small
-\begin{tabular}{|p{0.28\textwidth}|p{0.42\textwidth}|p{0.22\textwidth}|}
-\hline
-\textbf{Aporte} & \textbf{Módulos/Capacidades} & \textbf{Impacto esperado/observado} \\
-\hline
-Aplicación móvil \textit{TecnoTime} 
-& F1: Ingesta PDF$\rightarrow$BD; F2: Modelo de dominio; F3: Generador (backtracking+heurísticas); F4: Prioridad sin conexión (caché, frescura, backoff/cortacircuito); F5: Interoperabilidad JSON; F6: UX integral; F7: Recordatorios \& IA; F8: Exportaciones; F9: Aseguramiento de calidad; F10: Seguridad/Privacidad; F11: Empaque/Release. 
-& Reducción del tiempo para construir horarios sin choques (TTS $< 5$ min); disminución de huecos diarios; adopción de intercambio JSON; resiliencia en modo sin conexión. \\
-\hline
-\end{tabular}
-\end{table}
+\item \textbf{(OE1)} La organización exclusivamente académica se garantizó mediante selección guiada de materias/grupos, evitando mezclar eventos personales. Las vistas semanal y diaria, junto con la vista previa por grupo, contribuyeron a una lectura rápida y consistente del horario.
 
-\section{LIMITACIONES Y MITIGACIONES}
+\item \textbf{(OE2)} La continuidad de uso se sostuvo con persistencia local y \textbf{memoria de contexto}, mitigando la frustración por repetir carrera--nivel--materia. El funcionamiento con prioridad sin conexión aseguró acceso al horario y ajustes esenciales en escenarios de conectividad limitada.
 
-\begin{table}[htbp]
-\centering
-\caption{Limitaciones del proyecto, mitigaciones y estado. Fuente: elaboración propia.}
-\label{tab:5-3}
-\small
-\begin{tabular}{|p{0.36\textwidth}|p{0.44\textwidth}|p{0.12\textwidth}|}
-\hline
-\textbf{Limitación} & \textbf{Mitigación} & \textbf{Estado} \\
-\hline
-Enfoque en carreras de FCyT--UMSS (no otras facultades/universidades). 
-& Diseño modular para extensión futura (URLs y parsers por unidad académica). 
-& Mitigado \\
-\hline
-Disponibilidad sólo en Android; sin iOS/escritorio. 
-& Predominancia Android; app nativa optimizada. 
-& Mitigado \\
-\hline
-No publicación en Play Store (distribución interna). 
-& Gestión directa por desarrolladores/facultad. 
-& Mitigado \\
-\hline
-Exclusión de eventos personales. 
-& Enfoque académico evita dilución funcional. 
-& Mitigado \\
-\hline
-Dependencia de estructura/ubicación de PDFs institucionales. 
-& Parser tolerante; pruebas de regresión; importación manual de PDF. 
-& Implementado \\
-\hline
-Conectividad requerida solo para sincronizar (consulta y generación en modo sin conexión habilitadas). 
-& Caché local; verificación de frescura; \textit{backoff} exponencial y cortacircuito; mecanismo de respaldo (\textit{fallback}) por PDF. 
-& Implementado \\
-\hline
-\end{tabular}
-\end{table}
+\item \textbf{(OE5)} La experiencia de uso móvil resultó clara e intuitiva: onboarding progresivo, preferencias de presentación (formato 24/12\,h, visibilidad por día) y componente de acceso rápido favorecieron la consulta diaria. Estas decisiones de UX se alinean con las necesidades observadas en el área de aplicación.
 
-\section{RECOMENDACIONES}
+\item \textbf{(Arquitectura \& Datos)} La adopción de \emph{MVVM} y principios de \emph{arquitectura limpia} \cite{martin2017-cleanarch}, junto con la ingesta de PDFs oficiales \cite{horarios_fcyt} y el almacenamiento local con Room \cite{room_db}, permitieron operación con prioridad sin conexión, verificación de frescura y menor dependencia de infraestructura en tiempo real, mejorando mantenibilidad y escalabilidad.
 
-\begin{enumerate}
-  \item Integrar sincronización opcional con calendarios externos (por ejemplo, Google Calendar) manteniendo control de privacidad.
-  \item Ampliar personalización visual (paletas, etiquetas, emojis, estilos) por materia/grupo.
-  \item Permitir agregar eventos no académicos (reuniones, prácticas) sin perder el foco académico.
-  \item Parametrizar orígenes PDF para facilitar extensión a otras unidades académicas usando la misma arquitectura \cite{horarios_fcyt}.
-  \item Mantener el parser actualizado ante cambios de formato/ubicación en la web oficial \cite{horarios_fcyt}.
-  \item Ejecutar ciclos de pruebas de UX al cierre de cada semestre para recoger retroalimentación y ajustar.
-  \item Continuar documentando código, estructuras y flujos clave para facilitar contribuciones y evolución del proyecto.
-\end{enumerate}
+\item \textbf{(Impacto y transferencia)} La solución reduce el tiempo para construir horarios sin choques, disminuye huecos diarios y normaliza el intercambio estructurado entre estudiantes. El diseño modular y el uso de formatos abiertos sientan bases para su extensión a otras unidades académicas con mínimos cambios.
 
-\section{TRABAJO FUTURO}
-
-\begin{enumerate}
-  \item Extender a iOS/escritorio (evaluar frameworks multiplataforma).
-  \item Integrar IA avanzada para sugerencias basadas en historial/afinidad y patrones de uso.
-  \item Colaboración en tiempo real para horarios grupales (proyectos/equipos).
-  \item Notificaciones con contexto (ubicación, clima) preservando privacidad.
-  \item Explorar integración con sistemas institucionales (backend oficial) para sincronización directa.
-  \item Estudios longitudinales de impacto (asistencia, gestión del tiempo).
-  \item Versión web ligera para consulta desde navegadores.
-  \item Gamificación (logros, rachas) para fomentar uso sostenido.
+\item \textbf{(Límites reconocidos)} La disponibilidad actual se centra en Android y depende de la estructura y publicación de PDFs institucionales; se mitigó con caché local, sincronización resiliente (espera exponencial y cortacircuito lógico) e importación manual de PDF. Se recomienda continuar validando en nuevos periodos y revisar sistemáticamente cambios de formato y ubicación de la fuente oficial.
 \end{enumerate}

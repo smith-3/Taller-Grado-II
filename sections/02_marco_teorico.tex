@@ -124,6 +124,29 @@ La función \eqref{eq:objetivo} combina penalizaciones normalizadas. Dos aspecto
 \end{enumerate}
 Alternativamente, se puede abordar como problema \textbf{multiobjetivo} con \emph{frentes de Pareto} (\emph{Pareto fronts}); al sintetizar para el usuario, suele preferirse una \textbf{función agregada} por su interpretabilidad \cite{deb2001-moo}.
 
+La función de evaluación combina varias métricas normalizadas que penalizan o bonifican
+aspectos de calidad del horario.
+Las principales se resumen en la Tabla~\ref{tab:metricas_multicriterio},
+basadas en el enfoque de agregación ponderada propuesto por Deb et al. (2001) \cite{deb2001-moo}.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{>{\bfseries}m{3.6cm} m{7.0cm} m{3.0cm}}
+    \hline
+    Métrica & Descripción & Interpretación \\
+    \hline
+    Choques (\emph{overlaps}) & Detección de solapes entre bloques temporales; si existen, el horario es inválido o penalizado & Restricción dura \\
+    Gaps (\emph{tiempos muertos}) & Minutos vacíos entre clases consecutivas dentro de un mismo día & Menor es mejor \\
+    Docentes favoritos & Bonificación por incluir profesores marcados como preferidos por el usuario & Mayor es mejor \\
+    Días activos & Penalización por dispersión innecesaria de clases en muchos días & Menor es mejor \\
+    \hline
+  \end{tabular}
+  \caption{Métricas consideradas en la evaluación multicriterio del horario académico.
+  \emph{Fuente: Elaboración propia basada en Deb et al. (2001) \cite{deb2001-moo}.}}
+  \label{tab:metricas_multicriterio}
+\end{table}
+
 % ---------------------------------------------------------
 \section{Principios teóricos: offline-first y local-first}
 \label{sec:offline-first}
@@ -136,6 +159,18 @@ Alternativamente, se puede abordar como problema \textbf{multiobjetivo} con \emp
   \item \textbf{Resolución de conflictos} basada en marcas de tiempo o políticas deterministas \emph{(conflict-free policies)}.
 \end{itemize}
 Estos principios justifican decisiones de diseño orientadas a \textbf{disponibilidad}, \textbf{tolerancia a fallos} y \textbf{privacidad} (procesamiento local). % (Conceptual, sin entrar en frameworks específicos)
+Como se observa en la Figura~\ref{fig:offline_arch}, 
+la arquitectura \emph{offline-first} plantea un flujo basado en la persistencia local, 
+la sincronización diferida y la validación de frescura antes de la actualización del servidor 
+\cite{couchbase_offlinefirst}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\linewidth]{images/offline_architecture_couchbase.png}
+  \caption{Arquitectura conceptual \emph{offline-first}: sincronización diferida, caché local y consistencia eventual. 
+  \emph{Fuente: Couchbase, Inc. (2023) \cite{couchbase_offlinefirst}}.}
+  \label{fig:offline_arch}
+\end{figure}
 
 % ---------------------------------------------------------
 \section{Interoperabilidad y colaboración basada en JSON}
@@ -148,13 +183,9 @@ Para intercambio de información entre usuarios (\emph{social sharing}) se adopt
   \item \textbf{Portabilidad}: independencia del medio de transporte (mensajería, correo, etc.).
 \end{itemize}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  % Placeholder gráfico sin dependencia de archivos externos
-  \fbox{\begin{minipage}[c][42mm][c]{0.85\linewidth}\centering
-    \textit{Esquema conceptual de intercambio JSON (materias, grupos, bloques, metadatos)}\\[2mm]
-    \small Fuente: elaboración propia
-  \end{minipage}}
+  \includegraphics[width=0.3\linewidth]{images/diagrams/json_intercambio_esquema.png}
   \caption{Intercambio conceptual de horarios en JSON.}
   \label{fig:json-schema}
 \end{figure}
@@ -166,10 +197,9 @@ Para intercambio de información entre usuarios (\emph{social sharing}) se adopt
 Cuando las ofertas oficiales se publican en \textbf{PDF}, la teoría de extracción de información contempla:
 \begin{itemize}
   \item \textbf{Detección de tablas} y \textbf{parsing estructurado}, con reglas de \emph{post-procesamiento} para normalizar filas/columnas.
-  \item \textbf{OCR de respaldo} en documentos no textuales o mixtos (p.\,ej., con Tesseract \cite{smith2007-tesseract}).
   \item \textbf{Trazabilidad de la fuente} y \textbf{ética de extracción} (respeto a cambios, identificación de versión, citas).
 \end{itemize}
-Estas prácticas soportan la \textbf{calidad de datos} previa al modelado (consistencia, completitud, ausencia de duplicados).
+Estas prácticas soportan la \textbf{calidad de datos} previa al modelado (consistencia, completitud, ausencia de duplicados). El modelo clásico de integración de datos se articula en las tres fases \textbf{extracción}, \textbf{transformación} y \textbf{carga} —un ciclo ampliamente adoptado en la industria de inteligencia de negocios— \cite{kimball2013dwtoolkit,etl_wikipedia}. Asimismo, la serie de normas ISO 8000 define las características de calidad de datos necesarias para que los datos sean "aptos para su uso", incluyendo la precisión, consistencia, completitud y actualidad \cite{iso8000_2022}.
 
 % ---------------------------------------------------------
 \section{Propiedades de calidad y criterios no funcionales}
