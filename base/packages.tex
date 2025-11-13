@@ -22,7 +22,7 @@
 % Figuras
 \usepackage{graphicx}
 \usepackage{caption}
-\captionsetup{justification=centering, font=small, labelfont=bf}
+\captionsetup{justification=justified, font={normalsize}}
 \usepackage{subfigure}
 \usepackage{float}
 
@@ -30,7 +30,8 @@
 % \usepackage[bookmarks,breaklinks,colorlinks=true,allcolors=blue]{hyperref}
 \usepackage[bookmarks,breaklinks,colorlinks=false]{hyperref}
 
-\usepackage{url}
+\usepackage{xurl}
+\usepackage{tabularx,booktabs}
 
 % Bibliografía estilo numerado
 \AtBeginDocument{
@@ -40,6 +41,7 @@
 % Listados de código
 \usepackage{listings}
 \usepackage{inconsolata}
+\lstset{breaklines=true, breakatwhitespace=true}
 
 % Utilidades
 \usepackage{titlesec}
@@ -52,9 +54,12 @@
 \usepackage{todonotes}
 \usepackage{csquotes}
 \usepackage{rotating}
+\usepackage{longtable}
+\usepackage[final]{microtype}
 
 \usepackage{ragged2e}
 \usepackage{enumitem}
+\usepackage{listings} % Para código en anexo si es necesario
 
 % Diagramas con TikZ
 \usepackage{tikz}

@@ -1,0 +1,17 @@
+flowchart LR
+    %% C4 Nivel 2: Contenedores
+    user[Estudiante]:::actor
+    app[App Android TecnoTime]:::container
+    db[Base de datos local Room]:::container
+    pdfLib[Librerias PDF: Downloader-Extractor-Parser]:::container
+    web[Portal UMSS]:::external
+
+    user --> app
+    app --> db
+    app --> pdfLib
+    app -->|HTTP| web
+    pdfLib --> app
+
+    classDef actor fill:#fff,stroke:#333
+    classDef container fill:#e8f6ff,stroke:#339
+    classDef external fill:#eee,stroke:#555

@@ -1,0 +1,21 @@
+flowchart LR
+    D[Seleccionar archivo JSON] --> G[Leer archivo]
+    G --> H[Parsear ShareableScheduleDto]
+    H --> I{¿Validaciones pasan?}
+
+    I -->|No| J[Mostrar errores]
+    J --> K[Duplicados encontrados]
+    J --> L[Materias ya inscritas]
+    J --> M[Carrera distinta]
+
+    M --> N{¿Sincronizar carrera?}
+    N -->|Sí| O[Habilitar carrera faltante]
+    N -->|No| P[Cancelar importación]
+
+    I -->|Sí| Q[Importar entries válidos]
+    O --> Q
+    K --> Q
+    L --> Q
+    Q --> R[Actualizar SelectedSubjects]
+    R --> S[Mostrar resultado]
+

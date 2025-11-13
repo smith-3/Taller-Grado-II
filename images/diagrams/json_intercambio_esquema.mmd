@@ -1,11 +1,16 @@
 classDiagram
     class ShareableScheduleJSON {
+      +meta
       +careers
       +subjects
       +groups
       +teachers
       +classrooms
       +entries
+    }
+    class Meta {
+      +version
+      +min_supported
     }
     class Entry {
       +selectedSubject
@@ -15,4 +20,5 @@ classDiagram
       +teacher?
       +classroom?
     }
+    ShareableScheduleJSON --> Meta
     ShareableScheduleJSON --> Entry

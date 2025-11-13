@@ -1,0 +1,12 @@
+flowchart TB
+    %% C4 Nivel 1: Contexto
+    actor[Estudiante]:::actor
+    system[TecnoTime - Sistema]:::system
+    ext[Portal oficial de horarios UMSS]:::external
+
+    actor -->|Consulta y genera horarios| system
+    system -->|Descarga PDF oficiales| ext
+
+    classDef actor fill:#fff,stroke:#333,stroke-width:1px
+    classDef system fill:#dff0ff,stroke:#339,stroke-width:1px
+    classDef external fill:#eee,stroke:#555,stroke-width:1px

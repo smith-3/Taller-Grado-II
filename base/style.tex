@@ -44,6 +44,7 @@
 \setstretch{1.0}             % interlineado sencillo
 \setlength{\parskip}{6pt}    % espacio entre párrafos
 \setlength{\parindent}{0pt}  % sin sangría
+\sloppy                      % relajar justificación para evitar desbordes
 
 % --- Profundidad del índice ---
 \setcounter{tocdepth}{2}
@@ -56,6 +57,10 @@
 }
 \renewcommand{\lstlistingname}{Code extraction}
 \renewcommand*{\lstlistlistingname}{Code Excerpts Index}
+
+% Definiciones para código y rutas
+\newcommand{\code}[1]{\hyphenchar\font=45 \texttt{#1}}
+\newcommand{\codepath}[1]{\path{#1}}
 
 % --- Colores especiales (opcional) ---
 \definecolor{US_red}{cmyk}{0, 1, 0.65, 0.34}
@@ -74,6 +79,11 @@
 \fancyhf{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
+
+% --- Numeración global de figuras y tablas ---
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
 
 % --- Entorno de fichas para requisitos (RF) ---
 % Requiere: array, enumitem (cargados en packages.tex)

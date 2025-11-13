@@ -1,24 +1,24 @@
 \chapter{MARCO TEÓRICO}
 \label{chap:marco-teorico}
 
-Este capítulo presenta la base conceptual que sustenta \textit{TecnoTime}, una aplicación de gestión personal de horarios académicos. Se formaliza el \emph{Academic Timetabling Problem} (ATP) como un \emph{Constraint Satisfaction Problem} (CSP), se revisan enfoques de solución y se introducen principios teóricos conexos (arquitecturas \emph{offline-first}/\emph{local-first}, interoperabilidad basada en JSON, nociones generales de notificación, y criterios de calidad de software). El objetivo es proveer el \textbf{andamiaje teórico} (\emph{theoretical backbone}) que justifica el diseño posterior sin entrar en detalles de implementación.
+Este capítulo presenta la base conceptual que sustenta TecnoTime, una aplicación de gestión personal de horarios académicos. Se formaliza el Academic Timetabling Problem (ATP) como un Constraint Satisfaction Problem (CSP), se revisan enfoques de solución y se introducen principios teóricos conexos (arquitecturas offline-first/local-first, interoperabilidad basada en JSON, nociones generales de notificación, y criterios de calidad de software). El objetivo es proveer el andamiaje teórico (theoretical backbone) que justifica el diseño posterior sin entrar en detalles de implementación.
 
 % ---------------------------------------------------------
 \section{Fundamentos del timetabling y el CSP}
 \label{sec:fundamentos}
 
 \subsection{Definiciones básicas}
-El \textbf{timetabling académico} consiste en asignar eventos (clases) a recursos (aulas, docentes) y a ubicaciones temporales (días y franjas) cumpliendo \emph{restricciones duras} (factibilidad) y optimizando \emph{restricciones blandas} (calidad de uso) \cite{babaei2015-survey,kristiansen2013-survey}. 
+El timetabling académico consiste en asignar eventos (clases) a recursos (aulas, docentes) y a ubicaciones temporales (días y franjas) cumpliendo restricciones duras (factibilidad) y optimizando restricciones blandas (calidad de uso) \cite{babaei2015-survey,kristiansen2013-survey}. 
 
 En términos de CSP, se modela con:
 \begin{itemize}
-  \item \textbf{Variables}: decisiones de asignación (p.\,ej., selección de grupo por asignatura).
-  \item \textbf{Dominios}: valores posibles por variable (grupos, bloques, etc.).
-  \item \textbf{Restricciones}: predicados que limitan combinaciones válidas (solapes, disponibilidad).
+  \item Variables: decisiones de asignación (p.\,ej., selección de grupo por asignatura).
+  \item Dominios: valores posibles por variable (grupos, bloques, etc.).
+  \item Restricciones: predicados que limitan combinaciones válidas (solapes, disponibilidad).
 \end{itemize}
 
 \subsection{Complejidad}
-El ATP es típicamente \textbf{NP-difícil} (\emph{NP-hard}); la complejidad crece rápidamente con el número de asignaturas, grupos y recursos, lo que motiva el uso de \emph{búsqueda con poda}, heurísticas y métodos multicriterio para alcanzar soluciones de buena calidad en tiempos razonables \cite{babaei2015-survey,kristiansen2013-survey}.
+El ATP es típicamente NP-difícil (NP-hard); la complejidad crece rápidamente con el número de asignaturas, grupos y recursos, lo que motiva el uso de búsqueda con poda, heurísticas y métodos multicriterio para alcanzar soluciones de buena calidad en tiempos razonables \cite{babaei2015-survey,kristiansen2013-survey}.
 
 % ---------------------------------------------------------
 \section{Formalización para un usuario (selección de grupos)}
@@ -29,13 +29,13 @@ Se considera el caso de uso individual: un estudiante elige, para cada asignatur
 \subsection{Conjuntos, variables y datos}
 Sean:
 \begin{itemize}
-  \item $C$: conjunto de \textbf{asignaturas} (materias).
-  \item Para cada $c\in C$, $G(c)$: conjunto de \textbf{grupos} ofrecidos.
-  \item $W$: conjunto de \textbf{días} de la semana; $\mathcal{I}$: conjunto de \textbf{intervalos} (día, inicio, fin).
+  \item $C$: conjunto de asignaturas (materias).
+  \item Para cada $c\in C$, $G(c)$: conjunto de grupos ofrecidos.
+  \item $W$: conjunto de días de la semana; $\mathcal{I}$: conjunto de intervalos (día, inicio, fin).
   \item $y_{c,g}\in\{0,1\}$: variable binaria que indica si se elige el grupo $g\in G(c)$ para la asignatura $c$.
   \item $\text{sched}(c,g)\subseteq \mathcal{I}$: bloques temporales del grupo $g$ en $c$.
-  \item $\text{fav}(c,g)\in\{0,1\}$: indicador de \textbf{docente favorito}; $D\subseteq W$ días \textbf{permitidos} por preferencia.
-  \item $M\subseteq C$: subconjunto de \textbf{asignaturas obligatorias} (requisito curricular).
+  \item $\text{fav}(c,g)\in\{0,1\}$: indicador de docente favorito; $D\subseteq W$ días permitidos por preferencia.
+  \item $M\subseteq C$: subconjunto de asignaturas obligatorias (requisito curricular).
 \end{itemize}
 
 \subsection{Restricciones duras}
@@ -44,14 +44,14 @@ Sean:
   \quad\text{(exactamente un grupo por asignatura)} \label{eq:uno-por-materia} \\
   &\forall (c_1,g_1)\neq(c_2,g_2):\
     \text{overlap}\!\left(\text{sched}(c_1,g_1),\text{sched}(c_2,g_2)\right)
-    \Rightarrow y_{c_1,g_1}+y_{c_2,g_2}\le 1
-  \quad\text{(prohibición de solapes)} \label{eq:sin-choques} \\
+    \Rightarrow y_{c_1,g_1}+y_{c_2,g_2}\le 1 \\
+  &\quad\text{(prohibición de solapes)} \label{eq:sin-choques} \\
   &\forall c\in M:\ \sum_{g\in G(c)} y_{c,g} = 1
   \quad\text{(cumplir asignaturas obligatorias)} \label{eq:obligatorias}
 \end{align}
 
 \paragraph{Variantes de factibilidad.}
-En escenarios avanzados, puede \emph{permitirse} solape controlado como decisión explícita del usuario. Teóricamente, esto se representa cambiando \eqref{eq:sin-choques} por una \emph{penalización} en la función objetivo (ver multicriterio). Asimismo, el filtro de días $D$ puede imponerse como restricción ($\text{sched}(c,g)\subseteq D$) o como preferencia (penalización por violación).
+En escenarios avanzados, puede permitirse solape controlado como decisión explícita del usuario. Teóricamente, esto se representa cambiando \eqref{eq:sin-choques} por una penalización en la función objetivo (ver multicriterio). Asimismo, el filtro de días $D$ puede imponerse como restricción ($\text{sched}(c,g)\subseteq D$) o como preferencia (penalización por violación).
 
 \subsection{Función objetivo y evaluación multicriterio}
 Se minimiza una suma ponderada de penalizaciones \cite{deb2001-moo}:
@@ -64,13 +64,13 @@ Se minimiza una suma ponderada de penalizaciones \cite{deb2001-moo}:
   \quad w_k\ge 0
   \label{eq:objetivo}
 \end{equation}
-donde $\phi_{\text{gap}}$ mide \textbf{tiempos muertos intrajornada}, $\phi_{\text{fav}}$ \textbf{bonifica} docentes favoritos, $\phi_{\text{dias}}$ penaliza \textbf{dispersión en días no preferidos} y $\phi_{\text{solape}}$ castiga \textbf{choques} si se permiten. Para comparabilidad se recomienda \textbf{normalizar} cada $\phi_k$ en $[0,1]$ (o por máximos empíricos) y ajustar pesos $w_k$ según relevancia del usuario (\emph{user-centric weighting}).
+donde $\phi_{\text{gap}}$ mide tiempos muertos intrajornada, $\phi_{\text{fav}}$ bonifica docentes favoritos, $\phi_{\text{dias}}$ penaliza dispersión en días no preferidos y $\phi_{\text{solape}}$ castiga choques si se permiten. Para comparabilidad se recomienda normalizar cada $\phi_k$ en $[0,1]$ (o por máximos empíricos) y ajustar pesos $w_k$ según relevancia del usuario (user-centric weighting).
 
 \subsection{Notación resumida}
 \begin{table}[htbp]
   \centering
   \small
-  \begin{tabular}{>{\bfseries}m{2.8cm} m{8.5cm} m{2.5cm}}
+  \begin{tabular}{m{2.8cm} m{8.5cm} m{2.5cm}}
     \hline
     Símbolo & Significado & Dominio \\
     \hline
@@ -81,7 +81,7 @@ donde $\phi_{\text{gap}}$ mide \textbf{tiempos muertos intrajornada}, $\phi_{\te
     $M$ & Asignaturas obligatorias & $\mathcal{P}(C)$ \\
     \hline
   \end{tabular}
-  \caption{Notación utilizada en el modelo para un usuario. \emph{Fuente: elaboración propia}.}
+  \caption{Notación utilizada en el modelo para un usuario. Fuente: Elaboración propia.}
   \label{tab:notacion}
 \end{table}
 
@@ -89,12 +89,12 @@ donde $\phi_{\text{gap}}$ mide \textbf{tiempos muertos intrajornada}, $\phi_{\te
 \section{Estado del arte de enfoques de solución}
 \label{sec:estado-del-arte}
 
-Las estrategias para timetabling se agrupan en \textbf{exactas}, \textbf{heurísticas} y \textbf{metaheurísticas} \cite{babaei2015-survey,kristiansen2013-survey}.
+Las estrategias para timetabling se agrupan en exactas, heurísticas y metaheurísticas \cite{babaei2015-survey,kristiansen2013-survey}.
 
 \begin{table}[htbp]
   \centering
   \small
-  \begin{tabular}{>{\bfseries}m{3.2cm} m{4.2cm} m{4.6cm} m{2.8cm}}
+  \begin{tabular}{m{3.2cm} m{4.2cm} m{4.6cm} m{2.8cm}}
     \hline
     Enfoque & Ejemplos típicos & Ventajas & Consideraciones \\
     \hline
@@ -103,26 +103,26 @@ Las estrategias para timetabling se agrupan en \textbf{exactas}, \textbf{heurís
     Metaheurístico & GA, SA, Búsqueda Tabú, VNS & Alta calidad promedio & Configuración y tiempo \\
     \hline
   \end{tabular}
-  \caption{Panorama de enfoques para el ATP. \emph{Fuente: elaboración propia}.}
+  \caption{Panorama de enfoques para el ATP. Fuente: Elaboración propia.}
   \label{tab:enfoques}
 \end{table}
 
-\paragraph{Criterios de elección.} En el contexto \emph{on-device} (usuario individual), prima el \textbf{tiempo de respuesta} y la \textbf{simplicidad de configuración}; por ello suelen preferirse heurísticas con poda y evaluaciones multicriterio ligeras. Para evaluación comparativa, la literatura usa conjuntos de prueba como \emph{ITC-2007} (curriculum-based CTT), útiles para conceptos y métricas \emph{(benchmarks and metrics)}.
+\paragraph{Criterios de elección.} En el contexto on-device (usuario individual), prima el tiempo de respuesta y la simplicidad de configuración; por ello suelen preferirse heurísticas con poda y evaluaciones multicriterio ligeras. Para evaluación comparativa, la literatura usa conjuntos de prueba como ITC-2007 (curriculum-based CTT), útiles para conceptos y métricas (benchmarks and metrics).
 
 % ---------------------------------------------------------
 \section{Fundamentos algorítmicos (búsqueda y evaluación)}
 \label{sec:fundamentos-algoritmicos}
 
 \subsection{Búsqueda con retroceso y poda}
-La \textbf{búsqueda con retroceso} (\emph{backtracking}) explora combinaciones de grupos por asignatura y poda ramas que violan restricciones duras. Heurísticas de ordenación (p.\,ej., \emph{MRV}/\emph{LCV}) y \emph{poda temprana} reducen el espacio efectivo de búsqueda. La complejidad peor caso es $O(b^d)$, con $b$ el factor de ramificación y $d$ la profundidad (número de asignaturas).
+La búsqueda con retroceso (backtracking) explora combinaciones de grupos por asignatura y poda ramas que violan restricciones duras. Heurísticas de ordenación (p.\,ej., MRV/LCV) y poda temprana reducen el espacio efectivo de búsqueda. La complejidad peor caso es $O(b^d)$, con $b$ el factor de ramificación y $d$ la profundidad (número de asignaturas).
 
 \subsection{Evaluación multicriterio}
 La función \eqref{eq:objetivo} combina penalizaciones normalizadas. Dos aspectos prácticos:
 \begin{enumerate}
-  \item \textbf{Escalamiento y normalización}: evita que una métrica domine por magnitud.
-  \item \textbf{Ajuste de pesos}: puede fijarse por defecto y permitir \emph{tuning} explícito (sin cambiar el modelo).
+  \item Escalamiento y normalización: evita que una métrica domine por magnitud.
+  \item Ajuste de pesos: puede fijarse por defecto y permitir tuning explícito (sin cambiar el modelo).
 \end{enumerate}
-Alternativamente, se puede abordar como problema \textbf{multiobjetivo} con \emph{frentes de Pareto} (\emph{Pareto fronts}); al sintetizar para el usuario, suele preferirse una \textbf{función agregada} por su interpretabilidad \cite{deb2001-moo}.
+Alternativamente, se puede abordar como problema multiobjetivo con frentes de Pareto (Pareto fronts); al sintetizar para el usuario, suele preferirse una función agregada por su interpretabilidad \cite{deb2001-moo}.
 
 La función de evaluación combina varias métricas normalizadas que penalizan o bonifican
 aspectos de calidad del horario.
@@ -132,18 +132,17 @@ basadas en el enfoque de agregación ponderada propuesto por Deb et al. (2001) \
 \begin{table}[H]
   \centering
   \small
-  \begin{tabular}{>{\bfseries}m{3.6cm} m{7.0cm} m{3.0cm}}
+  \begin{tabular}{m{3.6cm} m{7.0cm} m{3.0cm}}
     \hline
     Métrica & Descripción & Interpretación \\
     \hline
-    Choques (\emph{overlaps}) & Detección de solapes entre bloques temporales; si existen, el horario es inválido o penalizado & Restricción dura \\
-    Gaps (\emph{tiempos muertos}) & Minutos vacíos entre clases consecutivas dentro de un mismo día & Menor es mejor \\
+    Choques (overlaps) & Detección de solapes entre bloques temporales; si existen, el horario es inválido o penalizado & Restricción dura \\
+    Gaps (tiempos muertos) & Minutos vacíos entre clases consecutivas dentro de un mismo día & Menor es mejor \\
     Docentes favoritos & Bonificación por incluir profesores marcados como preferidos por el usuario & Mayor es mejor \\
     Días activos & Penalización por dispersión innecesaria de clases en muchos días & Menor es mejor \\
     \hline
   \end{tabular}
-  \caption{Métricas consideradas en la evaluación multicriterio del horario académico.
-  \emph{Fuente: Elaboración propia basada en Deb et al. (2001) \cite{deb2001-moo}.}}
+  \caption{Métricas consideradas en la evaluación multicriterio del horario académico. Fuente: Elaboración propia basada en Deb et al. (2001) \cite{deb2001-moo}.}
   \label{tab:metricas_multicriterio}
 \end{table}
 
@@ -151,24 +150,23 @@ basadas en el enfoque de agregación ponderada propuesto por Deb et al. (2001) \
 \section{Principios teóricos: offline-first y local-first}
 \label{sec:offline-first}
 
-\textbf{Offline-first} y \textbf{local-first} priorizan disponibilidad sin red, resiliencia y control del usuario sobre sus datos. A nivel conceptual:
+Offline-first y local-first priorizan disponibilidad sin red, resiliencia y control del usuario sobre sus datos. A nivel conceptual:
 \begin{itemize}
-  \item \textbf{Caché local y fuente de verdad} (\emph{single source of truth} local) con sincronización diferida.
-  \item \textbf{Consistencia eventual} y \textbf{detección de frescura} (\emph{data freshness checks}) antes de propagar cambios.
-  \item \textbf{Estrategias de robustez}: \emph{exponential backoff}, \emph{circuit breakers}, reintentos acotados.
-  \item \textbf{Resolución de conflictos} basada en marcas de tiempo o políticas deterministas \emph{(conflict-free policies)}.
+  \item Caché local y fuente de verdad (single source of truth local) con sincronización diferida.
+  \item Consistencia eventual y detección de frescura (data freshness checks) antes de propagar cambios.
+  \item Estrategias de robustez: exponential backoff, circuit breakers, reintentos acotados.
+  \item Resolución de conflictos basada en marcas de tiempo o políticas deterministas (conflict-free policies).
 \end{itemize}
-Estos principios justifican decisiones de diseño orientadas a \textbf{disponibilidad}, \textbf{tolerancia a fallos} y \textbf{privacidad} (procesamiento local). % (Conceptual, sin entrar en frameworks específicos)
+Estos principios justifican decisiones de diseño orientadas a disponibilidad, tolerancia a fallos y privacidad (procesamiento local). % (Conceptual, sin entrar en frameworks específicos)
 Como se observa en la Figura~\ref{fig:offline_arch}, 
-la arquitectura \emph{offline-first} plantea un flujo basado en la persistencia local, 
+la arquitectura offline-first plantea un flujo basado en la persistencia local, 
 la sincronización diferida y la validación de frescura antes de la actualización del servidor 
 \cite{couchbase_offlinefirst}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\linewidth]{images/offline_architecture_couchbase.png}
-  \caption{Arquitectura conceptual \emph{offline-first}: sincronización diferida, caché local y consistencia eventual. 
-  \emph{Fuente: Couchbase, Inc. (2023) \cite{couchbase_offlinefirst}}.}
+  \caption{Arquitectura conceptual offline-first: sincronización diferida, caché local y consistencia eventual. Fuente: Couchbase, Inc. (2023) \cite{couchbase_offlinefirst}.}
   \label{fig:offline_arch}
 \end{figure}
 
@@ -176,17 +174,17 @@ la sincronización diferida y la validación de frescura antes de la actualizaci
 \section{Interoperabilidad y colaboración basada en JSON}
 \label{sec:interoperabilidad-json}
 
-Para intercambio de información entre usuarios (\emph{social sharing}) se adopta un formato \textbf{JSON} conforme al estándar \cite{rfc8259-json}. A nivel teórico:
+Para intercambio de información entre usuarios (social sharing) se adopta un formato JSON conforme al estándar \cite{rfc8259-json}. A nivel teórico:
 \begin{itemize}
-  \item \textbf{Esquema lógico} claro (identificadores de asignaturas, grupos, bloques).
-  \item \textbf{Validación}: integridad de referencias, ausencia de duplicados.
-  \item \textbf{Portabilidad}: independencia del medio de transporte (mensajería, correo, etc.).
+  \item Esquema lógico claro (identificadores de asignaturas, grupos, bloques).
+  \item Validación: integridad de referencias, ausencia de duplicados.
+  \item Portabilidad: independencia del medio de transporte (mensajería, correo, etc.).
 \end{itemize}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.3\linewidth]{images/diagrams/json_intercambio_esquema.png}
-  \caption{Intercambio conceptual de horarios en JSON.}
+  \caption{Intercambio conceptual de horarios en JSON. Fuente: Elaboración propia.}
   \label{fig:json-schema}
 \end{figure}
 
@@ -194,12 +192,12 @@ Para intercambio de información entre usuarios (\emph{social sharing}) se adopt
 \section{Obtención desde PDF institucional y limpieza de datos}
 \label{sec:pdf-parsing}
 
-Cuando las ofertas oficiales se publican en \textbf{PDF}, la teoría de extracción de información contempla:
+Cuando las ofertas oficiales se publican en PDF, la teoría de extracción de información contempla:
 \begin{itemize}
-  \item \textbf{Detección de tablas} y \textbf{parsing estructurado}, con reglas de \emph{post-procesamiento} para normalizar filas/columnas.
-  \item \textbf{Trazabilidad de la fuente} y \textbf{ética de extracción} (respeto a cambios, identificación de versión, citas).
+  \item Detección de tablas y parsing estructurado, con reglas de post-procesamiento para normalizar filas/columnas.
+  \item Trazabilidad de la fuente y ética de extracción (respeto a cambios, identificación de versión, citas).
 \end{itemize}
-Estas prácticas soportan la \textbf{calidad de datos} previa al modelado (consistencia, completitud, ausencia de duplicados). El modelo clásico de integración de datos se articula en las tres fases \textbf{extracción}, \textbf{transformación} y \textbf{carga} —un ciclo ampliamente adoptado en la industria de inteligencia de negocios— \cite{kimball2013dwtoolkit,etl_wikipedia}. Asimismo, la serie de normas ISO 8000 define las características de calidad de datos necesarias para que los datos sean "aptos para su uso", incluyendo la precisión, consistencia, completitud y actualidad \cite{iso8000_2022}.
+Estas prácticas soportan la calidad de datos previa al modelado (consistencia, completitud, ausencia de duplicados). El modelo clásico de integración de datos se articula en las tres fases extracción, transformación y carga —un ciclo ampliamente adoptado en la industria de inteligencia de negocios— \cite{kimball2013dwtoolkit,etl_wikipedia}. Asimismo, la serie de normas ISO 8000 define las características de calidad de datos necesarias para que los datos sean "aptos para su uso", incluyendo la precisión, consistencia, completitud y actualidad \cite{iso8000_2022}.
 
 % ---------------------------------------------------------
 \section{Propiedades de calidad y criterios no funcionales}
@@ -207,27 +205,27 @@ Estas prácticas soportan la \textbf{calidad de datos} previa al modelado (consi
 
 Desde una perspectiva teórica (alineable con marcos como ISO/IEC 25010), se consideran:
 \begin{itemize}
-  \item \textbf{Rendimiento y eficiencia}: tiempos de respuesta adecuados para uso interactivo (\emph{interactive latency}).
-  \item \textbf{Confiabilidad y resiliencia}: recuperación ante fallos transitorios; degradación controlada.
-  \item \textbf{Mantenibilidad}: modularidad, bajo acoplamiento, alta cohesión; separación de responsabilidades.
-  \item \textbf{Compatibilidad y portabilidad}: independencia de formato (p.\,ej., JSON), exportabilidad de datos del usuario.
-  \item \textbf{Usabilidad}: claridad de representación del horario; reducción de errores de selección (\emph{error prevention}).
+  \item Rendimiento y eficiencia: tiempos de respuesta adecuados para uso interactivo (interactive latency).
+  \item Confiabilidad y resiliencia: recuperación ante fallos transitorios; degradación controlada.
+  \item Mantenibilidad: modularidad, bajo acoplamiento, alta cohesión; separación de responsabilidades.
+  \item Compatibilidad y portabilidad: independencia de formato (p.\,ej., JSON), exportabilidad de datos del usuario.
+  \item Usabilidad: claridad de representación del horario; reducción de errores de selección (error prevention).
 \end{itemize}
 
 % ---------------------------------------------------------
 \section{Síntesis integradora}
 \label{sec:sintesis}
 
-El ATP se modela como un CSP con restricciones duras (factibilidad: sin solapes, obligatoriedad curricular) y blandas (calidad de uso: intrajornada, docentes favoritos, días preferidos). La solución favorece \textbf{búsqueda con poda} más \textbf{evaluación multicriterio} por su equilibrio entre \emph{calidad} y \emph{tiempo de respuesta} en el contexto individual. Los principios \textbf{offline/local-first} justifican disponibilidad y robustez; la \textbf{interoperabilidad JSON} habilita colaboración y portabilidad de horarios. Este marco teórico provee los fundamentos para el diseño y evaluación de la solución propuesta.
+El ATP se modela como un CSP con restricciones duras (factibilidad: sin solapes, obligatoriedad curricular) y blandas (calidad de uso: intrajornada, docentes favoritos, días preferidos). La solución favorece búsqueda con poda más evaluación multicriterio por su equilibrio entre calidad y tiempo de respuesta en el contexto individual. Los principios offline/local-first justifican disponibilidad y robustez; la interoperabilidad JSON habilita colaboración y portabilidad de horarios. Este marco teórico provee los fundamentos para el diseño y evaluación de la solución propuesta.
 
 % ---------------------------------------------------------
-\section*{Glosario EN–ES}
+\section*{Glosario EN-ES}
 \begin{itemize}
-  \item \textbf{Timetabling}: planificación de horarios.
-  \item \textbf{CSP (Constraint Satisfaction Problem)}: problema de satisfacción de restricciones.
-  \item \textbf{Restricción dura/blanda}: condición de factibilidad/criterio de calidad.
-  \item \textbf{Multicriterio}: combinación de varias métricas en la evaluación.
-  \item \textbf{Offline-first / Local-first}: prioridad de operación sin red y datos locales como fuente primaria.
-  \item \textbf{Data freshness}: actualidad/validación de los datos.
-  \item \textbf{Pareto front}: conjunto de soluciones no dominadas en optimización multiobjetivo.
+  \item Timetabling: planificación de horarios.
+  \item CSP (Constraint Satisfaction Problem): problema de satisfacción de restricciones.
+  \item Restricción dura/blanda: condición de factibilidad/criterio de calidad.
+  \item Multicriterio: combinación de varias métricas en la evaluación.
+  \item Offline-first / Local-first: prioridad de operación sin red y datos locales como fuente primaria.
+  \item Data freshness: actualidad/validación de los datos.
+  \item Pareto front: conjunto de soluciones no dominadas en optimización multiobjetivo.
 \end{itemize}

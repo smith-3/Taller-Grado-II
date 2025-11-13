@@ -1,0 +1,21 @@
+flowchart TB
+    %% C4 Nivel 4: Código (F1)
+    AutoSync[domain/usecase/AutoSyncUseCase.kt]:::code
+    SyncPrefs[data/local/preferences/SyncPreferences.kt]:::code
+    Scraper[data/remote/scraper/ScheduleScraper.kt]:::code
+    Downloader[data/remote/pdf/PdfDownloader.kt]:::code
+    Extractor[data/remote/pdf/PdfExtractor.kt]:::code
+    Parser[data/remote/pdf/PdfParser.kt]:::code
+    ImportUC[data/usecase/ImportCareerSchedulesUseCase.kt]:::code
+    RefreshUC[domain/usecase/RefreshSubjectsForCareerUseCase.kt]:::code
+    DAOs[data/local/dao/*]:::code
+
+    AutoSync --> Scraper
+    AutoSync --> RefreshUC
+    AutoSync --> SyncPrefs
+    RefreshUC --> ImportUC
+    ImportUC --> Downloader --> Extractor --> Parser
+    ImportUC --> DAOs
+
+    classDef code fill:#ffffff,stroke:#777
+

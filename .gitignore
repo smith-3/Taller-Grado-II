@@ -31,3 +31,25 @@ Thumbs.db
 # Build directories
 build/
 dist/
+*.bcf
+*.run.xml
+*.idx
+*.ind
+*.ilg
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.nav
+*.snm
+*.vrb
+*.xdv
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.kate-swp
+*.tex.backup
+*.aux.lock

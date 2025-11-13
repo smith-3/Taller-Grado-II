@@ -1,0 +1,15 @@
+flowchart TD
+  A[Inicio] --> B{¿Obligatorias > límite?}
+  B -->|Sí| C[Priorizar obligatorias]
+  B -->|No| D[Incluir obligatorias]
+
+  C --> E{¿Docentes favoritos?}
+  D --> E
+
+  E -->|Sí| F[Priorizar grupos con favoritos]
+  E -->|No| G[Usar grupos disponibles]
+
+  F --> H[Ordenar candidatos: mandatory -> preferred -> nivel]
+  G --> H
+
+  H --> I[Continuar a evaluación]

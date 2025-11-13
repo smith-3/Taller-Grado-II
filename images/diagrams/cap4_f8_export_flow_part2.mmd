@@ -1,0 +1,9 @@
+flowchart TD
+    K[Archivo temporal preparado] --> L[Mostrar diálogo de confirmación]
+    L --> M{¿Confirmar exportación?}
+    M -- No --> O[Cancelar exportación]
+    M -- Sí --> N[Guardar archivo]
+    N --> P[FileProvider: obtener URI segura]
+    P --> Q[Intent.ACTION_SEND con MIME correcto]
+    Q --> R[Share sheet del sistema]
+    R --> S[Compartición exitosa]

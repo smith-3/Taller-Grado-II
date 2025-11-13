@@ -1,0 +1,11 @@
+{
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "22px",
+    "primaryColor": "#E8F1FF",
+    "primaryTextColor": "#111",
+    "lineColor": "#333",
+    "nodeBorder": "#666"
+  }
+}

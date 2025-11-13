@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant OBS as ClassReminderSyncObserver
+    participant SIMON as SimonScheduler
+    participant NOTIF as NotificationService
+    participant U as Usuario
+    participant REC as NotificationActionReceiver
+    participant AIU as AiModelUsageManager
+    participant USE as SimonNotificationUseCase
+    participant SHOW as ShowNotificationUseCase
+
+    OBS->>OBS: Detecta cambio de horario
+    OBS->>SIMON: onScheduleChanged()
+    SIMON->>NOTIF: cancelOldReminders()
+    SIMON->>NOTIF: scheduleNewReminders()
+
+    U->>REC: Acción en notificación (Simón/Like)
+    REC->>AIU: withLease(...)
+    AIU->>USE: generateReminderClosure()/generateCheckInClosure()
+    USE-->>REC: NotificationInfo
+    REC->>SHOW: showNotification(info)
+    SHOW->>NOTIF: notify()
+

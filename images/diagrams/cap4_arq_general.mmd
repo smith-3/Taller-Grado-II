@@ -1,19 +1,61 @@
+%%{init: {
+  "theme": "default",
+  "flowchart": {
+    "defaultRenderer": "elk",
+    "layoutDirection": "LR",
+    "curve": "linear",
+    "nodeSpacing": 160,
+    "rankSpacing": 220
+  }
+}}%%
+
 C4Container
-title Arquitectura General TecnoTime - Capa Container
+title TecnoTime — Arquitectura esencial (C4 horizontal)
 
-Person(user, "Usuario", "Usuario de la aplicación móvil")
+UpdateLayoutConfig($c4ShapeInRow="3")
 
-Container_Boundary(app, "TecnoTime App") {
-    Container(presentation, "Presentation Layer", "Compose UI", "Pantallas: HomeScreen, GenerateScheduleConfigScreen, SettingsScreen, etc.")
-    Container(domain, "Domain Layer", "Use Cases & Business Logic", "GenerateSchedulesUseCase, ScheduleGeneratorUseCase, etc.")
-    Container(data, "Data Layer", "Room DB & Repositories", "AppDatabase, CareerRepository, GroupScheduleRepository, etc.")
+Person(user, "Usuario", "Estudiante")
+
+Container_Boundary(app, "Aplicación Android TecnoTime") {
+
+  %% Fila 1 (3 columnas)
+  Container(ui, "Interfaz (Compose)", "Jetpack Compose + VM", "Funciona sin conexión")
+  Container(domain, "Dominio", "Casos de uso", "Reglas, orquestación, recordatorios")
+  Container(storage, "Datos locales", "Room + Prefs", "Horarios y frescura")
+
+  %% Fila 2 (2 columnas)
+  Container(ai, "Asistente IA", "On-device", "Opcional")
+  Container(sync, "Ingesta PDF", "Downloader + Parser", "Descarga y normaliza")
 }
 
-Container_Ext(web_scraper, "Web Scraper Service", "Ktor/Retrofit", "Servicio externo para scraping de horarios")
-Container_Ext(pdf_parser, "PDF Parser Service", "External API", "Servicio para parsing de PDFs")
+Container_Ext(site, "Portal UMSS (PDF)", "Web oficial", "Única dependencia externa")
 
-Rel(user, presentation, "Interacción UI")
-Rel(presentation, domain, "Invoca use cases")
-Rel(domain, data, "Accede a datos locales")
-Rel(domain, web_scraper, "Sincroniza datos remotos")
-Rel(domain, pdf_parser, "Procesa PDFs offline")
+Rel_R(user, ui, "Usa la app")
+
+BiRel(ui, domain, "UI ↔ Casos de uso")
+
+Rel_R(domain, storage, "Lee/actualiza")
+
+Rel_D(domain, ai, "Pide ayuda (opt)")
+
+Rel_U(ai, storage, "Contexto local")
+
+Rel_D(domain, sync, "Programa/consulta")
+
+Rel_R(sync, site, "Descarga PDF")
+
+Rel_U(sync, storage, "Guarda horarios")
+
+UpdateRelStyle(ui, domain, "solid", "#3b82f6")
+
+UpdateRelStyle(domain, storage, "solid", "#10b981")
+
+UpdateRelStyle(domain, sync, "solid", "#10b981")
+
+UpdateRelStyle(sync, site, "dashed", "#6b7280")
+
+UpdateRelStyle(sync, storage, "solid", "#10b981")
+
+UpdateRelStyle(domain, ai, "dotted", "#a855f7")
+
+UpdateRelStyle(ai, storage, "dotted", "#a855f7")

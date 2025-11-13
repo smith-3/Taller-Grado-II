@@ -1,10 +1,11 @@
-flowchart TD
-    S[Start sync] --> N{Network?}
-    N -->|No| R[Retry later - backoff and jitter]
-    N -->|Yes| A[AutoSyncUseCase]
-    A --> CB[Circuit breaker]
-    CB --> F[Fetch and parse]
-    F --> P[Persist to Room]
-    P --> D[Done]
-    A -->|Server fail| L[Fallback: Import local PDF]
+flowchart LR
+    S[Sync] --> N{¿Red?}
+    N -->|No| R[Backoff]
+    R --> S
+    N -->|Sí| A[AutoSync]
+    A --> CB[Breaker]
+    CB --> F[Fetch]
+    F --> P[Guardar]
+    P --> D[Fin]
+    A -->|Falla server| L[PDF local]
     L --> P

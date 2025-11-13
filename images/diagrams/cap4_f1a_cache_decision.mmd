@@ -1,0 +1,10 @@
+flowchart LR
+    A[Generar] --> B[checkSync]
+    B --> C{¿Conectividad?}
+    C -- No --> D[Usar cache]
+    C -- Sí --> E[AutoSync]
+    E --> F{¿Actualiza?}
+    F -- No --> D
+    F -- Sí --> G[Refrescar datos]
+    G --> H[Marcar sync]
+    H --> I[Usar datos]

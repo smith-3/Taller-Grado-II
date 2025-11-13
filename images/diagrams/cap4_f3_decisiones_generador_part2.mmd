@@ -1,0 +1,16 @@
+flowchart TD
+  I[Evaluación] --> J{¿Minimizar gaps?}
+  J -->|Sí| K[Penalizar recesos entre bloques]
+  J -->|No| L[Sin penalización por gaps]
+
+  K --> M{¿Aceptar conflictos?}
+  L --> M
+
+  M -->|No| N[Descartar combinaciones con choques]
+  M -->|Sí| O[Permitir choques con penalización]
+
+  N --> P{¿Opciones válidas?}
+  O --> P
+
+  P -->|Sí| Q[Seleccionar Top-N]
+  P -->|No| R[Relajar opcionales y reintentar]

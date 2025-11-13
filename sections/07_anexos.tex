@@ -1,0 +1,144 @@
+\appendix
+\chapter{Anexos}\label{ch:anexos}
+
+\section{Anexo 0 --- Trazabilidad de componentes de TecnoTime}\label{ann:trazabilidad-tecnotime}
+
+\href{https://github.com/smith-3/TecnoTime}{TecnoTime}.
+
+\begin{longtable}{@{}p{7cm}p{9cm}@{}}
+\caption{Trazabilidad de componentes y rutas del proyecto \texttt{TecnoTime}}
+\label{tab:trazabilidad-tecnotime}\\
+
+\toprule
+\textbf{Componente} & \textbf{Ruta} \\
+\midrule
+\endfirsthead
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable\ -- Continuación}} \\
+\toprule
+\textbf{Componente} & \textbf{Ruta} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{2}{r}{Continúa en la siguiente página} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+% Dominio
+\texttt{Subject} & \path{domain/model/Subject.kt} \\
+\texttt{Group} & \path{domain/model/Group.kt} \\
+\texttt{GroupSchedule} & \path{domain/model/GroupSchedule.kt} \\
+\texttt{Career} & \path{domain/model/Career.kt} \\
+\texttt{Level} & \path{domain/model/Level.kt} \\
+\texttt{Teacher} & \path{domain/model/Teacher.kt} \\
+\texttt{Classroom} & \path{domain/model/Classroom.kt} \\
+\texttt{SelectedSubject} & \path{domain/model/SelectedSubject.kt} \\
+\texttt{UserSettings} & \path{domain/model/UserSettings.kt} \\
+\texttt{ScheduleGenerationParams} & \path{domain/model/ScheduleGenerationParams.kt} \\
+\texttt{ShareableScheduleDto} & \path{domain/model/ShareableScheduleDto.kt} \\
+\texttt{SubjectMapper} & \path{domain/mapper/SubjectMapper.kt} \\
+\texttt{GroupMapper} & \path{domain/mapper/GroupMapper.kt} \\
+\texttt{GroupScheduleMapper} & \path{domain/mapper/GroupScheduleMapper.kt} \\
+\texttt{UserSettingsMapper} & \path{domain/mapper/UserSettingsMapper.kt} \\
+\texttt{AutoSyncUseCase} & \path{domain/usecase/AutoSyncUseCase.kt} \\
+\texttt{RefreshSubjectsForCareerUseCase} & \path{domain/usecase/RefreshSubjectsForCareerUseCase.kt} \\
+\texttt{ImportCareerSchedulesUseCase} & \path{domain/usecase/ImportCareerSchedulesUseCase.kt} \\
+\texttt{GenerateSchedulesUseCaseImpl} & \path{domain/usecase/GenerateSchedulesUseCaseImpl.kt} \\
+\texttt{ScheduleGenerator} & \path{domain/usecase/ScheduleGenerator.kt} \\
+\texttt{GenerateWeeklyScheduleImageUseCase} & \path{domain/usecase/GenerateWeeklyScheduleImageUseCase.kt} \\
+\texttt{GenerateWeeklySchedulePdfUseCase} & \path{domain/usecase/GenerateWeeklySchedulePdfUseCase.kt} \\
+\texttt{GenerateScheduleExcelUseCase} & \path{domain/usecase/GenerateScheduleExcelUseCase.kt} \\
+\texttt{GenerateShareableScheduleJsonUseCase} & \path{domain/usecase/GenerateShareableScheduleJsonUseCase.kt} \\
+\texttt{LoadShareableScheduleUseCase} & \path{domain/usecase/LoadShareableScheduleUseCase.kt} \\
+\texttt{ImportSharedScheduleUseCase} & \path{domain/usecase/ImportSharedScheduleUseCase.kt} \\
+\texttt{ShareableScheduleJsonGenerator} & \path{domain/usecase/ShareableScheduleJsonGenerator.kt} \\
+\texttt{ShowNotificationUseCase} & \path{domain/usecase/ShowNotificationUseCase.kt} \\
+\texttt{ScheduleNotificationUseCase} & \path{domain/usecase/ScheduleNotificationUseCase.kt} \\
+\texttt{SyncCareerFromLocalPdfUseCase} & \path{domain/usecase/SyncCareerFromLocalPdfUseCase.kt} \\
+\texttt{ScheduleStrategyFactory} & \path{domain/service/ScheduleStrategyFactory.kt} \\
+\texttt{AcceptConflictsStrategy} & \path{domain/service/AcceptConflictsStrategy.kt} \\
+\texttt{MinimizeGapsStrategy} & \path{domain/service/MinimizeGapsStrategy.kt} \\
+\texttt{PrioritizeTeachersStrategy} & \path{domain/service/PrioritizeTeachersStrategy.kt} \\
+\texttt{CompositeStrategy} & \path{domain/service/CompositeStrategy.kt} \\
+\texttt{NetworkConnectivityChecker} & \path{domain/service/NetworkConnectivityChecker.kt} \\
+\texttt{SyncPreferences} & \path{domain/service/SyncPreferences.kt} \\
+\texttt{NotificationServiceImpl} & \path{domain/service/NotificationServiceImpl.kt} \\
+\texttt{NotificationStyler} & \path{domain/service/NotificationStyler.kt} \\
+\texttt{ModelInitializationService} & \path{domain/service/ModelInitializationService.kt} \\
+\texttt{ModelDownloader} & \path{domain/service/ModelDownloader.kt} \\
+\texttt{AiModelUsageManager} & \path{domain/service/AiModelUsageManager.kt} \\
+\texttt{NotifyWorker} & \path{domain/worker/NotifyWorker.kt} \\
+\texttt{ExponentialBackoff} & \path{domain/service/ExponentialBackoff.kt} \\
+\texttt{CircuitBreaker} & \path{domain/service/CircuitBreaker.kt} \\
+
+% Datos
+\texttt{SubjectEntity} & \path{data/entity/SubjectEntity.kt} \\
+\texttt{GroupEntity} & \path{data/entity/GroupEntity.kt} \\
+\texttt{GroupScheduleEntity} & \path{data/entity/GroupScheduleEntity.kt} \\
+\texttt{CareerEntity} & \path{data/entity/CareerEntity.kt} \\
+\texttt{LevelEntity} & \path{data/entity/LevelEntity.kt} \\
+\texttt{TeacherEntity} & \path{data/entity/TeacherEntity.kt} \\
+\texttt{ClassroomEntity} & \path{data/entity/ClassroomEntity.kt} \\
+\texttt{SelectedSubjectEntity} & \path{data/entity/SelectedSubjectEntity.kt} \\
+\texttt{UserSettingsEntity} & \path{data/entity/UserSettingsEntity.kt} \\
+\texttt{SubjectRepository} & \path{data/repository/SubjectRepository.kt} \\
+\texttt{GroupRepository} & \path{data/repository/GroupRepository.kt} \\
+\texttt{GroupScheduleRepository} & \path{data/repository/GroupScheduleRepository.kt} \\
+\texttt{CareerRepository} & \path{data/repository/CareerRepository.kt} \\
+\texttt{LevelRepository} & \path{data/repository/LevelRepository.kt} \\
+\texttt{TeacherRepository} & \path{data/repository/TeacherRepository.kt} \\
+\texttt{ClassroomRepository} & \path{data/repository/ClassroomRepository.kt} \\
+\texttt{SelectedSubjectRepository} & \path{data/repository/SelectedSubjectRepository.kt} \\
+\texttt{UserSettingsRepository} & \path{data/repository/UserSettingsRepository.kt} \\
+\texttt{ScheduleScraper} & \path{data/remote/ScheduleScraper.kt} \\
+\texttt{PdfDownloader} & \path{data/remote/PdfDownloader.kt} \\
+\texttt{PdfExtractor} & \path{data/remote/PdfExtractor.kt} \\
+\texttt{PdfParser} & \path{data/remote/PdfParser.kt} \\
+\texttt{Utils} & \path{data/util/Utils.kt} \\
+
+% Presentación
+\texttt{WelcomeScreen} & \path{presentation/welcome/WelcomeScreen.kt} \\
+\texttt{WelcomeViewModel} & \path{presentation/welcome/WelcomeViewModel.kt} \\
+\texttt{AddSubjectFlowScreen} & \path{presentation/addsubject/AddSubjectFlowScreen.kt} \\
+\texttt{AddSubjectViewModel} & \path{presentation/addsubject/AddSubjectViewModel.kt} \\
+\texttt{SelectLevelScreen} & \path{presentation/addsubject/SelectLevelScreen.kt} \\
+\texttt{SelectSubjectScreen} & \path{presentation/addsubject/SelectSubjectScreen.kt} \\
+\texttt{SelectGroupScreen} & \path{presentation/addsubject/SelectGroupScreen.kt} \\
+\texttt{ColorPickerScreen} & \path{presentation/addsubject/ColorPickerScreen.kt} \\
+\texttt{EmojiPickerScreen} & \path{presentation/addsubject/EmojiPickerScreen.kt} \\
+\texttt{EditGroupScreen} & \path{presentation/editgroup/EditGroupScreen.kt} \\
+\texttt{EditGroupSelectScreen} & \path{presentation/editgroup/EditGroupSelectScreen.kt} \\
+\texttt{EditGroupViewModel} & \path{presentation/editgroup/EditGroupViewModel.kt} \\
+\texttt{EditColorScreen} & \path{presentation/editgroup/EditColorScreen.kt} \\
+\texttt{EditEmojiScreen} & \path{presentation/editgroup/EditEmojiScreen.kt} \\
+\texttt{HomeScreen} & \path{presentation/home/HomeScreen.kt} \\
+\texttt{WeekDayTabsAnimated} & \path{presentation/home/WeekDayTabsAnimated.kt} \\
+\texttt{ScheduleAppWidgetProvider} & \path{presentation/widget/ScheduleAppWidgetProvider.kt} \\
+\texttt{ScheduleRemoteViewsService} & \path{presentation/widget/ScheduleRemoteViewsService.kt} \\
+\texttt{WidgetDateUtils} & \path{presentation/widget/WidgetDateUtils.kt} \\
+\texttt{WidgetPrefs} & \path{presentation/widget/WidgetPrefs.kt} \\
+\texttt{GenerateScheduleConfigScreen} & \path{presentation/generateSchedule/GenerateScheduleConfigScreen.kt} \\
+\texttt{GenerateScheduleViewModel} & \path{presentation/generateSchedule/GenerateScheduleViewModel.kt} \\
+\texttt{GenerateScheduleResultsScreen} & \path{presentation/generateSchedule/GenerateScheduleResultsScreen.kt} \\
+\texttt{SchedulePreview} & \path{presentation/generateSchedule/SchedulePreview.kt} \\
+\texttt{SettingsSendScheduleScreen} & \path{presentation/settings/sendschedule/SettingsSendScheduleScreen.kt} \\
+\texttt{SettingsSendScheduleViewModel} & \path{presentation/settings/sendschedule/SettingsSendScheduleViewModel.kt} \\
+\texttt{AiManagementViewModel} & \path{presentation/ai/AiManagementViewModel.kt} \\
+\texttt{NotificationActionReceiver} & \path{presentation/notification/NotificationActionReceiver.kt} \\
+
+% Aplicación
+\texttt{TecnoTimeApp} & \path{app/src/main/java/com/fragmind/tecnotime/TecnoTimeApp.kt} \\
+
+\end{longtable}
+
+\section{Anexo A --- Instrumento de encuesta: cuestionario completo}\label{ann:instrumento}
+\input{sections/anexos/anexoA_instrumento}
+
+\section{Anexo B --- Historias de usuario tabuladas}\label{ann:historias}
+\input{sections/anexos/anexoF_historias}
+
+\endinput

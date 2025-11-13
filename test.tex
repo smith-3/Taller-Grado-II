@@ -1,0 +1,18 @@
+\documentclass{article}
+\begin{document}
+\ExplSyntaxOn
+\cs_new_protected:Npn \tecno_break_identifier:n #1
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \regex_replace_all:nnN { ([a-z0-9])([A-Z]) } { \1\allowbreak\2 } \l_tmpa_tl
+    \tl_use:N \l_tmpa_tl
+  }
+\cs_new_protected:Npn \tecnoBreakIdentifier #1
+  { \tecno_break_identifier:n { #1 } }
+\ExplSyntaxOff
+
+\newcommand{\Code}[1]{\textsf{\tecnoBreakIdentifier{#1}}}
+
+\Code{checkConnectivityAndSync()}
+
+\end{document}

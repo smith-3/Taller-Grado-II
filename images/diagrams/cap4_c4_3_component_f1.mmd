@@ -1,0 +1,23 @@
+flowchart TB
+    %% C4 Nivel 3: Componentes (F1)
+    subgraph App Android
+      vm[GenerateScheduleViewModel]:::component
+      sync[AutoSyncUseCase]:::component
+      scraper[ScheduleScraper]:::component
+      dl[PdfDownloader]:::component
+      ex[PdfExtractor]:::component
+      parser[PdfParser]:::component
+      importUc[ImportCareerSchedulesUseCase]:::component
+      repos[Repos/DAOs Room]:::component
+    end
+
+    vm --> sync
+    sync --> scraper
+    sync --> importUc
+    importUc --> dl
+    dl --> ex
+    ex --> parser
+    importUc --> repos
+
+    classDef component fill:#f8fbff,stroke:#339
+

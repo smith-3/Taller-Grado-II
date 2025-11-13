@@ -1,0 +1,9 @@
+flowchart LR
+  A[Sin red] --> B{¿PDF local?}
+  B -->|Sí| C[Seleccionar PDF]
+  C --> D[Parsear]
+  D --> E{¿OK?}
+  E -->|Sí| F[Actualizar]
+  F --> G[Usar cache]
+  E -->|No| H[Error offline]
+  B -->|No| I[Usar cache actual]

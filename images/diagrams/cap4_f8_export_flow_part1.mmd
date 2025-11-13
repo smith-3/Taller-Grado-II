@@ -1,0 +1,15 @@
+flowchart TD
+    A[Usuario inicia exportación] --> B{¿Materias inscritas?}
+    B -- No --> C[Bloqueo: no hay materias]
+    C --> D[Fin]
+
+    B -- Sí --> E[Mostrar opciones de exportación]
+    E --> F{Seleccionar formato}
+    F -- Imagen (PNG) --> H[GenerateWeeklyScheduleImageUseCase]
+    F -- PDF --> G[GenerateWeeklySchedulePdfUseCase]
+    F -- Excel --> I[GenerateScheduleExcelUseCase]
+
+    H --> J[Obtener horario semanal]
+    G --> J
+    I --> J
+    J --> K[Crear archivo temporal]

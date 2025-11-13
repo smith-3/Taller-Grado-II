@@ -7,17 +7,17 @@ Este capítulo describe el contexto real de uso de la solución: el dominio inst
 La Facultad de Ciencias y Tecnología (FCyT) de la UMSS publica semestralmente los horarios oficiales en formato PDF, organizados por carrera y periodo. Durante la inscripción, el uso de herramientas web como Capuchino es intensivo; fuera de esa etapa, los estudiantes siguen necesitando: (i) consultar horarios personales con rapidez, (ii) ajustar materias ante cambios, y (iii) coordinar con pares mediante mensajería.
 
 \section{POBLACIÓN OBJETIVO Y ACTORES}
-\textbf{Actor principal}: estudiantes de la FCyT de distintos semestres y turnos que construyen, consultan y ajustan sus horarios.  
-\textbf{Actores secundarios}: personal administrativo que publica/actualiza los horarios y docentes/tutores cuya asignación incide en las preferencias estudiantiles.
+Actor principal: estudiantes de la FCyT de distintos semestres y turnos que construyen, consultan y ajustan sus horarios.
+Actores secundarios: personal administrativo que publica/actualiza los horarios y docentes/tutores cuya asignación incide en las preferencias estudiantiles.
 
 \subsection*{Evidencia cuantitativa (encuesta, n=126)}
 La encuesta aplicada a estudiantes de FCyT confirma:
 \begin{itemize}
-  \item \textbf{Dispositivo}: Android domina (94\%); laptop apenas 26\%.  
-  \item \textbf{Uso de Capuchino}: 48\% solo en inscripción, 44\% varias veces por semestre.  
-  \item \textbf{Coordinación social}: 80\% valida información por WhatsApp.  
-  \item \textbf{Frustración por repetir pasos}: 60\% califica 3–5 (alta).  
-  \item \textbf{Principales demandas}: actualización automática (88\%), modo sin conexión (78\%), recordatorios (56\%).  
+  \item Dispositivo: Android domina (94\%); laptop apenas 26\%.
+  \item Uso de Capuchino: 48\% solo en inscripción, 44\% varias veces por semestre.
+  \item Coordinación social: 80\% valida información por WhatsApp.
+  \item Frustración por repetir pasos: 60\% califica 1-2-3 (alta).
+  \item Principales demandas: actualización automática (88\%), modo sin conexión (78\%), recordatorios (56\%).
 \end{itemize}
 
 \begin{figure}[H]
@@ -63,7 +63,7 @@ La encuesta aplicada a estudiantes de FCyT confirma:
 
 \section{PERCEPCIONES DEL ESTADO ACTUAL (AS-IS)}
 Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detectar choques, pero reportan problemas recurrentes: actualización tardía de datos, interfaz obsoleta, pérdida del progreso, lentitud en inscripciones y baja personalización.  
-\textbf{Figura~\ref{fig:asis_proceso}} muestra el flujo actual y las limitaciones detectadas.
+Figura~\ref{fig:asis_proceso} muestra el flujo actual y las limitaciones detectadas.
 
 \begin{figure}[H]
   \centering
@@ -73,8 +73,8 @@ Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detect
 \end{figure}
 
 \section{DEMANDA DE SOLUCIÓN Y PROCESOS PROPUESTOS (TO-BE)}
-\textbf{Visión general:} los resultados evidencian la necesidad de una aplicación móvil que reduzca pasos repetitivos, funcione sin conexión y facilite la coordinación social.  
-\textbf{Figura~\ref{fig:area_tobe}} resume los flujos de uso esperados.
+Visión general: los resultados evidencian la necesidad de una aplicación móvil que reduzca pasos repetitivos, funcione sin conexión y facilite la coordinación social.
+Figura~\ref{fig:area_tobe} resume los flujos de uso esperados.
 
 \begin{figure}[H]
   \centering
@@ -83,7 +83,7 @@ Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detect
   \label{fig:area_tobe}
 \end{figure}
 
-\textbf{Características clave de uso:}
+Características clave de uso:
 \begin{itemize}
   \item Generación de horarios sin choques, priorizando materias obligatorias y docentes favoritos.
   \item Memoria de contexto para evitar repetir carrera/nivel/materias.
@@ -92,8 +92,8 @@ Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detect
 \end{itemize}
 
 \section{INFORMACIÓN Y REGLAS DEL ÁREA}
-\textbf{Entidades}: carrera, nivel, materia, grupo, horario, docente, aula y selección del estudiante.  
-\textbf{Reglas principales}:
+Entidades: carrera, nivel, materia, grupo, horario, docente, aula y selección del estudiante.
+Reglas principales:
 \begin{itemize}
   \item Sin solapamientos salvo habilitación explícita.
   \item Unicidad de códigos y consistencia jerárquica.
@@ -103,7 +103,7 @@ Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detect
 
 \section{DATOS Y FLUJO DE INFORMACIÓN}
 Los horarios en PDF son la fuente oficial. Se descargan, extraen y almacenan localmente; se verifican y actualizan de forma controlada. El intercambio social se realiza mediante archivos estructurados (JSON) para compartir horarios.  
-Véase \textbf{Figura~\ref{fig:area_flujo_datos}}.
+Véase Figura~\ref{fig:area_flujo_datos}.
 
 \begin{figure}[H]
   \centering
@@ -113,20 +113,20 @@ Véase \textbf{Figura~\ref{fig:area_flujo_datos}}.
 \end{figure}
 
 \section{ALCANCES, LÍMITES Y RIESGOS}
-\textbf{Alcances:} estudiantes FCyT; integración con horarios oficiales; uso sin conexión; recordatorios y consulta rápida.  
-\textbf{Límites:} no reemplaza inscripción oficial ni modela capacidad de aulas; foco inicial en Android.  
-\textbf{Riesgos y mitigación:}
+Alcances: estudiantes FCyT; integración con horarios oficiales; uso sin conexión; recordatorios y consulta rápida.
+Límites: no reemplaza inscripción oficial ni modela capacidad de aulas; foco inicial en Android.
+Riesgos y mitigación:
 \begin{itemize}
-  \item Cambios en formato o ubicación de PDFs → proceso flexible y sincronización manual.  
-  \item Retrasos oficiales → mantener caché y mostrar fecha de actualización.  
-  \item Conectividad limitada → operación offline-first.  
-  \item Saturación de fuente → reintentos espaciados.  
+  \item Cambios en formato o ubicación de PDFs: proceso flexible y sincronización manual.
+  \item Retrasos oficiales: mantener caché y mostrar fecha de actualización.
+  \item Conectividad limitada: operación offline-first.
+  \item Saturación de fuente: reintentos espaciados.
 \end{itemize}
 
 \section{DERIVACIÓN DE REQUERIMIENTOS DESDE LA ENCUESTA}
 \begin{table}[H]
   \centering
-  \caption{Trazabilidad de hallazgos $\rightarrow$ requerimientos del área. Fuente: Elaboración propia (encuesta n=126).}
+  \caption{Trazabilidad de hallazgos a requerimientos del área. Fuente: Elaboración propia (encuesta n=126).}
   \label{tab:derivacion_req_area}
   \small
   \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
