@@ -1,5 +1,20 @@
-xychart-beta
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #F44336, #2196F3, #FF9800'
+    }
+  }
+}}%%
+xychart-beta horizontal
     title "Demandas Clave de los Estudiantes"
     x-axis ["Modo sin conexión", "Recordatorios de clases", "Compartir mi horario", "Horarios actualizados automáticamente"]
     y-axis "Porcentaje (%)" 0 --> 90
-    bar [77.7, 56.2, 51.2, 88.4]
+    %% Modo sin conexión -> verde
+    bar [77.7, -1.9, -1.9, -1.9]
+    %% Recordatorios de clases -> rojo
+    bar [-1.9, 56.2, -1.9, -1.9]
+    %% Compartir mi horario -> azul
+    bar [-1.9, -1.9, 51.2, -1.9]
+    %% Horarios actualizados automáticamente -> naranja
+    bar [-1.9, -1.9, -1.9, 88.4]

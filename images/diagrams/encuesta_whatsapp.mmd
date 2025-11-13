@@ -1,5 +1,14 @@
-%%{init: { 'theme': 'default', 'pie': { 'textPosition': 0.5 }, 'themeVariables': { 'pieOuterStrokeWidth': 2, 'pieInnerRadius': 50 } } }%%
-pie showData
-    title Uso de mensajería para coordinar horarios (%, n=122)
-    "Sí" : 80.3
-    "No" : 19.7
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #F44336'
+    }
+  }
+}}%%
+xychart-beta
+    title "Coordinación social mediante WhatsApp (n=126)"
+    x-axis ["Sí (98)", "No (24)"]
+    y-axis "Porcentaje (%)" 0 --> 100
+    bar [80.3, -1.9]
+    bar [-1.9, 19.7]

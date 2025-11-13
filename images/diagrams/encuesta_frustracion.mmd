@@ -1,6 +1,22 @@
-%%{init: { 'theme': 'default' } }%%
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #8BC34A, #FFC107, #FF9800, #F44336'
+    }
+  }
+}}%%
 xychart-beta
     title "Frustración por repetición (1–5) (%, n=123)"
     x-axis ["1", "2", "3", "4", "5"]
-    y-axis "Porcentaje" 0 --> 100
-    bar "Porcentaje" [18.7, 21.1, 27.6, 20.3, 12.2]
+    y-axis "Porcentaje (%)" 0 --> 100
+    %% 1
+    bar [18.7, -1.9, -1.9, -1.9, -1.9]
+    %% 2
+    bar [-1.9, 21.1, -1.9, -1.9, -1.9]
+    %% 3
+    bar [-1.9, -1.9, 27.6, -1.9, -1.9]
+    %% 4
+    bar [-1.9, -1.9, -1.9, 20.3, -1.9]
+    %% 5
+    bar [-1.9, -1.9, -1.9, -1.9, 12.2]

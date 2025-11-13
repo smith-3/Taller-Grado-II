@@ -1,5 +1,20 @@
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #F44336, #2196F3, #FF9800'
+    }
+  }
+}}%%
 xychart-beta
     title "Frecuencia de Uso de Capuchino"
     x-axis ["Solo durante la inscripción", "Varias veces por semestre", "Raramente", "Nunca lo he usado"]
     y-axis "Porcentaje (%)" 0 --> 50
-    bar [48.4, 44.4, 7.3, 3.2]
+    %% Solo durante la inscripción -> verde
+    bar [48.4, -1.9, -1.9, -1.9]
+    %% Varias veces por semestre -> rojo
+    bar [-1.9, 44.4, -1.9, -1.9]
+    %% Raramente -> azul
+    bar [-1.9, -1.9, 7.3, -1.9]
+    %% Nunca lo he usado -> naranja
+    bar [-1.9, -1.9, -1.9, 3.2]

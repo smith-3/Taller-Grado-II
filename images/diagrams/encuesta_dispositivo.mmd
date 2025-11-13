@@ -1,6 +1,20 @@
-%%{init: { 'theme': 'default' } }%%
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #F44336, #2196F3, #FF9800'
+    }
+  }
+}}%%
 xychart-beta
     title "Dispositivo habitual para Capuchino (%, n=120)"
     x-axis ["Laptop", "Teléfono Android", "iPhone", "Tablet"]
-    y-axis "Porcentaje" 0 --> 100
-    bar "Porcentaje" [25.8, 71.7, 2.5, 0.0]
+    y-axis "Porcentaje (%)" 0 --> 100
+    %% Laptop -> verde
+    bar [25.8, -1.9, -1.9, -1.9]
+    %% Teléfono Android -> rojo
+    bar [-1.9, 71.7, -1.9, -1.9]
+    %% iPhone -> azul
+    bar [-1.9, -1.9, 2.5, -1.9]
+    %% Tablet -> naranja (0%, oculto)
+    bar [-1.9, -1.9, -1.9, -1.9]
