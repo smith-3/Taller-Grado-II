@@ -1,15 +1,43 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TD
-  A[Inicio] --> B{¿Obligatorias > límite?}
-  B -->|Sí| C[Priorizar obligatorias]
-  B -->|No| D[Incluir obligatorias]
+    A[Inicio]:::step
+    B{¿Obligatorias &gt; límite?}:::decision
 
-  C --> E{¿Docentes favoritos?}
-  D --> E
+    C[Priorizar obligatorias]:::step
+    D[Incluir obligatorias]:::step
 
-  E -->|Sí| F[Priorizar grupos con favoritos]
-  E -->|No| G[Usar grupos disponibles]
+    E{¿Docentes favoritos?}:::decision
 
-  F --> H[Ordenar candidatos: mandatory -> preferred -> nivel]
-  G --> H
+    F[Priorizar grupos con favoritos]:::step
+    G[Usar grupos disponibles]:::step
 
-  H --> I[Continuar a evaluación]
+    H[Ordenar candidatos: obligatorias → favoritos → nivel]:::step
+    I[Continuar a evaluación]:::final
+
+    %% Flujo
+    A --> B
+    B -->|Sí| C
+    B -->|No| D
+
+    C --> E
+    D --> E
+
+    E -->|Sí| F
+    E -->|No| G
+
+    F --> H
+    G --> H
+
+    H --> I
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

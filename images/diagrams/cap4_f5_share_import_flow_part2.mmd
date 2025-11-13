@@ -1,21 +1,57 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
-    D[Seleccionar archivo JSON] --> G[Leer archivo]
-    G --> H[Parsear ShareableScheduleDto]
-    H --> I{¿Validaciones pasan?}
+    %% --- Nodos principales ---
+    D[Seleccionar archivo JSON]:::step
+    G[Leer archivo]:::step
+    H[Parsear<br/>ShareableScheduleDto]:::step
 
-    I -->|No| J[Mostrar errores]
-    J --> K[Duplicados encontrados]
-    J --> L[Materias ya inscritas]
-    J --> M[Carrera distinta]
+    I{¿Validaciones<br/>pasan?}:::decision
 
-    M --> N{¿Sincronizar carrera?}
-    N -->|Sí| O[Habilitar carrera faltante]
-    N -->|No| P[Cancelar importación]
+    %% --- Errores detallados ---
+    J[Mostrar<br/>errores]:::error
+    K[Duplicados<br/>en JSON]:::error
+    L[Materias ya<br/>inscritas]:::error
+    M[Carrera distinta]:::error
 
-    I -->|Sí| Q[Importar entries válidos]
-    O --> Q
+    %% --- Sincronización de carrera ---
+    N{¿Sincronizar<br/>carrera?}:::decision
+    O[Habilitar carrera<br/>faltante]:::step
+    P[Cancelar<br/>importación]:::final
+
+    %% --- Importación válida ---
+    Q[Importar entries<br/>válidos]:::step
+    R[Actualizar<br/>SelectedSubjects]:::step
+    S[Mostrar<br/>resultado]:::final
+
+    %% --- Flujo principal ---
+    D --> G --> H --> I
+
+    I -->|No| J
+    J --> K
+    J --> L
+    J --> M
+
+    M --> N
+    N -->|Sí| O --> Q
+    N -->|No| P
+
+    I -->|Sí| Q
+
+    %% Errores no fatales pero afectan entries
     K --> Q
     L --> Q
-    Q --> R[Actualizar SelectedSubjects]
-    R --> S[Mostrar resultado]
 
+    Q --> R --> S
+
+    %% --- Estilos ---
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;
+    classDef error fill:#FFE5E5,stroke:#D9534F,stroke-width:2px,color:#A94442,rx:6,ry:6;

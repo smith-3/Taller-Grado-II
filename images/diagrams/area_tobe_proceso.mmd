@@ -1,7 +1,24 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#E8F4FD",
+    "primaryBorderColor": "#4A90E2",
+    "primaryTextColor": "#333",
+    "lineColor": "#4A90E2",
+    "fontSize": "16px",
+    "fontFamily": "Arial, sans-serif"
+  }
+}}%%
 flowchart TD
-    A[Estudiante instala TecnoTime app] --> B[Sincroniza datos oficiales automáticamente]
-    B --> C[Selecciona materias en modo offline]
-    C --> D[Genera horario con algoritmo inteligente]
-    D --> E[Recibe recordatorios automáticos]
-    E --> F[Usa widget en pantalla principal]
-    F --> G[Comparte horario JSON con compañeros]
+    A[Estudiante instala TecnoTime app]
+    B[Sincroniza datos oficiales automáticamente]
+    C[Selecciona materias en modo offline]
+    D[Genera horario con algoritmo inteligente]
+    E[Recibe recordatorios automáticos]
+    F[Usa widget en pantalla principal]
+    G[Comparte horario JSON con compañeros]
+
+    A --> B --> C --> D --> E --> F --> G
+
+    classDef box fill:#E8F4FD,stroke:#4A90E2,color:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G box;

@@ -1,16 +1,46 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TD
-  I[Evaluación] --> J{¿Minimizar gaps?}
-  J -->|Sí| K[Penalizar recesos entre bloques]
-  J -->|No| L[Sin penalización por gaps]
+    I[Evaluación]:::step
+    J{¿Minimizar gaps?}:::decision
 
-  K --> M{¿Aceptar conflictos?}
-  L --> M
+    K[Penalizar recesos entre bloques]:::step
+    L[Sin penalización por gaps]:::step
 
-  M -->|No| N[Descartar combinaciones con choques]
-  M -->|Sí| O[Permitir choques con penalización]
+    M{¿Aceptar conflictos?}:::decision
 
-  N --> P{¿Opciones válidas?}
-  O --> P
+    N[Descartar combinaciones con choques]:::step
+    O[Permitir choques con penalización]:::step
 
-  P -->|Sí| Q[Seleccionar Top-N]
-  P -->|No| R[Relajar opcionales y reintentar]
+    P{¿Opciones válidas?}:::decision
+
+    Q[Seleccionar Top-N]:::final
+    R[Relajar opcionales y reintentar]:::step
+
+    %% Flujo
+    I --> J
+    J -->|Sí| K
+    J -->|No| L
+
+    K --> M
+    L --> M
+
+    M -->|No| N
+    M -->|Sí| O
+
+    N --> P
+    O --> P
+
+    P -->|Sí| Q
+    P -->|No| R
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

@@ -1,21 +1,31 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px"
+  }
+}}%%
 sequenceDiagram
-    participant U as Usuario
-    participant AI as AiIntroScreen
-    participant VM as AiManagementViewModel
-    participant SIMON as SimonScheduler
-    participant MOTIV as SimonMotivationalScheduler
-    participant OBS as ClassReminderSyncObserver
-    participant NOTIF as NotificationService
+    autonumber
+    participant U as 👤 Usuario
+    participant AI as 🖥️ AiIntroScreen
+    participant VM as 🧠 AiManagementViewModel
+    participant SIMON as ⏰ SimonScheduler
+    participant MOTIV as 💬 SimonMotivationalScheduler
+    participant OBS as 👀 ClassReminderSyncObserver
+    participant NOTIF as 🔔 NotificationService
 
     U->>AI: Activa IA y recordatorios
-    AI->>VM: toggleAi() / enableClassNotifications=true
+    AI->>VM: toggleAi()<br/>enableClassNotifications = true
+
     VM->>SIMON: scheduleClassReminders()
     SIMON->>OBS: registerObserver()
-    OBS->>OBS: Monitorear cambios de horario
 
+    OBS->>OBS: Monitorear cambios<br/>en el horario
     OBS->>OBS: Detecta clase próxima
+
     OBS->>SIMON: onClassReminder()
     SIMON->>MOTIV: generateMotivationalMessage()
-    MOTIV->>NOTIF: scheduleNotification(10 min antes)
-    NOTIF-->>U: Mostrar notificación (schedule_channel)
+    MOTIV->>NOTIF: scheduleNotification()<br/>(10 min antes)
 
+    NOTIF-->>U: Mostrar notificación<br/>(schedule_channel)

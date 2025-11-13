@@ -1,24 +1,38 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#E8F4FD',
+    'primaryTextColor': '#333',
+    'primaryBorderColor': '#4A90E2',
+    'lineColor': '#4A90E2',
+    'secondaryColor': '#FFF3CD',
+    'tertiaryColor': '#D1ECF1',
+    'mainBkg': '#E8F4FD',
+    'fontSize': '14px',
+    'fontFamily': 'Arial, sans-serif'
+  }
+}}%%
 classDiagram
     class ShareableScheduleJSON {
-      +meta
-      +careers
-      +subjects
-      +groups
-      +teachers
-      +classrooms
-      +entries
+      +meta: Metadatos de versión
+      +careers: Lista de carreras
+      +subjects: Materias disponibles
+      +groups: Grupos de clases
+      +teachers: Docentes
+      +classrooms: Aulas
+      +entries: Entradas de horario
     }
     class Meta {
-      +version
-      +min_supported
+      +version: Versión del esquema
+      +min_supported: Versión mínima compatible
     }
     class Entry {
-      +selectedSubject
-      +schedule
-      +subject
-      +group
-      +teacher?
-      +classroom?
+      +selectedSubject: Materia seleccionada
+      +schedule: Horario específico
+      +subject: Detalles de la materia
+      +group: Grupo asignado
+      +teacher?: Docente (opcional)
+      +classroom?: Aula (opcional)
     }
     ShareableScheduleJSON --> Meta
     ShareableScheduleJSON --> Entry

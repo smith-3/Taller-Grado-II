@@ -1,21 +1,51 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "14px",
+    "fontFamily": "Arial, sans-serif",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TB
     %% C4 Nivel 4: Código (F1)
-    AutoSync[domain/usecase/AutoSyncUseCase.kt]:::code
-    SyncPrefs[data/local/preferences/SyncPreferences.kt]:::code
-    Scraper[data/remote/scraper/ScheduleScraper.kt]:::code
-    Downloader[data/remote/pdf/PdfDownloader.kt]:::code
-    Extractor[data/remote/pdf/PdfExtractor.kt]:::code
-    Parser[data/remote/pdf/PdfParser.kt]:::code
-    ImportUC[data/usecase/ImportCareerSchedulesUseCase.kt]:::code
-    RefreshUC[domain/usecase/RefreshSubjectsForCareerUseCase.kt]:::code
-    DAOs[data/local/dao/*]:::code
 
+    subgraph Domain["📁 domain / usecase"]
+        AutoSync[[AutoSyncUseCase.kt]]:::code
+        RefreshUC[[RefreshSubjectsForCareerUseCase.kt]]:::code
+    end
+
+    subgraph Data["📁 data layer"]
+        subgraph Preferences["preferences"]
+            SyncPrefs[[SyncPreferences.kt]]:::code
+        end
+
+        subgraph Remote["remote"]
+            Scraper[[ScheduleScraper.kt]]:::code
+
+            subgraph PDF["pdf"]
+                Downloader[[PdfDownloader.kt]]:::code
+                Extractor[[PdfExtractor.kt]]:::code
+                Parser[[PdfParser.kt]]:::code
+            end
+        end
+
+        subgraph Local["local"]
+            DAOs[(DAOs *.kt)]:::database
+        end
+
+        ImportUC[[ImportCareerSchedulesUseCase.kt]]:::code
+    end
+
+    %% Relaciones
     AutoSync --> Scraper
     AutoSync --> RefreshUC
     AutoSync --> SyncPrefs
+
     RefreshUC --> ImportUC
+
     ImportUC --> Downloader --> Extractor --> Parser
     ImportUC --> DAOs
 
-    classDef code fill:#ffffff,stroke:#777
-
+    %% Estilos
+    classDef code fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,rx:6,ry:6,color:#333;
+    classDef database fill:#E7F8ED,stroke:#3FAA66,stroke-width:2px,color:#222;

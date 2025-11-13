@@ -1,7 +1,24 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#E8F4FD",
+    "primaryBorderColor": "#4A90E2",
+    "primaryTextColor": "#333",
+    "lineColor": "#4A90E2",
+    "fontSize": "16px",
+    "fontFamily": "Arial, sans-serif"
+  }
+}}%%
 flowchart TD
-    A[Estudiante accede a Capuchino web] --> B[Selecciona carrera y nivel]
-    B --> C[Elige materias y grupos]
-    C --> D[Visualiza horario generado]
-    D --> E[Descarga PDF del horario]
-    E --> F[Confirma horarios vía WhatsApp con compañeros]
-    F --> G[Memoriza o toma foto del horario]
+    A[Estudiante accede a Capuchino web]
+    B[Selecciona carrera y nivel]
+    C[Elige materias y grupos]
+    D[Visualiza horario generado]
+    E[Descarga PDF del horario]
+    F[Confirma horarios vía WhatsApp con compañeros]
+    G[Memoriza o toma foto del horario]
+
+    A --> B --> C --> D --> E --> F --> G
+
+    classDef paso fill:#E8F4FD,stroke:#4A90E2,color:#333,stroke-width:2px;
+    class A,B,C,D,E,F,G paso;

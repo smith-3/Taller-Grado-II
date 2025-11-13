@@ -1,9 +1,37 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
-  A[Sin red] --> B{¿PDF local?}
-  B -->|Sí| C[Seleccionar PDF]
-  C --> D[Parsear]
-  D --> E{¿OK?}
-  E -->|Sí| F[Actualizar]
-  F --> G[Usar cache]
-  E -->|No| H[Error offline]
-  B -->|No| I[Usar cache actual]
+    A[Sin red]:::step
+
+    B{¿PDF local<br/>disponible?}:::decision
+
+    C[Seleccionar PDF]:::step
+    D[Parsear PDF]:::step
+
+    E{¿Parse OK?}:::decision
+
+    F[Actualizar datos]:::step
+    G[Usar cache]:::final
+
+    H[Error offline]:::error
+    I[Usar cache actual]:::step
+
+    %% Flujo
+    A --> B
+    B -->|Sí| C --> D --> E
+    B -->|No| I
+
+    E -->|Sí| F --> G
+    E -->|No| H
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;
+    classDef error fill:#FFE5E5,stroke:#D9534F,stroke-width:2px,color:#A94442,rx:6,ry:6;

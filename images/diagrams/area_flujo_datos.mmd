@@ -1,6 +1,23 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "primaryColor": "#E8F4FD",
+    "primaryBorderColor": "#4A90E2",
+    "primaryTextColor": "#333",
+    "lineColor": "#4A90E2",
+    "fontSize": "16px",
+    "fontFamily": "Arial, sans-serif"
+  }
+}}%%
 flowchart TD
-    A[Fuente Oficial UMSS] --> B[Sincronización Automática]
-    B --> C[Cache Local en App]
-    C --> D[Acceso Offline]
-    D --> E[Compartir JSON]
-    E --> F[Importar en otra App]
+    A[Fuente Oficial UMSS]
+    B[Sincronización Automática]
+    C[Cache Local en App]
+    D[Acceso Offline]
+    E[Compartir JSON]
+    F[Importar en otra App]
+
+    A --> B --> C --> D --> E --> F
+
+    classDef paso fill:#E8F4FD,stroke:#4A90E2,color:#333,stroke-width:2px;
+    class A,B,C,D,E,F paso;

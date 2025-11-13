@@ -1,4 +1,23 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
-    A[Usuario selecciona compartir] --> C[Generar JSON compartible]
-    C --> E[Incluir meta, carreras, subjects, groups, teachers, classrooms, entries]
-    E --> F[Mostrar diálogo de compartir por WhatsApp]
+    A[Usuario selecciona<br/>“Compartir horario”]:::step
+
+    C[Generar JSON<br/>compartible]:::step
+
+    E[Incluir: meta,<br/>careers, subjects,<br/>groups, teachers,<br/>classrooms, entries]:::step
+
+    F[Mostrar diálogo:<br/>Compartir vía WhatsApp]:::final
+
+    %% Flujo
+    A --> C --> E --> F
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

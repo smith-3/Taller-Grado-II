@@ -1,11 +1,31 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
-    S[Sync] --> N{¿Red?}
-    N -->|No| R[Backoff]
+    S[Sync inicial]:::step --> N{Hay red?}:::decision
+
+    %% Sin red -> backoff
+    N -- No --> R[Backoff - espera exponencial]:::error
     R --> S
-    N -->|Sí| A[AutoSync]
-    A --> CB[Breaker]
-    CB --> F[Fetch]
-    F --> P[Guardar]
-    P --> D[Fin]
-    A -->|Falla server| L[PDF local]
+
+    %% Con red
+    N -- Si --> A[AutoSync]:::step
+    A --> CB[Circuit Breaker]:::step
+    CB --> F[Fetch datos oficiales]:::step
+    F --> P[Guardar en cache local]:::step
+    P --> D[Fin]:::final
+
+    %% Falla de servidor -> PDF local
+    A -- Falla servidor --> L[Usar PDF local]:::step
     L --> P
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333;
+    classDef error fill:#FFE5E5,stroke:#D9534F,stroke-width:2px,color:#A94442;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000;

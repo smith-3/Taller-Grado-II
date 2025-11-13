@@ -1,15 +1,49 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TD
-    A[Usuario inicia exportación] --> B{¿Materias inscritas?}
-    B -- No --> C[Bloqueo: no hay materias]
-    C --> D[Fin]
+    A[Usuario inicia<br/>exportación]:::step
 
-    B -- Sí --> E[Mostrar opciones de exportación]
-    E --> F{Seleccionar formato}
-    F -- Imagen (PNG) --> H[GenerateWeeklyScheduleImageUseCase]
-    F -- PDF --> G[GenerateWeeklySchedulePdfUseCase]
-    F -- Excel --> I[GenerateScheduleExcelUseCase]
+    B{¿Materias<br/>inscritas?}:::decision
 
-    H --> J[Obtener horario semanal]
+    %% Rama SIN materias
+    C[Bloqueo:<br/>No hay materias]:::error
+    D[Fin]:::final
+
+    %% Rama CON materias
+    E[Mostrar opciones<br/>de exportación]:::step
+    F{Seleccionar<br/>formato}:::decision
+
+    H[GenerateWeeklySchedule<br/>ImageUseCase]:::step
+    G[GenerateWeeklySchedule<br/>PdfUseCase]:::step
+    I[GenerateSchedule<br/>ExcelUseCase]:::step
+
+    J[Obtener horario<br/>semanal]:::step
+    K[Crear archivo<br/>temporal]:::final
+
+    %% Flujo
+    A --> B
+
+    B -- No --> C --> D
+    B -- Sí --> E --> F
+
+    F -- Imagen (PNG) --> H
+    F -- PDF --> G
+    F -- Excel --> I
+
+    H --> J
     G --> J
     I --> J
-    J --> K[Crear archivo temporal]
+
+    J --> K
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef error fill:#FFE5E5,stroke:#D9534F,stroke-width:2px,color:#A94442,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

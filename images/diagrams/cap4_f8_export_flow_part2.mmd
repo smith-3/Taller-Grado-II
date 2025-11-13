@@ -1,9 +1,26 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TD
-    K[Archivo temporal preparado] --> L[Mostrar diálogo de confirmación]
-    L --> M{¿Confirmar exportación?}
-    M -- No --> O[Cancelar exportación]
-    M -- Sí --> N[Guardar archivo]
-    N --> P[FileProvider: obtener URI segura]
-    P --> Q[Intent.ACTION_SEND con MIME correcto]
-    Q --> R[Share sheet del sistema]
-    R --> S[Compartición exitosa]
+    K[Archivo temporal<br/>preparado]:::step --> L[Mostrar diálogo<br/>de confirmación]:::step
+    
+    L --> M{¿Confirmar<br/>exportación?}:::decision
+
+    M -- No --> O[Cancelar<br/>exportación]:::error
+    M -- Sí --> N[Guardar<br/>archivo]:::step
+
+    N --> P[FileProvider:<br/>obtener URI segura]:::step
+    P --> Q[Intent.ACTION_SEND<br/>con MIME correcto]:::step
+    Q --> R[Share sheet<br/>del sistema]:::step
+    R --> S[Compartición<br/>exitosa]:::final
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef error fill:#FFE5E5,stroke:#D9534F,stroke-width:2px,color:#A94442,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

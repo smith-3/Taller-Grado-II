@@ -1,10 +1,35 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
-    A[Generar] --> B[checkSync]
-    B --> C{¿Conectividad?}
-    C -- No --> D[Usar cache]
-    C -- Sí --> E[AutoSync]
-    E --> F{¿Actualiza?}
+
+    A[🟦 Generar horario]:::step
+    B[Verificar checkSync]:::step
+
+    C{¿Conectividad?}:::decision
+    D[Usar cache local]:::cache
+    E[AutoSync]:::step
+
+    F{¿Actualiza datos?}:::decision
+    G[Refrescar datos desde servidor]:::step
+    H[Marcar datos como sincronizados]:::step
+    I[Usar datos actualizados]:::final
+
+    %% Flujo
+    A --> B --> C
+    C -- No --> D --> I
+    C -- Sí --> E --> F
+
     F -- No --> D
-    F -- Sí --> G[Refrescar datos]
-    G --> H[Marcar sync]
-    H --> I[Usar datos]
+    F -- Sí --> G --> H --> I
+
+    %% Estilos
+    classDef step fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef decision fill:#FFF7E0,stroke:#E0A100,stroke-width:2px,color:#333,rx:6,ry:6;
+    classDef cache fill:#E7F8ED,stroke:#3FAA66,stroke-width:2px,color:#222,rx:6,ry:6;
+    classDef final fill:#DFF3FF,stroke:#4A90E2,stroke-width:2px,color:#000,rx:6,ry:6;

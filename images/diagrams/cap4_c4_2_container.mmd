@@ -1,17 +1,34 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "14px",
+    "fontFamily": "Arial, sans-serif",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart LR
     %% C4 Nivel 2: Contenedores
-    user[Estudiante]:::actor
-    app[App Android TecnoTime]:::container
-    db[Base de datos local Room]:::container
-    pdfLib[Librerias PDF: Downloader-Extractor-Parser]:::container
-    web[Portal UMSS]:::external
 
+    subgraph Device["Dispositivo del estudiante"]
+        user[👨‍🎓 Estudiante]:::actor
+        app[📱 App Android TecnoTime]:::container
+        db[(Base de datos local Room)]:::database
+        pdfLib[[Librerías PDF<br/>Downloader / Extractor / Parser]]:::container
+    end
+
+    subgraph UMSS["Infraestructura UMSS"]
+        web[🌐 Portal UMSS]:::external
+    end
+
+    %% Relaciones
     user --> app
     app --> db
     app --> pdfLib
     app -->|HTTP| web
     pdfLib --> app
 
-    classDef actor fill:#fff,stroke:#333
-    classDef container fill:#e8f6ff,stroke:#339
-    classDef external fill:#eee,stroke:#555
+    %% Estilos
+    classDef actor fill:#FFFFFF,stroke:#333,stroke-width:2px,rx:6,ry:6;
+    classDef container fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,rx:6,ry:6;
+    classDef database fill:#E7F8ED,stroke:#3FAA66,stroke-width:2px;
+    classDef external fill:#F5F5F5,stroke:#777,stroke-width:2px,stroke-dasharray:4 2;

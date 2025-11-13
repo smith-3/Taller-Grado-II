@@ -1,4 +1,13 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "14px"
+  }
+}}%%
 sequenceDiagram
+    autonumber
+
     participant OBS as ClassReminderSyncObserver
     participant SIMON as SimonScheduler
     participant NOTIF as NotificationService
@@ -8,15 +17,20 @@ sequenceDiagram
     participant USE as SimonNotificationUseCase
     participant SHOW as ShowNotificationUseCase
 
-    OBS->>OBS: Detecta cambio de horario
+    %% --- Sincronización de recordatorios ---
+    OBS->>OBS: Detecta cambio<br/>en el horario
     OBS->>SIMON: onScheduleChanged()
     SIMON->>NOTIF: cancelOldReminders()
     SIMON->>NOTIF: scheduleNewReminders()
 
-    U->>REC: Acción en notificación (Simón/Like)
+    %% --- Interacción con el usuario ---
+    U->>REC: Acción en notificación<br/>(Simón / Like)
+
+    %% --- Manejo de acción ---
     REC->>AIU: withLease(...)
-    AIU->>USE: generateReminderClosure()/generateCheckInClosure()
+    AIU->>USE: generateReminderClosure()<br/>/ generateCheckInClosure()
     USE-->>REC: NotificationInfo
+
+    %% --- Mostrar nueva notificación ---
     REC->>SHOW: showNotification(info)
     SHOW->>NOTIF: notify()
-

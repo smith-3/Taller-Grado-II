@@ -1,16 +1,26 @@
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "14px",
+    "fontFamily": "Arial, sans-serif",
+    "lineColor": "#4A90E2"
+  }
+}}%%
 flowchart TB
     %% C4 Nivel 3: Componentes (F1)
-    subgraph App Android
-      vm[GenerateScheduleViewModel]:::component
-      sync[AutoSyncUseCase]:::component
-      scraper[ScheduleScraper]:::component
-      dl[PdfDownloader]:::component
-      ex[PdfExtractor]:::component
-      parser[PdfParser]:::component
-      importUc[ImportCareerSchedulesUseCase]:::component
-      repos[Repos/DAOs Room]:::component
+
+    subgraph App["📱 App Android - Componentes"]
+        vm[[GenerateScheduleViewModel]]:::component
+        sync[[AutoSyncUseCase]]:::component
+        scraper[[ScheduleScraper]]:::component
+        dl[[PdfDownloader]]:::component
+        ex[[PdfExtractor]]:::component
+        parser[[PdfParser]]:::component
+        importUc[[ImportCareerSchedulesUseCase]]:::component
+        repos[(Repos / DAOs Room)]:::database
     end
 
+    %% Relaciones internas
     vm --> sync
     sync --> scraper
     sync --> importUc
@@ -19,5 +29,6 @@ flowchart TB
     ex --> parser
     importUc --> repos
 
-    classDef component fill:#f8fbff,stroke:#339
-
+    %% Estilos
+    classDef component fill:#E8F4FD,stroke:#4A90E2,stroke-width:2px,rx:6,ry:6;
+    classDef database fill:#E7F8ED,stroke:#3FAA66,stroke-width:2px;
