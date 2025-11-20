@@ -4,24 +4,31 @@
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 
+\noindent A continuación se presentan las conclusiones principales, alineadas explícitamente con el objetivo general (OG) y los objetivos específicos (OE1–OE5) planteados en el Capítulo 1.
+
 \begin{enumerate}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item (OG) Se comprobó el objetivo general: TecnoTime satisface la necesidad de organizar horarios académicos de forma clara, accesible y personalizable para estudiantes de la FCyT-UMSS, reduciendo pasos y errores frente al flujo web vigente (p.\,ej., Cappuccino \cite{cappuccino_umss}) y favoreciendo su uso cotidiano más allá del periodo de inscripción.
+\item (OG) Se cumplió el objetivo general: TecnoTime permite organizar y visualizar horarios académicos de forma clara, accesible y personalizable para estudiantes de la FCyT-UMSS, reduciendo pasos y errores frente al flujo web vigente (p.\,ej., Cappuchino \cite{cappuccino_umss}) y manteniendo utilidad más allá del periodo de inscripción.
 
-\item (OE4) La generación por defecto de horarios sin choques, junto con la evaluación multicriterio (huecos, docentes favoritos y días activos), produjo soluciones de calidad en tiempos compatibles con la ejecución on-device. Ello permitió mantener el enfoque en el caso de uso individual, respetando restricciones duras y optimizando preferencias blandas.
+\item (OE1) Se cumplió el objetivo de organizar exclusivamente la carga académica mediante selección guiada de materias y grupos, evitando eventos personales. Las vistas semanal/diaria y la vista previa por grupo ofrecen lectura rápida y consistente.
 
-\item (OE3) La exportación/importación en formatos imagen/PDF/Excel y el archivo estructurado (JSON) habilitaron coordinación entre pares por mensajería con menor riesgo de transcripción y mejor trazabilidad. Esta interoperabilidad facilita reproducir, comparar y adoptar configuraciones de horario en contextos reales de curso.
+\item (OE2) Se cumplió el objetivo de ajuste manual y persistencia: el usuario puede seleccionar/cambiar grupos, conservar preferencias y consultar un widget (componente visual que se muestra en la pantalla principal del dispositivo); la memoria de contexto reduce repetición de carrera–nivel–materia.
 
-\item (OE1) La organización exclusivamente académica se garantizó mediante selección guiada de materias/grupos, evitando mezclar eventos personales. Las vistas semanal y diaria, junto con la vista previa por grupo, contribuyeron a una lectura rápida y consistente del horario.
+\item (OE3) Se cumplió el objetivo de facilitar descarga e intercambio: exportación a imagen/PDF/Excel y archivo estructurado en JSON (formato de intercambio de datos basado en texto) habilitan coordinación por mensajería con menor riesgo de transcripción y mejor trazabilidad.
 
-\item (OE2) La continuidad de uso se sostuvo con persistencia local y memoria de contexto, mitigando la frustración por repetir carrera-nivel-materia. El funcionamiento con prioridad sin conexión aseguró acceso al horario y ajustes esenciales en escenarios de conectividad limitada.
+\item (OE4) Se cumplió el objetivo de sugerir horarios optimizados: la generación por defecto sin choques, con evaluación multicriterio (huecos, docentes favoritos y días activos), produce soluciones de calidad en tiempos compatibles con ejecución en el dispositivo.
 
-\item (OE5) La experiencia de uso móvil resultó clara e intuitiva: onboarding progresivo, preferencias de presentación (formato 24/12\,h, visibilidad por día) y componente de acceso rápido favorecieron la consulta diaria. Estas decisiones de UX se alinean con las necesidades observadas en el área de aplicación.
-
-\item (Arquitectura \& Datos) La adopción de MVVM y principios de arquitectura limpia \cite{martin2017-cleanarch}, junto con la ingesta de PDFs oficiales \cite{horarios_fcyt} y el almacenamiento local con Room \cite{room_db}, permitieron operación con prioridad sin conexión, verificación de frescura y menor dependencia de infraestructura en tiempo real, mejorando mantenibilidad y escalabilidad.
-
-\item (Impacto y transferencia) La solución reduce el tiempo para construir horarios sin choques, disminuye huecos diarios y normaliza el intercambio estructurado entre estudiantes. El diseño modular y el uso de formatos abiertos sientan bases para su extensión a otras unidades académicas con mínimos cambios.
-
-\item (Límites reconocidos) La disponibilidad actual se centra en Android y depende de la estructura y publicación de PDFs institucionales; se mitigó con caché local, sincronización resiliente (espera exponencial y cortacircuito lógico) e importación manual de PDF. Se recomienda continuar validando en nuevos periodos y revisar sistemáticamente cambios de formato y ubicación de la fuente oficial.
+\item (OE5) Se cumplió el objetivo de optimizar la experiencia móvil: onboarding progresivo, preferencias de presentación (formato 24/12\,h, visibilidad por día) y componente de acceso rápido favorecen la consulta diaria y la adopción.
 \end{enumerate}
+
+\section{Recomendaciones}
+\begin{itemize}
+  \item Despliegue institucional: formalizar un canal de distribución (intranet/tienda) y firmar versiones; evaluar un endpoint (punto final de una API) oficial para horarios a fin de reemplazar la ingesta desde PDF.
+  \item Mantenimiento de datos: hacer seguimiento de cambios en el formato/ubicación de los PDFs; programar validaciones previas a inscripciones; mantener fallback por PDF local.
+  \item Portabilidad: explorar extensión a iOS y otras facultades; considerar un modo “lectura” web para consulta rápida.
+  \item Métricas opt-in: incorporar telemetría voluntaria para mejorar ranking de generador, detectar fallas de sincronización y medir adopción sin comprometer privacidad.
+  \item Rendimiento y QA: ampliar pruebas de UI para export/import; realizar benchmarks por dispositivo; asegurar TTS \(\leq\) objetivos definidos.
+  \item Seguridad y privacidad: revisar periódicamente permisos, almacenamiento y cifrado de datos sensibles; mantener IA en el dispositivo como activación voluntaria, con control de descarga/borrado.
+  \item Documentación y soporte: mantener actualizados los manuales de instalación y de usuario (ver Anexos A–B) y una guía de preguntas frecuentes.
+\end{itemize}

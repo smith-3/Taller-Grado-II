@@ -1,0 +1,19 @@
+% Ficha resumen del trabajo (una plana)
+\chapter*{FICHA RESUMEN}
+
+\noindent La planificación de horarios académicos en la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón presenta desafíos recurrentes para los estudiantes. Las herramientas actuales, como el sistema web Cappuchino, carecen de optimización para dispositivos móviles, no permiten personalización avanzada y no ofrecen funcionalidad sin conexión.
+
+\noindent El presente proyecto desarrolla TecnoTime, una aplicación móvil que permite organizar, generar y consultar horarios de forma flexible y confiable, optimizada para dispositivos Android. La solución aborda las limitaciones de las herramientas existentes mediante una experiencia móvil completa que prioriza la disponibilidad sin conexión y la personalización.
+
+\noindent El desarrollo adoptó un enfoque iterativo-incremental organizado en once fases. Se inició con la ingesta y normalización de horarios oficiales desde archivos PDF hacia una base de datos local, seguido de la definición del modelo de dominio con entidades y reglas de integridad. Se implementó un generador de horarios viables mediante heurísticas que minimizan choques y huecos entre clases, priorizando docentes favoritos según las preferencias del estudiante.
+
+\noindent La arquitectura prioriza la operación sin conexión mediante caché local y sincronización diferida con políticas de frescura. Se desarrolló interoperabilidad mediante un contrato JSON para compartir horarios por mensajería, permitiendo la coordinación entre estudiantes. La experiencia de usuario se optimizó con orientación inicial guiada, navegación intuitiva y un componente de acceso rápido desde la pantalla principal.
+
+\noindent Se integraron notificaciones académicas programables para recordatorios de clases y un asistente de inteligencia artificial opcional que opera completamente en el dispositivo. La aplicación permite exportar horarios en formatos PDF, imagen y Excel para facilitar su distribución. Las fases finales incluyeron aseguramiento de calidad mediante pruebas unitarias y de extremo a extremo, controles de seguridad con datos mínimos y permisos limitados, así como optimización del tamaño del paquete.
+
+\noindent TecnoTime cumplió con el objetivo general y los cinco objetivos específicos planteados. La aplicación permite organizar exclusivamente la carga académica mediante selección guiada de materias y grupos, con vistas semanal y diaria que facilitan la consulta rápida. El ajuste manual de horarios y la persistencia de preferencias reducen la repetición de pasos, mientras que el componente de acceso rápido ofrece disponibilidad inmediata.
+
+\noindent La funcionalidad de descarga e intercambio en múltiples formatos habilita la coordinación colaborativa entre estudiantes con menor riesgo de errores. El generador de horarios optimizados produce soluciones sin choques en tiempos compatibles con ejecución en el dispositivo. La interfaz móvil incluye orientación progresiva y preferencias de presentación que favorecen la adopción y el uso cotidiano.
+
+\noindent El proyecto demuestra la viabilidad de aplicar principios de ingeniería de software rigurosos en el contexto académico local. TecnoTime representa una solución integral que supera las limitaciones de las herramientas web existentes mediante una experiencia móvil fluida, persistencia local con sincronización inteligente y capacidades de intercambio estructurado, ofreciendo una base sólida para futuras extensiones a otras facultades o plataformas.
+

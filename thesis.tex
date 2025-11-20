@@ -22,9 +22,7 @@
     \input{sections/00_agradecimientos}
     \clearpage
 
-    % Comienzo de numeración normal
-    \pagenumbering{arabic}
-    \setcounter{page}{1}
+
 
     % Índices
     \hypersetup{linkcolor=black}
@@ -34,6 +32,14 @@
     % \lstlistoflistings
 
     \clearpage
+
+    % Ficha resumen del trabajo
+    \input{sections/00_ficha_resumen}
+    \clearpage
+
+    % Comienzo de numeración normal
+    \pagenumbering{arabic}
+    \setcounter{page}{1}
 
     % Capítulos
     \input{sections/01_introduction}
@@ -48,6 +54,20 @@
 
     % Anexos (opcional)
     \appendix
+    % Evitar que las tablas y figuras de anexos aparezcan en los índices
+    \captionsetup{list=no}
+    % Mostrar "Anexo" en lugar de "Capítulo" dentro de anexos
+    \renewcommand{\chaptername}{Anexo}
+    % En anexos, figuras/tablas numeran por capítulo: A.1, B.1, ...
+    \counterwithin{figure}{chapter}
+    \counterwithin{table}{chapter}
+    % Reiniciar contadores para comenzar en A.1
+    \setcounter{figure}{0}
+    \setcounter{table}{0}
+    % Formato de título de capítulo en anexos: "Anexo A: Título"
+    \titleformat{\chapter}[block]
+      {\normalfont\bfseries\fontsize{12}{18}\selectfont\centering}
+      {Anexo \thechapter:}{1em}{\MakeUppercase}
     \input{sections/07_anexos}
 
 \end{document}

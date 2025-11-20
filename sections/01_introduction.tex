@@ -3,21 +3,29 @@
 \chapter{INTRODUCCIÓN}
 \label{cap:Introducción}
 
-La organización de horarios académicos es una tarea esencial para los estudiantes universitarios, especialmente en instituciones de alta demanda como la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS). Sin embargo, las herramientas disponibles actualmente, como el sistema Cappuccino \cite{cappuccino_umss}, presentan limitaciones significativas, incluyendo la falta de optimización para dispositivos móviles y la incapacidad de personalizar horarios según las necesidades individuales. Estas deficiencias complican la planificación académica y reducen la eficiencia en el manejo del tiempo de los estudiantes.
+La organización de horarios académicos es una tarea esencial para los estudiantes universitarios, en particular en instituciones de alta demanda como la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS). Sin embargo, las herramientas disponibles en la actualidad, como el sistema Cappuchino \cite{cappuccino_umss}, presentan limitaciones relevantes, entre ellas la falta de optimización para dispositivos móviles y la incapacidad de personalizar horarios según las necesidades individuales.
 
-Este proyecto propone el desarrollo de una aplicación móvil diseñada específicamente para los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS. La aplicación permitirá gestionar horarios de manera flexible y eficiente, incorporando funcionalidades avanzadas como sugerencias de horarios optimizados \cite{smart_timetable}, descarga en múltiples formatos y notificaciones personalizadas. Este enfoque no solo abordará las limitaciones actuales, sino que también mejorará significativamente la experiencia del usuario, promoviendo una planificación académica más efectiva y adaptada a las necesidades tecnológicas modernas.
+Estas deficiencias complican la planificación académica y reducen la eficiencia en el manejo del tiempo de los estudiantes.
 
-\section{ANTECEDENTES}
+El presente proyecto propone el desarrollo de una aplicación móvil diseñada para los estudiantes de la Facultad de Ciencias y Tecnología de la UMSS. La aplicación permitirá gestionar horarios de manera flexible y eficiente, incorporando funcionalidades avanzadas como sugerencias de horarios optimizados \cite{smart_timetable}, descarga en múltiples formatos y notificaciones personalizadas.
+
+Este enfoque no solo abordará las limitaciones actuales, sino que también mejorará de forma notable la experiencia del usuario, promoviendo una planificación académica más efectiva y adaptada a las necesidades tecnológicas modernas.
+
+\section{Antecedentes}
 \label{sec:Antecedentes}
 
 % Contenido del capítulo "Antecedentes"
-El uso de plataformas digitales en la gestión de horarios académicos ha evolucionado significativamente en los últimos años. Sin embargo, la mayoría de estas soluciones presentan limitaciones que dificultan su adopción por parte de los estudiantes universitarios. En la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS), los estudiantes enfrentan el desafío de manejar horarios en diferentes plataformas, como es el caso de la herramienta Cappuccino, diseñada por la Sociedad Científica de Estudiantes de Sistemas e Informática (S.C.E.S.I.) \cite{cappuccino_umss}. Esta aplicación permite la creación de horarios de manera sencilla, pero la falta de optimización para dispositivos móviles ha sido un factor recurrente que dificulta la adaptación de los estudiantes a sus actividades diarias.
+El uso de plataformas digitales en la gestión de horarios académicos ha evolucionado de manera significativa en los últimos años. Sin embargo, la mayoría de estas soluciones presentan limitaciones que dificultan su adopción por parte de los estudiantes universitarios.
 
-En contraste, aplicaciones como Smart Timetable \cite{smart_timetable} ofrecen una solución más flexible y adaptada a las demandas actuales, al permitir la creación de múltiples horarios y la integración de funcionalidades como alarmas, gestión de tareas y soporte para calendarios rotativos. Estas características son fundamentales para los estudiantes que requieren mayor control y personalización de su tiempo. Además, la posibilidad de sincronizar eventos académicos con actividades personales es una necesidad emergente en instituciones que buscan facilitar la organización del estudiante universitario implementando nuevas plataformas dinámicas.
+En la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS), los estudiantes enfrentan el desafío de manejar horarios en diferentes plataformas, como es el caso de la herramienta Cappuchino, diseñada por la Sociedad Científica de Estudiantes de Sistemas e Informática (S.C.E.S.I.) \cite{cappuccino_umss}. Esta aplicación permite la creación de horarios de manera sencilla, pero la falta de optimización para dispositivos móviles ha sido un factor recurrente que dificulta la adaptación de los estudiantes a sus actividades diarias.
+
+En contraste, aplicaciones como Smart Timetable \cite{smart_timetable} ofrecen una solución más flexible y adaptada a las demandas actuales, al permitir la creación de múltiples horarios y la integración de funcionalidades como alarmas, gestión de tareas y soporte para calendarios rotativos. Estas características son fundamentales para los estudiantes que requieren mayor control y personalización de su tiempo.
+
+Además, la posibilidad de sincronizar eventos académicos con actividades personales es una necesidad emergente en instituciones que buscan facilitar la organización del estudiante universitario implementando nuevas plataformas dinámicas.
 
 A nivel nacional, otras universidades como la Universidad Mayor de San Andrés (UMSA) también han optado por la digitalización de sus horarios mediante plataformas estáticas, que, si bien facilitan la consulta de horarios, carecen de herramientas dinámicas para la gestión eficiente del tiempo por parte del estudiante. Este tipo de soluciones no permiten la integración con dispositivos móviles ni la generación de recordatorios automáticos, limitando la eficiencia en la planificación académica \cite{campushome_apps}.
 
-\section{OBJETIVOS}
+\section{Objetivos}
 \label{sec:Objetivos}
 
 \subsection{Objetivo general}
@@ -27,7 +35,7 @@ Desarrollar una aplicación móvil para la gestión completa de horarios académ
 \begin{itemize}
     \item Crear un sistema personalizado que permita a los estudiantes organizar sus horarios académicos según sus preferencias y conveniencia, exclusivamente para las materias de la Facultad de Ciencias y Tecnología de la UMSS, excluyendo actividades personales.
 
-    \item Desarrollar un módulo que permita a los estudiantes ajustar manualmente sus horarios seleccionando las materias en función de su inscripción. Este módulo incluirá la capacidad de visualizar el horario en un widget dentro de la aplicación móvil, así como la opción de guardar los horarios.
+    \item Desarrollar un módulo que permita a los estudiantes ajustar manualmente sus horarios seleccionando las materias en función de su inscripción. Este módulo incluirá la capacidad de visualizar el horario en un widget (componente visual que se muestra en la pantalla principal del dispositivo), así como la opción de guardar los horarios.
 
     \item Crear una funcionalidad que facilite la descarga y el intercambio de horarios académicos en diversos formatos, para optimizar su consulta y promover la organización colaborativa entre estudiantes.
     \item Integrar una herramienta que sugiera horarios optimizados, minimizando los períodos de espera entre clases y maximizando la eficiencia del tiempo del estudiante, utilizando algoritmos de planificación basados en grafos.
@@ -35,32 +43,36 @@ Desarrollar una aplicación móvil para la gestión completa de horarios académ
     \item Optimizar la interfaz de usuario para dispositivos móviles, garantizando una visualización clara e intuitiva de los horarios, adaptada a las necesidades del estudiante.
 \end{itemize}
 
-\section{JUSTIFICACIÓN}
+\section{Justificación}
 \label{sec:Justificación}
 
-La gestión eficiente del tiempo académico es una habilidad fundamental para los estudiantes universitarios, especialmente en instituciones como la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS), donde los estudiantes deben organizar múltiples materias en cada semestre. Sin embargo, el sistema actual que proporciona los horarios académicos carece de una solución adecuada que permita a los estudiantes organizar sus horarios desde dispositivos móviles, dificultando su planificación académica y contribuyendo a una menor eficiencia en sus estudios \cite{cappuccino_umss}.
+La gestión eficiente del tiempo académico es una habilidad fundamental para los estudiantes universitarios, especialmente en instituciones como la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS), donde los estudiantes deben organizar múltiples materias en cada semestre.
 
-Este proyecto es relevante porque aborda una necesidad significativa dentro del contexto académico de la UMSS: la falta de una aplicación móvil adecuada para gestionar los horarios de materias de manera accesible y funcional. Actualmente, los estudiantes dependen de herramientas que no están optimizadas para dispositivos móviles o que carecen de funcionalidades clave \cite{smart_timetable}. La aplicación propuesta permitirá a los estudiantes organizar sus horarios de manera eficiente, reduciendo la posibilidad de conflictos en su carga académica y optimizando su rendimiento académico.
+Sin embargo, el sistema actual que proporciona los horarios académicos carece de una solución adecuada que permita a los estudiantes organizar sus horarios desde dispositivos móviles, dificultando su planificación académica y contribuyendo a una menor eficiencia en sus estudios \cite{cappuccino_umss}.
+
+El presente proyecto es relevante porque aborda una necesidad significativa dentro del contexto académico de la UMSS: la falta de una aplicación móvil adecuada para gestionar los horarios de materias de manera accesible y funcional. Actualmente, los estudiantes dependen de herramientas que no están optimizadas para dispositivos móviles o que carecen de funcionalidades clave \cite{smart_timetable}.
+
+La aplicación propuesta permitirá a los estudiantes organizar sus horarios de manera eficiente, reduciendo la posibilidad de conflictos en su carga académica y optimizando su rendimiento académico. Asimismo, se facilitará la toma de decisiones informadas durante el proceso de inscripción. De esta manera, se espera mejorar la experiencia académica general de los estudiantes.
 
 Los principales beneficiarios de esta aplicación serán los estudiantes de la Facultad de Ciencias y Tecnología, quienes podrán visualizar y organizar sus horarios de manera más efectiva, ajustándolos exclusivamente a sus necesidades académicas. Al optimizar su planificación académica, los estudiantes podrán cumplir mejor con sus compromisos universitarios.
 
-Finalmente, este proyecto llenará un vacío en el contexto actual de la UMSS, donde no existen soluciones adecuadas que ofrezcan una experiencia de gestión de horarios académicos adaptada a las demandas tecnológicas actuales. La implementación de esta aplicación facilitará la organización académica de los estudiantes y mejorará su eficiencia en la planificación de sus estudios \cite{campushome_apps}.
+Por último, el presente proyecto llenará un vacío en el contexto actual de la UMSS, donde no existen soluciones adecuadas que ofrezcan una experiencia de gestión de horarios académicos adaptada a las demandas tecnológicas actuales. La implementación de esta aplicación facilitará la organización académica de los estudiantes y mejorará su eficiencia en la planificación de sus estudios \cite{campushome_apps}.
 
-\section{ALCANCES Y LÍMITES}
+\section{Alcances y límites}
 \label{sec:AlcancesYLimites}
 
-El presente capítulo establece los alcances y límites del proyecto, ratificando y explicitando las expectativas que el desarrollo de la aplicación móvil para la gestión de horarios de la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS) busca satisfacer y aquellas áreas que no serán abordadas.
+Se establecen los alcances y límites del proyecto, ratificando y explicitando las expectativas que el desarrollo de la aplicación móvil para la gestión de horarios de la Facultad de Ciencias y Tecnología de la Universidad Mayor de San Simón (UMSS) busca satisfacer y aquéllas áreas que no serán abordadas.
 
 \subsection{Alcances del proyecto}
 
-El alcance del proyecto define hasta dónde se extenderá la aplicación móvil y las funcionalidades que incluirá. Estos son:
+Se define hasta dónde se extenderá la aplicación móvil y las funcionalidades que incluirá:
 
 \begin{itemize}
     \item Desarrollar una aplicación móvil para la gestión de horarios académicos, exclusivamente para las 19 carreras de la Facultad de Ciencias y Tecnología de la UMSS \cite{fcyt_umss}.
     \item Permitir la configuración y organización personalizada de horarios académicos basados en las materias seleccionadas durante el proceso de inscripción.
     \item Incorporar una funcionalidad para sugerir horarios optimizados, minimizando los períodos de espera entre clases y maximizando la eficiencia del tiempo del estudiante.
     \item Crear una aplicación específicamente diseñada para dispositivos móviles con sistema operativo Android, adaptada a las necesidades tecnológicas actuales.
-    \item Implementar tecnologías como web scraping, APIs y bases de datos para la recopilación, procesamiento y almacenamiento de los horarios académicos ofrecidos por la facultad \cite{horarios_fcyt}.
+    \item Implementar tecnologías como extracción automática de datos, interfaces de programación de aplicaciones y bases de datos para la recolección, procesamiento y almacenamiento de los horarios académicos ofrecidos por la facultad \cite{horarios_fcyt}.
     \item Ofrecer opciones para descargar los horarios académicos en formatos accesibles como PDF o imágenes, facilitando su consulta y distribución.
     \item Incluir alertas automáticas y notificaciones relacionadas con las clases programadas, basadas en el horario personalizado seleccionado por el estudiante.
 \end{itemize}
@@ -72,7 +84,7 @@ Los límites del proyecto detallan las áreas que no serán abordadas y las rest
 \begin{itemize}
     \item La aplicación se enfocará exclusivamente en las 19 carreras de la Facultad de Ciencias y Tecnología de la UMSS, sin considerar otras facultades o universidades \cite{fcyt_umss}.
     \item La disponibilidad de la aplicación estará restringida únicamente a dispositivos móviles con sistema operativo Android, a partir de la API 34. No se desarrollará para otros sistemas operativos como iOS ni para plataformas de escritorio.
-    \item No se publicará la aplicación en plataformas como Google Play Store. Su distribución será gestionada directamente por los desarrolladores o la facultad a través de medios internos.
+    \item No se publicará la aplicación en tiendas de aplicaciones como Google Play. Su distribución será gestionada directamente por los desarrolladores o la facultad a través de medios internos.
     \item La aplicación no incluirá actividades o eventos personales del estudiante; estará exclusivamente destinada a la organización de horarios académicos.
     \item No se integrarán funcionalidades para sincronizar horarios con calendarios externos o personales, limitando el uso al entorno interno de la facultad.
     \item El proyecto no abarcará el desarrollo de funcionalidades para la gestión de información o actividades fuera del ámbito académico de la Facultad de Ciencias y Tecnología.

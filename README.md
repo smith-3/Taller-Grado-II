@@ -139,3 +139,22 @@ pdflatex thesis.tex
 - Los archivos generados (.aux, .log, .pdf, etc.) están ignorados en .gitignore
 - Usa el estilo APA para las referencias bibliográficas
 - Asegúrate de seguir los límites de páginas por capítulo según la guía
+
+## 7. NORMAS DE ESTILO Y FORMATO (ACTUALIZACIÓN)
+
+### Jerarquía de Títulos
+- **Niveles permitidos**: `\chapter`, `\section`, `\subsection`.
+- **Niveles prohibidos**: `\subsubsection`, `\paragraph`.
+- **Numeración**: Todos los títulos deben estar numerados. No usar versiones con asterisco (`\section*`, `\subsection*`) en el contenido principal.
+- **Formato**: Títulos en negrita gestionados por LaTeX, pero nunca usar `\textbf{}` suelto como título informal.
+
+### Listas
+- **Viñetas**: Usar entorno `itemize` para listas con viñetas.
+- **Numeradas**: Usar entorno `enumerate` para listas numeradas.
+- **Prohibido**: Entorno `description` (genera negritas sin viñetas).
+- **Etiquetas**: No usar negrita en las etiquetas de los ítems (ej. usar `\item Etiqueta:` en lugar de `\item \textbf{Etiqueta:}`).
+
+### Texto y Párrafos
+- **Cuerpo del texto**: Texto plano, sin negritas (`\textbf`) ni cursivas (`\textit`, `\emph`).
+- **Énfasis**: No usar negrita ni cursiva para enfatizar palabras dentro de un párrafo.
+- **Títulos in-line**: No usar títulos al inicio de párrafo en negrita (ej. "**Título.** Texto..."). Integrar el texto de manera natural o usar subsecciones si es necesario.

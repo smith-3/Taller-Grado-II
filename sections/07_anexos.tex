@@ -1,8 +1,127 @@
-\appendix
-\chapter{Anexos}\label{ch:anexos}
+% Los anexos se estructuran como capítulos con numeración A, B, C...
 
-\section{Anexo 0 --- Trazabilidad de componentes de TecnoTime}\label{ann:trazabilidad-tecnotime}
+% Título general de la sección de anexos
+\chapter*{Anexos}
+\addcontentsline{toc}{chapter}{Anexos}
 
+\chapter{Manual de instalación}\label{ann:instalacion}
+\section{Introducción}
+Este anexo describe los requisitos, pasos de instalación y acciones de mantenimiento (actualización, desinstalación), así como soluciones a problemas comunes.
+\section{Requisitos del sistema}
+\begin{itemize}
+  \item Android 8.0 (API 26) o superior.
+  \item ~100 MB de almacenamiento disponible para datos y exportaciones.
+  \item Conectividad a internet opcional: la app funciona sin conexión y sincroniza cuando hay red.
+  \item Permisos: notificaciones (para recordatorios) y almacenamiento/compartir (para exportar horarios).
+\end{itemize}
+
+\section{Pasos de instalación}
+
+\subsection{Opción A: desde APK (distribución interna)}
+\begin{enumerate}
+  \item Copiar el archivo \texttt{TecnoTime.apk} al dispositivo (carpeta Descargas).
+  \item Habilitar Instalar apps desconocidas para el gestor de archivos.
+  \item Abrir el APK y confirmar la instalación.
+  \item Abrir TecnoTime desde el cajón de aplicaciones.
+\end{enumerate}
+
+\subsection{Opción B: desde tienda (si aplica)}
+Buscar TecnoTime en la tienda, verificar editor y permisos, e instalar normalmente.
+Durante el periodo previo a la publicación general (prevista para el 25 de noviembre de 2025), la instalación está disponible mediante el programa de pruebas de Google Play en \url{https://play.google.com/apps/testing/com.fragmind.tecnotime}; el acceso requiere unirse como tester.
+
+\section{Actualización y desinstalación}
+Para actualizar, instalar la nueva versión sobre la existente. Para desinstalar, mantener pulsado el icono y seleccionar Desinstalar.
+
+\section{Solución de problemas}
+\begin{itemize}
+  \item No se instala: verificar espacio libre y permiso de orígenes desconocidos.
+  \item Widget no actualiza: excluir de ahorro de batería y permitir ejecución en segundo plano.
+  \item No llegan notificaciones: habilitar el canal de notificaciones de TecnoTime en Ajustes.
+\end{itemize}
+
+\chapter{Manual de usuario}\label{ann:manual-usuario}
+\begin{multicols}{2}
+
+% Versión más breve y directa
+
+\section{¿Qué hace?}
+Organiza tus materias, evita choques, te recuerda clases y te deja compartir o importar horarios. Pensado para estudiantes FCyT.
+
+\section{Requisitos}
+Android 8.0+; ~30 MB libres. La IA (Simón) es opcional y pesa más. Funciona sin internet para consultar.
+
+\section{Instalación y primer uso}
+Instala desde Play Store o APK. Al abrir: acepta permisos, pon tu nombre, elige 12/24h y tema, selecciona carrera(s) y activa recordatorios si quieres. La IA “Simón” es opcional.
+
+\section{Pantallas y tareas}
+\subsection{Inicio (hoy)}
+\begin{itemize}
+  \item Ve tarjetas con hora, materia, aula y docente.
+  \item Desliza para cambiar de día o toca la fecha.
+  \item Botón “Vista semanal” para ver todo compacto.
+\end{itemize}
+
+\subsection{Agregar/editar materia}
+\begin{itemize}
+  \item Agrega: nivel → materia → grupo. Opcional: color/emoji.
+  \item Edita desde la tarjeta: cambiar grupo, color o emoji.
+\end{itemize}
+
+\subsection{Carreras}
+\begin{itemize}
+  \item Ve progreso por niveles y abre el PDF origen.
+  \item Sincroniza desde tu galería o desincroniza si hace falta.
+\end{itemize}
+
+\section{Exportar / Importar}
+\begin{itemize}
+  \item Exporta tu horario como imagen, PDF o Excel y compártelo.
+  \item Enviar copia (JSON): elige qué materias incluir.
+  \item Importar JSON: no duplica materias ya inscritas.
+\end{itemize}
+
+\section{Recordatorios e IA}
+\begin{itemize}
+  \item Notificaciones antes de clases con la anticipación que elijas.
+  \item Simón (IA): descarga/borra el modelo y prueba mensajes.
+\end{itemize}
+
+\section{Widget}
+Añádelo desde el lanzador; muestra el día y puedes navegar.
+
+\section{Ajustes}
+Formato 12/24h, tema claro/oscuro, fines de semana, docentes favoritos, versión y novedades.
+
+\section{Privacidad}
+Sin cuenta. Datos locales. Los JSON no llevan info personal.
+
+% (Se eliminan secciones FAQ y Soporte a solicitud del usuario)
+
+% Glosario mínimo (opcional)
+\section{Glosario}
+\begin{itemize}
+  \item Card: tarjeta con datos de una clase.
+  \item FAB: botón flotante para acciones rápidas.
+\end{itemize}
+
+\end{multicols}
+
+\chapter{Instrumento de encuesta: cuestionario completo}\label{ann:instrumento}
+% Presentar el cuestionario en dos columnas para mejor aprovechamiento del espacio
+\begin{multicols}{2}
+\input{sections/anexos/anexoA_instrumento}
+\end{multicols}
+
+\chapter{Historias de usuario tabuladas}\label{ann:historias}
+% Compactar espaciado y permitir corte entre páginas solo en este anexo
+\begingroup
+\setlength{\LTpre}{0pt}\setlength{\LTpost}{0pt}
+\renewcommand\arraystretch{1.05}
+\setlength{\tabcolsep}{4pt}
+\input{sections/anexos/anexoF_historias}
+\endgroup
+
+\chapter{Trazabilidad de componentes de TecnoTime}\label{ann:trazabilidad-tecnotime}
 \href{https://github.com/smith-3/TecnoTime}{TecnoTime}.
 
 \begin{longtable}{@{}p{7cm}p{9cm}@{}}
@@ -10,14 +129,14 @@
 \label{tab:trazabilidad-tecnotime}\\
 
 \toprule
-\textbf{Componente} & \textbf{Ruta} \\
+Componente & Ruta \\
 \midrule
 \endfirsthead
 
 \multicolumn{2}{c}%
-{{\bfseries \tablename\ \thetable\ -- Continuación}} \\
+{\tablename\ \thetable\ -- Continuación} \\
 \toprule
-\textbf{Componente} & \textbf{Ruta} \\
+Componente & Ruta \\
 \midrule
 \endhead
 
@@ -135,10 +254,4 @@
 
 \end{longtable}
 
-\section{Anexo A --- Instrumento de encuesta: cuestionario completo}\label{ann:instrumento}
-\input{sections/anexos/anexoA_instrumento}
-
-\section{Anexo B --- Historias de usuario tabuladas}\label{ann:historias}
-\input{sections/anexos/anexoF_historias}
-
-\endinput
+% Fin de anexos

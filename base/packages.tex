@@ -18,6 +18,7 @@
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{colortbl}
+\usepackage[subfigure, titles]{tocloft}
 
 % Figuras
 \usepackage{graphicx}
@@ -55,12 +56,18 @@
 \usepackage{csquotes}
 \usepackage{rotating}
 \usepackage{longtable}
+% Tablas X que pueden partirse en varias páginas
+\usepackage{ltablex}
+\keepXColumns
 \usepackage[final]{microtype}
 
 \usepackage{ragged2e}
 \usepackage{enumitem}
 \usepackage{listings} % Para código en anexo si es necesario
 
+% Columnas múltiples (para cuestionario en anexos)
+\usepackage{multicol}
+
 % Diagramas con TikZ
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,babel}

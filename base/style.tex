@@ -17,26 +17,26 @@
 
 \titleformat{\chapter}[block]
   {\normalfont\bfseries\fontsize{12}{18}\selectfont\centering} % Arial-like, mayúsculas, centrado
-  {\thechapter.}{1em}{\MakeUppercase}
+  {CAPÍTULO \thechapter\ --}{1em}{\MakeUppercase}
 
 \titlespacing*{\chapter}{0pt}{0pt}{20pt}
 
 \titleformat{\section}[block]
-  {\normalfont\bfseries\fontsize{12}{18}\selectfont\raggedright} % Arial-like, subtítulo
-  {\thesection.}{1em}{\MakeUppercase}
+  {\normalfont\bfseries\fontsize{11}{17}\selectfont\raggedright} % Arial-like, 11pt, negrita
+  {\thesection.}{1em}{}
 
 \titlespacing*{\section}{0pt}{12pt}{6pt}
 
 % --- Configuraciones para subtítulos ---
 \titleformat{\subsection}[block]
   {\normalfont\bfseries\fontsize{11}{17}\selectfont\raggedright}
-  {\thesubsection.}{1em}{\MakeUppercase}
+  {\thesubsection.}{1em}{}
 
 \titlespacing*{\subsection}{0pt}{12pt}{6pt}
 
 \titleformat{\subsubsection}[block]
   {\normalfont\bfseries\fontsize{11}{17}\selectfont\raggedright}
-  {\thesubsubsection.}{1em}{\MakeUppercase}
+  {\thesubsubsection.}{1em}{}
 
 \titlespacing*{\subsubsection}{0pt}{12pt}{6pt}
 
@@ -84,6 +84,19 @@
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
+
+% --- Etiquetas: usar "Cuadro" en lugar de "Tabla" ---
+\renewcommand{\tablename}{Cuadro}
+\renewcommand{\listtablename}{Índice de cuadros}
+
+% --- Configuración de índices (tocloft) ---
+\renewcommand{\cftfigpresnum}{Figura }
+\renewcommand{\cftfigaftersnum}{:}
+\setlength{\cftfignumwidth}{2.5cm} % Ajustar ancho para "Figura X.Y"
+
+\renewcommand{\cfttabpresnum}{Cuadro }
+\renewcommand{\cfttabaftersnum}{:}
+\setlength{\cfttabnumwidth}{2.5cm} % Ajustar ancho para "Cuadro X.Y"
 
 % --- Entorno de fichas para requisitos (RF) ---
 % Requiere: array, enumitem (cargados en packages.tex)

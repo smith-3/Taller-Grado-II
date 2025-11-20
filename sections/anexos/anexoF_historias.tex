@@ -1,199 +1,217 @@
-\noindent Las historias de usuario se agrupan por área funcional y se presentan en tablas compactas. Cada fila incluye rol, necesidad, beneficio, criterios clave (G/W/T), prioridad MoSCoW y release objetivo. Para ahorrar espacio se usan descripciones breves; los detalles narrativos permanecen en los capítulos correspondientes. \textit{Hint: G/W/T = Given / When / Then.}
+\noindent Las historias de usuario se agrupan por área funcional y se presentan en tablas compactas. Cada fila incluye rol, necesidad, beneficio, criterios clave (G/W/T) y prioridad MoSCoW. Para ahorrar espacio se usan descripciones breves; los detalles narrativos permanecen en los capítulos correspondientes. La columna G/W/T resume el criterio Given–When–Then (Dado que / Cuando / Entonces) usado para describir escenarios de prueba.
 
 \medskip
 
-\subsection*{Onboarding \& Perfil}
+\subsection{Onboarding \& Perfil}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Onboarding y Perfil}\label{tab:hu_onboarding}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-01 & Estudiante & Ver bienvenida y permisos & Entender la app antes de usar & \textbf{G:} primera apertura; \textbf{W:} ingreso; \textbf{T:} intro + permisos.\\[-0.4em]
- & & & & \textbf{G:} rechazo; \textbf{W:} continuo; \textbf{T:} explica funciones limitadas. & Must & R1 \\
-US-02 & Estudiante & Ingresar mi nombre & Personalizar mensajes/notif. & \textbf{G:} primera ejecución; \textbf{W:} guardo; \textbf{T:} se usa en UI/IA local. & Must & R1 \\
-US-03 & Estudiante & Configurar 12/24h, fines, días sin clase, tema & Ver horario a mi gusto & \textbf{G:} ajusto switch; \textbf{W:} cambio; \textbf{T:} ejemplo reacciona.\\[-0.4em]
- & & & & \textbf{G:} cambio tema; \textbf{W:} selecciono; \textbf{T:} UI cambia y persiste. & Must & R1 \\
-US-04 & Estudiante & Onboarding único & Evitar repeticiones & \textbf{G:} terminé onboarding; \textbf{W:} reabro; \textbf{T:} ingreso directo al Home. & Must & R1 \\
+US-01 & Estudiante & Ver bienvenida y permisos & Entender la app antes de usar & G: primera apertura; W: ingreso; T: intro + permisos.\\[-0.4em]
+ & & & & G: rechazo; W: continuo; T: explica funciones limitadas. & Must \\
+US-02 & Estudiante & Ingresar mi nombre & Personalizar mensajes/notif. & G: primera ejecución; W: guardo; T: se usa en UI/IA local. & Must \\
+US-03 & Estudiante & Configurar 12/24h, fines, días sin clase, tema & Ver horario a mi gusto & G: ajusto switch; W: cambio; T: ejemplo reacciona.\\[-0.4em]
+ & & & & G: cambio tema; W: selecciono; T: UI cambia y persiste. & Must \\
+US-04 & Estudiante & Onboarding único & Evitar repeticiones & G: terminé onboarding; W: reabro; T: ingreso directo al Home. & Must \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Carreras, Niveles y Progreso}
+\subsection{Carreras, Niveles y Progreso}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Carreras, niveles y progreso}\label{tab:hu_carreras}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-05 & Estudiante & Sincronizar carreras & Cargar horarios y materias & \textbf{G:} lista carreras; \textbf{W:} selecciono; \textbf{T:} queda sincronizada. & Must & R1 \\
-US-06 & Estudiante & Ver niveles con \% & Entender avance & \textbf{G:} entro carrera; \textbf{W:} abro niveles; \textbf{T:} cards con anillo y \%. & Should & R1 \\
-US-07 & Estudiante & Marcar materia aprobada/no & Reflejar estado real & \textbf{G:} no aprobada; \textbf{W:} toco; \textbf{T:} pasa a ``aprobada''.\\[-0.4em]
- & & & & \textbf{G:} aprobada; \textbf{W:} revierto; \textbf{T:} diálogo + ``no aprobada''. & Must & R1 \\
-US-08 & Estudiante & Abrir PDF origen & Validar fuente oficial & \textbf{G:} card carrera; \textbf{W:} toco PDF; \textbf{T:} abre/descarga documento. & Should & R1 \\
-US-09 & Estudiante & Desincronizar carrera & Limpiar malla errónea & \textbf{G:} carrera sync; \textbf{W:} desincronizo; \textbf{T:} diálogo crítico + limpieza. & Must & R1 \\
-US-10 & Estudiante & Subir PDF manual & Actualizar sin web & \textbf{G:} en carrera; \textbf{W:} ``Sincronizar PDF''; \textbf{T:} parsea y actualiza. & Should & R1 \\
+US-05 & Estudiante & Sincronizar carreras & Cargar horarios y materias & G: lista carreras; W: selecciono; T: queda sincronizada. & Must \\
+US-06 & Estudiante & Ver niveles con \% & Entender avance & G: entro carrera; W: abro niveles; T: cards con anillo y \%. & Should \\
+US-07 & Estudiante & Marcar materia aprobada/no & Reflejar estado real & G: no aprobada; W: toco; T: pasa a ``aprobada''.\\[-0.4em]
+ & & & & G: aprobada; W: revierto; T: diálogo + ``no aprobada''. & Must \\
+US-08 & Estudiante & Abrir PDF origen & Validar fuente oficial & G: card carrera; W: toco PDF; T: abre/descarga documento. & Should \\
+US-09 & Estudiante & Desincronizar carrera & Limpiar malla errónea & G: carrera sync; W: desincronizo; T: diálogo crítico + limpieza. & Must \\
+US-10 & Estudiante & Subir PDF manual & Actualizar sin web & G: en carrera; W: ``Sincronizar PDF''; T: parsea y actualiza. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Home, Navegación y Widget}
+\subsection{Home, Navegación y Widget}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Home, navegación y widget}\label{tab:hu_home}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-11 & Estudiante & Ver cards del día & Planificar jornada & \textbf{G:} Home; \textbf{W:} abro; \textbf{T:} cards con hora/materia/grupo/aula. & Must & R1 \\
-US-12 & Estudiante & Navegar por swipe & Revisar semana rápido & \textbf{G:} Home; \textbf{W:} deslizo; \textbf{T:} cambia día. & Should & R1 \\
-US-13 & Estudiante & Selector de fecha & Saltar a día específico & \textbf{G:} toco fecha; \textbf{W:} elijo; \textbf{T:} Home muestra ese día. & Should & R1 \\
-US-14 & Estudiante & Vista semanal compacta & Visualizar distribución completa & \textbf{G:} Home; \textbf{W:} botón semanal; \textbf{T:} resume semana activa. & Could & R1 \\
-US-15 & Estudiante & Widget con días & Consultar sin abrir app & \textbf{G:} widget; \textbf{W:} deslizo; \textbf{T:} materias visibles cambian. & Should & R1 \\
+US-11 & Estudiante & Ver cards del día & Planificar jornada & G: Home; W: abro; T: cards con hora/materia/grupo/aula. & Must \\
+US-12 & Estudiante & Navegar por swipe & Revisar semana rápido & G: Home; W: deslizo; T: cambia día. & Should \\
+US-13 & Estudiante & Selector de fecha & Saltar a día específico & G: toco fecha; W: elijo; T: Home muestra ese día. & Should \\
+US-14 & Estudiante & Vista semanal compacta & Visualizar distribución completa & G: Home; W: botón semanal; T: resume semana activa. & Could \\
+US-15 & Estudiante & Widget con días & Consultar sin abrir app & G: widget; W: deslizo; T: materias visibles cambian. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Materias \& Grupos}
+\subsection{Materias \& Grupos}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Materias y grupos}\label{tab:hu_materias}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-16 & Estudiante & Agregar materia guiada & Construir horario & \textbf{G:} pulso FAB; \textbf{W:} sigo flujo; \textbf{T:} materia creada (nivel→emoji). & Must & R1 \\
-US-17 & Estudiante & Seleccionar nivel & Elegir contenedor correcto & \textbf{G:} pantalla nivel; \textbf{W:} elijo; \textbf{T:} vuelve con nivel marcado. & Must & R1 \\
-US-18 & Estudiante & Seleccionar materia & Escoger código correcto & \textbf{G:} lista materias; \textbf{W:} toco; \textbf{T:} queda asignada. & Must & R1 \\
-US-19 & Estudiante & Ver preview de grupo & Decidir con info completa & \textbf{G:} lista grupos; \textbf{W:} elijo; \textbf{T:} muestra días/horas/docente antes de confirmar. & Must & R1 \\
-US-20 & Estudiante & Personalizar color/emoji & Identificar visualmente & \textbf{G:} pantalla color/emoji; \textbf{W:} guardo; \textbf{T:} cards reflejan estilo. & Could & R1 \\
-US-21 & Estudiante & Editar desde card & Ajustar sin recrear & \textbf{G:} toco card; \textbf{W:} ``Editar''; \textbf{T:} cambio grupo/color/emoji. & Should & R1 \\
-US-22 & Estudiante & Finalizar materia & Impactar generaciones futuras & \textbf{G:} opción finalizar; \textbf{W:} elijo estado; \textbf{T:} se registra (aprobado/abandonar). & Should & R1 \\
+US-16 & Estudiante & Agregar materia guiada & Construir horario & G: pulso FAB; W: sigo flujo; T: materia creada (nivel→emoji). & Must \\
+US-17 & Estudiante & Seleccionar nivel & Elegir contenedor correcto & G: pantalla nivel; W: elijo; T: vuelve con nivel marcado. & Must \\
+US-18 & Estudiante & Seleccionar materia & Escoger código correcto & G: lista materias; W: toco; T: queda asignada. & Must \\
+US-19 & Estudiante & Ver preview de grupo & Decidir con info completa & G: lista grupos; W: elijo; T: muestra días/horas/docente antes de confirmar. & Must \\
+US-20 & Estudiante & Personalizar color/emoji & Identificar visualmente & G: pantalla color/emoji; W: guardo; T: cards reflejan estilo. & Could \\
+US-21 & Estudiante & Editar desde card & Ajustar sin recrear & G: toco card; W: ``Editar''; T: cambio grupo/color/emoji. & Should \\
+US-22 & Estudiante & Finalizar materia & Impactar generaciones futuras & G: opción finalizar; W: elijo estado; T: se registra (aprobado/abandonar). & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Profesores \& Favoritos}
+\subsection{Profesores \& Favoritos}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Profesores y favoritos}\label{tab:hu_profes}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-23 & Estudiante & Marcar docentes favoritos & Priorizarlos al generar & \textbf{G:} lista docentes; \textbf{W:} toco estrella; \textbf{T:} queda favorito. & Should & R1 \\
+US-23 & Estudiante & Marcar docentes favoritos & Priorizarlos al generar & G: lista docentes; W: toco estrella; T: queda favorito. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Exportar / Importar / Compartir}
+\subsection{Exportar / Importar / Compartir}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Exportar, importar y compartir}\label{tab:hu_export}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-36 & Estudiante & Exportar como imagen & Compartir fácilmente & \textbf{G:} hay materias; \textbf{W:} ``Enviar $\rightarrow$ Imagen''; \textbf{T:} confirmación + share sheet. & Should & R1 \\
-US-37 & Estudiante & Exportar como PDF & Imprimir/archivar & Igual que imagen con ``Enviar $\rightarrow$ PDF''. & Should & R1 \\
-US-38 & Estudiante & Exportar como Excel & Manipular en tabla & Igual que imagen con ``Enviar $\rightarrow$ Excel''. & Could & R1 \\
-US-39 & Estudiante & Enviar copia JSON & Compartir selectivamente & \textbf{G:} ``Enviar copia''; \textbf{W:} uso Todo/Limpiar/Compartir; \textbf{T:} JSON según selección. & Must & R1 \\
-US-40 & Estudiante & Bloquear exportar sin materias & Evitar archivos vacíos & \textbf{G:} 0 materias; \textbf{W:} exporto; \textbf{T:} muestra aviso y detiene acción. & Must & R1 \\
-US-41 & Estudiante & Importar JSON (app) & Añadir materias propias & \textbf{G:} ``Añadir horario''; \textbf{W:} elijo JSON; \textbf{T:} lista materias y evita duplicados. & Must & R1 \\
-US-42 & Estudiante & Abrir JSON externo & Importar directo & \textbf{G:} recibo JSON; \textbf{W:} ``Abrir con TecnoTime''; \textbf{T:} muestra UI importación. & Must & R1 \\
-US-43 & Estudiante & Importar otra carrera & Usarla si la sincronizo & \textbf{G:} JSON externa; \textbf{W:} importo; \textbf{T:} pregunta “¿Sincronizar?” y continúa si acepto. & Should & R1 \\
+US-36 & Estudiante & Exportar como imagen & Compartir fácilmente & G: hay materias; W: ``Enviar $\rightarrow$ Imagen''; T: confirmación + share sheet. & Should \\
+US-37 & Estudiante & Exportar como PDF & Imprimir/archivar & Igual que imagen con ``Enviar $\rightarrow$ PDF''. & Should \\
+US-38 & Estudiante & Exportar como Excel & Manipular en tabla & Igual que imagen con ``Enviar $\rightarrow$ Excel''. & Could \\
+US-39 & Estudiante & Enviar copia JSON & Compartir selectivamente & G: ``Enviar copia''; W: uso Todo/Limpiar/Compartir; T: JSON según selección. & Must \\
+US-40 & Estudiante & Bloquear exportar sin materias & Evitar archivos vacíos & G: 0 materias; W: exporto; T: muestra aviso y detiene acción. & Must \\
+US-41 & Estudiante & Importar JSON (app) & Añadir materias propias & G: ``Añadir horario''; W: elijo JSON; T: lista materias y evita duplicados. & Must \\
+US-42 & Estudiante & Abrir JSON externo & Importar directo & G: recibo JSON; W: ``Abrir con TecnoTime''; T: muestra UI importación. & Must \\
+US-43 & Estudiante & Importar otra carrera & Usarla si la sincronizo & G: JSON externa; W: importo; T: pregunta “¿Sincronizar?” y continúa si acepto. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Generador de Horarios}
+\subsection{Generador de Horarios}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Generador de horarios}\label{tab:hu_generador}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-24 & Estudiante & Abrir generador & Configurar parámetros & \textbf{G:} FAB; \textbf{W:} ``Generar''; \textbf{T:} veo opciones. & Must & R1 \\
-US-25 & Estudiante & Definir \# materias/propuestas & Controlar resultado & \textbf{G:} tarjeta parámetros; \textbf{W:} ajusto; \textbf{T:} respeta [1..20], [1..25]. & Must & R1 \\
-US-26 & Estudiante & Priorizar profesores & Favorecer favoritos & \textbf{G:} opción ON; \textbf{W:} genero; \textbf{T:} intenta incluir favoritos. & Should & R1 \\
-US-27 & Estudiante & Minimizar recesos & Reducir tiempos muertos & \textbf{G:} opción ON; \textbf{W:} genero; \textbf{T:} se optimizan huecos. & Should & R1 \\
-US-28 & Estudiante & Aceptar choques & Permitir casos extremos & \textbf{G:} opción ON; \textbf{W:} genero; \textbf{T:} propone horarios con solapes controlados. & Could & R1 \\
-US-29 & Estudiante & Coherencia favoritos/choques & Evitar inconsistencias & \textbf{G:} fav ON, choques OFF; \textbf{W:} genero; \textbf{T:} sin choques (ON/ON sí permite). & Must & R1 \\
-US-30 & Estudiante & Marcar materias obligatorias & Forzar inclusión & \textbf{G:} marco oblig.; \textbf{W:} genero; \textbf{T:} respeta máximos/convierte excedentes. & Must & R1 \\
-US-31 & Estudiante & Favorecer niveles bajos & Progresión académica & \textbf{G:} config por defecto; \textbf{W:} genero; \textbf{T:} evita combinaciones incoherentes. & Should & R1 \\
-US-32 & Estudiante & Deslizar entre propuestas & Comparar rápido & \textbf{G:} propuestas listas; \textbf{W:} hago swipe; \textbf{T:} cambia 1..N. & Must & R1 \\
-US-33 & Estudiante & Vista semanal propuesta & Validar a alto nivel & \textbf{G:} propuesta; \textbf{W:} botón semanal; \textbf{T:} muestra semana. & Could & R1 \\
-US-34 & Estudiante & Fijar materias con switches & Regenerar respetando & \textbf{G:} propuesta; \textbf{W:} activo switch; \textbf{T:} nuevas propuestas las respetan. & Should & R1 \\
-US-35 & Estudiante & Cargar completo/parcial & Construir horario final & \textbf{G:} propuesta; \textbf{W:} ``Completo/Parcial''; \textbf{T:} aplica selección en Home. & Must & R1 \\
+US-24 & Estudiante & Abrir generador & Configurar parámetros & G: FAB; W: ``Generar''; T: veo opciones. & Must \\
+US-25 & Estudiante & Definir \# materias/propuestas & Controlar resultado & G: tarjeta parámetros; W: ajusto; T: respeta [1..20], [1..25]. & Must \\
+US-26 & Estudiante & Priorizar profesores & Favorecer favoritos & G: opción ON; W: genero; T: intenta incluir favoritos. & Should \\
+US-27 & Estudiante & Minimizar recesos & Reducir tiempos muertos & G: opción ON; W: genero; T: se optimizan huecos. & Should \\
+US-28 & Estudiante & Aceptar choques & Permitir casos extremos & G: opción ON; W: genero; T: propone horarios con solapes controlados. & Could \\
+US-29 & Estudiante & Coherencia favoritos/choques & Evitar inconsistencias & G: fav ON, choques OFF; W: genero; T: sin choques (ON/ON sí permite). & Must \\
+US-30 & Estudiante & Marcar materias obligatorias & Forzar inclusión & G: marco oblig.; W: genero; T: respeta máximos/convierte excedentes. & Must \\
+US-31 & Estudiante & Favorecer niveles bajos & Progresión académica & G: config por defecto; W: genero; T: evita combinaciones incoherentes. & Should \\
+US-32 & Estudiante & Deslizar entre propuestas & Comparar rápido & G: propuestas listas; W: hago swipe; T: cambia 1..N. & Must \\
+US-33 & Estudiante & Vista semanal propuesta & Validar a alto nivel & G: propuesta; W: botón semanal; T: muestra semana. & Could \\
+US-34 & Estudiante & Fijar materias con switches & Regenerar respetando & G: propuesta; W: activo switch; T: nuevas propuestas las respetan. & Should \\
+US-35 & Estudiante & Cargar completo/parcial & Construir horario final & G: propuesta; W: ``Completo/Parcial''; T: aplica selección en Home. & Must \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Recordatorios \& IA ``Simón''}
+\subsection{Recordatorios \& IA ``Simón''}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-44 & Estudiante & Activar/desactivar notificaciones & Ajustar mi flujo & \textbf{G:} ajustes recordatorio; \textbf{W:} apago switch; \textbf{T:} oculta anticipación. & Must & R1 \\
-US-45 & Estudiante & Definir tiempo de anticipación & Recibir avisos oportunos & \textbf{G:} notificaciones ON; \textbf{W:} elijo tiempo; \textbf{T:} se guarda y aplica. & Must & R1 \\
-US-46 & Estudiante & Activar IA (descarga opcional) & Controlar datos/espacio & \textbf{G:} activo IA; \textbf{W:} elijo Wi-Fi/datos; \textbf{T:} confirma tamaño e inicia descarga. & Should & R1 \\
-US-47 & Estudiante & Probar/eliminar IA & Gestionar almacenamiento & \textbf{G:} modelo listo; \textbf{W:} ``Probar''; \textbf{T:} respuesta. \textbf{G:} ``Eliminar''; \textbf{W:} confirmo; \textbf{T:} borra modelo. & Should & R1 \\
-US-48 & Estudiante & Mensajes motivacionales & Controlar tono & \textbf{G:} IA disponible; \textbf{W:} cambio switch; \textbf{T:} respeta preferencia. & Could & R1 \\
+US-44 & Estudiante & Activar/desactivar notificaciones & Ajustar mi flujo & G: ajustes recordatorio; W: apago switch; T: oculta anticipación. & Must \\
+US-45 & Estudiante & Definir tiempo de anticipación & Recibir avisos oportunos & G: notificaciones ON; W: elijo tiempo; T: se guarda y aplica. & Must \\
+US-46 & Estudiante & Activar IA (descarga opcional) & Controlar datos/espacio & G: activo IA; W: elijo Wi-Fi/datos; T: confirma tamaño e inicia descarga. & Should \\
+US-47 & Estudiante & Probar/eliminar IA & Gestionar almacenamiento & G: modelo listo; W: ``Probar''; T: respuesta. G: ``Eliminar''; W: confirmo; T: borra modelo. & Should \\
+US-48 & Estudiante & Mensajes motivacionales & Controlar tono & G: IA disponible; W: cambio switch; T: respeta preferencia. & Could \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Offline, Actualizaciones \& Resiliencia}
+\subsection{Offline, Actualizaciones \& Resiliencia}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-49 & Estudiante & Usar sin conexión (lectura) & No depender de la red & \textbf{G:} sin conexión; \textbf{W:} abro; \textbf{T:} horario y funciones locales disponibles. & Must & R1 \\
-US-50 & Estudiante & Validar datos antes de generar & Evitar info obsoleta & \textbf{G:} hay internet; \textbf{W:} genero; \textbf{T:} se verifica/actualiza antes. & Should & R1 \\
-US-51 & Sistema & Aplicar backoff progresivo & No saturar servidor & \textbf{G:} 2 fallos; \textbf{W:} reintento; \textbf{T:} aumenta espera y limita intentos. & Must & R1 \\
-US-52 & Sistema & Bloqueo temporal tras fallos & Evitar tormenta de peticiones & \textbf{G:} timeouts repetidos; \textbf{W:} nueva llamada; \textbf{T:} bloqueo temporal + mensaje. & Must & R1 \\
-US-53 & Estudiante & Auto-actualización periódica & Mantener datos al día & \textbf{G:} ciclo programado; \textbf{W:} hay internet; \textbf{T:} sincroniza carrera/malla/modelo. & Should & R1 \\
+US-49 & Estudiante & Usar sin conexión (lectura) & No depender de la red & G: sin conexión; W: abro; T: horario y funciones locales disponibles. & Must \\
+US-50 & Estudiante & Validar datos antes de generar & Evitar info obsoleta & G: hay internet; W: genero; T: se verifica/actualiza antes. & Should \\
+US-51 & Sistema & Aplicar backoff progresivo & No saturar servidor & G: 2 fallos; W: reintento; T: aumenta espera y limita intentos. & Must \\
+US-52 & Sistema & Bloqueo temporal tras fallos & Evitar tormenta de peticiones & G: timeouts repetidos; W: nueva llamada; T: bloqueo temporal + mensaje. & Must \\
+US-53 & Estudiante & Auto-actualización periódica & Mantener datos al día & G: ciclo programado; W: hay internet; T: sincroniza carrera/malla/modelo. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Soporte, Información y Preferencias}
+\subsection{Soporte, Información y Preferencias}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Soporte, información y preferencias}\label{tab:hu_soporte}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-54 & Estudiante & Ver versión/novedades/soporte & Informarme y colaborar & \textbf{G:} menú inferior; \textbf{W:} toco opción; \textbf{T:} abre Store/correo/changelog. & Could & R1 \\
-US-55 & Estudiante & Tema claro/oscuro persistente & Consistencia visual & \textbf{G:} elijo tema; \textbf{W:} reinicio; \textbf{T:} se mantiene. & Must & R1 \\
-US-56 & Estudiante & Formato 12/24h persistente & Evitar confusiones & \textbf{G:} cambio formato; \textbf{W:} guardo; \textbf{T:} se refleja globalmente. & Must & R1 \\
+US-54 & Estudiante & Ver versión/novedades/soporte & Informarme y colaborar & G: menú inferior; W: toco opción; T: abre Store/correo/changelog. & Could \\
+US-55 & Estudiante & Tema claro/oscuro persistente & Consistencia visual & G: elijo tema; W: reinicio; T: se mantiene. & Must \\
+US-56 & Estudiante & Formato 12/24h persistente & Evitar confusiones & G: cambio formato; W: guardo; T: se refleja globalmente. & Must \\
 \bottomrule
 \end{tabularx}
 \normalsize
 
 \medskip
 
-\subsection*{Seguridad, Privacidad, Rendimiento y Accesibilidad}
+\subsection{Seguridad, Privacidad, Rendimiento y Accesibilidad}
 \small
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}P{0.9cm}@{}}
+\captionsetup{type=table}
+\captionof{table}{Historias de usuario — Seguridad, privacidad, rendimiento y accesibilidad}\label{tab:hu_seguridad}
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Rol} & \textbf{Necesidad} & \textbf{Beneficio} & \textbf{Criterios G/W/T} & \textbf{Prioridad} & \textbf{Release} \\
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-57 & Estudiante & Privacidad del nombre & No exponer PII & \textbf{G:} ingreso nombre; \textbf{W:} uso app; \textbf{T:} no se envía a servidores. & Must & R1 \\
-US-58 & Estudiante & App < 30 MB (sin IA) & Instalar con poco espacio & \textbf{G:} build; \textbf{W:} compilo; \textbf{T:} APK/Bundle < 30 MB. & Should & R1 \\
-US-59 & Estudiante & Buen rendimiento en gama media & Uso cómodo & \textbf{G:} listas/scroll; \textbf{W:} navego; \textbf{T:} FPS aceptable sin ANR. & Should & R1 \\
-US-60 & Estudiante & Accesibilidad básica & Comprender opciones & \textbf{G:} tema claro/oscuro; \textbf{W:} interactúo; \textbf{T:} contraste/tamaño legible. & Could & R1 \\
-US-61 & Estudiante & Mensajes de error claros & Saber qué hacer & \textbf{G:} falla servidor; \textbf{W:} reintento; \textbf{T:} causa + alternativas offline/PDF. & Must & R1 \\
-US-62 & Estudiante & Manejo de vacíos/estados límite & Evitar confusiones & \textbf{G:} sin materias; \textbf{W:} voy al Home; \textbf{T:} mensaje ``No hay materias'' + CTA agregar/generar. & Must & R1 \\
-US-63 & Estudiante & Localización ES/formatos regionales & Coherencia cultural & \textbf{G:} región ES-BO; \textbf{W:} render; \textbf{T:} fechas/números correctos. & Should & R1 \\
+US-57 & Estudiante & Privacidad del nombre & No exponer PII & G: ingreso nombre; W: uso app; T: no se envía a servidores. & Must \\
+US-58 & Estudiante & App < 30 MB (sin IA) & Instalar con poco espacio & G: build; W: compilo; T: APK/Bundle < 30 MB. & Should \\
+US-59 & Estudiante & Buen rendimiento en gama media & Uso cómodo & G: listas/scroll; W: navego; T: FPS aceptable sin ANR. & Should \\
+US-60 & Estudiante & Accesibilidad básica & Comprender opciones & G: tema claro/oscuro; W: interactúo; T: contraste/tamaño legible. & Could \\
+US-61 & Estudiante & Mensajes de error claros & Saber qué hacer & G: falla servidor; W: reintento; T: causa + alternativas offline/PDF. & Must \\
+US-62 & Estudiante & Manejo de vacíos/estados límite & Evitar confusiones & G: sin materias; W: voy al Home; T: mensaje ``No hay materias'' + CTA agregar/generar. & Must \\
+US-63 & Estudiante & Localización ES/formatos regionales & Coherencia cultural & G: región ES-BO; W: render; T: fechas/números correctos. & Should \\
 \bottomrule
 \end{tabularx}
 \normalsize

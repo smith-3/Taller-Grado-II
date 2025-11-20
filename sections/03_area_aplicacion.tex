@@ -1,20 +1,22 @@
-\chapter{ÁREA DE APLICACIÓN}
+\chapter{MARCO DE APLICACIÓN}
 \label{chap:area_aplicacion}
 
 Este capítulo describe el contexto real de uso de la solución: el dominio institucional, la población objetivo, los procesos actuales (AS-IS) y los procesos propuestos (TO-BE), así como la información y restricciones propias del área. No se detalla la metodología ni el diseño técnico; el propósito es situar el problema en su entorno operativo y establecer límites y criterios de evaluación vinculados al uso real.
 
-\section{DOMINIO Y CONTEXTO INSTITUCIONAL}
-La Facultad de Ciencias y Tecnología (FCyT) de la UMSS publica semestralmente los horarios oficiales en formato PDF, organizados por carrera y periodo. Durante la inscripción, el uso de herramientas web como Capuchino es intensivo; fuera de esa etapa, los estudiantes siguen necesitando: (i) consultar horarios personales con rapidez, (ii) ajustar materias ante cambios, y (iii) coordinar con pares mediante mensajería.
+\section{Dominio y contexto institucional}
+La Facultad de Ciencias y Tecnología (FCyT) de la UMSS publica semestralmente los horarios oficiales en formato PDF, organizados por carrera y periodo. Durante la inscripción, el uso de herramientas web como Cappuchino es intensivo; fuera de esa etapa, los estudiantes siguen necesitando: (i) consultar horarios personales con rapidez, (ii) ajustar materias ante cambios y (iii) coordinar con pares mediante mensajería.
 
-\section{POBLACIÓN OBJETIVO Y ACTORES}
+\section{Población objetivo y actores}
 Actor principal: estudiantes de la FCyT de distintos semestres y turnos que construyen, consultan y ajustan sus horarios.
 Actores secundarios: personal administrativo que publica/actualiza los horarios y docentes/tutores cuya asignación incide en las preferencias estudiantiles.
 
-\subsection*{Evidencia cuantitativa (encuesta, n=126)}
-La encuesta aplicada a estudiantes de FCyT confirma:
+\subsection{Evidencia cuantitativa (encuesta, n=126)}
+Muestreo y aplicación: se utilizó una muestra por conveniencia de 126 estudiantes de la FCyT. El instrumento se aplicó en línea mediante Google Forms y la participación fue voluntaria. El instrumento completo y los resultados tabulados se presentan en anexos (ver \ref{ann:instrumento} y \ref{ann:historias}).
+
+La encuesta confirma:
 \begin{itemize}
   \item Dispositivo: Android domina (94\%); laptop apenas 26\%.
-  \item Uso de Capuchino: 48\% solo en inscripción, 44\% varias veces por semestre.
+  \item Uso de Cappuchino: 48\% solo en inscripción, 44\% varias veces por semestre.
   \item Coordinación social: 80\% valida información por WhatsApp.
   \item Frustración por repetir pasos: 60\% califica 1-2-3 (alta).
   \item Principales demandas: actualización automática (88\%), modo sin conexión (78\%), recordatorios (56\%).
@@ -25,14 +27,14 @@ La encuesta aplicada a estudiantes de FCyT confirma:
   \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/diagrams/encuesta_dispositivo.png}
-    \caption{Distribución de dispositivos utilizados por los estudiantes (n=126). Fuente: Elaboración propia.}
+    \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
     \label{fig:encuesta_dispositivo}
   \end{minipage}
   \hfill
   \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
-    \caption{Frecuencia de uso de Capuchino por los estudiantes (n=126). Fuente: Elaboración propia.}
+\caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
     \label{fig:encuesta_uso_capuchino}
   \end{minipage}
 \end{figure}
@@ -42,14 +44,14 @@ La encuesta aplicada a estudiantes de FCyT confirma:
   \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/diagrams/encuesta_whatsapp.png}
-    \caption{Coordinación social mediante WhatsApp (n=126). Fuente: Elaboración propia.}
+    \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126). \\ \small{Fuente: Elaboración propia.}}
     \label{fig:encuesta_whatsapp}
   \end{minipage}
   \hfill
   \begin{minipage}{0.4\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/diagrams/encuesta_frustracion.png}
-    \caption{Nivel de frustración por repetir pasos (n=126). Fuente: Elaboración propia.}
+    \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126). \\ \small{Fuente: Elaboración propia.}}
     \label{fig:encuesta_frustracion}
   \end{minipage}
 \end{figure}
@@ -57,29 +59,41 @@ La encuesta aplicada a estudiantes de FCyT confirma:
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
-  \caption{Principales demandas de los estudiantes (n=126). Fuente: Elaboración propia.}
+  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
   \label{fig:encuesta_demandas}
 \end{figure}
 
-\section{PERCEPCIONES DEL ESTADO ACTUAL (AS-IS)}
-Los estudiantes valoran la rapidez de Capuchino para organizar horarios y detectar choques, pero reportan problemas recurrentes: actualización tardía de datos, interfaz obsoleta, pérdida del progreso, lentitud en inscripciones y baja personalización.  
+\section{Percepciones del estado actual (AS-IS)}
+Los estudiantes valoran la rapidez de Cappuchino para organizar horarios y detectar choques, pero reportan problemas recurrentes: actualización tardía de datos, interfaz obsoleta, pérdida del progreso, lentitud en inscripciones y baja personalización.  
 Figura~\ref{fig:asis_proceso} muestra el flujo actual y las limitaciones detectadas.
+
+Historia de uso actual (AS-IS).
+De manera típica, el estudiante: (1) abre Cappuchino y genera un horario base para su carrera/semestre; (2) consulta PDFs oficiales de horarios por materia y grupo para validar o actualizar; (3) contrasta en canales de WhatsApp cambios de última hora (docentes, aulas, grupos cerrados); (4) reescribe o ajusta a mano su selección para evitar choques; (5) repite la verificación ante cada ajuste o noticia; y (6) comparte capturas/archivos con compañeros para coordinar. En periodos de alta demanda, el ciclo se repite varias veces al día.
+
+Puntos de dolor reportados.
+\begin{itemize}
+  \item Repetición de pasos y pérdida de progreso entre sesiones o dispositivos.
+  \item Dispersión de la información entre PDF, web y mensajería; riesgo de desactualización.
+  \item Falta de funcionamiento sin conexión en momentos críticos (aula, pasillos, movilidad).
+  \item Dificultad para consolidar un horario personal sin choques al cambiar un único grupo.
+  \item Fricción para compartir e importar horarios en un formato estructurado.
+\end{itemize}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/diagrams/area_asis_proceso.png}
-  \caption{Proceso actual (AS-IS): navegación y patrones de uso. Fuente: Elaboración propia.}
+  \caption[Proceso actual (AS-IS): navegación y patrones de uso]{Proceso actual (AS-IS): navegación y patrones de uso. \\ \small{Fuente: Elaboración propia.}}
   \label{fig:asis_proceso}
 \end{figure}
 
-\section{DEMANDA DE SOLUCIÓN Y PROCESOS PROPUESTOS (TO-BE)}
+\section{Demanda de solución y procesos propuestos (TO-BE)}
 Visión general: los resultados evidencian la necesidad de una aplicación móvil que reduzca pasos repetitivos, funcione sin conexión y facilite la coordinación social.
 Figura~\ref{fig:area_tobe} resume los flujos de uso esperados.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/diagrams/area_tobe_proceso.png}
-  \caption{Procesos propuestos (TO-BE) a nivel de uso. Fuente: Elaboración propia.}
+  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso. \\ \small{Fuente: Elaboración propia.}}
   \label{fig:area_tobe}
 \end{figure}
 
@@ -87,11 +101,11 @@ Características clave de uso:
 \begin{itemize}
   \item Generación de horarios sin choques, priorizando materias obligatorias y docentes favoritos.
   \item Memoria de contexto para evitar repetir carrera/nivel/materias.
-  \item Intercambio estructurado (JSON) compatible con mensajería.
+  \item Intercambio estructurado en JSON (formato de intercambio de datos basado en texto) compatible con mensajería.
   \item Consulta diaria y recordatorios antes de clase.
 \end{itemize}
 
-\section{INFORMACIÓN Y REGLAS DEL ÁREA}
+\section{Información y reglas del área}
 Entidades: carrera, nivel, materia, grupo, horario, docente, aula y selección del estudiante.
 Reglas principales:
 \begin{itemize}
@@ -101,18 +115,19 @@ Reglas principales:
   \item Actualización por sincronización con la fuente oficial.
 \end{itemize}
 
-\section{DATOS Y FLUJO DE INFORMACIÓN}
+\section{Datos y flujo de información}
 Los horarios en PDF son la fuente oficial. Se descargan, extraen y almacenan localmente; se verifican y actualizan de forma controlada. El intercambio social se realiza mediante archivos estructurados (JSON) para compartir horarios.  
 Véase Figura~\ref{fig:area_flujo_datos}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/diagrams/area_flujo_datos.png}
-  \caption{Flujo de información en el área de aplicación. Fuente: Elaboración propia.}
+  \caption[Flujo de información en el área de aplicación]{Flujo de información en el área de aplicación. \\ \small{Fuente: Elaboración propia.}}
   \label{fig:area_flujo_datos}
 \end{figure}
 
-\section{ALCANCES, LÍMITES Y RIESGOS}
+\section{Alcances, límites y riesgos}
+En este apartado se precisan los alcances y límites desde el punto de vista del área de aplicación, complementando los alcances generales presentados en el Capítulo~1.
 Alcances: estudiantes FCyT; integración con horarios oficiales; uso sin conexión; recordatorios y consulta rápida.
 Límites: no reemplaza inscripción oficial ni modela capacidad de aulas; foco inicial en Android.
 Riesgos y mitigación:
@@ -123,10 +138,10 @@ Riesgos y mitigación:
   \item Saturación de fuente: reintentos espaciados.
 \end{itemize}
 
-\section{DERIVACIÓN DE REQUERIMIENTOS DESDE LA ENCUESTA}
+\section{Derivación de requerimientos desde la encuesta}
 \begin{table}[H]
   \centering
-  \caption{Trazabilidad de hallazgos a requerimientos del área. Fuente: Elaboración propia (encuesta n=126).}
+  \caption[Trazabilidad de hallazgos a requerimientos del área]{Trazabilidad de hallazgos a requerimientos del área. \\ \small{Fuente: Elaboración propia (encuesta n=126).}}
   \label{tab:derivacion_req_area}
   \small
   \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
@@ -137,9 +152,9 @@ Riesgos y mitigación:
     \hline
     60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
     \hline
-    80\% coordina por WhatsApp & Intercambio estructurado (JSON) & Compartir/abrir desde mensajería \\
+    80\% coordina por WhatsApp & Intercambio estructurado en JSON (formato de intercambio de datos basado en texto) & Compartir/abrir desde mensajería \\
     \hline
-    78\% valora modo sin conexión & Operación offline-first & Consulta sin red \\
+    78\% valora modo sin conexión & Operación offline-first (arquitectura que prioriza el funcionamiento sin conexión) & Consulta sin red \\
     \hline
     57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
     \hline
@@ -148,8 +163,8 @@ Riesgos y mitigación:
   \end{tabular}
 \end{table}
 
-\section{CRITERIOS DE ÉXITO E IMPACTO ESPERADO}
+\section{Criterios de éxito e impacto esperado}
 Reducción de pasos para construir horarios sin choques; continuidad de uso fuera del periodo de inscripción; disminución de choques no detectados; incremento del intercambio estructurado; y mejor organización académica personal.
 
-\section*{SÍNTESIS}
+\section{SÍNTESIS}
 El área de aplicación se ubica entre la oferta oficial (PDFs FCyT), las prácticas actuales de consulta y la coordinación estudiantil por mensajería. Las brechas identificadas justifican una solución complementaria centrada en el estudiante, con consulta móvil eficaz, uso sin conexión y respeto por la fuente oficial.

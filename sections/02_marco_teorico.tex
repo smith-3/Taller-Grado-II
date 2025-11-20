@@ -1,231 +1,195 @@
 \chapter{MARCO TEÓRICO}
 \label{chap:marco-teorico}
 
-Este capítulo presenta la base conceptual que sustenta TecnoTime, una aplicación de gestión personal de horarios académicos. Se formaliza el Academic Timetabling Problem (ATP) como un Constraint Satisfaction Problem (CSP), se revisan enfoques de solución y se introducen principios teóricos conexos (arquitecturas offline-first/local-first, interoperabilidad basada en JSON, nociones generales de notificación, y criterios de calidad de software). El objetivo es proveer el andamiaje teórico (theoretical backbone) que justifica el diseño posterior sin entrar en detalles de implementación.
+Este capítulo establece los fundamentos teóricos y tecnológicos que sustentan el desarrollo de ``TecnoTime''. Se abordan los paradigmas de ingeniería de software móvil moderna, la arquitectura de software escalable, los algoritmos de optimización para la generación de horarios y la integración de inteligencia artificial en el borde (Edge AI). Cada sección vincula los conceptos académicos con las tecnologías específicas implementadas en la solución.
 
-% ---------------------------------------------------------
-\section{Fundamentos del timetabling y el CSP}
-\label{sec:fundamentos}
+\section{Ingeniería de Software para Dispositivos Móviles}
+\label{sec:ingenieria-movil}
 
-\subsection{Definiciones básicas}
-El timetabling académico consiste en asignar eventos (clases) a recursos (aulas, docentes) y a ubicaciones temporales (días y franjas) cumpliendo restricciones duras (factibilidad) y optimizando restricciones blandas (calidad de uso) \cite{babaei2015-survey,kristiansen2013-survey}. 
+El desarrollo de aplicaciones móviles ha transitado desde enfoques imperativos hacia paradigmas declarativos y reactivos, priorizando la eficiencia en el manejo de recursos limitados y la experiencia de usuario fluida.
 
-En términos de CSP, se modela con:
-\begin{itemize}
-  \item Variables: decisiones de asignación (p.\,ej., selección de grupo por asignatura).
-  \item Dominios: valores posibles por variable (grupos, bloques, etc.).
-  \item Restricciones: predicados que limitan combinaciones válidas (solapes, disponibilidad).
-\end{itemize}
+\subsection{Arquitectura de Plataforma Android}
+Android es un sistema operativo basado en el núcleo Linux, diseñado para dispositivos con pantalla táctil. Su arquitectura se divide en capas: el kernel de Linux, la capa de abstracción de hardware (HAL), el tiempo de ejecución de Android (ART) y el marco de trabajo de aplicaciones (Application Framework) \cite{android_arch}.
 
-\subsection{Complejidad}
-El ATP es típicamente NP-difícil (NP-hard); la complejidad crece rápidamente con el número de asignaturas, grupos y recursos, lo que motiva el uso de búsqueda con poda, heurísticas y métodos multicriterio para alcanzar soluciones de buena calidad en tiempos razonables \cite{babaei2015-survey,kristiansen2013-survey}.
+El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema y un rendimiento superior en comparación con soluciones híbridas, especialmente en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}. En este proyecto se utiliza Kotlin, un lenguaje moderno y estáticamente tipado que interoperan completamente con Java, aprovechando características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
 
-% ---------------------------------------------------------
-\section{Formalización para un usuario (selección de grupos)}
-\label{sec:formalizacion-usuario}
+\subsection{Paradigma de Interfaz Declarativa (Jetpack Compose)}
+Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). La tendencia actual en la industria, respaldada por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}, es el uso de marcos de trabajo declarativos.
 
-Se considera el caso de uso individual: un estudiante elige, para cada asignatura, un único grupo respetando factibilidad temporal y preferencias.
+El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre ambos paradigmas.
 
-\subsection{Conjuntos, variables y datos}
-Sean:
-\begin{itemize}
-  \item $C$: conjunto de asignaturas (materias).
-  \item Para cada $c\in C$, $G(c)$: conjunto de grupos ofrecidos.
-  \item $W$: conjunto de días de la semana; $\mathcal{I}$: conjunto de intervalos (día, inicio, fin).
-  \item $y_{c,g}\in\{0,1\}$: variable binaria que indica si se elige el grupo $g\in G(c)$ para la asignatura $c$.
-  \item $\text{sched}(c,g)\subseteq \mathcal{I}$: bloques temporales del grupo $g$ en $c$.
-  \item $\text{fav}(c,g)\in\{0,1\}$: indicador de docente favorito; $D\subseteq W$ días permitidos por preferencia.
-  \item $M\subseteq C$: subconjunto de asignaturas obligatorias (requisito curricular).
-\end{itemize}
-
-\subsection{Restricciones duras}
-\begin{align}
-  &\forall c\in C:\ \sum_{g\in G(c)} y_{c,g} = 1
-  \quad\text{(exactamente un grupo por asignatura)} \label{eq:uno-por-materia} \\
-  &\forall (c_1,g_1)\neq(c_2,g_2):\
-    \text{overlap}\!\left(\text{sched}(c_1,g_1),\text{sched}(c_2,g_2)\right)
-    \Rightarrow y_{c_1,g_1}+y_{c_2,g_2}\le 1 \\
-  &\quad\text{(prohibición de solapes)} \label{eq:sin-choques} \\
-  &\forall c\in M:\ \sum_{g\in G(c)} y_{c,g} = 1
-  \quad\text{(cumplir asignaturas obligatorias)} \label{eq:obligatorias}
-\end{align}
-
-\paragraph{Variantes de factibilidad.}
-En escenarios avanzados, puede permitirse solape controlado como decisión explícita del usuario. Teóricamente, esto se representa cambiando \eqref{eq:sin-choques} por una penalización en la función objetivo (ver multicriterio). Asimismo, el filtro de días $D$ puede imponerse como restricción ($\text{sched}(c,g)\subseteq D$) o como preferencia (penalización por violación).
-
-\subsection{Función objetivo y evaluación multicriterio}
-Se minimiza una suma ponderada de penalizaciones \cite{deb2001-moo}:
-\begin{equation}
-  \min_{y}\; F(y)= 
-  w_{\text{gap}}\,\phi_{\text{gap}}(y)
-  + w_{\text{fav}}\,\phi_{\text{fav}}(y)
-  + w_{\text{dias}}\,\phi_{\text{dias}}(y)
-  + w_{\text{solape}}\,\phi_{\text{solape}}(y),
-  \quad w_k\ge 0
-  \label{eq:objetivo}
-\end{equation}
-donde $\phi_{\text{gap}}$ mide tiempos muertos intrajornada, $\phi_{\text{fav}}$ bonifica docentes favoritos, $\phi_{\text{dias}}$ penaliza dispersión en días no preferidos y $\phi_{\text{solape}}$ castiga choques si se permiten. Para comparabilidad se recomienda normalizar cada $\phi_k$ en $[0,1]$ (o por máximos empíricos) y ajustar pesos $w_k$ según relevancia del usuario (user-centric weighting).
-
-\subsection{Notación resumida}
-\begin{table}[htbp]
-  \centering
-  \small
-  \begin{tabular}{m{2.8cm} m{8.5cm} m{2.5cm}}
-    \hline
-    Símbolo & Significado & Dominio \\
-    \hline
-    $C,\,G(c),\,W,\,\mathcal{I}$ & Conjuntos de materias, grupos, días e intervalos & Finito \\
-    $y_{c,g}$ & Decisión de selección de grupo para $c$ & $\{0,1\}$ \\
-    $\text{sched}(c,g)$ & Bloques (día, inicio, fin) del grupo & $\mathcal{I}$ \\
-    $\phi_k,\,w_k$ & Penalizaciones y pesos en \eqref{eq:objetivo} & $\mathbb{R}_{\ge 0}$ \\
-    $M$ & Asignaturas obligatorias & $\mathcal{P}(C)$ \\
-    \hline
-  \end{tabular}
-  \caption{Notación utilizada en el modelo para un usuario. Fuente: Elaboración propia.}
-  \label{tab:notacion}
+\begin{table}[h!]
+    \centering
+    \caption{Comparación entre UI Imperativa y Declarativa}
+    \label{tab:imperative_vs_declarative}
+    \begin{tabular}{|p{6cm}|p{6cm}|}
+        \hline
+        \textbf{Enfoque Imperativo (XML)} & \textbf{Enfoque Declarativo (Compose)} \\
+        \hline
+        Se manipula manualmente el árbol de vistas (DOM/Views). & La UI se describe como una función del estado. \\
+        \hline
+        El estado de la UI y el estado de la app pueden desincronizarse. & El estado es la única fuente de verdad. \\
+        \hline
+        Mucho código repetitivo (boilerplate). & Código más conciso y legible. \\
+        \hline
+    \end{tabular}
+    \vspace{0.2cm}
+    \\
+    \small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
 \end{table}
 
-% ---------------------------------------------------------
-\section{Estado del arte de enfoques de solución}
-\label{sec:estado-del-arte}
+``TecnoTime'' adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación. Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición, actualizando inteligentemente solo los componentes que dependen de los datos modificados, lo que reduce la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
 
-Las estrategias para timetabling se agrupan en exactas, heurísticas y metaheurísticas \cite{babaei2015-survey,kristiansen2013-survey}.
+\subsection{Ciclo de Vida y Gestión de Estado (UDF)}
+La gestión de estado es crítica en aplicaciones reactivas para garantizar la consistencia de los datos mostrados. Se utiliza el patrón Unidirectional Data Flow (UDF), donde el estado fluye en una sola dirección (de la lógica a la UI) y los eventos fluyen en sentido contrario (de la UI a la lógica).
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \begin{tabular}{m{3.2cm} m{4.2cm} m{4.6cm} m{2.8cm}}
-    \hline
-    Enfoque & Ejemplos típicos & Ventajas & Consideraciones \\
-    \hline
-    Exacto & ILP/CP, Branch \& Bound & Óptimo garantizado, trazabilidad & Coste alto; escalado limitado \\
-    Heurístico & Greedy, constructivo, reparación & Rápido, simple, control local & Sensible a orden y reglas \\
-    Metaheurístico & GA, SA, Búsqueda Tabú, VNS & Alta calidad promedio & Configuración y tiempo \\
-    \hline
-  \end{tabular}
-  \caption{Panorama de enfoques para el ATP. Fuente: Elaboración propia.}
-  \label{tab:enfoques}
-\end{table}
+Para implementar esto, se emplean flujos reactivos mediante StateFlow de la librería Kotlin Coroutines. StateFlow es un flujo observable que emite actualizaciones de estado inmutables a la interfaz de usuario, asegurando que la UI siempre refleje el último estado válido producido por la capa de lógica de negocio \cite{reactive_kotlin}.
 
-\paragraph{Criterios de elección.} En el contexto on-device (usuario individual), prima el tiempo de respuesta y la simplicidad de configuración; por ello suelen preferirse heurísticas con poda y evaluaciones multicriterio ligeras. Para evaluación comparativa, la literatura usa conjuntos de prueba como ITC-2007 (curriculum-based CTT), útiles para conceptos y métricas (benchmarks and metrics).
+\section{Arquitectura de Software}
+\label{sec:arquitectura-software}
 
-% ---------------------------------------------------------
-\section{Fundamentos algorítmicos (búsqueda y evaluación)}
-\label{sec:fundamentos-algoritmicos}
+Para garantizar la mantenibilidad, testabilidad y escalabilidad del proyecto, se siguen principios de diseño robustos y patrones arquitectónicos estandarizados en la industria del software.
 
-\subsection{Búsqueda con retroceso y poda}
-La búsqueda con retroceso (backtracking) explora combinaciones de grupos por asignatura y poda ramas que violan restricciones duras. Heurísticas de ordenación (p.\,ej., MRV/LCV) y poda temprana reducen el espacio efectivo de búsqueda. La complejidad peor caso es $O(b^d)$, con $b$ el factor de ramificación y $d$ la profundidad (número de asignaturas).
+\subsection{Clean Architecture y Regla de Dependencia}
+El proyecto implementa Clean Architecture, propuesta por Robert C. Martin \cite{martin2017-cleanarch}. Esta arquitectura estructura el código en capas concéntricas con responsabilidades claras, como se ilustra en la Figura \ref{fig:clean_architecture}.
 
-\subsection{Evaluación multicriterio}
-La función \eqref{eq:objetivo} combina penalizaciones normalizadas. Dos aspectos prácticos:
-\begin{enumerate}
-  \item Escalamiento y normalización: evita que una métrica domine por magnitud.
-  \item Ajuste de pesos: puede fijarse por defecto y permitir tuning explícito (sin cambiar el modelo).
-\end{enumerate}
-Alternativamente, se puede abordar como problema multiobjetivo con frentes de Pareto (Pareto fronts); al sintetizar para el usuario, suele preferirse una función agregada por su interpretabilidad \cite{deb2001-moo}.
-
-La función de evaluación combina varias métricas normalizadas que penalizan o bonifican
-aspectos de calidad del horario.
-Las principales se resumen en la Tabla~\ref{tab:metricas_multicriterio},
-basadas en el enfoque de agregación ponderada propuesto por Deb et al. (2001) \cite{deb2001-moo}.
-
-\begin{table}[H]
-  \centering
-  \small
-  \begin{tabular}{m{3.6cm} m{7.0cm} m{3.0cm}}
-    \hline
-    Métrica & Descripción & Interpretación \\
-    \hline
-    Choques (overlaps) & Detección de solapes entre bloques temporales; si existen, el horario es inválido o penalizado & Restricción dura \\
-    Gaps (tiempos muertos) & Minutos vacíos entre clases consecutivas dentro de un mismo día & Menor es mejor \\
-    Docentes favoritos & Bonificación por incluir profesores marcados como preferidos por el usuario & Mayor es mejor \\
-    Días activos & Penalización por dispersión innecesaria de clases en muchos días & Menor es mejor \\
-    \hline
-  \end{tabular}
-  \caption{Métricas consideradas en la evaluación multicriterio del horario académico. Fuente: Elaboración propia basada en Deb et al. (2001) \cite{deb2001-moo}.}
-  \label{tab:metricas_multicriterio}
-\end{table}
-
-% ---------------------------------------------------------
-\section{Principios teóricos: offline-first y local-first}
-\label{sec:offline-first}
-
-Offline-first y local-first priorizan disponibilidad sin red, resiliencia y control del usuario sobre sus datos. A nivel conceptual:
-\begin{itemize}
-  \item Caché local y fuente de verdad (single source of truth local) con sincronización diferida.
-  \item Consistencia eventual y detección de frescura (data freshness checks) antes de propagar cambios.
-  \item Estrategias de robustez: exponential backoff, circuit breakers, reintentos acotados.
-  \item Resolución de conflictos basada en marcas de tiempo o políticas deterministas (conflict-free policies).
-\end{itemize}
-Estos principios justifican decisiones de diseño orientadas a disponibilidad, tolerancia a fallos y privacidad (procesamiento local). % (Conceptual, sin entrar en frameworks específicos)
-Como se observa en la Figura~\ref{fig:offline_arch}, 
-la arquitectura offline-first plantea un flujo basado en la persistencia local, 
-la sincronización diferida y la validación de frescura antes de la actualización del servidor 
-\cite{couchbase_offlinefirst}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\linewidth]{images/offline_architecture_couchbase.png}
-  \caption{Arquitectura conceptual offline-first: sincronización diferida, caché local y consistencia eventual. Fuente: Couchbase, Inc. (2023) \cite{couchbase_offlinefirst}.}
-  \label{fig:offline_arch}
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+        \draw[fill=white] (0,0) circle (3.5cm);
+        \node at (0, 2.8) {Frameworks \& Drivers (UI, DB, Devices)};
+        
+        \draw[fill=gray!10] (0,0) circle (2.5cm);
+        \node at (0, 1.8) {Interface Adapters (Presenters, Gateways)};
+        
+        \draw[fill=gray!30] (0,0) circle (1.5cm);
+        \node at (0, 0.8) {Application Business Rules (Use Cases)};
+        
+        \draw[fill=gray!50] (0,0) circle (0.5cm);
+        \node at (0, 0) {Entities};
+        
+        % Dependency Arrow
+        \draw[->, thick] (-3.8, 0) -- (-0.2, 0);
+        \node[anchor=south] at (-2, 0) {Dependency Rule};
+    \end{tikzpicture}
+    \caption{Diagrama conceptual de Clean Architecture}
+    \label{fig:clean_architecture}
+    \small{Fuente: Basado en Martin (2017) \cite{martin2017-cleanarch}}
 \end{figure}
 
-% ---------------------------------------------------------
-\section{Interoperabilidad y colaboración basada en JSON}
-\label{sec:interoperabilidad-json}
-
-Para intercambio de información entre usuarios (social sharing) se adopta un formato JSON conforme al estándar \cite{rfc8259-json}. A nivel teórico:
+Las capas principales son:
 \begin{itemize}
-  \item Esquema lógico claro (identificadores de asignaturas, grupos, bloques).
-  \item Validación: integridad de referencias, ausencia de duplicados.
-  \item Portabilidad: independencia del medio de transporte (mensajería, correo, etc.).
+    \item Capa de Dominio (Domain): Contiene la lógica de negocio pura (Entidades y Casos de Uso). Es la capa más interna y no tiene dependencias de frameworks externos.
+    \item Capa de Datos (Data): Implementa las interfaces definidas por el dominio y gestiona las fuentes de datos (base de datos local, red).
+    \item Capa de Presentación (Presentation): Contiene la UI y los adaptadores de vista.
 \end{itemize}
+La Regla de Dependencia establece que las dependencias de código fuente solo pueden apuntar hacia adentro; el dominio no conoce detalles de la base de datos ni de la interfaz de usuario, lo que permite cambiar estas capas externas sin afectar la lógica central.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.75\linewidth]{images/diagrams/json_intercambio_esquema.png}
-  \caption{Intercambio conceptual de horarios en JSON. Fuente: Elaboración propia.}
-  \label{fig:json-schema}
+\subsection{Patrón Model-View-ViewModel (MVVM)}
+Se utiliza el patrón MVVM para separar la lógica de presentación de la interfaz de usuario. La Figura \ref{fig:mvvm_pattern} muestra la interacción entre sus componentes.
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[node distance=2cm, auto]
+        \node (view) [draw, rectangle, minimum width=2cm, minimum height=1cm] {View (UI)};
+        \node (viewmodel) [draw, rectangle, right of=view, node distance=4cm, minimum width=2.5cm, minimum height=1cm] {ViewModel};
+        \node (model) [draw, rectangle, right of=viewmodel, node distance=4cm, minimum width=2cm, minimum height=1cm] {Model};
+
+        \draw[->] (view) -- node {User Actions} (viewmodel);
+        \draw[->] (viewmodel) -- node {State Updates} (view);
+        \draw[<->] (viewmodel) -- node {Data Requests} (model);
+    \end{tikzpicture}
+    \caption{Patrón Model-View-ViewModel (MVVM)}
+    \label{fig:mvvm_pattern}
+    \small{Fuente: Basado en Google Developers \cite{android_arch}}
 \end{figure}
 
-% ---------------------------------------------------------
-\section{Obtención desde PDF institucional y limpieza de datos}
-\label{sec:pdf-parsing}
-
-Cuando las ofertas oficiales se publican en PDF, la teoría de extracción de información contempla:
 \begin{itemize}
-  \item Detección de tablas y parsing estructurado, con reglas de post-procesamiento para normalizar filas/columnas.
-  \item Trazabilidad de la fuente y ética de extracción (respeto a cambios, identificación de versión, citas).
-\end{itemize}
-Estas prácticas soportan la calidad de datos previa al modelado (consistencia, completitud, ausencia de duplicados). El modelo clásico de integración de datos se articula en las tres fases extracción, transformación y carga —un ciclo ampliamente adoptado en la industria de inteligencia de negocios— \cite{kimball2013dwtoolkit,etl_wikipedia}. Asimismo, la serie de normas ISO 8000 define las características de calidad de datos necesarias para que los datos sean "aptos para su uso", incluyendo la precisión, consistencia, completitud y actualidad \cite{iso8000_2022}.
-
-% ---------------------------------------------------------
-\section{Propiedades de calidad y criterios no funcionales}
-\label{sec:prop-no-func}
-
-Desde una perspectiva teórica (alineable con marcos como ISO/IEC 25010), se consideran:
-\begin{itemize}
-  \item Rendimiento y eficiencia: tiempos de respuesta adecuados para uso interactivo (interactive latency).
-  \item Confiabilidad y resiliencia: recuperación ante fallos transitorios; degradación controlada.
-  \item Mantenibilidad: modularidad, bajo acoplamiento, alta cohesión; separación de responsabilidades.
-  \item Compatibilidad y portabilidad: independencia de formato (p.\,ej., JSON), exportabilidad de datos del usuario.
-  \item Usabilidad: claridad de representación del horario; reducción de errores de selección (error prevention).
+    \item Model: Representa los datos y la lógica de negocio (Capa de Dominio).
+    \item View: La interfaz de usuario (Compose) que observa el estado.
+    \item ViewModel: Actúa como intermediario, exponiendo el estado de la UI y procesando las interacciones del usuario. En Android, los ViewModels están diseñados para sobrevivir a cambios de configuración, como la rotación de pantalla \cite{pro_android_kotlin}.
 \end{itemize}
 
-% ---------------------------------------------------------
-\section{Síntesis integradora}
-\label{sec:sintesis}
+\subsection{Inyección de Dependencias (Hilt)}
+La Inyección de Dependencias (DI) es un patrón de diseño donde los objetos reciben sus dependencias desde fuera en lugar de crearlas ellos mismos, promoviendo la Inversión de Control (IoC) \cite{dependency_injection_principles}.
 
-El ATP se modela como un CSP con restricciones duras (factibilidad: sin solapes, obligatoriedad curricular) y blandas (calidad de uso: intrajornada, docentes favoritos, días preferidos). La solución favorece búsqueda con poda más evaluación multicriterio por su equilibrio entre calidad y tiempo de respuesta en el contexto individual. Los principios offline/local-first justifican disponibilidad y robustez; la interoperabilidad JSON habilita colaboración y portabilidad de horarios. Este marco teórico provee los fundamentos para el diseño y evaluación de la solución propuesta.
+Se utiliza Hilt, la solución estándar de Google para DI en Android basada en Dagger. Hilt reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones (por ejemplo, inyectar repositorios simulados durante las pruebas automatizadas).
 
-% ---------------------------------------------------------
-\section*{Glosario EN-ES}
+\section{Algoritmia de Planificación (Timetabling)}
+\label{sec:algoritmia}
+
+El núcleo funcional de la aplicación aborda el problema de generación de horarios académicos, conocido formalmente en la literatura como University Course Timetabling Problem (UCTP).
+
+\subsection{Problema de Satisfacción de Restricciones (CSP)}
+El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricciones (CSP), definido por Russell y Norvig \cite{russell2021ai} como una terna $(X, D, C)$:
 \begin{itemize}
-  \item Timetabling: planificación de horarios.
-  \item CSP (Constraint Satisfaction Problem): problema de satisfacción de restricciones.
-  \item Restricción dura/blanda: condición de factibilidad/criterio de calidad.
-  \item Multicriterio: combinación de varias métricas en la evaluación.
-  \item Offline-first / Local-first: prioridad de operación sin red y datos locales como fuente primaria.
-  \item Data freshness: actualidad/validación de los datos.
-  \item Pareto front: conjunto de soluciones no dominadas en optimización multiobjetivo.
+    \item $X$: Un conjunto de variables (las asignaturas a inscribir).
+    \item $D$: Un conjunto de dominios (los grupos disponibles para cada asignatura).
+    \item $C$: Un conjunto de restricciones que especifican combinaciones permitidas de valores.
 \end{itemize}
+Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (ej. no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (ej. minimizar huecos libres).
+
+\subsection{Algoritmos de Búsqueda: Backtracking}
+Para resolver el CSP, se implementa el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo ``retrocede'' al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
+
+\subsection{Heurísticas de Poda y Optimización}
+Dado que el espacio de búsqueda puede crecer exponencialmente, se aplican heurísticas para mejorar la eficiencia:
+\begin{itemize}
+    \item Poda (Pruning): Se descartan tempranamente las ramas que no pueden llevar a una solución válida (ej. si una materia obligatoria se queda sin cupos válidos).
+    \item Ordenamiento de Variables (Fail-First): Se intentan asignar primero las variables más restrictivas para detectar conflictos lo antes posible \cite{automated_timetabling}.
+    \item Función Objetivo: Las soluciones válidas encontradas se evalúan mediante una función de puntuación ponderada que penaliza los huecos y bonifica la asignación de docentes preferidos.
+\end{itemize}
+
+\section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
+\label{sec:edge-ai}
+
+``TecnoTime'' integra capacidades de inteligencia artificial generativa ejecutándose directamente en el dispositivo móvil, un paradigma conocido como Edge AI.
+
+\subsection{Inferencia Local vs. Inferencia en la Nube}
+A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el dispositivo del usuario. El Cuadro \ref{tab:edge_vs_cloud} compara ambos enfoques.
+
+\begin{table}[h!]
+    \centering
+    \caption{Comparación entre Edge AI y Cloud AI}
+    \label{tab:edge_vs_cloud}
+    \begin{tabular}{|p{5cm}|p{5cm}|}
+        \hline
+        \textbf{Edge AI (Local)} & \textbf{Cloud AI (Nube)} \\
+        \hline
+        Procesamiento en el dispositivo. & Procesamiento en servidores remotos. \\
+        \hline
+        Privacidad total (datos no salen). & Riesgo de privacidad al enviar datos. \\
+        \hline
+        Latencia baja (tiempo real). & Latencia depende de la red. \\
+        \hline
+        Funciona sin internet (Offline). & Requiere conexión constante. \\
+        \hline
+    \end{tabular}
+    \vspace{0.2cm}
+    \\
+    \small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
+\end{table}
+
+En la implementación, se utiliza la librería llama.cpp a través de JNI (Java Native Interface) para ejecutar la inferencia de modelos de lenguaje de manera eficiente en la CPU del dispositivo Android.
+
+\subsection{Modelos de Lenguaje (LLMs) y Cuantización}
+Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos con recursos limitados (memoria y batería), se utiliza la técnica de Cuantización. Este proceso reduce la precisión de los pesos del modelo (por ejemplo, de punto flotante de 16 bits a enteros de 4 bits), disminuyendo drásticamente el tamaño del modelo y el consumo de memoria con una pérdida mínima de precisión \cite{quantization_papers}. El formato de archivo utilizado es GGUF, optimizado para inferencia rápida en CPU.
+
+\section{Gestión y Persistencia de Datos}
+\label{sec:persistencia}
+
+La aplicación sigue una filosofía Offline-First, garantizando que la funcionalidad principal esté disponible sin conexión a internet, un requisito crítico en entornos con conectividad intermitente \cite{guda2025offline}.
+
+\subsection{Bases de Datos Relacionales Embebidas (Room)}
+Para la persistencia local se utiliza SQLite, un motor de base de datos relacional ligero embebido en Android. El acceso se gestiona a través de la librería Room, que proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
+
+\subsection{Estrategias de Sincronización y Offline-First}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/offline_architecture_couchbase.png}
+    \caption{Arquitectura típica de una aplicación Offline-First}
+    \label{fig:offline_architecture}
+    \small{Fuente: Couchbase Inc. (2023) \cite{couchbase_offlinefirst}}
+\end{figure}
+
+La arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local. Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager, un planificador de tareas diferibles y garantizadas. Cuando la sincronización completa, se actualiza la base de datos local, y Room notifica automáticamente a la UI para que refleje los cambios, desacoplando así la experiencia de usuario de la latencia de la red.
