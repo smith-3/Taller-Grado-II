@@ -5,7 +5,9 @@
 % --- Nota de cumplimiento (no teoría, solo aplicación) ---
 % (Hint EN: "Applied chapter, no theory dump.")
 
-\noindent Para el desarrollo de este proyecto se utilizó TecnoTime, una aplicación Android diseñada para optimizar la gestión de horarios académicos en la FCyT-UMSS. El desarrollo se estructuró en doce fases iterativas e incrementales, detalladas en el Cuadro~\ref{tab:fases_metodologia}, cada una con objetivos, entregables y criterios de aceptación específicos. Este capítulo documenta la aplicación práctica de la metodología, las decisiones técnicas adoptadas, los artefactos generados y las evidencias verificables de cada fase.
+\noindent Para el desarrollo de este proyecto se utilizó TecnoTime, una aplicación Android diseñada para optimizar la gestión de horarios académicos en la FCyT-UMSS. El desarrollo se estructuró en doce fases iterativas e incrementales, detalladas en el Cuadro~\ref{tab:fases_metodologia}, cada una con objetivos, entregables y criterios de aceptación específicos.
+
+Este capítulo documenta la aplicación práctica de la metodología, las decisiones técnicas adoptadas, los artefactos generados y las evidencias verificables de cada fase.
 
 % ---- Opcional: compact helpers (si tus normas lo permiten) ----
 \setlength{\emergencystretch}{2em}
@@ -26,8 +28,6 @@ Para el desarrollo de TecnoTime se adoptó la metodología Kanban en su variante
 
 \begin{table}[H]
   \centering\small
-  \caption[Aplicación de la metodología por fases]{Aplicación de la metodología por fases. \\ \small{Fuente: Elaboración propia.}}
-  \label{tab:fases_metodologia}
   \begin{tabularx}{\linewidth}{@{}p{1.2cm}p{3.9cm}>{\RaggedRight\arraybackslash}X@{}}
     \hline
     Fase & Propósito principal & Entregables y evidencias \\
@@ -46,10 +46,15 @@ Para el desarrollo de TecnoTime se adoptó la metodología Kanban en su variante
     F11 & Preparar liberación y métricas & Empaquetado en release, tablero de indicadores (TTS, adopción) y plan de seguimiento post despliegue. \\
     \hline
   \end{tabularx}
+  \caption[Aplicación de la metodología por fases]{Aplicación de la metodología por fases.}
+  \label{tab:fases_metodologia}
+  \small{Fuente: Elaboración propia.}
 \end{table}
 
 \subsection{Contexto empírico}
-El desarrollo partió de un prototipo de ingesta de PDF y normalización local. A partir de esa base se ejecutaron iteraciones sobre selección de materias, generación de horarios y validaciones con usuarios piloto. Las fases posteriores incorporaron intercambio JSON para envío y recepción de horarios, mejoras de experiencia de usuario (pantallas guía, configuración y widget), recordatorios y exportaciones en formatos comunes. Al cierre se integró la asistencia ``Simón'' como componente optativo y se documentaron controles de seguridad.
+El desarrollo partió de un prototipo de ingesta de PDF y normalización local. A partir de esa base se ejecutaron iteraciones sobre selección de materias, generación de horarios y validaciones con usuarios piloto.
+
+Las fases posteriores incorporaron intercambio JSON para envío y recepción de horarios, mejoras de experiencia de usuario (pantallas guía, configuración y widget), recordatorios y exportaciones en formatos comunes. Al cierre se integró la asistencia ``Simón'' como componente optativo y se documentaron controles de seguridad.
 
 \subsection{Factores de decisión}
 La encuesta aplicada a 125 estudiantes orientó las prioridades del tablero:
@@ -63,20 +68,25 @@ La encuesta aplicada a 125 estudiantes orientó las prioridades del tablero:
 \end{itemize}
 
 \subsection{Decisiones técnicas derivadas}
-Los factores anteriores guiaron la priorización de las fases (ver Cuadro~\ref{tab:fases_metodologia}: F4--F8) y condicionaron los artefactos liberados por incremento. Se reforzó el almacenamiento local y la sincronización diferida, se consolidó el contrato JSON con asistentes de importación y envío, se diseñaron recordatorios parametrizables y se establecieron exportaciones multiplataforma. Los artefactos y evidencias se encuentran documentados en \cite{tecnotime_repo}.
+Los factores anteriores guiaron la priorización de las fases (ver Cuadro~\ref{tab:fases_metodologia}: F4--F8) y condicionaron los artefactos liberados por incremento. Se reforzó el almacenamiento local y la sincronización diferida. Asimismo, se consolidó el contrato JSON con asistentes de importación y envío, se diseñaron recordatorios parametrizables y se establecieron exportaciones multiplataforma. Los artefactos y evidencias se encuentran documentados en \cite{tecnotime_repo}.
 
 \subsection{Arquitectura de la solución}
-La solución se apoya en una aplicación Android autosuficiente: la interacción sucede en la interfaz offline (Jetpack Compose), el motor de dominio coordina reglas y recordatorios, la ingesta procesa PDFs y la persistencia local resguarda horarios, configuraciones y políticas de frescura. El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} resume esta arquitectura offline-first.
+La solución se apoya en una aplicación Android autosuficiente: la interacción sucede en la interfaz offline (Jetpack Compose), el motor de dominio coordina reglas y recordatorios, la ingesta procesa PDFs y la persistencia local resguarda horarios, configuraciones y políticas de frescura.
+
+El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} resume esta arquitectura offline-first.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_arq_general.png}
-  \caption[Arquitectura general empleada en TecnoTime]{Arquitectura general empleada en TecnoTime. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Arquitectura general empleada en TecnoTime]{Arquitectura general empleada en TecnoTime.}
   \label{fig:arquitectura_tecnotime}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 % ----------------------------------------------------------------------
 \section{Estudio de campo y levantamiento de requerimientos}
+
+Esta sección documenta el proceso completo de investigación empírica realizado para fundamentar el desarrollo de TecnoTime, desde el diseño del instrumento de recolección hasta la derivación de requerimientos funcionales trazables.
 
 \subsection{Diseño del instrumento de recolección}
 
@@ -84,7 +94,7 @@ Para fundamentar el desarrollo de TecnoTime en necesidades reales de los estudia
 
 El instrumento se organizó en cuatro bloques temáticos: caracterización del encuestado (carrera, semestre, dispositivos utilizados), uso de herramientas actuales (Cappuchino, PDFs oficiales, canales de comunicación), problemática percibida (frustración, repetición de pasos, dificultades de coordinación) y demandas específicas (actualización automática, modo sin conexión, recordatorios, compartir horarios).
 
-El cuestionario fue aplicado mediante Google Forms durante el periodo académico 2025-I, con participación voluntaria y anónima. El instrumento completo se presenta en el Anexo \ref{ann:instrumento}, mientras que los resultados tabulados se encuentran disponibles en el Anexo \ref{ann:historias} y en formato digital \cite{encuesta_fcyt_2025}.
+El cuestionario fue aplicado mediante Google Forms durante el periodo académico 2025-I, con participación voluntaria y anónima. El instrumento completo se presenta en el Anexo \ref{ann:instrumento}, mientras que los resultados tabulados se encuentran documentados en la subsección \ref{sec:historias_usuario} de este capítulo y en formato digital \cite{encuesta_fcyt_2025}.
 
 \subsection{Aplicación y características de la muestra}
 
@@ -94,15 +104,18 @@ El perfil de los encuestados abarca desde estudiantes de primeros semestres hast
 
 \subsection{Resultados cuantitativos de la encuesta}
 
+Los resultados de la encuesta aplicada a 126 estudiantes de la FCyT se presentan organizados por dimensiones temáticas, comenzando por el análisis de dispositivos utilizados y continuando con patrones de uso, coordinación social y demandas específicas.
+
 \subsubsection{Dispositivos utilizados}
 
 El análisis de dispositivos revela una marcada preferencia por plataformas móviles. El 94\% de los encuestados utiliza dispositivos Android como herramienta principal para consultas académicas, mientras que solo el 26\% dispone de computadora portátil de uso regular. Esta distribución confirma la necesidad de priorizar el desarrollo nativo para Android y optimizar la experiencia móvil.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_dispositivo.png}
-  \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_dispositivo.png}
+  \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126).}
   \label{fig:encuesta_dispositivo}
+  \small{Fuente: \cite{encuesta_fcyt_2025}.}
 \end{figure}
 
 \subsubsection{Uso de Cappuchino}
@@ -111,9 +124,10 @@ La herramienta Cappuchino presenta un patrón de uso concentrado en periodos esp
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
-  \caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
+  \caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126).}
   \label{fig:encuesta_uso_capuchino}
+  \small{Fuente: \cite{encuesta_fcyt_2025}.}
 \end{figure}
 
 \subsubsection{Coordinación social mediante WhatsApp}
@@ -122,9 +136,10 @@ El 80\% de los encuestados valida información de horarios y coordina cambios me
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_whatsapp.png}
-  \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \includegraphics[width=0.5\textwidth]{images/diagrams/encuesta_whatsapp.png}
+  \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126).}
   \label{fig:encuesta_whatsapp}
+  \small{Fuente: \cite{encuesta_fcyt_2025}.}
 \end{figure}
 
 \subsubsection{Frustración por repetir pasos}
@@ -133,9 +148,10 @@ El 60\% de los estudiantes califica como alta su frustración (niveles 1-2-3 en 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_frustracion.png}
-  \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_frustracion.png}
+  \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126).}
   \label{fig:encuesta_frustracion}
+  \small{Fuente: \cite{encuesta_fcyt_2025}.}
 \end{figure}
 
 \subsubsection{Principales demandas identificadas}
@@ -145,8 +161,9 @@ Las demandas con mayor valoración por parte de los estudiantes incluyen: actual
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
-  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126).}
   \label{fig:encuesta_demandas}
+  \small{Fuente: \cite{encuesta_fcyt_2025}.}
 \end{figure}
 
 \subsection{Derivación de requerimientos funcionales}
@@ -155,8 +172,6 @@ Los hallazgos cuantitativos de la encuesta se tradujeron en requerimientos funci
 
 \begin{table}[H]
   \centering
-  \caption[Trazabilidad de hallazgos a requerimientos funcionales]{Trazabilidad de hallazgos a requerimientos funcionales. \\ \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}}
-  \label{tab:derivacion_req}
   \small
   \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
     \hline
@@ -175,6 +190,9 @@ Los hallazgos cuantitativos de la encuesta se tradujeron en requerimientos funci
     88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
     \hline
   \end{tabular}
+  \caption[Trazabilidad de hallazgos a requerimientos funcionales]{Trazabilidad de hallazgos a requerimientos funcionales.}
+  \label{tab:derivacion_req}
+  \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}
 \end{table}
 
 \subsection{Proceso propuesto (TO-BE)}
@@ -184,11 +202,36 @@ Con base en las demandas identificadas y los requerimientos derivados, se diseñ
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/diagrams/area_tobe_proceso.png}
-  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso con TecnoTime. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso con TecnoTime.}
   \label{fig:area_tobe}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 El proceso propuesto reduce significativamente los pasos necesarios para consultar y actualizar horarios, elimina la dispersión de información entre múltiples canales y habilita funcionalidades de coordinación social mediante formatos estructurados.
+
+\subsection{Historias de usuario derivadas}\label{sec:historias_usuario}
+
+A partir de los requerimientos funcionales identificados mediante la encuesta y el análisis del proceso TO-BE, se elaboró un conjunto completo de historias de usuario organizadas por área funcional. Cada historia sigue el formato estándar: \textbf{Como} [rol] \textbf{necesito} [funcionalidad] \textbf{para} [beneficio], acompañada de criterios de aceptación Given-When-Then (G/W/T) y priorización mediante el método MoSCoW (Must/Should/Could/Won't).
+
+Las historias de usuario se agrupan en las siguientes categorías funcionales, reflejando tanto las demandas identificadas en la encuesta como los requisitos técnicos del sistema:
+
+\begin{itemize}[nosep]
+  \item Onboarding y configuración inicial de perfil
+  \item Gestión de carreras, niveles y seguimiento de progreso académico
+  \item Navegación en la pantalla principal, vista semanal y widget
+  \item Administración de materias y grupos
+  \item Gestión de profesores y favoritos
+  \item Generador de horarios con restricciones y optimización
+  \item Exportación, importación e intercambio de horarios
+  \item Recordatorios automatizados y asistente IA ``Simón''
+  \item Operación sin conexión, actualización automática y resiliencia
+  \item Soporte, información y preferencias del usuario
+  \item Seguridad, privacidad, rendimiento y accesibilidad
+\end{itemize}
+
+El conjunto completo comprende 63 historias de usuario (US-01 a US-63), documentadas en formato tabular con identificador único, rol, necesidad, beneficio, criterios de aceptación resumidos y nivel de prioridad. Las tablas completas se presentan a continuación:
+
+\input{sections/metodologia/historias_usuario}
 
 % ----------------------------------------------------------------------
 % (Reubicado al final del capítulo para que 4.2 inicie con F1)
@@ -196,6 +239,8 @@ El proceso propuesto reduce significativamente los pasos necesarios para consult
 
 % ============================
 \section{F1: Ingestión y normalización (de PDF a BD)}
+
+Esta fase constituye el punto de partida del desarrollo, estableciendo el mecanismo de adquisición y transformación de datos oficiales desde archivos PDF publicados por la UMSS hacia un modelo estructurado persistente en la base de datos local de la aplicación.
 
 \subsection{Objetivo}
 Transformar horarios oficiales (PDF) a un modelo estructurado local, controlando la carga a la fuente y asegurando la frescura de los datos.
@@ -212,8 +257,9 @@ Al abrir el generador se valida conectividad y vigencia de datos. Si el contenid
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\linewidth]{images/diagrams/cap4_c4_1_context.png}
-  \caption[C4 Nivel 1 — Contexto del sistema para F1]{C4 Nivel 1 — Contexto del sistema para F1. \\ \small{Fuente: Elaboración propia.}}
+  \caption[C4 Nivel 1 — Contexto del sistema para F1]{C4 Nivel 1 — Contexto del sistema para F1.}
   \label{fig:c4_context_f1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \subsubsection{4.2.2 Ingesta, análisis y persistencia con frescura}
@@ -230,22 +276,25 @@ Cuando se requiere actualización, el flujo descarga, extrae y analiza el PDF of
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_2_container.png}
-  \caption[C4 Nivel 2 — Contenedores involucrados en F1]{C4 Nivel 2 — Contenedores involucrados en F1. \\ \small{Fuente: Elaboración propia.}}
+  \caption[C4 Nivel 2 — Contenedores involucrados en F1]{C4 Nivel 2 — Contenedores involucrados en F1.}
   \label{fig:c4_container_f1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_3_component_f1.png}
-  \caption[C4 Nivel 3 — Componentes de ingesta y normalización (F1)]{C4 Nivel 3 — Componentes de ingesta y normalización (F1). \\ \small{Fuente: Elaboración propia.}}
+  \caption[C4 Nivel 3 — Componentes de ingesta y normalización (F1)]{C4 Nivel 3 — Componentes de ingesta y normalización (F1).}
   \label{fig:c4_component_f1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_4_code_f1.png}
-  \caption[C4 Nivel 4 — Clases y casos de uso relevantes (F1)]{C4 Nivel 4 — Clases y casos de uso relevantes (F1). \\ \small{Fuente: Elaboración propia.}}
+  \caption[C4 Nivel 4 — Clases y casos de uso relevantes (F1)]{C4 Nivel 4 — Clases y casos de uso relevantes (F1).}
   \label{fig:c4_code_f1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 Criterios de entrada (Entry).
@@ -267,6 +316,8 @@ Cache hit-rate semanal $\geq 80\%$; reintentos acotados; tiempo de ingesta por P
 % ============================
 \section{F2: Modelo de dominio (entidades, reglas, mapeo)}
 
+Esta fase consolida la arquitectura de datos de TecnoTime, definiendo el modelo de dominio que sustenta todas las operaciones de la aplicación y garantiza la integridad referencial entre entidades.
+
 \subsection{Objetivo}
 Consolidar un modelo de dominio coherente con el área de aplicación, garantizando integridad y trazabilidad entre entidades y sus reglas.
 
@@ -274,6 +325,8 @@ Consolidar un modelo de dominio coherente con el área de aplicación, garantiza
 Se modelaron entidades y relaciones clave; se definieron índices/llaves para unicidad e integridad; y se implementaron mapeos entre ingreso (PDF/JSON), dominio y almacenamiento.
 
 \subsection{Entidades (derivadas del código)}
+El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento. Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real. Las entidades principales abarcan desde la representación de materias y grupos hasta la gestión de preferencias de usuario y configuraciones del sistema. A continuación se detallan las entidades fundamentales que componen este modelo:
+
 \begin{itemize}
   \item Materia: \cclass{domain/model/Subject.kt}{Subject} (\textsf{code}, \textsf{name}, \textsf{isElective}, \textsf{isApproved}, \textsf{isActive}).
   \item Grupo: \Class{Group} (\textsf{id}, \textsf{subjectCode}, \textsf{groupId}, \textsf{levelId}, \textsf{groupName}, \textsf{type}, \textsf{modality}, \textsf{isActive}).
@@ -285,6 +338,8 @@ Se modelaron entidades y relaciones clave; se definieron índices/llaves para un
 \end{itemize}
 
 \subsection{Reglas e invariantes}
+La integridad del modelo de dominio se sustenta en un conjunto de reglas e invariantes que garantizan la consistencia de los datos a lo largo del ciclo de vida de la aplicación. Estas reglas abarcan desde restricciones de unicidad en identificadores hasta validaciones temporales que aseguran la coherencia de los horarios. La implementación de estas invariantes se realiza tanto a nivel de base de datos mediante índices y restricciones de integridad referencial, como a nivel de lógica de negocio mediante validaciones en los casos de uso. El cumplimiento estricto de estas reglas previene estados inconsistentes que podrían comprometer la funcionalidad del generador de horarios o la experiencia del usuario. Las reglas establecidas son:
+
 \begin{itemize}
   \item Unicidad de \textsf{Subject.code}: \Class{SubjectEntity} define índice único sobre \textsf{code}.
   \item Unicidad compuesta \textsf{(subjectCode, groupId)}: \Class{GroupEntity} con índice compuesto único; FK a \Class{LevelEntity} y \Class{SubjectEntity}.
@@ -293,6 +348,8 @@ Se modelaron entidades y relaciones clave; se definieron índices/llaves para un
 \end{itemize}
 
 \subsection{Mapeos del ingreso al dominio y al almacenamiento}
+La arquitectura de TecnoTime implementa una clara separación entre las capas de ingreso de datos, dominio y persistencia, requiriendo transformaciones explícitas entre las representaciones de cada capa. Los mapeos bidireccionales permiten convertir datos desde formatos externos como PDF y JSON hacia el modelo de dominio, y posteriormente hacia entidades de base de datos para su almacenamiento persistente. Esta estrategia de mapeo explícito facilita la evolución independiente de cada capa, permite la validación de datos en cada transformación y simplifica las pruebas unitarias al aislar las responsabilidades de cada componente. Los principales componentes de mapeo implementados son:
+
 \begin{itemize}
   \item DTO de horario compartible (\cclass{domain/model/ShareableScheduleDto.kt}{ShareableScheduleDto}) y analizadores PDF/JSON para el ingreso.
   \item Mapeadores de dominio (p. ej., \Class{SubjectMapper}, \Class{GroupMapper}, \Class{GroupScheduleMapper}, \Class{UserSettingsMapper}) para transformar entre entidades y dominio.
@@ -300,6 +357,8 @@ Se modelaron entidades y relaciones clave; se definieron índices/llaves para un
 \end{itemize}
 
 \subsection{Evidencias (código)}
+La implementación del modelo de dominio se materializa en un conjunto de clases Kotlin que reflejan fielmente el diseño conceptual presentado. Estas clases se organizan en el paquete domain/model y siguen los principios de inmutabilidad y encapsulamiento propios de la programación funcional. Las entidades de base de datos correspondientes se definen en el paquete data/local/entity utilizando las anotaciones de Room para especificar índices, relaciones y restricciones. La correspondencia uno a uno entre entidades de dominio y entidades de persistencia facilita el mantenimiento y la comprensión del código. Las clases principales que evidencian este modelo son:
+
 \begin{itemize}
   \item Unicidad: \Class{SubjectEntity}: índice unique(\textsf{code}); \Class{GroupEntity}: índice compuesto unique(\textsf{subject\_code}, \textsf{group\_id}).
   \item Modelos: \Class{Subject}, \Class{Group}, \Class{GroupSchedule}, \Class{UserSettings}.
@@ -311,8 +370,9 @@ Como apoyo visual, la Figura \ref{fig:f2_modelo_dominio_er} ilustra el diagrama 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagram_er.png}
-  \caption[Modelo de dominio: diagrama entidad–relación (ER)]{Modelo de dominio: diagrama entidad–relación (ER). \\ \small{Fuente: elaboración propia.}}
+  \caption[Modelo de dominio: diagrama entidad–relación (ER)]{Modelo de dominio: diagrama entidad–relación (ER).}
   \label{fig:f2_modelo_dominio_er}
+  \small{Fuente: elaboración propia.}
 \end{figure}
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
@@ -323,6 +383,8 @@ Salida/DoD: unicidad e integridad referencial verificadas; mapeos ida/vuelta pro
 % ============================
 \section{F3: Generador (restricciones, heurísticas, UI)}
 
+Esta fase implementa el núcleo algorítmico de TecnoTime, desarrollando el motor de generación automática de horarios que combina restricciones duras, heurísticas de optimización y criterios de preferencia del usuario.
+
 \subsection{Objetivo}
 Seleccionar un grupo por materia evitando choques por defecto y optimizando los huecos y la afinidad con docentes favoritos.
 
@@ -330,6 +392,8 @@ Seleccionar un grupo por materia evitando choques por defecto y optimizando los 
 Se parametrizó el problema, se aplicó búsqueda con poda y heurísticas MRV/LCV con scoring multicriterio y se integró UI para configurar y aplicar resultados.
 
 \subsection{Parámetros reales}
+El generador de horarios opera como un sistema configurable que acepta múltiples parámetros para adaptar su comportamiento a las preferencias específicas de cada estudiante. Estos parámetros controlan aspectos críticos como el número máximo de materias a considerar, la cantidad de soluciones alternativas a generar, y las estrategias de optimización a aplicar. La parametrización permite al usuario equilibrar entre la exhaustividad de la búsqueda y el tiempo de ejecución, así como priorizar diferentes criterios de calidad según sus necesidades individuales. Todos los parámetros se encapsulan en la clase ScheduleGenerationParams para garantizar la validación y consistencia de la configuración. Los parámetros configurables son:
+
 \begin{itemize}
   \item Límite de materias por horario: \(\leq\)20 y número de horarios generados: hasta 25. Parametrización en \cclass{domain/model/ScheduleGenerationParams.kt}{ScheduleGenerationParams} (\textsf{totalSubjectsCount}, \textsf{numberOfSchedules}).
   \item Flags principales:
@@ -342,6 +406,8 @@ Se parametrizó el problema, se aplicó búsqueda con poda y heurísticas MRV/LC
 \end{itemize}
 
 \subsection{Estrategia operativa}
+La generación de horarios viables se aborda como un problema de satisfacción de restricciones (CSP) resuelto mediante búsqueda con retroceso (backtracking) mejorada con heurísticas de poda y ordenamiento. La estrategia operativa combina técnicas clásicas de inteligencia artificial con optimizaciones específicas del dominio académico, como la priorización de niveles inferiores para garantizar la progresión curricular y el manejo especial de series de materias correlativas. El algoritmo construye soluciones incrementalmente, descartando tempranamente las ramas que violan restricciones duras y evaluando las soluciones completas mediante una función de puntuación multicriterio que pondera choques, huecos y preferencias de docentes. Esta aproximación permite generar múltiples alternativas viables en tiempos compatibles con la ejecución en dispositivo móvil. Los componentes estratégicos implementados son:
+
 \begin{itemize}
 \item Selección incremental con poda temprana y un orden implícito MRV/LCV; se promueven los niveles bajos mediante \textsf{promoteLowestLevels(...)} y se asegura la progresión de series con \textsf{enforceSeriesProgression(...)} en \texttt{GenerateSchedulesUseCaseImpl}.
 \item Priorización de grupos con docentes favoritos mediante \textsf{prioritizeGroupsByFavoriteTeacher(...)}: los favoritos sin conflicto prevalecen y, si \textsf{acceptConflicts} está habilitado, se consideran también los que generan conflicto.
@@ -351,6 +417,8 @@ Se parametrizó el problema, se aplicó búsqueda con poda y heurísticas MRV/LC
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
 \subsection{Interacción de usuario (pantallas reales)}
+La interfaz de usuario del generador de horarios se diseñó siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas. El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas. La implementación utiliza Jetpack Compose para construir interfaces declarativas y reactivas que responden automáticamente a cambios en el estado del generador. Los componentes de UI implementados son:
+
 \begin{itemize}
   \item Pantalla de configuración (\texttt{GenerateScheduleConfigScreen}) y modelo de vista (\texttt{GenerateScheduleViewModel}) para selección de materias, opciones y lanzamiento de la generación.
   \item Pantalla de resultados (\texttt{GenerateScheduleResultsScreen}) y vista previa (\texttt{SchedulePreview}) para aplicar parcial (solo marcadas vía \textsf{fixedGroups}) o completo (todo el horario propuesto).
@@ -363,8 +431,9 @@ A continuación se presentan dos vistas complementarias del proceso de generaci�
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f3_secuencia_generacion.png}
-\caption[Secuencia de generación de horarios]{Secuencia de generación de horarios. \\ \small{Fuente: Elaboración propia.}}
+\caption[Secuencia de generación de horarios]{Secuencia de generación de horarios.}
   \label{fig:f3_secuencia_generacion}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \noindent Para facilitar la lectura, la Figura~\ref{fig:f3_decisiones_generador} se organiza en dos paneles: (I) conformación del conjunto candidato (obligatorias, preferencia por docentes y orden de exploración) y (II) evaluación de combinaciones (penalización de huecos, tratamiento de choques y relajación cuando no hay opciones válidas).
@@ -379,8 +448,9 @@ A continuación se presentan dos vistas complementarias del proceso de generaci�
     \centering
     \includegraphics[width=\linewidth]{images/diagrams/cap4_f3_decisiones_generador_part2.png}
   \end{minipage}
-\caption[Decisiones del generador]{Decisiones del generador. \\ \small{Fuente: Elaboración propia.}}
+\caption[Decisiones del generador]{Decisiones del generador.}
   \label{fig:f3_decisiones_generador}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
@@ -410,6 +480,8 @@ La evaluación combina tres estrategias y dos penalizaciones fijas. Resumen brev
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
 \subsection{Evidencias (código)}
+La implementación del generador de horarios se distribuye en múltiples componentes que separan claramente las responsabilidades de generación, evaluación y presentación. El núcleo algorítmico reside en las clases de casos de uso y generadores, mientras que las estrategias de evaluación se implementan como componentes independientes y componibles siguiendo el patrón Strategy. La capa de presentación orquesta la interacción con el usuario y la visualización de resultados mediante ViewModels que exponen el estado como flujos reactivos. Esta arquitectura facilita las pruebas unitarias de cada componente y permite la evolución independiente del algoritmo y la interfaz. Los componentes principales son:
+
 \begin{itemize}
   \item Generación: \Class{GenerateSchedulesUseCaseImpl}, \Class{ScheduleGenerator}.
   \item Estrategias y evaluación: \Class{ScheduleStrategyFactory}, \Class{CompositeStrategy}, \Class{AcceptConflictsStrategy}, \Class{MinimizeGapsStrategy}, \Class{PrioritizeTeachersStrategy}.
@@ -418,6 +490,8 @@ La evaluación combina tres estrategias y dos penalizaciones fijas. Resumen brev
 
 % ============================
 \section{F4: Prioridad sin conexión (frescura, políticas, fallback)}
+
+Esta fase establece la arquitectura offline-first de la aplicación, priorizando la disponibilidad y consistencia de datos locales mediante políticas de frescura, sincronización controlada y mecanismos de resiliencia.
 
 \subsection{Objetivo}
 Asegurar disponibilidad sin red priorizando la caché local, controlando frescura y habilitando recuperación manual por PDF.
@@ -450,6 +524,8 @@ Entrada: conectividad verificada o disponibilidad de PDF local; sin sincronizaci
 Salida/DoD: datos locales actualizados y consistentes por carrera; generación bloqueada durante sincronización; reintentos espaciados y circuito recuperado tras fallos.
 
 \subsection{Evidencias (código)}
+La arquitectura offline-first de TecnoTime se sustenta en un conjunto de componentes que gestionan la sincronización diferida, el almacenamiento local prioritario y las políticas de frescura de datos. La implementación utiliza WorkManager para programar tareas de sincronización en segundo plano que respetan las restricciones de red y batería del dispositivo, mientras que Room proporciona la capa de persistencia local con soporte para observación reactiva de cambios. Los repositorios implementan el patrón Single Source of Truth, exponiendo siempre los datos locales a la UI y actualizándolos transparentemente cuando la sincronización completa exitosamente. Esta arquitectura garantiza una experiencia de usuario fluida independientemente de la conectividad de red. Los componentes que implementan esta funcionalidad son:
+
 \begin{itemize}
   \item Gate del generador: \Class{GenerateScheduleViewModel} (bandera \textsf{isSyncing}).
   \item Chequeo y sincronización: \Class{NetworkConnectivityChecker}, \Class{AutoSyncUseCase}, \Class{SyncPreferences}.
@@ -459,26 +535,31 @@ Salida/DoD: datos locales actualizados y consistentes por carrera; generación b
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
-  \caption[Gate de caché y frescura]{Gate de caché y frescura. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Gate de caché y frescura]{Gate de caché y frescura.}
   \label{fig:f4_offline}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/offline_first_sync.png}
-  \caption[Sincronización con backoff y circuit breaker]{Sincronización con backoff y circuit breaker. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Sincronización con backoff y circuit breaker]{Sincronización con backoff y circuit breaker.}
   \label{fig:f4_offline_sync}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
-  \caption[Fallback por PDF local]{Fallback por PDF local. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Fallback por PDF local]{Fallback por PDF local.}
   \label{fig:f4_offline_pdf}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 % ============================
 \section{F5: Interoperabilidad (JSON + WhatsApp)}
+
+Esta fase habilita el intercambio estructurado de horarios entre estudiantes, implementando un contrato JSON interoperable y flujos de exportación/importación compatibles con plataformas de mensajería instantánea.
 
 \subsection{Objetivo}
 Permitir compartir e importar horarios entre estudiantes de forma interoperable y segura.
@@ -513,15 +594,17 @@ Al abrir el JSON con TecnoTime: \texttt{LoadShareableScheduleUseCase} valida y c
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part1.png}
-\caption[Exportación del horario en la aplicación]{Exportación del horario en la aplicación. \\ \small{Fuente: Elaboración propia.}}
+\caption[Exportación del horario en la aplicación]{Exportación del horario en la aplicación.}
   \label{fig:f5_flow_export}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part2.png}
-\caption[Importación del horario en la aplicación]{Importación del horario en la aplicación. \\ \small{Fuente: Elaboración propia.}}
+\caption[Importación del horario en la aplicación]{Importación del horario en la aplicación.}
   \label{fig:f5_flow_import}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 El intercambio define un bloque de metadatos y un cuerpo auto-contenido:
@@ -534,6 +617,8 @@ El intercambio define un bloque de metadatos y un cuerpo auto-contenido:
 Campos mínimos obligatorios por entry para garantizar la importación: \textsf{subject.code}, \textsf{group.groupId} y \textsf{schedule} (día y franja horaria). El resto de atributos enriquecen la experiencia (docente, aula, color/emoji, notificaciones) y se consumen cuando están disponibles.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+Los criterios de entrada y salida definen las condiciones necesarias para iniciar esta fase del desarrollo y las evidencias verificables que demuestran su completitud. Estos criterios garantizan que cada fase se construya sobre una base sólida de trabajo previo y que entregue artefactos de calidad suficiente para las fases subsecuentes. La definición explícita de Definition of Done (DoD) permite evaluar objetivamente el progreso y facilita la toma de decisiones sobre cuándo avanzar a la siguiente fase. Los criterios establecidos son:
+
 \begin{itemize}
   \item Entrada: Materias inscritas disponibles; permisos de almacenamiento/compartir concedidos si aplica; JSON válido al importar.
   \item Salida/DoD: Exportaciones válidas (PNG/PDF/Excel/JSON) compartibles; importación ejecuta validaciones y merge sin duplicados; bloqueos correctos cuando no hay materias.
@@ -541,6 +626,8 @@ Campos mínimos obligatorios por entry para garantizar la importación: \textsf{
 
 % ============================
 \section{F6: UX aplicada: onboarding, navegación, edición y widget}
+
+Esta fase refina la experiencia de usuario mediante flujos guiados, navegación optimizada y componentes de acceso rápido, reduciendo la fricción en tareas frecuentes y mejorando la usabilidad general de la aplicación.
 
 \subsection{Objetivo}
 Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual.
@@ -551,9 +638,10 @@ Se diseñaron flujos guiados (onboarding, agregar/editar), navegación por días
 Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:f6_resumen_ux} resume los flujos, comportamientos esperados e implementación de componentes de interfaz asociados a F6.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+La siguiente tabla sintetiza los criterios de entrada que deben cumplirse antes de iniciar esta fase, los criterios de salida que marcan su finalización exitosa, y la definición de completitud (DoD) que especifica las condiciones verificables de calidad. Esta estructura tabular facilita la revisión rápida de los requisitos y permite el seguimiento sistemático del avance de la fase. El cuadro presenta:
+
 \begin{table}[H]
    \centering\small
-   \caption[Resumen de UX aplicada (F6)]{Resumen de UX aplicada (F6). \\ \small{Fuente: Elaboración propia.}}\label{tab:f6_resumen_ux}
    \begin{tabularx}{\linewidth}{@{}p{3.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X@{}}
      \hline
      Flujo & Pasos / Comportamiento & Implementación (clases principales) \\
@@ -565,11 +653,13 @@ Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:
      Widget & Muestra el día actual; permite desplazamiento entre días; tarjetas con información esencial (materia, grupo, hora, aula, docente). & \texttt{ScheduleAppWidgetProvider}, \texttt{ScheduleRemoteViewsService}; utilidades en \texttt{WidgetDateUtils}, preferencias en \texttt{WidgetPrefs}. \\
      \hline
    \end{tabularx}
+   \caption[Resumen de UX aplicada (F6)]{Resumen de UX aplicada (F6).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f6_resumen_ux}
 \end{table}
 
 \begin{table}[H]
    \centering\small
-   \caption[Criterios de entrada y salida (F6)]{Criterios de entrada y salida (F6). \\ \small{Fuente: Elaboración propia.}}\label{tab:f6_entry_exit}
    \begin{tabularx}{\linewidth}{@{}p{2.8cm}>{\RaggedRight\arraybackslash}X@{}}
      \hline
      Criterio & Descripción \\
@@ -578,12 +668,17 @@ Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:
      Salida / DoD & Reducción de pasos en tareas críticas; preview consistente; widget operativo y sincronizado. \\
      \hline
    \end{tabularx}
+   \caption[Criterios de entrada y salida (F6)]{Criterios de entrada y salida (F6).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f6_entry_exit}
 \end{table}
 
 % Rutas omitidas para simplificar; se emplean únicamente nombres de clases.
 
 % ============================
 \section{F7: Notificaciones e IA (Simón, opt-in)}
+
+Esta fase incorpora asistencia proactiva mediante recordatorios automatizados y un asistente de inteligencia artificial opcional, manteniendo el principio de activación voluntaria y operación local sin dependencias externas.
 
 \subsection{Objetivo}
 Entregar recordatorios puntuales y una IA opcional sin afectar la operación base.
@@ -594,9 +689,10 @@ Se crearon canales y estilos de notificación, programación en background y un 
 Para estandarizar la presentación y facilitar la lectura, el Cuadro \ref{tab:f7_notif_ai} resume los flujos, el comportamiento esperado y los componentes clave. Se mantiene la activación voluntaria (opt-in) de IA y los canales separados para notificaciones.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+El siguiente cuadro especifica de manera estructurada las precondiciones necesarias para comenzar el trabajo en esta fase, las postcondiciones que indican su finalización, y los criterios de aceptación que definen cuándo los entregables alcanzan el nivel de calidad requerido. Esta documentación explícita de criterios reduce la ambigüedad en la planificación y facilita la coordinación entre diferentes aspectos del desarrollo. La tabla muestra:
+
 \begin{table}[H]
    \centering\small
-   \caption[Resumen de notificaciones e IA (F7)]{Resumen de notificaciones e IA (F7). \\ \small{Fuente: Elaboración propia.}}\label{tab:f7_notif_ai}
    \begin{tabularx}{\linewidth}{@{}p{3.5cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X@{}}
      \hline
      Flujo & Comportamiento / Reglas & Implementación (clases principales) \\
@@ -606,25 +702,29 @@ Para estandarizar la presentación y facilitar la lectura, el Cuadro \ref{tab:f7
      Red y almacenamiento & Selección de red (Wi‑Fi/datos) para descarga; validación de espacio libre; reintentos controlados. IA desactivada por defecto (\textsf{enableAi=false}); opt-out disponible (borrado del modelo). & \texttt{AiManagementViewModel} (flujos de descarga/actualización/borrado); \texttt{UserSettingsRepository} (preferencias). \\
      \hline
    \end{tabularx}
+   \caption[Resumen de notificaciones e IA (F7)]{Resumen de notificaciones e IA (F7).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f7_notif_ai}
 \end{table}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f7_secuencia_ia_recordatorios_part1.png}
-  \caption[Secuencia (1/2): activación y programación del recordatorio]{Secuencia (1/2): activación y programación del recordatorio. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Secuencia (1/2): activación y programación del recordatorio]{Secuencia (1/2): activación y programación del recordatorio.}
   \label{fig:f7_notifications_ai_part1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f7_secuencia_ia_recordatorios_part2.png}
-  \caption[Secuencia (2/2): reprogramación y respuestas en notificación (Simón/Like)]{Secuencia (2/2): reprogramación y respuestas en notificación (Simón/Like). \\ \small{Fuente: Elaboración propia.}}
+  \caption[Secuencia (2/2): reprogramación y respuestas en notificación (Simón/Like)]{Secuencia (2/2): reprogramación y respuestas en notificación (Simón/Like).}
   \label{fig:f7_notifications_ai_part2}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{table}[H]
    \centering\small
-   \caption[Criterios de entrada y salida (F7)]{Criterios de entrada y salida (F7). \\ \small{Fuente: Elaboración propia.}}\label{tab:f7_entry_exit}
    \begin{tabularx}{\linewidth}{@{}p{3.0cm}>{\RaggedRight\arraybackslash}X@{}}
      \hline
      Criterio & Descripción \\
@@ -633,10 +733,15 @@ Para estandarizar la presentación y facilitar la lectura, el Cuadro \ref{tab:f7
      Salida / DoD & Notificaciones puntuales y configurables; estilos consistentes; IA descargable y reversible (opt-out), integrada a recordatorios y mensajes motivacionales sin afectar el funcionamiento base. \\
      \hline
    \end{tabularx}
+   \caption[Criterios de entrada y salida (F7)]{Criterios de entrada y salida (F7).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f7_entry_exit}
 \end{table}
 
 % ============================
 \section{F8: Export (imagen, PDF, Excel)}
+
+Esta fase amplía las capacidades de portabilidad de TecnoTime, implementando generadores de exportación en formatos estándar que facilitan el archivo, impresión y compartición de horarios en contextos diversos.
 
 \subsection{Objetivo}
 Facilitar la portabilidad del horario en formatos estándar y su compartición segura.
@@ -647,9 +752,10 @@ Se implementaron generadores de imagen, PDF y Excel; y la copia JSON interoperab
 Para mantener consistencia con F6–F7, el Cuadro \ref{tab:f8_export} estructura formatos, reglas de exportación y clases implicadas. Se usa la hoja de compartir del sistema y FileProvider para exponer archivos.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+La tabla a continuación documenta los requisitos previos que habilitan el inicio de esta fase, los resultados esperados que señalan su conclusión, y las métricas de calidad que validan la completitud del trabajo realizado. La especificación clara de estos criterios permite identificar tempranamente bloqueos o dependencias incumplidas y asegura que cada fase agregue valor verificable al producto. El cuadro detalla:
+
 \begin{table}[H]
    \centering\small
-   \caption[Resumen de exportación (F8)]{Resumen de exportación (F8). \\ \small{Fuente: Elaboración propia.}}\label{tab:f8_export}
    \begin{tabularx}{\linewidth}{@{}p{3.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X@{}}
      \hline
      Formato & Reglas / Flujo & Implementación (clases principales) \\
@@ -660,11 +766,13 @@ Para mantener consistencia con F6–F7, el Cuadro \ref{tab:f8_export} estructura
      Copia (JSON) & Selección opcional de materias a incluir; confirmación; comparte con MIME \textsf{application/json}. Detalle del contrato en F5 (interoperabilidad). & \texttt{SettingsSendScheduleScreen} (diálogo de selección); \texttt{SettingsSendScheduleViewModel}; \texttt{GenerateShareableScheduleJsonUseCase} (ver F5). \\
      \hline
    \end{tabularx}
+   \caption[Resumen de exportación (F8)]{Resumen de exportación (F8).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f8_export}
 \end{table}
 
 \begin{table}[H]
   \centering\small
-  \caption[Aspectos técnicos de compartición]{Aspectos técnicos de compartición. \\ \small{Fuente: Elaboración propia.}}\label{tab:f8_tecnico}
   \begin{tabularx}{\linewidth}{@{}p{3.2cm}>{\RaggedRight\arraybackslash}X@{}}
     \hline
     Elemento & Descripción \\
@@ -675,25 +783,29 @@ Para mantener consistencia con F6–F7, el Cuadro \ref{tab:f8_export} estructura
     Validaciones previas & Si no existen materias inscritas, no se permite exportar; se informa al usuario. \\
     \hline
   \end{tabularx}
+  \caption[Aspectos técnicos de compartición]{Aspectos técnicos de compartición.}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f8_tecnico}
 \end{table}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f8_export_flow_part1.png}
-  \caption[Flujo (1/2): validación, selección de formato y preparación]{Flujo (1/2): validación, selección de formato y preparación. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Flujo (1/2): validación, selección de formato y preparación]{Flujo (1/2): validación, selección de formato y preparación.}
   \label{fig:f8_export_flow_part1}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.45\linewidth]{images/diagrams/cap4_f8_export_flow_part2.png}
-  \caption[Flujo (2/2): confirmación, guardado y compartición]{Flujo (2/2): confirmación, guardado y compartición (FileProvider + share sheet). \\ \small{Fuente: Elaboración propia.}}
+  \caption[Flujo (2/2): confirmación, guardado y compartición]{Flujo (2/2): confirmación, guardado y compartición (FileProvider + share sheet).}
   \label{fig:f8_export_flow_part2}
+  \small{Fuente: Elaboración propia.}
 \end{figure}
 
 \begin{table}[H]
   \centering\small
-  \caption[Criterios de entrada y salida (F8)]{Criterios de entrada y salida (F8). \\ \small{Fuente: Elaboración propia.}}\label{tab:f8_entry_exit}
   \begin{tabularx}{\linewidth}{@{}p{2.8cm}>{\RaggedRight\arraybackslash}X@{}}
     \hline
     Criterio & Descripción \\
@@ -702,10 +814,15 @@ Para mantener consistencia con F6–F7, el Cuadro \ref{tab:f8_export} estructura
     Exit / DoD & Archivos contienen materia, grupo, día, hora, aula y docente; MIME correcto; compartición exitosa; bloqueo adecuado ante horario vacío. \\
     \hline
   \end{tabularx}
+  \caption[Criterios de entrada y salida (F8)]{Criterios de entrada y salida (F8).}
+  \label{PLACEHOLDER}
+  \small{Fuente: Elaboración propia.}\label{tab:f8_entry_exit}
 \end{table}
 
 % ============================
 \section{F9: Pruebas y validación (QA)}
+
+Esta fase establece el marco de aseguramiento de calidad del proyecto, definiendo la estrategia de pruebas, implementando casos críticos de validación y verificando el cumplimiento de requisitos funcionales y no funcionales.
 
 \subsection{Objetivo}
 Verificar funcionalidad crítica end-to-end y asegurar calidad en unidades, integración y UI.
@@ -714,6 +831,8 @@ Verificar funcionalidad crítica end-to-end y asegurar calidad en unidades, inte
 Se definió una pirámide de pruebas y se implementaron casos críticos E2E; se validaron parsers, repositorios, generador y flujos de export/import y notificaciones.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+Esta fase establece criterios específicos de entrada, salida y completitud que reflejan sus objetivos particulares y su posición en el flujo de desarrollo. Los criterios de entrada aseguran que se cuenta con los insumos necesarios, los de salida verifican que se produjeron los artefactos esperados, y el DoD confirma que estos artefactos cumplen los estándares de calidad establecidos. Los criterios son:
+
 \begin{itemize}
   \item Entrada: módulos críticos identificados, datos semilla y fixtures disponibles, entorno de pruebas configurado.
   \item Salida/DoD: cobertura \(\geq 75\%\) en módulos núcleo; flujos E2E críticos en verde; issues bloqueantes cerrados.
@@ -731,6 +850,8 @@ Se aplicó el enfoque unit/integration/UI:E2E, alineado al código real:
 Cobertura objetivo. $\geq 75\%$ en módulos core (generator, parsing, sync, interop) y 100\% de flujos E2E críticos (listados abajo).
 
 \subsection{Casos críticos de validación (E2E y funcionales)}
+La validación del generador de horarios requiere un conjunto exhaustivo de casos de prueba que verifiquen tanto el cumplimiento de restricciones duras como la calidad de las soluciones propuestas. Estos casos críticos cubren escenarios extremos como materias con disponibilidad limitada, configuraciones que priorizan diferentes criterios, y situaciones de conflicto entre restricciones. Cada caso de prueba especifica las entradas exactas, los pasos de ejecución y los resultados esperados, permitiendo la verificación automatizada y la detección temprana de regresiones. Los casos implementados son:
+
 \begin{itemize}
   \item TC-ONB-001: Onboarding completo. Entradas/Pasos: Abrir la aplicación, luego ir a Welcome, ingresar el nombre, ajustar el formato 24h, fines de semana y tema, sincronizar carreras, activar IA (opcional), continuar a Home. Resultado esperado: Preferencias persistidas; carreras visibles; IA permanece desactivada si no se activó. Evidencia: \texttt{WelcomeScreen}, \texttt{WelcomeViewModel}; captura <TBD>.
 
@@ -761,6 +882,8 @@ Cobertura objetivo. $\geq 75\%$ en módulos core (generator, parsing, sync, inte
 % ============================
 \section{F10: Seguridad y privacidad}
 
+Esta fase endurece los controles de seguridad y privacidad de la aplicación, implementando gestión de permisos, cifrado de datos sensibles y políticas de respaldo que protegen la información del usuario.
+
 \subsection{Objetivo}
 Minimizar datos y permisos y mantener el procesamiento local con controles explícitos.
 
@@ -768,6 +891,8 @@ Minimizar datos y permisos y mantener el procesamiento local con controles expl�
 Se restringieron datos/persistencia a lo esencial, se limitaron permisos a casos de uso y se habilitó IA en el dispositivo con activación voluntaria, sin telemetría obligatoria.
 
 \subsection{Criterios de entrada/salida (Entry/Exit/DoD)}
+Los criterios definidos para esta fase reflejan su naturaleza específica y sus interdependencias con otras fases del desarrollo. La entrada requiere la disponibilidad de componentes previos en estado funcional, mientras que la salida exige la entrega de artefactos verificados y documentados. El DoD incorpora tanto verificaciones funcionales como no funcionales, asegurando que la fase no solo cumple sus objetivos inmediatos sino que también mantiene la calidad general del sistema. Los criterios son:
+
 \begin{itemize}
   \item Entrada: definición de datos mínimos y permisos requeridos por caso de uso.
   \item Salida/DoD: aplicación operativa con permisos mínimos; datos personales procesados localmente; IA 100\% opt-in/opt-out; sin telemetría obligatoria.
@@ -780,6 +905,8 @@ IA on-device (opt-in). Descarga/uso del modelo bajo control del usuario: activar
 
 % ============================
 \section{F11: Release (parámetros y tamaños)}
+
+Esta fase prepara el empaquetado final de la aplicación para distribución, estableciendo configuraciones de release, métricas de seguimiento y procedimientos de despliegue que aseguran la calidad del producto liberado.
 
 \subsection{Objetivo}
 Empaquetar y distribuir con tamaños razonables y control de calidad.
@@ -794,6 +921,14 @@ Distribución. Canales internos/privados para QA y distribución (sin Play Store
 
 Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 de noviembre de 2025. Hasta esa fecha, se ofrece mediante el programa de pruebas de Google Play; el acceso requiere unirse como tester al grupo correspondiente. Enlace de acceso al programa de pruebas: \url{https://play.google.com/apps/testing/com.fragmind.tecnotime}.
 \section{Resumen operacional por fases (F1–F11)}
+Esta sección consolida la información operativa de cada fase del desarrollo, presentando de forma sintética los artefactos generados, las decisiones técnicas adoptadas y los criterios de aceptación verificados en cada incremento.
+
+% Resumen compacto de cada fase con artefactos, decisiones y criterios de aceptación.
+% Facilita la revisión rápida de todo el desarrollo sin repetir detalles ya documentados.
+
+% ============================
+
+\subsection{F1: Ingesta de PDF a BD}
 \small % opcional: compactar un poco la tipografía
 
 % -- Estilo de bullets homogéneo, simple y sin rutas largas --
@@ -810,6 +945,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F2: Modelo de dominio}
+La Fase 2 define el modelo de dominio que representa conceptualmente el problema de gestión de horarios académicos y establece las reglas de integridad que gobiernan las relaciones entre entidades. Este modelo sirve como contrato entre las diferentes capas de la aplicación y como fuente de verdad para la lógica de negocio. La claridad y completitud del modelo de dominio facilita la comunicación entre desarrolladores, simplifica el mantenimiento del código y reduce la probabilidad de inconsistencias en los datos. Los elementos principales son:
+
 \begin{itemize}
   \item Objetivo: Entidades, relaciones y mapeos consistentes para soporte de generador y export.
   \item Qué se hizo: Definición de entidades (Subject, Group, GroupSchedule, Teacher, Classroom, Settings), índices/keys y mappers.
@@ -819,6 +956,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F3: Generador de horarios}
+La Fase 3 implementa el núcleo algorítmico de TecnoTime: el generador de horarios optimizados que resuelve el problema de satisfacción de restricciones mediante búsqueda con retroceso y heurísticas de poda. Esta fase representa el mayor desafío técnico del proyecto, requiriendo el balance entre exhaustividad de la búsqueda, tiempo de ejecución y calidad de las soluciones. El generador debe producir múltiples alternativas viables en tiempos compatibles con la ejecución en dispositivo móvil, considerando restricciones duras como no solapamiento y restricciones blandas como minimización de huecos. Los aspectos clave son:
+
 \begin{itemize}
   \item Objetivo: Producir Top-$N$ horarios sin choques por defecto, optimizando huecos y favoritos.
   \item Qué se hizo: Backtracking con MRV/LCV, poda temprana, composite scoring (choques/gaps/favoritos), aplicación parcial/completa.
@@ -828,6 +967,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F4: Prioridad sin conexión (offline-first)}
+La Fase 4 establece la arquitectura offline-first que prioriza el almacenamiento local y garantiza la funcionalidad de la aplicación independientemente de la conectividad de red. Esta decisión arquitectónica responde directamente a las necesidades identificadas en la encuesta, donde el 78% de estudiantes valoró el funcionamiento sin conexión. La implementación incluye políticas de frescura de datos, sincronización diferida en segundo plano y mecanismos de recuperación ante fallos de red. Los componentes clave son:
+
 \begin{itemize}
   \item Objetivo: Operación robusta con conectividad intermitente y protección de la fuente.
   \item Qué se hizo: Cache local, freshness gate previo al generador, backoff+circuit breaker, ventana de no-sync, fallback por PDF local.
@@ -837,6 +978,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F5 — Interoperabilidad (JSON + WhatsApp)}
+La Fase 5 habilita la interoperabilidad entre instancias de TecnoTime mediante un contrato JSON estandarizado que permite compartir horarios a través de canales de mensajería como WhatsApp. Esta funcionalidad responde a la necesidad de coordinación social identificada en la encuesta, donde el 80% de estudiantes utiliza WhatsApp para validar cambios en horarios. El diseño del formato de intercambio balancea completitud de información, compacidad del mensaje y facilidad de validación. Los elementos son:
+
 \begin{itemize}
   \item Objetivo: Compartir e importar horarios de forma confiable entre usuarios.
   \item Qué se hizo: Export JSON total/parcial con versión; import con validación (duplicados, carrera distinta) y merge idempotente.
@@ -846,6 +989,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F6 — UX aplicada}
+La Fase 6 refina la experiencia de usuario mediante la implementación de patrones de UX móvil que facilitan la adopción y el uso cotidiano de la aplicación. Esta fase incluye el diseño del flujo de onboarding que guía a nuevos usuarios a través de la configuración inicial, la implementación del widget de pantalla principal que proporciona acceso inmediato al horario actual, y la optimización de la navegación para minimizar el número de toques necesarios para completar tareas comunes. El diseño de UX se validó mediante pruebas con usuarios piloto que identificaron puntos de fricción y oportunidades de mejora. Los aspectos principales son:
+
 \begin{itemize}
   \item Objetivo: Reducir fricción: onboarding, ajustes, agregar/editar, vista semanal, widget.
   \item Qué se hizo: Flujos guiados, preview de grupo, selección por nivel/materia, valores por defecto sensatos, widget de acceso rápido.
@@ -855,6 +1000,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F7 — Notificaciones e IA (opt-in)}
+La Fase 7 integra dos funcionalidades opcionales que enriquecen la experiencia del usuario sin comprometer la simplicidad de la aplicación base: el sistema de notificaciones programables para recordatorios de clases y el asistente de inteligencia artificial "Simón" que opera completamente en el dispositivo. Ambas funcionalidades siguen un modelo opt-in donde el usuario debe activarlas explícitamente, respetando principios de privacidad y control del usuario. El asistente IA utiliza modelos cuantizados en formato GGUF que permiten la inferencia local sin envío de datos a servidores externos, alineándose con los requisitos de privacidad del proyecto. Los componentes son:
+
 \begin{itemize}
   \item Objetivo: Recordatorios puntuales y mensajería opcional con IA on-device.
   \item Qué se hizo: Canales separados (clases/mensajes), WorkManager, plantillas; gestión del modelo IA (descarga/borrado; Wi-Fi/datos; sin telemetría).
@@ -864,6 +1011,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F8 — Exportaciones}
+La Fase 8 implementa las capacidades de exportación de horarios en múltiples formatos (PDF, imagen, Excel) que facilitan la distribución y el uso de los horarios fuera de la aplicación. Esta funcionalidad responde a la necesidad identificada en la encuesta donde el 51% de estudiantes solicitó capacidades de compartir horarios. La generación de cada formato requiere transformaciones específicas: el PDF utiliza bibliotecas de renderizado vectorial, la imagen captura la vista de Compose como bitmap, y el Excel estructura los datos en hojas de cálculo con formato condicional. La implementación garantiza que los horarios exportados sean legibles, completos y mantengan la información de contexto necesaria. Los elementos son:
+
 \begin{itemize}
   \item Objetivo: Compartir horario como imagen, PDF o Excel.
   \item Qué se hizo: Confirmación previa, bloqueo si horario vacío, generación por formato y share sheet.
@@ -873,6 +1022,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F9 — Pruebas y validación}
+La Fase 9 establece el aseguramiento de calidad mediante una batería de pruebas que validan tanto la funcionalidad individual de componentes como los flujos de extremo a extremo que atraviesan múltiples capas de la aplicación. Las pruebas unitarias verifican la lógica de negocio aislada, las pruebas de integración validan la interacción entre repositorios y casos de uso, y las pruebas de UI confirman que los flujos críticos funcionan correctamente desde la perspectiva del usuario. La cobertura de pruebas se enfoca en los módulos de mayor riesgo: el generador de horarios, los parsers de PDF, y la lógica de sincronización offline. La estructura de pruebas es:
+
 \begin{itemize}
   \item Objetivo: Asegurar calidad funcional y de flujo extremo a extremo.
   \item Qué se hizo: Unitarias (tiempo/solapes/parsers/estrategias), integración (repos+usecases), UI/E2E (onboarding hasta generar, aplicar y exportar/importar).
@@ -882,6 +1033,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F10 — Seguridad y privacidad}
+La Fase 10 endurece la seguridad y privacidad de la aplicación mediante la implementación de principios de minimización de datos, control explícito del usuario y operación local por defecto. La aplicación solicita únicamente los permisos estrictamente necesarios (almacenamiento para PDFs, notificaciones opcionales) y los requiere just-in-time cuando el usuario intenta usar la funcionalidad relacionada. El asistente de IA opera completamente en el dispositivo sin enviar datos a servidores externos, y el usuario puede desactivarlo y eliminar el modelo en cualquier momento. Estos controles de privacidad se alinean con las mejores prácticas de desarrollo móvil y las expectativas de usuarios conscientes de la privacidad. Los componentes son:
+
 \begin{itemize}
   \item Objetivo: Datos y permisos mínimos; control explícito del usuario.
   \item Qué se hizo: Sólo nombre y preferencias locales; permisos just-in-time; IA local sin envío de datos.
@@ -891,6 +1044,8 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \end{itemize}
 
 \subsection{F11 — Release y KPIs}
+La Fase 11 prepara la aplicación para su liberación mediante la optimización del empaquetado, la definición de métricas de adopción y uso, y el establecimiento de procesos de despliegue continuo. La optimización incluye la aplicación de ProGuard/R8 para reducir el tamaño del APK, la separación del modelo de IA en un paquete opcional descargable bajo demanda, y la configuración de splits por densidad de pantalla. Las métricas definidas permiten evaluar el éxito de la aplicación: tiempo promedio de consulta de horario (TTS), número de huecos por día en horarios generados, porcentaje de notificaciones entregadas a tiempo, y tasa de adopción del formato JSON para compartir. Los elementos finales son:
+
 \begin{itemize}
   \item Objetivo: Empaque optimizado y medición de adopción/uso.
   \item Qué se hizo: Shrink/optimize; firma y notas; umbrales (APK < 30 MB sin IA; IA ~200–230 MB opcional); KPIs (TTS, gaps/día, on-time, adopción JSON).
@@ -903,8 +1058,10 @@ Disponibilidad y acceso. La aplicación estará publicada en Google Play el 25 d
 \noindent \textsf{minSdk=24}, \textsf{targetSdk=35}, tamaño del APK: 23\,MB y tamaño del modelo IA: 229\,MB en la build de referencia.
 
 % ----------------------------------------------------------------------
-\section{Procedimientos operativos (antes “UC”, ahora “PR”)}
-% (Hint EN: keep “UC” for SRS; in Chapter IV use “PR = Procedure”)
+\section{Procedimientos operativos (antes "UC", ahora "PR")}
+
+Los procedimientos operativos documentan los flujos de trabajo principales de la aplicación desde la perspectiva del sistema, describiendo las secuencias de acciones, validaciones y transformaciones que se ejecutan para completar cada operación crítica.
+
 \subsection{PR-001 — Ingestión y normalización}
 Actor: Sistema. Objetivo: BD local vigente.
 Entry: conectividad o PDF local.
@@ -938,10 +1095,10 @@ $\displaystyle \frac{\#\text{notifs abiertas }\geq X\text{ min antes}}{\#\text{n
 
 % ----------------------------------------------------------------------
 \section{Riesgos y mitigaciones}
+El desarrollo de TecnoTime enfrentó diversos riesgos técnicos y operativos que podrían haber comprometido el éxito del proyecto si no se hubieran identificado y mitigado tempranamente. Los riesgos abarcan desde la disponibilidad y formato de los datos fuente (PDFs oficiales) hasta las limitaciones de rendimiento en dispositivos de gama baja y la complejidad del algoritmo de generación de horarios. Para cada riesgo identificado se definió una estrategia de mitigación específica que reduce su probabilidad de ocurrencia o su impacto en caso de materializarse. La tabla siguiente documenta los riesgos principales, su nivel de criticidad y las medidas implementadas para controlarlos:
+
 \begin{table}[H]
   \centering
-  \caption{Riesgos (P=probabilidad, I=impacto) y acciones. \\ \small{Fuente: Elaboración propia.}}
-  \label{tab:cap4_riesgos}
   \small
   \begin{tabular}{|p{6.6cm}|c|c|p{7.8cm}|}
     \hline
@@ -958,28 +1115,19 @@ $\displaystyle \frac{\#\text{notifs abiertas }\geq X\text{ min antes}}{\#\text{n
     Datos desactualizados & M & M & Freshness check previo a generación; auto-sync condicionado \\
     \hline
   \end{tabular}
+  \caption{Riesgos (P=probabilidad, I=impacto) y acciones.}
+  \label{tab:riesgos}
+  \small{Fuente: Elaboración propia.}
+  \label{tab:cap4_riesgos}
 \end{table}
 
 % ----------------------------------------------------------------------
 \section{Checklist de release y CI/CD}
+El proceso de liberación de TecnoTime requiere la verificación sistemática de múltiples aspectos técnicos y de calidad antes de distribuir la aplicación a usuarios finales. Este checklist garantiza que cada versión liberada cumple con los estándares de funcionalidad, rendimiento, seguridad y experiencia de usuario establecidos en el proyecto. Las verificaciones abarcan desde la ejecución exitosa de la suite de pruebas automatizadas hasta la validación manual de flujos críticos en dispositivos reales, pasando por la revisión de métricas de tamaño de APK y consumo de recursos. El cumplimiento de este checklist reduce significativamente la probabilidad de introducir regresiones o problemas de calidad en producción. Las verificaciones son:
+
 \begin{itemize}
   \item Pruebas verdes; cobertura $\geq 75\%$ en módulos críticos; flujos E2E críticos completos.
   \item Lint/análisis estático sin issues críticos.
   \item Verificar canales de notificación creados y configurados correctamente.
   \item APK $<30$\,MB (sin IA); firma válida; notas de versión; rollout por etapas.
 \end{itemize}
-
-% ----------------------------------------------------------------------
-\section{Lecciones aprendidas y trabajo futuro}
-Lecciones. Poda por hard constraints + MRV/LCV reduce el espacio de búsqueda sin perder calidad; JSON compartible habilita colaboración (WhatsApp-first); prioridad sin conexión reduce ansiedad por caídas; widget aumenta consultas diarias.
-
-Próximos pasos. Filtros por aula/docente, eventos externos (tareas/exámenes), telemetría opt-in para refinar ranking, benchmark por dispositivo, más pruebas de UI en export/import.
-
-% ----------------------------------------------------------------------
-\section{SÍNTESIS}
-Se ejecutó un enfoque iterativo-incremental guiado por evidencia de encuestas y entrevistas, con una arquitectura limpia priorizando la operación con prioridad sin conexión. El generador, basado en backtracking y heurísticas, respeta restricciones duras y preferencias blandas. La interoperabilidad JSON facilita la colaboración, mientras que los recordatorios con IA on-device opcional completan las funcionalidades. La cadena de requisitos a artefactos y pruebas asegura alineación entre problema, implementación y verificación.
-
-% Nota editorial: rutas simplificadas
-% Se omiten URLs de repositorio y rutas completas; se priorizan nombres de clases para legibilidad.
-
-Notas de cierre. Los porcentajes de la encuesta fueron incorporados en el capítulo correspondiente; se fijó \(T_{fresh}{=}48\,h\) y \(W_{nosync}{=}07{:}00\text{–}12{:}30\) (ajustable). La simbología de flechas se mantuvo consistente en tablas y diagramas.

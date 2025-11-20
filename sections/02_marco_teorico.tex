@@ -22,11 +22,9 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
 
 \begin{table}[h!]
     \centering
-    \caption{Comparación entre UI Imperativa y Declarativa}
-    \label{tab:imperative_vs_declarative}
     \begin{tabular}{|p{6cm}|p{6cm}|}
         \hline
-        \textbf{Enfoque Imperativo (XML)} & \textbf{Enfoque Declarativo (Compose)} \\
+        Enfoque Imperativo (XML) & Enfoque Declarativo (Compose) \\
         \hline
         Se manipula manualmente el árbol de vistas (DOM/Views). & La UI se describe como una función del estado. \\
         \hline
@@ -35,19 +33,19 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
         Mucho código repetitivo (boilerplate). & Código más conciso y legible. \\
         \hline
     \end{tabular}
-    \vspace{0.2cm}
-    \\
+    \caption{Comparación entre UI Imperativa y Declarativa}
+    \label{tab:imperative_vs_declarative}
     \small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
 \end{table}
 
-``TecnoTime'' adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
+TecnoTime adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
 
-Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza inteligentemente solo los componentes que dependen de los datos modificados. Esto reduce la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
+Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza inteligentemente solo los componentes que dependen de los datos modificados, reduciendo la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
 
 \subsection{Ciclo de Vida y Gestión de Estado (UDF)}
 La gestión de estado es crítica en aplicaciones reactivas para garantizar la consistencia de los datos mostrados. Se utiliza el patrón Unidirectional Data Flow (UDF), donde el estado fluye en una sola dirección (de la lógica a la UI) y los eventos fluyen en sentido contrario (de la UI a la lógica).
 
-Para implementar esto, se emplean flujos reactivos mediante StateFlow de la librería Kotlin Coroutines. StateFlow es un flujo observable que emite actualizaciones de estado inmutables a la interfaz de usuario, asegurando que la UI siempre refleje el último estado válido producido por la capa de lógica de negocio \cite{reactive_kotlin}.
+Para implementar este patrón, se emplean flujos reactivos mediante StateFlow de la librería Kotlin Coroutines. StateFlow es un flujo observable que emite actualizaciones de estado inmutables a la interfaz de usuario, asegurando que la UI siempre refleje el último estado válido producido por la capa de lógica de negocio \cite{reactive_kotlin}.
 
 \section{Arquitectura de Software}
 \label{sec:arquitectura-software}
@@ -75,11 +73,11 @@ Las capas principales son:
 La Regla de Dependencia establece que las dependencias de código fuente solo pueden apuntar hacia adentro; el dominio no conoce detalles de la base de datos ni de la interfaz de usuario, lo que permite cambiar estas capas externas sin afectar la lógica central.
 
 \subsection{Arquitectura Recomendada para Aplicaciones Android}
-Google propone una arquitectura en capas que combina los principios de Clean Architecture con las particularidades del ecosistema Android. Esta arquitectura promueve la separación de responsabilidades y facilita las pruebas unitarias. Además, mejora la mantenibilidad del código a largo plazo.
+Google propone una arquitectura en capas que combina los principios de Clean Architecture con las particularidades del ecosistema Android. Esta arquitectura promueve la separación de responsabilidades y facilita las pruebas unitarias, mejorando la mantenibilidad del código a largo plazo.
 
-La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura. Muestra cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas.
+La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura, mostrando cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas.
 
-El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores. Los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
+El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores, mientras que los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
 
 \begin{figure}[H]
     \centering
@@ -169,7 +167,7 @@ Se utiliza el patrón MVVM para separar la lógica de presentación de la interf
 \subsection{Inyección de Dependencias (Hilt)}
 La Inyección de Dependencias (DI) es un patrón de diseño donde los objetos reciben sus dependencias desde fuera en lugar de crearlas ellos mismos, promoviendo la Inversión de Control (IoC) \cite{dependency_injection_principles}.
 
-Se utiliza Hilt, la solución estándar de Google para DI en Android basada en Dagger. Hilt reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones (por ejemplo, inyectar repositorios simulados durante las pruebas automatizadas).
+Se utiliza Hilt, la solución estándar de Google para DI en Android basada en Dagger. Hilt reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones. Por ejemplo, permite inyectar repositorios simulados durante las pruebas automatizadas.
 
 \section{Algoritmia de Planificación (Timetabling)}
 \label{sec:algoritmia}
@@ -183,15 +181,16 @@ El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricc
     \item $D$: Un conjunto de dominios (los grupos disponibles para cada asignatura).
     \item $C$: Un conjunto de restricciones que especifican combinaciones permitidas de valores.
 \end{itemize}
-Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (ej. no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (ej. minimizar huecos libres).
+
+Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (por ejemplo, no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (por ejemplo, minimizar huecos libres).
 
 \subsection{Algoritmos de Búsqueda: Backtracking}
-Para resolver el CSP, se implementa el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo ``retrocede'' al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
+Para resolver el CSP, se implementa el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo retrocede al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
 
 \subsection{Heurísticas de Poda y Optimización}
 Dado que el espacio de búsqueda puede crecer exponencialmente, se aplican heurísticas para mejorar la eficiencia:
 \begin{itemize}
-    \item Poda (Pruning): Se descartan tempranamente las ramas que no pueden llevar a una solución válida (ej. si una materia obligatoria se queda sin cupos válidos).
+    \item Poda (Pruning): Se descartan tempranamente las ramas que no pueden llevar a una solución válida. Por ejemplo, si una materia obligatoria se queda sin cupos válidos.
     \item Ordenamiento de Variables (Fail-First): Se intentan asignar primero las variables más restrictivas para detectar conflictos lo antes posible \cite{automated_timetabling}.
     \item Función Objetivo: Las soluciones válidas encontradas se evalúan mediante una función de puntuación ponderada que penaliza los huecos y bonifica la asignación de docentes preferidos.
 \end{itemize}
@@ -206,11 +205,9 @@ A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el 
 
 \begin{table}[h!]
     \centering
-    \caption{Comparación entre Edge AI y Cloud AI}
-    \label{tab:edge_vs_cloud}
     \begin{tabular}{|p{5cm}|p{5cm}|}
         \hline
-        \textbf{Edge AI (Local)} & \textbf{Cloud AI (Nube)} \\
+        Edge AI (Local) & Cloud AI (Nube) \\
         \hline
         Procesamiento en el dispositivo. & Procesamiento en servidores remotos. \\
         \hline
@@ -221,8 +218,8 @@ A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el 
         Funciona sin internet (Offline). & Requiere conexión constante. \\
         \hline
     \end{tabular}
-    \vspace{0.2cm}
-    \\
+    \caption{Comparación entre Edge AI y Cloud AI}
+    \label{tab:edge_vs_cloud}
     \small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
 \end{table}
 
@@ -244,11 +241,11 @@ El patrón Offline-First invierte la dependencia tradicional de las aplicaciones
 
 La Figura \ref{fig:offline_architecture} ilustra la arquitectura típica de una aplicación que sigue este patrón. Como se observa, la base de datos local actúa como la fuente primaria de datos, mientras que las operaciones de red se ejecutan de manera asíncrona en segundo plano.
 
-En la implementación de TecnoTime, la arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local. Esto garantiza una experiencia fluida incluso sin conexión.
+En la implementación de TecnoTime, la arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local, garantizando una experiencia fluida incluso sin conexión.
 
-Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager. Este componente actúa como planificador de tareas diferibles y garantizadas.
+Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager, un componente que actúa como planificador de tareas diferibles y garantizadas.
 
-Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Room notifica automáticamente a la UI mediante flujos reactivos (Flow) para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red. Permite que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
+Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Room notifica automáticamente a la UI mediante flujos reactivos (Flow) para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red, permitiendo que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
 
 \begin{figure}[H]
     \centering

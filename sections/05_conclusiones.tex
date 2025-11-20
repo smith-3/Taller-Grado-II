@@ -6,7 +6,7 @@
 
 \section{Conclusiones}
 
-\noindent Al concluir el desarrollo de TecnoTime, se presentan las siguientes conclusiones derivadas de los desafíos técnicos enfrentados, las soluciones implementadas y los aprendizajes obtenidos durante el proceso, alineadas con el objetivo general (OG) y los objetivos específicos (OE1–OE5).
+\noindent Al concluir el desarrollo de TecnoTime, se presentan las siguientes conclusiones derivadas de los desafíos técnicos enfrentados, las soluciones implementadas y los aprendizajes obtenidos durante el proceso.
 
 \begin{enumerate}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
@@ -31,12 +31,22 @@
 \noindent Los desafíos enfrentados, desde algoritmos inadecuados hasta problemas de scraping y UI confusa, fueron oportunidades de aprendizaje que fortalecieron tanto el producto final como las competencias técnicas adquiridas.
 
 \section{Recomendaciones}
-\begin{itemize}
-  \item Despliegue institucional: formalizar un canal de distribución (intranet/tienda) y firmar versiones; evaluar un endpoint (punto final de una API) oficial para horarios a fin de reemplazar la ingesta desde PDF.
-  \item Mantenimiento de datos: hacer seguimiento de cambios en el formato/ubicación de los PDFs; programar validaciones previas a inscripciones; mantener fallback por PDF local.
-  \item Portabilidad: explorar extensión a iOS y otras facultades; considerar un modo “lectura” web para consulta rápida.
-  \item Métricas opt-in: incorporar telemetría voluntaria para mejorar ranking de generador, detectar fallas de sincronización y medir adopción sin comprometer privacidad.
-  \item Rendimiento y QA: ampliar pruebas de UI para export/import; realizar benchmarks por dispositivo; asegurar TTS \(\leq\) objetivos definidos.
-  \item Seguridad y privacidad: revisar periódicamente permisos, almacenamiento y cifrado de datos sensibles; mantener IA en el dispositivo como activación voluntaria, con control de descarga/borrado.
-  \item Documentación y soporte: mantener actualizados los manuales de instalación y de usuario (ver Anexos A–B) y una guía de preguntas frecuentes.
-\end{itemize}
+
+\noindent A partir de las limitaciones identificadas durante el desarrollo y el feedback de los usuarios, se presentan las siguientes recomendaciones orientadas a extender la funcionalidad de TecnoTime y mejorar su utilidad en el contexto académico real.
+
+\begin{enumerate}
+\setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
+
+\item \textbf{Edición manual de horarios generados.} Los docentes frecuentemente cambian grupos o salones sin que esto se refleje en los PDFs oficiales. Se recomienda implementar funcionalidad de edición que permita al estudiante modificar horarios generados: cambiar grupos, docentes, aulas y horarios de clases específicas. Esto evitaría que el usuario deba regenerar todo el horario por un único cambio y aumentaría la utilidad real de la aplicación ante inconsistencias en datos oficiales.
+
+\item \textbf{Integración de actividades personales y extracurriculares.} TecnoTime actualmente solo gestiona horarios académicos formales, pero los estudiantes tienen otras actividades: deportes, reuniones estudiantiles, trabajos, compromisos personales. Se recomienda permitir agregar eventos personalizados con título, horario, recurrencia y ubicación, visualizándolos junto a clases académicas. Esto transformaría la aplicación en un gestor integral del tiempo del estudiante.
+
+\item \textbf{Sistema de notas y recordatorios académicos.} La aplicación carece de funcionalidad para registrar fechas de exámenes, entregas de trabajos o recordatorios académicos vinculados a materias. Se recomienda implementar un módulo de notas asociadas a cada materia, permitiendo agregar eventos importantes (exámenes, laboratorios, presentaciones) con notificaciones configurables. Esta funcionalidad complementaría la organización temporal con gestión de tareas académicas.
+
+\item \textbf{Extensión a otras facultades y universidades.} La arquitectura actual depende del formato específico de PDFs de la FCyT. Para extender TecnoTime a otras facultades o universidades, se requiere que las instituciones publiquen horarios en formato estructurado similar o proporcionen endpoint oficial. De no ser posible, sería necesario desarrollar parsers específicos por facultad, aumentando significativamente el esfuerzo de mantenimiento. La estandarización de formatos institucionales facilitaría esta expansión.
+
+\item \textbf{Despliegue institucional y mantenimiento de datos.} Se recomienda formalizar un canal de distribución oficial (intranet/tienda institucional), firmar digitalmente versiones, y establecer monitoreo del formato y ubicación de PDFs antes de cada periodo de inscripciones. Un endpoint oficial de la universidad reemplazaría la ingesta desde PDF, mejorando confiabilidad y eliminando la fragilidad del scraping.
+
+\item \textbf{Notificaciones inteligentes y funcionalidades avanzadas.} Como extensión futura, podrían explorarse notificaciones inteligentes basadas en IA para recordatorios contextuales, detección de conflictos en tiempo real, o sugerencias de redistribución de carga académica. Sin embargo, estas mejoras son secundarias frente a las necesidades puntuales de edición manual, actividades personales y sistema de notas identificadas como prioritarias.
+
+\end{enumerate}
