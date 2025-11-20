@@ -4,7 +4,8 @@
 
 % --- Nota de cumplimiento (no teoría, solo aplicación) ---
 % (Hint EN: "Applied chapter, no theory dump.")
-\noindent Enfoque. Este capítulo documenta la aplicación de la metodología en TecnoTime: fases ejecutadas, actividades, decisiones, artefactos (con rutas de repositorio) y evidencias verificables. Se excluyen SRS y Área de Aplicación (capítulos previos).
+
+\noindent Para el desarrollo de este proyecto se utilizó TecnoTime, una aplicación Android diseñada para optimizar la gestión de horarios académicos en la FCyT-UMSS. El desarrollo se estructuró en doce fases iterativas e incrementales, detalladas en el Cuadro~\ref{tab:fases_metodologia}, cada una con objetivos, entregables y criterios de aceptación específicos. Este capítulo documenta la aplicación práctica de la metodología, las decisiones técnicas adoptadas, los artefactos generados y las evidencias verificables de cada fase.
 
 % ---- Opcional: compact helpers (si tus normas lo permiten) ----
 \setlength{\emergencystretch}{2em}
@@ -19,16 +20,19 @@
 \providecommand{\cclass}[2]{\textsf{#2}}
 
 % ----------------------------------------------------------------------
-\section{Metodología adoptada}
-Se aplicó un enfoque iterativo-incremental con Kanban ajustado a un desarrollador único. Cada fase cerró un incremento funcional corto con criterios de aceptación y revisión en tablero digital.
+\section{Metodología adoptada: Kanban iterativo-incremental}
+
+Para el desarrollo de TecnoTime se adoptó la metodología Kanban en su variante iterativo-incremental, ajustada a un desarrollador único. Cada fase constituyó un incremento funcional con criterios de aceptación claros y revisión continua mediante tablero digital. Esta aproximación permitió priorizar funcionalidades según la evidencia de la encuesta aplicada y adaptarse a cambios en los requerimientos durante el desarrollo.
 
 \begin{table}[H]
   \centering\small
   \caption[Aplicación de la metodología por fases]{Aplicación de la metodología por fases. \\ \small{Fuente: Elaboración propia.}}
+  \label{tab:fases_metodologia}
   \begin{tabularx}{\linewidth}{@{}p{1.2cm}p{3.9cm}>{\RaggedRight\arraybackslash}X@{}}
     \hline
     Fase & Propósito principal & Entregables y evidencias \\
     \hline
+    F0 & Identificar necesidades reales mediante estudio de campo & Instrumento de recolección (Google Forms), muestra de 126 estudiantes, análisis cuantitativo con hallazgos clave (94\% Android, 80\% coordina por WhatsApp, 88\% solicita actualización automática) y derivación de requerimientos funcionales trazables. \\
     F1 & Incorporar horarios oficiales al sistema & Canal de descarga controlada de PDF, normalización a esquema Room y verificación de consistencia por carrera. \\
     F2 & Definir el modelo de dominio & Entidades, reglas y agregados consolidados en la capa \texttt{domain}, acompañados de diagramas de referencia. \\
     F3 & Generar horarios viables & Servicio de generación configurable, heurísticas MRV/LCV y pantallas para configurar y aplicar resultados. \\
@@ -59,7 +63,7 @@ La encuesta aplicada a 125 estudiantes orientó las prioridades del tablero:
 \end{itemize}
 
 \subsection{Decisiones técnicas derivadas}
-Los factores anteriores guiaron la priorización de las fases F4--F8 y condicionaron los artefactos liberados por incremento. Se reforzó el almacenamiento local y la sincronización diferida, se consolidó el contrato JSON con asistentes de importación y envío, se diseñaron recordatorios parametrizables y se establecieron exportaciones multiplataforma. Los artefactos y evidencias se encuentran documentados en \cite{tecnotime_repo}.
+Los factores anteriores guiaron la priorización de las fases (ver Cuadro~\ref{tab:fases_metodologia}: F4--F8) y condicionaron los artefactos liberados por incremento. Se reforzó el almacenamiento local y la sincronización diferida, se consolidó el contrato JSON con asistentes de importación y envío, se diseñaron recordatorios parametrizables y se establecieron exportaciones multiplataforma. Los artefactos y evidencias se encuentran documentados en \cite{tecnotime_repo}.
 
 \subsection{Arquitectura de la solución}
 La solución se apoya en una aplicación Android autosuficiente: la interacción sucede en la interfaz offline (Jetpack Compose), el motor de dominio coordina reglas y recordatorios, la ingesta procesa PDFs y la persistencia local resguarda horarios, configuraciones y políticas de frescura. El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} resume esta arquitectura offline-first.
@@ -136,7 +140,7 @@ El 60\% de los estudiantes califica como alta su frustración (niveles 1-2-3 en 
 
 \subsubsection{Principales demandas identificadas}
 
-Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases F4, F5, F7 y F8 del desarrollo.
+Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases correspondientes del desarrollo (ver Cuadro~\ref{tab:fases_metodologia}: F4, F5, F7 y F8).
 
 \begin{figure}[H]
   \centering

@@ -4,23 +4,31 @@
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 
-\noindent A continuación se presentan las conclusiones principales, alineadas explícitamente con el objetivo general (OG) y los objetivos específicos (OE1–OE5) planteados en el Capítulo 1.
+\section{Conclusiones}
+
+\noindent Al concluir el desarrollo de TecnoTime, se presentan las siguientes conclusiones derivadas de los desafíos técnicos enfrentados, las soluciones implementadas y los aprendizajes obtenidos durante el proceso, alineadas con el objetivo general (OG) y los objetivos específicos (OE1–OE5).
 
 \begin{enumerate}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item (OG) Se cumplió el objetivo general: TecnoTime permite organizar y visualizar horarios académicos de forma clara, accesible y personalizable para estudiantes de la FCyT-UMSS, reduciendo pasos y errores frente al flujo web vigente (p.\,ej., Cappuchino \cite{cappuccino_umss}) y manteniendo utilidad más allá del periodo de inscripción.
+\item \textbf{Desarrollo de aplicación móvil para organización de horarios académicos.} El mayor desafío fue adaptar el algoritmo de generación a preferencias heterogéneas de estudiantes. Inicialmente se consideró grafos para ``el mejor'' horario, pero usuarios mostraron preferencias variadas (días libres vs.\,compactos vs.\,docentes). Se adoptó estrategia multicriterio generando múltiples opciones configurables. La validación iterativa con usuarios evitó soluciones técnicamente correctas pero poco útiles.
 
-\item (OE1) Se cumplió el objetivo de organizar exclusivamente la carga académica mediante selección guiada de materias y grupos, evitando eventos personales. Las vistas semanal/diaria y la vista previa por grupo ofrecen lectura rápida y consistente.
+\item \textbf{Organización de carga académica mediante selección guiada.} En fases finales surgió problema crítico: materias con componente teórico y laboratorio (p.\,ej., Física I) no se distinguían en el sistema web de la facultad. Se extendió el modelo de datos tratándolos como materias independientes con vinculación lógica, modificando el parser de PDFs. La arquitectura limpia facilitó esta extensión tardía sin comprometer componentes existentes.
 
-\item (OE2) Se cumplió el objetivo de ajuste manual y persistencia: el usuario puede seleccionar/cambiar grupos, conservar preferencias y consultar un widget (componente visual que se muestra en la pantalla principal del dispositivo); la memoria de contexto reduce repetición de carrera–nivel–materia.
+\item \textbf{Ajuste manual de horarios y persistencia de preferencias.} El scraping de PDFs generaba errores por símbolos especiales y falta de datos de docentes, rompiendo integridad referencial. Se implementó formateo riguroso con validación y contingencias inteligentes reutilizando docentes de semestres anteriores. Separar teórico/laboratorio requirió migraciones complejas tardías. La limpieza de datos resultó tan crítica como el diseño del esquema.
 
-\item (OE3) Se cumplió el objetivo de facilitar descarga e intercambio: exportación a imagen/PDF/Excel y archivo estructurado en JSON (formato de intercambio de datos basado en texto) habilitan coordinación por mensajería con menor riesgo de transcripción y mejor trazabilidad.
+\item \textbf{Facilitar descarga e intercambio de horarios.} La generación de imagen y PDF renderiza HTML del horario en componente web interno; Excel se genera directamente sin renderizado visual. El desafío fue alto consumo de memoria al crear imágenes grandes (~28 MB), causando errores en dispositivos de gama baja. Se solucionó liberando memoria tras comprimir, calculando dimensiones dinámicamente y ejecutando en hilo principal con control de cancelación.
 
-\item (OE4) Se cumplió el objetivo de sugerir horarios optimizados: la generación por defecto sin choques, con evaluación multicriterio (huecos, docentes favoritos y días activos), produce soluciones de calidad en tiempos compatibles con ejecución en el dispositivo.
+\item \textbf{Generación de horarios optimizados.} El enfoque inicial con grafos mostró limitaciones: complejidad elevada, única solución generada y falta de escalabilidad a múltiples criterios. Se implementó backtracking heurístico con poda inteligente y evaluación multicriterio, generando top-N soluciones. Heurísticas eficientes con criterios claros superaron el enfoque teóricamente óptimo en escenarios reales.
 
-\item (OE5) Se cumplió el objetivo de optimizar la experiencia móvil: onboarding progresivo, preferencias de presentación (formato 24/12\,h, visibilidad por día) y componente de acceso rápido favorecen la consulta diaria y la adopción.
+\item \textbf{Optimización de experiencia móvil.} Las primeras versiones generaban confusión sobre funcionalidades y flujos. El feedback reveló mal entendimiento del usuario. Se implementó onboarding interactivo, rediseño de pantallas basado en testing con usuarios reales, y tooltips contextuales en puntos críticos. La interfaz intuitiva requiere iteración con usuarios reales, no diseño único basado en suposiciones del desarrollador.
+
 \end{enumerate}
+
+\vspace{0.5em}
+\noindent El desarrollo de TecnoTime demostró que construir software útil requiere validación continua con usuarios, resiliencia ante datos imperfectos, arquitectura flexible que permita incorporar cambios significativos, e iteración constante basada en feedback real. Las suposiciones iniciales sobre preferencias de horarios y flujos de UI fueron desafiadas por la realidad.
+
+\noindent Los desafíos enfrentados, desde algoritmos inadecuados hasta problemas de scraping y UI confusa, fueron oportunidades de aprendizaje que fortalecieron tanto el producto final como las competencias técnicas adquiridas.
 
 \section{Recomendaciones}
 \begin{itemize}
