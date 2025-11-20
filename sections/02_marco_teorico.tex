@@ -11,7 +11,9 @@ El desarrollo de aplicaciones móviles ha transitado desde enfoques imperativos 
 \subsection{Arquitectura de Plataforma Android}
 Android es un sistema operativo basado en el núcleo Linux, diseñado para dispositivos con pantalla táctil. Su arquitectura se divide en capas: el kernel de Linux, la capa de abstracción de hardware (HAL), el tiempo de ejecución de Android (ART) y el marco de trabajo de aplicaciones (Application Framework) \cite{android_arch}.
 
-El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema y un rendimiento superior en comparación con soluciones híbridas, especialmente en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}. En este proyecto se utiliza Kotlin, un lenguaje moderno y estáticamente tipado que interoperan completamente con Java, aprovechando características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
+El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema. Este enfoque ofrece un rendimiento superior en comparación con soluciones híbridas, especialmente en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}.
+
+En este proyecto se utiliza Kotlin, un lenguaje moderno y estáticamente tipado que interopera completamente con Java. Se aprovechan características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
 
 \subsection{Paradigma de Interfaz Declarativa (Jetpack Compose)}
 Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). La tendencia actual en la industria, respaldada por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}, es el uso de marcos de trabajo declarativos.
@@ -38,7 +40,9 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
     \small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
 \end{table}
 
-``TecnoTime'' adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación. Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición, actualizando inteligentemente solo los componentes que dependen de los datos modificados, lo que reduce la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
+``TecnoTime'' adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
+
+Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza inteligentemente solo los componentes que dependen de los datos modificados. Esto reduce la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
 
 \subsection{Ciclo de Vida y Gestión de Estado (UDF)}
 La gestión de estado es crítica en aplicaciones reactivas para garantizar la consistencia de los datos mostrados. Se utiliza el patrón Unidirectional Data Flow (UDF), donde el estado fluye en una sola dirección (de la lógica a la UI) y los eventos fluyen en sentido contrario (de la UI a la lógica).
@@ -55,27 +59,12 @@ El proyecto implementa Clean Architecture, propuesta por Robert C. Martin \cite{
 
 \begin{figure}[h!]
     \centering
-    \begin{tikzpicture}
-        \draw[fill=white] (0,0) circle (3.5cm);
-        \node at (0, 2.8) {Frameworks \& Drivers (UI, DB, Devices)};
-        
-        \draw[fill=gray!10] (0,0) circle (2.5cm);
-        \node at (0, 1.8) {Interface Adapters (Presenters, Gateways)};
-        
-        \draw[fill=gray!30] (0,0) circle (1.5cm);
-        \node at (0, 0.8) {Application Business Rules (Use Cases)};
-        
-        \draw[fill=gray!50] (0,0) circle (0.5cm);
-        \node at (0, 0) {Entities};
-        
-        % Dependency Arrow
-        \draw[->, thick] (-3.8, 0) -- (-0.2, 0);
-        \node[anchor=south] at (-2, 0) {Dependency Rule};
-    \end{tikzpicture}
+    \includegraphics[width=0.75\textwidth]{images/CleanArchitecture.jpg}
     \caption{Diagrama conceptual de Clean Architecture}
     \label{fig:clean_architecture}
-    \small{Fuente: Basado en Martin (2017) \cite{martin2017-cleanarch}}
+    \small{Fuente: Martin (2012) \cite{martin2012cleanarch_blog}}
 \end{figure}
+
 
 Las capas principales son:
 \begin{itemize}
@@ -85,24 +74,91 @@ Las capas principales son:
 \end{itemize}
 La Regla de Dependencia establece que las dependencias de código fuente solo pueden apuntar hacia adentro; el dominio no conoce detalles de la base de datos ni de la interfaz de usuario, lo que permite cambiar estas capas externas sin afectar la lógica central.
 
+\subsection{Arquitectura Recomendada para Aplicaciones Android}
+Google propone una arquitectura en capas que combina los principios de Clean Architecture con las particularidades del ecosistema Android. Esta arquitectura promueve la separación de responsabilidades y facilita las pruebas unitarias. Además, mejora la mantenibilidad del código a largo plazo.
+
+La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura. Muestra cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas.
+
+El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores. Los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/android_app_architecture.png}
+    \caption{Arquitectura recomendada para aplicaciones Android}
+    \label{fig:android_architecture}
+    \small{Fuente: Android Developers \cite{android_guide_architecture}}
+\end{figure}
+
+Esta arquitectura se compone de tres capas principales, cada una con responsabilidades específicas:
+
+\begin{itemize}
+    \item Capa de UI (User Interface): Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
+\end{itemize}
+
+Los componentes clave de esta capa incluyen:
+\begin{itemize}
+    \item Composables: Funciones que describen la UI como una función del estado.
+    \item ViewModels: Gestionan el estado de la UI y sobreviven a cambios de configuración.
+    \item UI State: Representación inmutable del estado actual de la pantalla.
+\end{itemize}
+
+La Figura \ref{fig:android_ui_layer} ilustra cómo estos componentes colaboran para mantener la UI sincronizada con el estado de la aplicación.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/android_ui_layer.png}
+    \caption{Componentes de la capa de UI en Android}
+    \label{fig:android_ui_layer}
+    \small{Fuente: Android Developers \cite{android_guide_architecture}}
+\end{figure}
+
+\begin{itemize}
+    \item Capa de Dominio: Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
+\end{itemize}
+
+Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, "Generar Horario" o "Exportar a PDF") y orquesta la interacción entre múltiples repositorios si es necesario.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{images/android_domain_layer.png}
+    \caption{Capa de dominio y casos de uso}
+    \label{fig:android_domain_layer}
+    \small{Fuente: Android Developers \cite{android_guide_architecture}}
+\end{figure}
+
+Como se observa en la Figura \ref{fig:android_domain_layer}, los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación.
+
+\begin{itemize}
+    \item Capa de Datos: Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
+\end{itemize}
+
+Los repositorios implementan la lógica de sincronización, caché y transformación de datos. En aplicaciones offline-first como TecnoTime, los repositorios priorizan la base de datos local y sincronizan con fuentes remotas en segundo plano.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/android_data_layer.png}
+    \caption{Capa de datos y repositorios en Android}
+    \label{fig:android_data_layer}
+    \small{Fuente: Android Developers \cite{android_guide_architecture}}
+\end{figure}
+
+La Figura \ref{fig:android_data_layer} muestra cómo los repositorios abstraen las fuentes de datos subyacentes, permitiendo cambiar la implementación (por ejemplo, de SQLite a Room) sin afectar las capas superiores.
+
+
+
 \subsection{Patrón Model-View-ViewModel (MVVM)}
 Se utiliza el patrón MVVM para separar la lógica de presentación de la interfaz de usuario. La Figura \ref{fig:mvvm_pattern} muestra la interacción entre sus componentes.
 
 \begin{figure}[h!]
     \centering
-    \begin{tikzpicture}[node distance=2cm, auto]
-        \node (view) [draw, rectangle, minimum width=2cm, minimum height=1cm] {View (UI)};
-        \node (viewmodel) [draw, rectangle, right of=view, node distance=4cm, minimum width=2.5cm, minimum height=1cm] {ViewModel};
-        \node (model) [draw, rectangle, right of=viewmodel, node distance=4cm, minimum width=2cm, minimum height=1cm] {Model};
-
-        \draw[->] (view) -- node {User Actions} (viewmodel);
-        \draw[->] (viewmodel) -- node {State Updates} (view);
-        \draw[<->] (viewmodel) -- node {Data Requests} (model);
-    \end{tikzpicture}
-    \caption{Patrón Model-View-ViewModel (MVVM)}
+    \includegraphics[width=0.75\textwidth]{images/viewmodel-lifecycle.png}
+    \caption{Ciclo de vida del ViewModel en Android}
     \label{fig:mvvm_pattern}
-    \small{Fuente: Basado en Google Developers \cite{android_arch}}
+    \small{Fuente: Android Developers \cite{android_viewmodel_guide}}
 \end{figure}
+
+
+
 
 \begin{itemize}
     \item Model: Representa los datos y la lógica de negocio (Capa de Dominio).
@@ -184,12 +240,21 @@ La aplicación sigue una filosofía Offline-First, garantizando que la funcional
 Para la persistencia local se utiliza SQLite, un motor de base de datos relacional ligero embebido en Android. El acceso se gestiona a través de la librería Room, que proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
 
 \subsection{Estrategias de Sincronización y Offline-First}
-\begin{figure}[h!]
+El patrón Offline-First invierte la dependencia tradicional de las aplicaciones móviles respecto a la conectividad de red. En lugar de asumir que la red siempre está disponible, este enfoque trata la conectividad como un recurso opcional y potencialmente intermitente.
+
+La Figura \ref{fig:offline_architecture} ilustra la arquitectura típica de una aplicación que sigue este patrón. Como se observa, la base de datos local actúa como la fuente primaria de datos, mientras que las operaciones de red se ejecutan de manera asíncrona en segundo plano.
+
+En la implementación de TecnoTime, la arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local. Esto garantiza una experiencia fluida incluso sin conexión.
+
+Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager. Este componente actúa como planificador de tareas diferibles y garantizadas.
+
+Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Room notifica automáticamente a la UI mediante flujos reactivos (Flow) para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red. Permite que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/offline_architecture_couchbase.png}
+    \includegraphics[width=0.65\textwidth]{images/offline_architecture_couchbase.png}
     \caption{Arquitectura típica de una aplicación Offline-First}
     \label{fig:offline_architecture}
     \small{Fuente: Couchbase Inc. (2023) \cite{couchbase_offlinefirst}}
 \end{figure}
 
-La arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local. Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager, un planificador de tareas diferibles y garantizadas. Cuando la sincronización completa, se actualiza la base de datos local, y Room notifica automáticamente a la UI para que refleje los cambios, desacoplando así la experiencia de usuario de la latencia de la red.

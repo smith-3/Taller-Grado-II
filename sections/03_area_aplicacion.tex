@@ -1,170 +1,69 @@
 \chapter{MARCO DE APLICACIÓN}
 \label{chap:area_aplicacion}
 
-Este capítulo describe el contexto real de uso de la solución: el dominio institucional, la población objetivo, los procesos actuales (AS-IS) y los procesos propuestos (TO-BE), así como la información y restricciones propias del área. No se detalla la metodología ni el diseño técnico; el propósito es situar el problema en su entorno operativo y establecer límites y criterios de evaluación vinculados al uso real.
+\section{Contexto institucional de la Facultad de Ciencias y Tecnología}
 
-\section{Dominio y contexto institucional}
-La Facultad de Ciencias y Tecnología (FCyT) de la UMSS publica semestralmente los horarios oficiales en formato PDF, organizados por carrera y periodo. Durante la inscripción, el uso de herramientas web como Cappuchino es intensivo; fuera de esa etapa, los estudiantes siguen necesitando: (i) consultar horarios personales con rapidez, (ii) ajustar materias ante cambios y (iii) coordinar con pares mediante mensajería.
+La Facultad de Ciencias y Tecnología (FCyT) de la Universidad Mayor de San Simón (UMSS) es una unidad académica que alberga múltiples carreras de ingeniería, entre las que destacan Ingeniería Informática, Ingeniería de Sistemas, Ingeniería Civil, Ingeniería Electromecánica, Ingeniería Electrónica, Ingeniería Química, Ingeniería de Alimentos y Licenciatura en Física \cite{fcyt_umss}. Cada carrera organiza su oferta académica en niveles o semestres, con horarios diferenciados por turno (mañana, tarde, noche) y modalidad (presencial, semipresencial).
 
-\section{Población objetivo y actores}
-Actor principal: estudiantes de la FCyT de distintos semestres y turnos que construyen, consultan y ajustan sus horarios.
-Actores secundarios: personal administrativo que publica/actualiza los horarios y docentes/tutores cuya asignación incide en las preferencias estudiantiles.
+La publicación de horarios académicos se realiza semestralmente a través del portal oficial de la facultad \cite{horarios_fcyt}, donde se distribuyen archivos en formato PDF organizados por carrera y periodo lectivo. Este proceso centralizado permite a estudiantes, docentes y personal administrativo acceder a la información de asignación de aulas, grupos y horarios de clases. Sin embargo, la naturaleza estática del formato PDF y la dispersión de la información entre múltiples documentos generan dificultades operativas que afectan principalmente a la población estudiantil.
 
-\subsection{Evidencia cuantitativa (encuesta, n=126)}
-Muestreo y aplicación: se utilizó una muestra por conveniencia de 126 estudiantes de la FCyT. El instrumento se aplicó en línea mediante Google Forms y la participación fue voluntaria. El instrumento completo y los resultados tabulados se presentan en anexos (ver \ref{ann:instrumento} y \ref{ann:historias}).
+\section{Problemática en la gestión de horarios universitarios}
 
-La encuesta confirma:
-\begin{itemize}
-  \item Dispositivo: Android domina (94\%); laptop apenas 26\%.
-  \item Uso de Cappuchino: 48\% solo en inscripción, 44\% varias veces por semestre.
-  \item Coordinación social: 80\% valida información por WhatsApp.
-  \item Frustración por repetir pasos: 60\% califica 1-2-3 (alta).
-  \item Principales demandas: actualización automática (88\%), modo sin conexión (78\%), recordatorios (56\%).
-\end{itemize}
+El sistema actual de publicación de horarios presenta limitaciones significativas que dificultan la consulta, actualización y coordinación de información académica. Los horarios oficiales se distribuyen exclusivamente en formato PDF, lo que impide la búsqueda dinámica, la personalización y la integración con herramientas digitales de uso cotidiano. Cuando se producen cambios en asignaciones de aulas, docentes o grupos, la actualización de los documentos no siempre es inmediata ni se comunica de manera efectiva a los estudiantes afectados.
 
-\begin{figure}[H]
-  \centering
-  \begin{minipage}{0.4\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/diagrams/encuesta_dispositivo.png}
-    \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
-    \label{fig:encuesta_dispositivo}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.4\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
-\caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
-    \label{fig:encuesta_uso_capuchino}
-  \end{minipage}
-\end{figure}
+Según encuesta aplicada a 126 estudiantes de la FCyT \cite{encuesta_fcyt_2025}, el 94\% utiliza dispositivos Android como plataforma principal para consultas académicas, mientras que solo el 26\% dispone de computadora portátil de uso regular. Esta preferencia por dispositivos móviles contrasta con la ausencia de aplicaciones nativas que faciliten la gestión personalizada de horarios. Adicionalmente, el 80\% de los encuestados reporta que valida y coordina cambios de horario mediante grupos de WhatsApp, evidenciando la dispersión de información entre canales formales (PDFs oficiales) e informales (mensajería instantánea).
 
-\begin{figure}[H]
-  \centering
-  \begin{minipage}{0.4\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/diagrams/encuesta_whatsapp.png}
-    \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126). \\ \small{Fuente: Elaboración propia.}}
-    \label{fig:encuesta_whatsapp}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.4\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/diagrams/encuesta_frustracion.png}
-    \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126). \\ \small{Fuente: Elaboración propia.}}
-    \label{fig:encuesta_frustracion}
-  \end{minipage}
-\end{figure}
+La falta de herramientas móviles adecuadas obliga a los estudiantes a repetir procesos de consulta y validación cada vez que requieren verificar su horario, lo que genera frustración y pérdida de tiempo. El 60\% de los encuestados califica como alta su frustración por tener que repetir pasos para acceder a información que debería estar disponible de manera inmediata y personalizada \cite{encuesta_fcyt_2025}.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
-  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126). \\ \small{Fuente: Elaboración propia.}}
-  \label{fig:encuesta_demandas}
-\end{figure}
+\section{Actores involucrados y afectación}
 
-\section{Percepciones del estado actual (AS-IS)}
-Los estudiantes valoran la rapidez de Cappuchino para organizar horarios y detectar choques, pero reportan problemas recurrentes: actualización tardía de datos, interfaz obsoleta, pérdida del progreso, lentitud en inscripciones y baja personalización.  
-Figura~\ref{fig:asis_proceso} muestra el flujo actual y las limitaciones detectadas.
+La problemática identificada afecta a diferentes actores del ecosistema académico de la FCyT, cada uno con necesidades y roles específicos:
 
-Historia de uso actual (AS-IS).
-De manera típica, el estudiante: (1) abre Cappuchino y genera un horario base para su carrera/semestre; (2) consulta PDFs oficiales de horarios por materia y grupo para validar o actualizar; (3) contrasta en canales de WhatsApp cambios de última hora (docentes, aulas, grupos cerrados); (4) reescribe o ajusta a mano su selección para evitar choques; (5) repite la verificación ante cada ajuste o noticia; y (6) comparte capturas/archivos con compañeros para coordinar. En periodos de alta demanda, el ciclo se repite varias veces al día.
+Los estudiantes constituyen el actor principal afectado. Requieren consultar sus horarios de manera frecuente, especialmente durante el periodo de inscripción y las primeras semanas del semestre. Necesitan detectar conflictos de horario, coordinar con compañeros para formar grupos de estudio y recibir notificaciones ante cambios de última hora. La ausencia de una herramienta móvil eficiente los obliga a depender de PDFs estáticos y a validar información mediante canales informales, incrementando el riesgo de desinformación.
 
-Puntos de dolor reportados.
-\begin{itemize}
-  \item Repetición de pasos y pérdida de progreso entre sesiones o dispositivos.
-  \item Dispersión de la información entre PDF, web y mensajería; riesgo de desactualización.
-  \item Falta de funcionamiento sin conexión en momentos críticos (aula, pasillos, movilidad).
-  \item Dificultad para consolidar un horario personal sin choques al cambiar un único grupo.
-  \item Fricción para compartir e importar horarios en un formato estructurado.
-\end{itemize}
+Los docentes, como segundo actor relevante, se ven afectados indirectamente cuando los estudiantes desconocen cambios de aula o ajustes en la asignación de grupos. La falta de un canal de comunicación directo y confiable puede generar confusión al inicio de clases y afectar la asistencia estudiantil.
+
+El personal administrativo, responsable de la publicación y actualización de horarios, enfrenta la limitación de que el formato PDF no permite actualizaciones dinámicas ni notificaciones automáticas. Cualquier modificación requiere regenerar el documento completo y esperar a que los estudiantes lo descarguen nuevamente, sin garantía de que la información llegue oportunamente a los afectados.
+
+\section{Situación actual: herramientas y limitaciones (AS-IS)}
+
+Actualmente, los estudiantes de la FCyT utilizan principalmente dos herramientas para gestionar sus horarios académicos: el sistema web Cappuchino \cite{cappuccino_umss} y los archivos PDF oficiales publicados por la facultad \cite{horarios_fcyt}.
+
+Cappuchino es un sistema desarrollado por la Sociedad Científica de Estudiantes de Sistemas e Informática (SCESI) que permite a los estudiantes organizar horarios, detectar choques entre materias y generar combinaciones viables durante el periodo de inscripción. Si bien esta herramienta es valorada por su rapidez y capacidad de detección de conflictos, presenta limitaciones importantes: solo funciona de manera óptima durante el periodo de inscripción, no ofrece modo sin conexión, no permite personalización de horarios una vez finalizada la inscripción y carece de funcionalidades de recordatorios o sincronización con calendarios personales. Según la encuesta aplicada \cite{encuesta_fcyt_2025}, el 48\% de los estudiantes utiliza Cappuchino únicamente durante la inscripción, mientras que el 44\% lo consulta varias veces por semestre.
+
+El proceso típico que sigue un estudiante para gestionar su horario incluye los siguientes pasos: abrir Cappuchino o descargar el PDF oficial, generar o consultar un horario base para su carrera y semestre, contrastar con PDFs oficiales actualizados para validar cambios, verificar en grupos de WhatsApp si hay modificaciones de última hora en docentes, aulas o grupos, ajustar manualmente su selección para evitar choques y compartir capturas de pantalla o archivos con compañeros para coordinar. Este ciclo se repite múltiples veces durante el semestre, especialmente ante cambios o ajustes académicos.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.35\textwidth]{images/diagrams/area_asis_proceso.png}
-  \caption[Proceso actual (AS-IS): navegación y patrones de uso]{Proceso actual (AS-IS): navegación y patrones de uso. \\ \small{Fuente: Elaboración propia.}}
+  \caption[Proceso actual (AS-IS): navegación y patrones de uso]{Proceso actual (AS-IS): navegación y patrones de uso con Cappuchino. \\ \small{Fuente: \cite{cappuccino_umss}.}}
   \label{fig:asis_proceso}
 \end{figure}
 
-\section{Demanda de solución y procesos propuestos (TO-BE)}
-Visión general: los resultados evidencian la necesidad de una aplicación móvil que reduzca pasos repetitivos, funcione sin conexión y facilite la coordinación social.
-Figura~\ref{fig:area_tobe} resume los flujos de uso esperados.
+Los principales puntos de dolor reportados por los estudiantes incluyen: repetición de pasos y pérdida de progreso entre sesiones o dispositivos, dispersión de información entre PDF, web y mensajería con riesgo de desactualización, falta de funcionamiento sin conexión en momentos críticos como aulas o movilidad, dificultad para consolidar un horario personal sin choques al cambiar un único grupo y fricción para compartir e importar horarios en un formato estructurado.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.35\textwidth]{images/diagrams/area_tobe_proceso.png}
-  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso. \\ \small{Fuente: Elaboración propia.}}
-  \label{fig:area_tobe}
-\end{figure}
+\section{Necesidad de una solución complementaria}
 
-Características clave de uso:
-\begin{itemize}
-  \item Generación de horarios sin choques, priorizando materias obligatorias y docentes favoritos.
-  \item Memoria de contexto para evitar repetir carrera/nivel/materias.
-  \item Intercambio estructurado en JSON (formato de intercambio de datos basado en texto) compatible con mensajería.
-  \item Consulta diaria y recordatorios antes de clase.
-\end{itemize}
+La brecha identificada entre las necesidades de los estudiantes y las capacidades de las herramientas actuales justifica el desarrollo de una aplicación móvil complementaria que aborde las limitaciones descritas. Los datos de la encuesta \cite{encuesta_fcyt_2025} evidencian demandas concretas: el 88\% de los encuestados solicita actualización automática de horarios, el 78\% valora el modo sin conexión, el 56\% requiere recordatorios antes de clase y el 51\% desea funcionalidades de compartir horarios de manera estructurada.
 
-\section{Información y reglas del área}
-Entidades: carrera, nivel, materia, grupo, horario, docente, aula y selección del estudiante.
-Reglas principales:
-\begin{itemize}
-  \item Sin solapamientos salvo habilitación explícita.
-  \item Unicidad de códigos y consistencia jerárquica.
-  \item Tolerancia a datos incompletos (aula/docente pendientes).
-  \item Actualización por sincronización con la fuente oficial.
-\end{itemize}
+La solución propuesta no pretende reemplazar los sistemas oficiales de inscripción ni modificar los procesos administrativos de la facultad. Su objetivo es complementar la oferta existente proporcionando una herramienta centrada en el estudiante que facilite la consulta rápida, la personalización, el uso sin conexión y la coordinación social mediante formatos de intercambio estructurados.
 
-\section{Datos y flujo de información}
-Los horarios en PDF son la fuente oficial. Se descargan, extraen y almacenan localmente; se verifican y actualizan de forma controlada. El intercambio social se realiza mediante archivos estructurados (JSON) para compartir horarios.  
-Véase Figura~\ref{fig:area_flujo_datos}.
+Los beneficios esperados incluyen: reducción del tiempo invertido en consultas repetitivas de horario, disminución de choques no detectados mediante generación automática de combinaciones viables, mejora en la coordinación entre estudiantes mediante intercambio de horarios en formato estructurado, continuidad de uso fuera del periodo de inscripción con recordatorios y consulta diaria y mejor organización académica personal mediante integración con herramientas de productividad.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.35\textwidth]{images/diagrams/area_flujo_datos.png}
-  \caption[Flujo de información en el área de aplicación]{Flujo de información en el área de aplicación. \\ \small{Fuente: Elaboración propia.}}
-  \label{fig:area_flujo_datos}
-\end{figure}
+\section{Visión general de la solución esperada}
 
-\section{Alcances, límites y riesgos}
-En este apartado se precisan los alcances y límites desde el punto de vista del área de aplicación, complementando los alcances generales presentados en el Capítulo~1.
-Alcances: estudiantes FCyT; integración con horarios oficiales; uso sin conexión; recordatorios y consulta rápida.
-Límites: no reemplaza inscripción oficial ni modela capacidad de aulas; foco inicial en Android.
-Riesgos y mitigación:
-\begin{itemize}
-  \item Cambios en formato o ubicación de PDFs: proceso flexible y sincronización manual.
-  \item Retrasos oficiales: mantener caché y mostrar fecha de actualización.
-  \item Conectividad limitada: operación offline-first.
-  \item Saturación de fuente: reintentos espaciados.
-\end{itemize}
+La aplicación móvil TecnoTime se concibe como una herramienta complementaria que permita a los estudiantes de la FCyT gestionar sus horarios académicos de manera eficiente, personalizada y sin dependencia constante de conectividad. Las funcionalidades principales esperadas incluyen: generación automática de horarios sin choques, priorizando materias obligatorias y docentes favoritos; consulta rápida del horario personal con vista diaria y semanal; funcionamiento sin conexión mediante almacenamiento local de datos; recordatorios configurables antes de cada clase; intercambio de horarios con compañeros mediante formato estructurado compatible con mensajería; y actualización sincronizada con la fuente oficial de la facultad.
 
-\section{Derivación de requerimientos desde la encuesta}
-\begin{table}[H]
-  \centering
-  \caption[Trazabilidad de hallazgos a requerimientos del área]{Trazabilidad de hallazgos a requerimientos del área. \\ \small{Fuente: Elaboración propia (encuesta n=126).}}
-  \label{tab:derivacion_req_area}
-  \small
-  \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
-    \hline
-    Hallazgo & Requerimiento derivado & Criterio de aceptación \\
-    \hline
-    94\% usa Android & Priorizar Android y vista móvil & Flujo usable sin laptop \\
-    \hline
-    60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
-    \hline
-    80\% coordina por WhatsApp & Intercambio estructurado en JSON (formato de intercambio de datos basado en texto) & Compartir/abrir desde mensajería \\
-    \hline
-    78\% valora modo sin conexión & Operación offline-first (arquitectura que prioriza el funcionamiento sin conexión) & Consulta sin red \\
-    \hline
-    57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
-    \hline
-    88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
-    \hline
-  \end{tabular}
-\end{table}
+La solución propuesta representa una mejora significativa sobre la situación actual al centralizar la información dispersa, eliminar pasos repetitivos, habilitar el uso móvil nativo y facilitar la coordinación social. El impacto esperado incluye una adopción progresiva por parte de la comunidad estudiantil de la FCyT, especialmente entre usuarios de dispositivos Android, y una reducción medible en el tiempo dedicado a tareas de consulta y validación de horarios.
 
-\section{Criterios de éxito e impacto esperado}
-Reducción de pasos para construir horarios sin choques; continuidad de uso fuera del periodo de inscripción; disminución de choques no detectados; incremento del intercambio estructurado; y mejor organización académica personal.
+\section{Alcances y límites del área de aplicación}
+
+El alcance de la aplicación se circunscribe a estudiantes de la Facultad de Ciencias y Tecnología de la UMSS. La solución se enfoca en la gestión personal de horarios académicos, integrándose con los horarios oficiales publicados por la facultad mediante descarga y procesamiento de archivos PDF. La aplicación prioriza el funcionamiento sin conexión, permitiendo consultas y recordatorios incluso sin acceso a internet, y habilita el intercambio de horarios entre estudiantes mediante formatos estructurados.
+
+Los límites de la aplicación son claros: no reemplaza el sistema oficial de inscripción de materias, no modela capacidad de aulas ni disponibilidad de cupos, no gestiona trámites administrativos ni académicos y se enfoca inicialmente en la plataforma Android debido a la preferencia mayoritaria identificada en la encuesta. La aplicación no pretende sustituir a Cappuchino ni a los sistemas oficiales, sino complementarlos con funcionalidades centradas en el uso cotidiano y la experiencia del estudiante.
+
+Los principales riesgos del área de aplicación incluyen cambios en el formato o ubicación de los PDFs oficiales, para lo cual se implementa un proceso flexible de ingesta con capacidad de sincronización manual; retrasos en la publicación oficial de horarios, mitigados mediante mantenimiento de caché local y visualización de la fecha de última actualización; conectividad limitada en campus, abordada mediante arquitectura offline-first que prioriza el funcionamiento sin conexión; y saturación de la fuente oficial durante periodos de alta demanda, controlada mediante reintentos espaciados y políticas de sincronización inteligente.
 
 \section{SÍNTESIS}
-El área de aplicación se ubica entre la oferta oficial (PDFs FCyT), las prácticas actuales de consulta y la coordinación estudiantil por mensajería. Las brechas identificadas justifican una solución complementaria centrada en el estudiante, con consulta móvil eficaz, uso sin conexión y respeto por la fuente oficial.
+
+El área de aplicación se ubica en la intersección entre la oferta oficial de horarios de la FCyT (publicados en PDF), las prácticas actuales de consulta mediante herramientas web y la coordinación estudiantil por mensajería instantánea. Las brechas identificadas entre necesidades estudiantiles y capacidades de las herramientas existentes justifican una solución complementaria centrada en el estudiante, con consulta móvil eficaz, uso sin conexión, personalización y respeto por la fuente oficial de información académica.

@@ -72,6 +72,121 @@ La solución se apoya en una aplicación Android autosuficiente: la interacción
 \end{figure}
 
 % ----------------------------------------------------------------------
+\section{Estudio de campo y levantamiento de requerimientos}
+
+\subsection{Diseño del instrumento de recolección}
+
+Para fundamentar el desarrollo de TecnoTime en necesidades reales de los estudiantes de la FCyT, se diseñó un cuestionario estructurado orientado a capturar patrones de uso de herramientas actuales, puntos de dolor en la gestión de horarios y expectativas sobre funcionalidades deseadas en una aplicación móvil complementaria.
+
+El instrumento se organizó en cuatro bloques temáticos: caracterización del encuestado (carrera, semestre, dispositivos utilizados), uso de herramientas actuales (Cappuchino, PDFs oficiales, canales de comunicación), problemática percibida (frustración, repetición de pasos, dificultades de coordinación) y demandas específicas (actualización automática, modo sin conexión, recordatorios, compartir horarios).
+
+El cuestionario fue aplicado mediante Google Forms durante el periodo académico 2025-I, con participación voluntaria y anónima. El instrumento completo se presenta en el Anexo \ref{ann:instrumento}, mientras que los resultados tabulados se encuentran disponibles en el Anexo \ref{ann:historias} y en formato digital \cite{encuesta_fcyt_2025}.
+
+\subsection{Aplicación y características de la muestra}
+
+Se aplicó un muestreo por conveniencia dirigido a estudiantes de la Facultad de Ciencias y Tecnología de la UMSS, obteniendo un total de 126 respuestas válidas. La muestra incluyó estudiantes de diferentes carreras, niveles académicos y turnos, reflejando la diversidad de la población objetivo.
+
+El perfil de los encuestados abarca desde estudiantes de primeros semestres hasta niveles avanzados, con predominio de las carreras de Ingeniería Informática e Ingeniería de Sistemas. La participación fue voluntaria y la tasa de respuesta completa alcanzó el 100\% de los formularios iniciados, evidenciando el interés de los estudiantes en la problemática abordada.
+
+\subsection{Resultados cuantitativos de la encuesta}
+
+\subsubsection{Dispositivos utilizados}
+
+El análisis de dispositivos revela una marcada preferencia por plataformas móviles. El 94\% de los encuestados utiliza dispositivos Android como herramienta principal para consultas académicas, mientras que solo el 26\% dispone de computadora portátil de uso regular. Esta distribución confirma la necesidad de priorizar el desarrollo nativo para Android y optimizar la experiencia móvil.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_dispositivo.png}
+  \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \label{fig:encuesta_dispositivo}
+\end{figure}
+
+\subsubsection{Uso de Cappuchino}
+
+La herramienta Cappuchino presenta un patrón de uso concentrado en periodos específicos. El 48\% de los estudiantes la utiliza únicamente durante el periodo de inscripción, mientras que el 44\% la consulta varias veces por semestre. Solo el 8\% reporta un uso diario o muy frecuente, evidenciando que la herramienta no cubre necesidades de consulta continua fuera del periodo de inscripción.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
+  \caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \label{fig:encuesta_uso_capuchino}
+\end{figure}
+
+\subsubsection{Coordinación social mediante WhatsApp}
+
+El 80\% de los encuestados valida información de horarios y coordina cambios mediante grupos de WhatsApp, confirmando que la mensajería instantánea se ha convertido en un canal informal pero crítico para la gestión de información académica. Este hallazgo fundamenta la necesidad de habilitar intercambio estructurado de horarios compatible con plataformas de mensajería.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_whatsapp.png}
+  \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \label{fig:encuesta_whatsapp}
+\end{figure}
+
+\subsubsection{Frustración por repetir pasos}
+
+El 60\% de los estudiantes califica como alta su frustración (niveles 1-2-3 en escala de 1 a 5) por tener que repetir pasos para consultar horarios. Este indicador evidencia la necesidad de memoria de contexto y persistencia de selecciones para evitar procesos repetitivos en cada sesión de consulta.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{images/diagrams/encuesta_frustracion.png}
+  \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \label{fig:encuesta_frustracion}
+\end{figure}
+
+\subsubsection{Principales demandas identificadas}
+
+Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases F4, F5, F7 y F8 del desarrollo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
+  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126). \\ \small{Fuente: \cite{encuesta_fcyt_2025}.}}
+  \label{fig:encuesta_demandas}
+\end{figure}
+
+\subsection{Derivación de requerimientos funcionales}
+
+Los hallazgos cuantitativos de la encuesta se tradujeron en requerimientos funcionales específicos mediante un proceso de trazabilidad que vincula cada demanda identificada con una funcionalidad concreta de la aplicación y un criterio de aceptación verificable.
+
+\begin{table}[H]
+  \centering
+  \caption[Trazabilidad de hallazgos a requerimientos funcionales]{Trazabilidad de hallazgos a requerimientos funcionales. \\ \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}}
+  \label{tab:derivacion_req}
+  \small
+  \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
+    \hline
+    Hallazgo & Requerimiento derivado & Criterio de aceptación \\
+    \hline
+    94\% usa Android & Priorizar Android y vista móvil & Flujo usable sin laptop \\
+    \hline
+    60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
+    \hline
+    80\% coordina por WhatsApp & Intercambio estructurado en JSON & Compartir/abrir desde mensajería \\
+    \hline
+    78\% valora modo sin conexión & Operación offline-first & Consulta sin red \\
+    \hline
+    57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
+    \hline
+    88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Proceso propuesto (TO-BE)}
+
+Con base en las demandas identificadas y los requerimientos derivados, se diseñó un proceso mejorado que aborda las limitaciones del flujo actual. El proceso propuesto con TecnoTime simplifica la gestión de horarios mediante: generación automática de combinaciones sin choques, memoria de contexto para evitar repetición de selecciones, intercambio estructurado compatible con mensajería, consulta diaria sin conexión y recordatorios configurables antes de clase.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.35\textwidth]{images/diagrams/area_tobe_proceso.png}
+  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso con TecnoTime. \\ \small{Fuente: Elaboración propia.}}
+  \label{fig:area_tobe}
+\end{figure}
+
+El proceso propuesto reduce significativamente los pasos necesarios para consultar y actualizar horarios, elimina la dispersión de información entre múltiples canales y habilita funcionalidades de coordinación social mediante formatos estructurados.
+
+% ----------------------------------------------------------------------
 % (Reubicado al final del capítulo para que 4.2 inicie con F1)
 % \section{Mapa de fases (F1-F11)} — contenido movido más adelante
 
