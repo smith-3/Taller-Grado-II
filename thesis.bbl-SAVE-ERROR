@@ -1,0 +1,966 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{anyt/global//global/global}
+    \entry{android_arch}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=7ace771b22ac28958ff5694e260839cc}{%
+           family={{Android Developers}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{fullhash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{bibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorbibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authornamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorfullhash}{7ace771b22ac28958ff5694e260839cc}
+      \field{extraname}{1}
+      \field{labelalpha}{Android Arch}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Documentación oficial de la arquitectura de Android}
+      \field{shorthand}{Android Arch}
+      \field{title}{Android Architecture}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://developer.android.com/guide/platform
+      \endverb
+      \verb{url}
+      \verb https://developer.android.com/guide/platform
+      \endverb
+    \endentry
+    \entry{android_data_layer_guide}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=7ace771b22ac28958ff5694e260839cc}{%
+           family={{Android Developers}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{fullhash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{bibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorbibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authornamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorfullhash}{7ace771b22ac28958ff5694e260839cc}
+      \field{extraname}{2}
+      \field{labelalpha}{Android Data Layer}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Documentación oficial sobre la capa de datos en Android}
+      \field{shorthand}{Android Data Layer}
+      \field{title}{Capa de datos — Android Developers}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://developer.android.com/topic/architecture/data-layer?hl=es-419
+      \endverb
+      \verb{url}
+      \verb https://developer.android.com/topic/architecture/data-layer?hl=es-419
+      \endverb
+    \endentry
+    \entry{android_guide_architecture}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=7ace771b22ac28958ff5694e260839cc}{%
+           family={{Android Developers}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{fullhash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{bibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorbibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authornamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorfullhash}{7ace771b22ac28958ff5694e260839cc}
+      \field{extraname}{3}
+      \field{labelalpha}{Android Guide}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Guía oficial de arquitectura de aplicaciones Android}
+      \field{shorthand}{Android Guide}
+      \field{title}{Guide to app architecture}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://developer.android.com/topic/architecture
+      \endverb
+      \verb{url}
+      \verb https://developer.android.com/topic/architecture
+      \endverb
+    \endentry
+    \entry{android_ui_layer_guide}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=7ace771b22ac28958ff5694e260839cc}{%
+           family={{Android Developers}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{fullhash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{bibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorbibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authornamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorfullhash}{7ace771b22ac28958ff5694e260839cc}
+      \field{extraname}{4}
+      \field{labelalpha}{Android UI Layer}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Documentación oficial sobre la capa de UI en Android}
+      \field{shorthand}{Android UI Layer}
+      \field{title}{UI Layer — Android Developers}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://developer.android.com/topic/architecture/ui-layer
+      \endverb
+      \verb{url}
+      \verb https://developer.android.com/topic/architecture/ui-layer
+      \endverb
+    \endentry
+    \entry{android_programming}{book}{}
+      \name{author}{3}{}{%
+        {{hash=05c0ff3b1b58fc6be25fa1925fb8f7b8}{%
+           family={Phillips},
+           familyi={P\bibinitperiod},
+           given={Bill},
+           giveni={B\bibinitperiod}}}%
+        {{hash=43506f8d34eb3970f75e3263ba39ef59}{%
+           family={Stewart},
+           familyi={S\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=9d334ab09082cd3c9de44b721ff40373}{%
+           family={Marsicano},
+           familyi={M\bibinitperiod},
+           given={Kristin},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Big Nerd Ranch Guides}%
+      }
+      \strng{namehash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \strng{fullhash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \strng{bibnamehash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \strng{authorbibnamehash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \strng{authornamehash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \strng{authorfullhash}{37c2c3b9cacace6544fea5fdaa52e2b4}
+      \field{labelalpha}{Big Nerd Ranch}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Big Nerd Ranch}
+      \field{title}{Android Programming: The Big Nerd Ranch Guide}
+      \field{year}{2019}
+    \endentry
+    \entry{automated_timetabling}{book}{}
+      \name{author}{2}{}{%
+        {{hash=67b65fd37e1c5a4c91e0a504b087c819}{%
+           family={Burke},
+           familyi={B\bibinitperiod},
+           given={Edmund},
+           giveni={E\bibinitperiod}}}%
+        {{hash=10eca51b6d39e4370554b71999cd5769}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \strng{fullhash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \strng{bibnamehash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \strng{authorbibnamehash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \strng{authornamehash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \strng{authorfullhash}{40bb190b4901ca6e4d0758a7f7b38b75}
+      \field{labelalpha}{Burke \& Ross}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Burke \& Ross}
+      \field{title}{Practice and Theory of Automated Timetabling}
+      \field{year}{1996}
+    \endentry
+    \entry{campushome_apps}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=14031c2e8e87b379b0ea4fe688db9f2a}{%
+           family={CampusHome},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \strng{fullhash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \strng{bibnamehash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \strng{authorbibnamehash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \strng{authornamehash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \strng{authorfullhash}{14031c2e8e87b379b0ea4fe688db9f2a}
+      \field{labelalpha}{CampusHome}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Artículo con selección de apps útiles para estudiantes.}
+      \field{shorthand}{CampusHome}
+      \field{title}{Mejores apps para estudiantes universitarios}
+      \field{urlday}{13}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://campushome.es/blog/mejores-apps-universitarios/
+      \endverb
+      \verb{url}
+      \verb https://campushome.es/blog/mejores-apps-universitarios/
+      \endverb
+    \endentry
+    \entry{cappuccino_umss}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=93fff048529394eff99a8c215164acc4}{%
+           family={Estudiantes\bibnamedelimb de\bibnamedelimb Sistemas\bibnamedelimb e\bibnamedelima Informática},
+           familyi={E\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim e\bibinitperiod\bibinitdelim I\bibinitperiod},
+           given={Sociedad\bibnamedelima Científica},
+           giveni={S\bibinitperiod\bibinitdelim C\bibinitperiod},
+           prefix={de},
+           prefixi={d\bibinitperiod}}}%
+      }
+      \strng{namehash}{93fff048529394eff99a8c215164acc4}
+      \strng{fullhash}{93fff048529394eff99a8c215164acc4}
+      \strng{bibnamehash}{93fff048529394eff99a8c215164acc4}
+      \strng{authorbibnamehash}{93fff048529394eff99a8c215164acc4}
+      \strng{authornamehash}{93fff048529394eff99a8c215164acc4}
+      \strng{authorfullhash}{93fff048529394eff99a8c215164acc4}
+      \field{labelalpha}{Cappuchino}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Sistema web de gestión de horarios académicos de FCyT (UMSS).}
+      \field{shorthand}{Cappuchino}
+      \field{title}{SCESI Cappuchino – Organizador de horarios}
+      \field{urlday}{20}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://capuchino-scesi.web.app/
+      \endverb
+      \verb{url}
+      \verb https://capuchino-scesi.web.app/
+      \endverb
+    \endentry
+    \entry{martin2012cleanarch_blog}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=6f41df64eb0dc4855be70172368604c2}{%
+           family={Martin},
+           familyi={M\bibinitperiod},
+           given={Robert\bibnamedelima C.},
+           giveni={R\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{fullhash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{bibnamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authorbibnamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authornamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authorfullhash}{6f41df64eb0dc4855be70172368604c2}
+      \field{extraname}{1}
+      \field{labelalpha}{Clean Arch Blog}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{8}
+      \field{note}{Blog post original presentando Clean Architecture}
+      \field{shorthand}{Clean Arch Blog}
+      \field{title}{The Clean Architecture}
+      \field{year}{2012}
+      \verb{urlraw}
+      \verb https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+      \endverb
+      \verb{url}
+      \verb https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+      \endverb
+    \endentry
+    \entry{martin2017-cleanarch}{book}{}
+      \name{author}{1}{}{%
+        {{hash=6f41df64eb0dc4855be70172368604c2}{%
+           family={Martin},
+           familyi={M\bibinitperiod},
+           given={Robert\bibnamedelima C.},
+           giveni={R\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Prentice Hall}%
+      }
+      \strng{namehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{fullhash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{bibnamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authorbibnamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authornamehash}{6f41df64eb0dc4855be70172368604c2}
+      \strng{authorfullhash}{6f41df64eb0dc4855be70172368604c2}
+      \field{extraname}{2}
+      \field{labelalpha}{Clean Architecture}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9780134494166}
+      \field{shorthand}{Clean Architecture}
+      \field{title}{Clean Architecture: A Craftsman's Guide to Software Structure and Design}
+      \field{year}{2017}
+    \endentry
+    \entry{cormen_algorithms}{book}{}
+      \name{author}{4}{}{%
+        {{hash=835b8c52757d98c15859b416316d9820}{%
+           family={Cormen},
+           familyi={C\bibinitperiod},
+           given={Thomas\bibnamedelima H.},
+           giveni={T\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=a389dea91a76366c4b4af5f52a928a76}{%
+           family={Leiserson},
+           familyi={L\bibinitperiod},
+           given={Charles\bibnamedelima E.},
+           giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=3a964821f97ee17f8bb285bc61c52899}{%
+           family={Rivest},
+           familyi={R\bibinitperiod},
+           given={Ronald\bibnamedelima L.},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=bc78426660400760f77758aec45e71a8}{%
+           family={Stein},
+           familyi={S\bibinitperiod},
+           given={Clifford},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {MIT press}%
+      }
+      \strng{namehash}{c251cdfd036d9474565c517e73c19c5d}
+      \strng{fullhash}{10f004e08c7c03d98be0da1231a869ce}
+      \strng{bibnamehash}{c251cdfd036d9474565c517e73c19c5d}
+      \strng{authorbibnamehash}{c251cdfd036d9474565c517e73c19c5d}
+      \strng{authornamehash}{c251cdfd036d9474565c517e73c19c5d}
+      \strng{authorfullhash}{10f004e08c7c03d98be0da1231a869ce}
+      \field{labelalpha}{Cormen et al.}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Cormen et al.}
+      \field{title}{Introduction to Algorithms}
+      \field{year}{2009}
+    \endentry
+    \entry{couchbase_offlinefirst}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=1ca85719445bc0d2174b94f64872bbe6}{%
+           family={Couchbase},
+           familyi={C\bibinitperiod},
+           given={Inc.},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{1ca85719445bc0d2174b94f64872bbe6}
+      \strng{fullhash}{1ca85719445bc0d2174b94f64872bbe6}
+      \strng{bibnamehash}{1ca85719445bc0d2174b94f64872bbe6}
+      \strng{authorbibnamehash}{1ca85719445bc0d2174b94f64872bbe6}
+      \strng{authornamehash}{1ca85719445bc0d2174b94f64872bbe6}
+      \strng{authorfullhash}{1ca85719445bc0d2174b94f64872bbe6}
+      \field{labelalpha}{Couchbase}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Entrada de blog. Consultado el 11 de noviembre de 2025.}
+      \field{shorthand}{Couchbase}
+      \field{title}{Offline-First: More Reliable Mobile Apps}
+      \field{urlday}{13}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.couchbase.com/blog/offline-first-more-reliable-mobile-apps/
+      \endverb
+      \verb{url}
+      \verb https://www.couchbase.com/blog/offline-first-more-reliable-mobile-apps/
+      \endverb
+    \endentry
+    \entry{encuesta_fcyt_2025}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=c071780f4d01e70f5c61ddb00c1e934d}{%
+           family={{UMSS}},
+           familyi={U\bibinitperiod},
+           given={FCyT},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \strng{fullhash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \strng{bibnamehash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \strng{authorbibnamehash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \strng{authornamehash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \strng{authorfullhash}{c071780f4d01e70f5c61ddb00c1e934d}
+      \field{labelalpha}{Encuesta FCyT}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Hoja de cálculo publicada}
+      \field{note}{Disponible en línea}
+      \field{shorthand}{Encuesta FCyT}
+      \field{title}{Encuesta sobre el Uso de Cappuchino y la Necesidad de una Aplicación Móvil Complementaria (App Simón)}
+      \field{urlday}{12}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vS4u1wgB4sUD_x8eVeA82eoabtBMtzlnWMLe5PgIUmHX105B52nVwTR_59EOsaWKLGwhYeYzCVnHVBq/pubhtml?pli=1#gid=935814532
+      \endverb
+      \verb{url}
+      \verb https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vS4u1wgB4sUD_x8eVeA82eoabtBMtzlnWMLe5PgIUmHX105B52nVwTR_59EOsaWKLGwhYeYzCVnHVBq/pubhtml?pli=1#gid=935814532
+      \endverb
+    \endentry
+    \entry{fcyt_umss}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=f36be1c7094cf4da43cf4a7e88fd5116}{%
+           family={{Universidad Mayor de San Simón}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{fullhash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{bibnamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authorbibnamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authornamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authorfullhash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \field{extraname}{1}
+      \field{labelalpha}{FCyT UMSS}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Página oficial de la Facultad de Ciencias y Tecnología, UMSS.}
+      \field{shorthand}{FCyT UMSS}
+      \field{title}{Facultad de Ciencias y Tecnología – UMSS}
+      \field{urlday}{13}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://fcyt.umss.edu.bo/
+      \endverb
+      \verb{url}
+      \verb https://fcyt.umss.edu.bo/
+      \endverb
+    \endentry
+    \entry{quantization_papers}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{hash=ff99b6be6f7ad0c9f311e5ddf91c01f7}{%
+           family={Gholami},
+           familyi={G\bibinitperiod},
+           given={Amir},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{fullhash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{bibnamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authorbibnamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authornamehash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \strng{authorfullhash}{413a2af5b9f6f77f60bcb0182a76654a}
+      \field{labelalpha}{Gholami et al.}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint}
+      \field{shorthand}{Gholami et al.}
+      \field{title}{A Survey of Quantization Methods for Efficient Neural Network Inference}
+      \field{year}{2021}
+    \endentry
+    \entry{guda2025offline}{article}{}
+      \name{author}{1}{}{%
+        {{hash=db56b1ca7f035955053674c06003d532}{%
+           family={Guda},
+           familyi={G\bibinitperiod},
+           given={V.\bibnamedelimi R.},
+           giveni={V\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{db56b1ca7f035955053674c06003d532}
+      \strng{fullhash}{db56b1ca7f035955053674c06003d532}
+      \strng{bibnamehash}{db56b1ca7f035955053674c06003d532}
+      \strng{authorbibnamehash}{db56b1ca7f035955053674c06003d532}
+      \strng{authornamehash}{db56b1ca7f035955053674c06003d532}
+      \strng{authorfullhash}{db56b1ca7f035955053674c06003d532}
+      \field{labelalpha}{Guda}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Multidisciplinary Research and Growth Evaluation}
+      \field{number}{3}
+      \field{shorthand}{Guda}
+      \field{title}{Implementation of Offline-First Architectures for Android Internet-Based Chat Systems}
+      \field{volume}{6}
+      \field{year}{2025}
+      \field{pages}{1200\bibrangedash 1203}
+      \range{pages}{4}
+    \endentry
+    \entry{gupta2022modern}{article}{}
+      \name{author}{2}{}{%
+        {{hash=29941a55ce9570d3258751081c4834e7}{%
+           family={Gupta},
+           familyi={G\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=31149f58d4f339113d239f687000d391}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \strng{fullhash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \strng{bibnamehash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \strng{authorbibnamehash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \strng{authornamehash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \strng{authorfullhash}{56aa8ad41625f3cf0c992dbf4aeb9cd0}
+      \field{labelalpha}{Gupta \& Sharma}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Mobile Development}
+      \field{shorthand}{Gupta \& Sharma}
+      \field{title}{Modern UI with Jetpack Compose}
+      \field{year}{2022}
+    \endentry
+    \entry{horarios_fcyt}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=f36be1c7094cf4da43cf4a7e88fd5116}{%
+           family={{Universidad Mayor de San Simón}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{fullhash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{bibnamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authorbibnamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authornamehash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \strng{authorfullhash}{f36be1c7094cf4da43cf4a7e88fd5116}
+      \field{extraname}{2}
+      \field{labelalpha}{Horarios FCyT}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Portal SAGAA de horarios académicos de la Facultad de Ciencias y Tecnología.}
+      \field{shorthand}{Horarios FCyT}
+      \field{title}{Horarios FCyT -- Facultad de Ciencias y Tecnología -- UMSS}
+      \field{urlday}{20}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://sagaa.fcyt.umss.edu.bo/horarios/HorariosFCyT.php
+      \endverb
+      \verb{url}
+      \verb https://sagaa.fcyt.umss.edu.bo/horarios/HorariosFCyT.php
+      \endverb
+    \endentry
+    \entry{jain2023compose}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=94142c8aa4d40e61b42a8a32ede3aff8}{%
+           family={Jain},
+           familyi={J\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod}}}%
+        {{hash=993085477d4181f579e77271900f4d7e}{%
+           family={Patel},
+           familyi={P\bibinitperiod},
+           given={N.},
+           giveni={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{cbfdd23c9aca0885baac393842ced463}
+      \strng{fullhash}{cbfdd23c9aca0885baac393842ced463}
+      \strng{bibnamehash}{cbfdd23c9aca0885baac393842ced463}
+      \strng{authorbibnamehash}{cbfdd23c9aca0885baac393842ced463}
+      \strng{authornamehash}{cbfdd23c9aca0885baac393842ced463}
+      \strng{authorfullhash}{cbfdd23c9aca0885baac393842ced463}
+      \field{labelalpha}{Jain \& Patel}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE Mobile Conf}
+      \field{shorthand}{Jain \& Patel}
+      \field{title}{Jetpack Compose vs. XML: A Comparative Analysis}
+      \field{year}{2023}
+    \endentry
+    \entry{pothineni2024offline}{article}{}
+      \name{author}{1}{}{%
+        {{hash=0e10951741a742b1a44da60e55a22d24}{%
+           family={Pothineni},
+           familyi={P\bibinitperiod},
+           given={S.\bibnamedelimi H.},
+           giveni={S\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{0e10951741a742b1a44da60e55a22d24}
+      \strng{fullhash}{0e10951741a742b1a44da60e55a22d24}
+      \strng{bibnamehash}{0e10951741a742b1a44da60e55a22d24}
+      \strng{authorbibnamehash}{0e10951741a742b1a44da60e55a22d24}
+      \strng{authornamehash}{0e10951741a742b1a44da60e55a22d24}
+      \strng{authorfullhash}{0e10951741a742b1a44da60e55a22d24}
+      \field{labelalpha}{Pothineni}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Artificial Intelligence General Science (JAIGS)}
+      \field{number}{01}
+      \field{shorthand}{Pothineni}
+      \field{title}{Offline-First Mobile Architecture: Enhancing Usability and Resilience in Mobile Systems}
+      \field{volume}{7}
+      \field{year}{2024}
+      \field{pages}{320\bibrangedash 326}
+      \range{pages}{7}
+    \endentry
+    \entry{pro_android_kotlin}{book}{}
+      \name{author}{1}{}{%
+        {{hash=a210a3382d6ba61fe27f509401f79abb}{%
+           family={Späth},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Apress}%
+      }
+      \strng{namehash}{a210a3382d6ba61fe27f509401f79abb}
+      \strng{fullhash}{a210a3382d6ba61fe27f509401f79abb}
+      \strng{bibnamehash}{a210a3382d6ba61fe27f509401f79abb}
+      \strng{authorbibnamehash}{a210a3382d6ba61fe27f509401f79abb}
+      \strng{authornamehash}{a210a3382d6ba61fe27f509401f79abb}
+      \strng{authorfullhash}{a210a3382d6ba61fe27f509401f79abb}
+      \field{labelalpha}{Pro Android Kotlin}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Pro Android Kotlin}
+      \field{title}{Pro Android with Kotlin}
+      \field{year}{2018}
+    \endentry
+    \entry{reactive_kotlin}{book}{}
+      \name{author}{1}{}{%
+        {{hash=ef6b76fc5e2d2bd43809d0573d17f9e6}{%
+           family={Malah},
+           familyi={M\bibinitperiod},
+           given={Rivu},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Packt Publishing Ltd}%
+      }
+      \strng{namehash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \strng{fullhash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \strng{bibnamehash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \strng{authorbibnamehash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \strng{authornamehash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \strng{authorfullhash}{ef6b76fc5e2d2bd43809d0573d17f9e6}
+      \field{labelalpha}{Reactive Kotlin}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Reactive Kotlin}
+      \field{title}{Reactive Programming with Kotlin}
+      \field{year}{2017}
+    \endentry
+    \entry{russell2021ai}{book}{}
+      \name{author}{2}{}{%
+        {{hash=18ee0a7bfc995f40254c9d425c977a49}{%
+           family={Russell},
+           familyi={R\bibinitperiod},
+           given={Stuart\bibnamedelima J.},
+           giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=5de798d5fa3c0236c0478134cd23f52a}{%
+           family={Norvig},
+           familyi={N\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{a4f50258a14156905c8d2b1b4704be30}
+      \strng{fullhash}{a4f50258a14156905c8d2b1b4704be30}
+      \strng{bibnamehash}{a4f50258a14156905c8d2b1b4704be30}
+      \strng{authorbibnamehash}{a4f50258a14156905c8d2b1b4704be30}
+      \strng{authornamehash}{a4f50258a14156905c8d2b1b4704be30}
+      \strng{authorfullhash}{a4f50258a14156905c8d2b1b4704be30}
+      \field{labelalpha}{Russell \& Norvig}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{4}
+      \field{shorthand}{Russell \& Norvig}
+      \field{title}{Artificial Intelligence: A Modern Approach}
+      \field{year}{2021}
+    \endentry
+    \entry{dependency_injection_principles}{book}{}
+      \name{author}{2}{}{%
+        {{hash=4f08d24826cb0bb50101e66d040b84a7}{%
+           family={Seemann},
+           familyi={S\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ebe062b1632fdb028723f06917336aba}{%
+           family={Deursen},
+           familyi={D\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Manning Publications}%
+      }
+      \strng{namehash}{92ed6ac6c721dca92a860568382a5711}
+      \strng{fullhash}{92ed6ac6c721dca92a860568382a5711}
+      \strng{bibnamehash}{92ed6ac6c721dca92a860568382a5711}
+      \strng{authorbibnamehash}{92ed6ac6c721dca92a860568382a5711}
+      \strng{authornamehash}{92ed6ac6c721dca92a860568382a5711}
+      \strng{authorfullhash}{92ed6ac6c721dca92a860568382a5711}
+      \field{labelalpha}{Seemann \& van Deursen}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Seemann \& van Deursen}
+      \field{title}{Dependency Injection Principles, Practices, and Patterns}
+      \field{year}{2019}
+    \endentry
+    \entry{edge_ai_arxiv}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{hash=f41bbc46c4cca943fa2a0c3bf70c8a04}{%
+           family={Shi},
+           familyi={S\bibinitperiod},
+           given={Weisong},
+           giveni={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{b13d56fe65b8052396f26390274b4978}
+      \strng{fullhash}{b13d56fe65b8052396f26390274b4978}
+      \strng{bibnamehash}{b13d56fe65b8052396f26390274b4978}
+      \strng{authorbibnamehash}{b13d56fe65b8052396f26390274b4978}
+      \strng{authornamehash}{b13d56fe65b8052396f26390274b4978}
+      \strng{authorfullhash}{b13d56fe65b8052396f26390274b4978}
+      \field{labelalpha}{Shi et al.}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:xxxx.xxxxx}
+      \field{shorthand}{Shi et al.}
+      \field{title}{Edge Artificial Intelligence}
+      \field{year}{2023}
+    \endentry
+    \entry{database_concepts}{book}{}
+      \name{author}{3}{}{%
+        {{hash=525ecdcf12996b3d68e3c71d7526bf35}{%
+           family={Silberschatz},
+           familyi={S\bibinitperiod},
+           given={Abraham},
+           giveni={A\bibinitperiod}}}%
+        {{hash=1640aebebaf3b1913d7477fe0f7675e0}{%
+           family={Korth},
+           familyi={K\bibinitperiod},
+           given={Henry\bibnamedelima F.},
+           giveni={H\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=61d6a2d7215571ff54eadda8d36a2d58}{%
+           family={Sudarshan},
+           familyi={S\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {McGraw-Hill Education}%
+      }
+      \strng{namehash}{4c269a32abf2e4056c1b534993062a6b}
+      \strng{fullhash}{4c269a32abf2e4056c1b534993062a6b}
+      \strng{bibnamehash}{4c269a32abf2e4056c1b534993062a6b}
+      \strng{authorbibnamehash}{4c269a32abf2e4056c1b534993062a6b}
+      \strng{authornamehash}{4c269a32abf2e4056c1b534993062a6b}
+      \strng{authorfullhash}{4c269a32abf2e4056c1b534993062a6b}
+      \field{labelalpha}{Silberschatz et al.}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{shorthand}{Silberschatz et al.}
+      \field{title}{Database System Concepts}
+      \field{year}{2019}
+    \endentry
+    \entry{singh2025comparative}{article}{}
+      \name{author}{3}{}{%
+        {{hash=535b46081523fc5c5dcfaba2a621d930}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f73200ded762b8806e06b523bc757afe}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={R.\bibnamedelimi K.},
+           giveni={R\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=9843b981a347092faf6faad9f1b9bcdd}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{2751945653a6cc728f12c10698a68277}
+      \strng{fullhash}{2751945653a6cc728f12c10698a68277}
+      \strng{bibnamehash}{2751945653a6cc728f12c10698a68277}
+      \strng{authorbibnamehash}{2751945653a6cc728f12c10698a68277}
+      \strng{authornamehash}{2751945653a6cc728f12c10698a68277}
+      \strng{authorfullhash}{2751945653a6cc728f12c10698a68277}
+      \field{labelalpha}{Singh et al.}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Innovative Research in Technology}
+      \field{number}{1}
+      \field{shorthand}{Singh et al.}
+      \field{title}{Comparative study of XML vs Jetpack Compose for UI Development in Android}
+      \field{volume}{12}
+      \field{year}{2025}
+      \field{pages}{6175}
+      \range{pages}{1}
+    \endentry
+    \entry{smart_timetable}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=f6e50271c58902653b95b61ec0b0007b}{%
+           family={Timetable},
+           familyi={T\bibinitperiod},
+           given={Smart},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{f6e50271c58902653b95b61ec0b0007b}
+      \strng{fullhash}{f6e50271c58902653b95b61ec0b0007b}
+      \strng{bibnamehash}{f6e50271c58902653b95b61ec0b0007b}
+      \strng{authorbibnamehash}{f6e50271c58902653b95b61ec0b0007b}
+      \strng{authornamehash}{f6e50271c58902653b95b61ec0b0007b}
+      \strng{authorfullhash}{f6e50271c58902653b95b61ec0b0007b}
+      \field{labelalpha}{Smart Timetable}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Aplicación para la gestión personalizada de horarios académicos.}
+      \field{shorthand}{Smart Timetable}
+      \field{title}{Smart Timetable – Horario de clases y planificador universitario}
+      \field{urlday}{13}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://smart-timetable.app/es
+      \endverb
+      \verb{url}
+      \verb https://smart-timetable.app/es
+      \endverb
+    \endentry
+    \entry{tecnotime_repo}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=6d7f1969d8894f55783b44bcb91eea8b}{%
+           family={Lazarte\bibnamedelima Alcocer},
+           familyi={L\bibinitperiod\bibinitdelim A\bibinitperiod},
+           given={Manuel\bibnamedelima Smith},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \strng{fullhash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \strng{bibnamehash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \strng{authorbibnamehash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \strng{authornamehash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \strng{authorfullhash}{6d7f1969d8894f55783b44bcb91eea8b}
+      \field{labelalpha}{TecnoTime Repo}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Repositorio del proyecto. Release citado en el Cap. IV: v0.9.0-cap4}
+      \field{shorthand}{TecnoTime Repo}
+      \field{title}{TecnoTime (Android app) — source code}
+      \field{urlday}{13}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://github.com/smith-3/TecnoTime
+      \endverb
+      \verb{url}
+      \verb https://github.com/smith-3/TecnoTime
+      \endverb
+    \endentry
+    \entry{android_viewmodel_guide}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=7ace771b22ac28958ff5694e260839cc}{%
+           family={{Android Developers}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{fullhash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{bibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorbibnamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authornamehash}{7ace771b22ac28958ff5694e260839cc}
+      \strng{authorfullhash}{7ace771b22ac28958ff5694e260839cc}
+      \field{extraname}{5}
+      \field{labelalpha}{ViewModel Guide}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Documentación oficial del componente ViewModel}
+      \field{shorthand}{ViewModel Guide}
+      \field{title}{ViewModel Overview}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://developer.android.com/topic/libraries/architecture/viewmodel
+      \endverb
+      \verb{url}
+      \verb https://developer.android.com/topic/libraries/architecture/viewmodel
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

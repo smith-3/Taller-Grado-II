@@ -1,8 +1,12 @@
 \documentclass[11pt]{report}
 
 % Ajustes de bibliografía
-\renewcommand{\bibname}{Bibliografía} % Por si algún estilo usa \bibname
-\usepackage[natbibapa]{apacite}
+\renewcommand{\bibname}{Bibliografía}
+\usepackage[style=alphabetic, backend=biber]{biblatex}
+\addbibresource{bibliografia.bib}
+% Remove bold from bibliography labels
+\DeclareFieldFormat{labelalpha}{#1}
+\DeclareFieldFormat{extraalpha}{#1}
 
 % Paquetes y estilo
 \input{base/packages}
@@ -49,8 +53,7 @@
     \input{sections/05_conclusiones}
 
     % Bibliografía
-    \bibliographystyle{apacite}
-    \bibliography{bibliografia}
+    \printbibliography
 
     % Anexos (opcional)
     \appendix

@@ -1,7 +1,7 @@
 \chapter{MARCO TEÓRICO}
 \label{chap:marco-teorico}
 
-Este capítulo establece los fundamentos teóricos y tecnológicos que sustentan el desarrollo de ``TecnoTime''. Se abordan los paradigmas de ingeniería de software móvil moderna, la arquitectura de software escalable, los algoritmos de optimización para la generación de horarios y la integración de inteligencia artificial en el borde (Edge AI). Cada sección vincula los conceptos académicos con las tecnologías específicas implementadas en la solución.
+Este capítulo establece los fundamentos teóricos y tecnológicos relacionados con la ingeniería de software móvil moderna, la arquitectura de software escalable, los algoritmos de optimización y la inteligencia artificial en el borde (Edge AI).
 
 \section{Ingeniería de Software para Dispositivos Móviles}
 \label{sec:ingenieria-movil}
@@ -13,14 +13,14 @@ Android es un sistema operativo basado en el núcleo Linux, diseñado para dispo
 
 El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema. Este enfoque ofrece un rendimiento superior en comparación con soluciones híbridas, especialmente en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}.
 
-En este proyecto se utiliza Kotlin, un lenguaje moderno y estáticamente tipado que interopera completamente con Java. Se aprovechan características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
+Kotlin es un lenguaje moderno y estáticamente tipado que interopera completamente con Java, ofreciendo características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
 
 \subsection{Paradigma de Interfaz Declarativa (Jetpack Compose)}
 Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). La tendencia actual en la industria, respaldada por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}, es el uso de marcos de trabajo declarativos.
 
 El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre ambos paradigmas.
 
-\begin{table}[h!]
+\begin{table}[H]
     \centering
     \begin{tabular}{|p{6cm}|p{6cm}|}
         \hline
@@ -38,7 +38,8 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
     \small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
 \end{table}
 
-TecnoTime adopta Jetpack Compose, el kit de herramientas moderno de Android. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
+Jetpack Compose es el kit de herramientas moderno de Android para construir interfaces nativas. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
+
 
 Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza inteligentemente solo los componentes que dependen de los datos modificados, reduciendo la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
 
@@ -50,14 +51,14 @@ Para implementar este patrón, se emplean flujos reactivos mediante StateFlow de
 \section{Arquitectura de Software}
 \label{sec:arquitectura-software}
 
-Para garantizar la mantenibilidad, testabilidad y escalabilidad del proyecto, se siguen principios de diseño robustos y patrones arquitectónicos estandarizados en la industria del software.
+Para garantizar la mantenibilidad, testabilidad y escalabilidad del software, se siguen principios de diseño robustos y patrones arquitectónicos estandarizados en la industria.
 
 \subsection{Clean Architecture y Regla de Dependencia}
-El proyecto implementa Clean Architecture, propuesta por Robert C. Martin \cite{martin2017-cleanarch}. Esta arquitectura estructura el código en capas concéntricas con responsabilidades claras, como se ilustra en la Figura \ref{fig:clean_architecture}.
+Clean Architecture, propuesta por Robert C. Martin \cite{martin2017-cleanarch}, estructura el código en capas concéntricas con responsabilidades claras, como se ilustra en la Figura \ref{fig:clean_architecture}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/CleanArchitecture.jpg}
+    \includegraphics[width=0.7\textwidth]{images/CleanArchitecture.jpg}
     \caption{Diagrama conceptual de Clean Architecture}
     \label{fig:clean_architecture}
     \small{Fuente: Martin (2012) \cite{martin2012cleanarch_blog}}
@@ -89,9 +90,8 @@ El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI h
 
 Esta arquitectura se compone de tres capas principales, cada una con responsabilidades específicas:
 
-\begin{itemize}
-    \item Capa de UI (User Interface): Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
-\end{itemize}
+\subsubsection{Capa de UI (User Interface)}
+Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
 
 Los componentes clave de esta capa incluyen:
 \begin{itemize}
@@ -104,50 +104,40 @@ La Figura \ref{fig:android_ui_layer} ilustra cómo estos componentes colaboran p
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/android_ui_layer.png}
-    \caption{Componentes de la capa de UI en Android}
+    \includegraphics[width=0.8\textwidth]{images/udf_cycle.png}
+    \caption{Ciclo de eventos y datos en el patrón UDF}
     \label{fig:android_ui_layer}
-    \small{Fuente: Android Developers \cite{android_guide_architecture}}
+    \small{Fuente: Android Developers \cite{android_ui_layer_guide}}
 \end{figure}
 
-\begin{itemize}
-    \item Capa de Dominio: Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
-\end{itemize}
+\subsubsection{Capa de Dominio}
+Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
 
 Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, "Generar Horario" o "Exportar a PDF") y orquesta la interacción entre múltiples repositorios si es necesario.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{images/android_domain_layer.png}
-    \caption{Capa de dominio y casos de uso}
-    \label{fig:android_domain_layer}
-    \small{Fuente: Android Developers \cite{android_guide_architecture}}
-\end{figure}
+Los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación al encapsular reglas de negocio complejas y reutilizables.
 
-Como se observa en la Figura \ref{fig:android_domain_layer}, los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación.
+\subsubsection{Capa de Datos}
+Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
 
-\begin{itemize}
-    \item Capa de Datos: Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
-\end{itemize}
-
-Los repositorios implementan la lógica de sincronización, caché y transformación de datos. En aplicaciones offline-first como TecnoTime, los repositorios priorizan la base de datos local y sincronizan con fuentes remotas en segundo plano.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/android_data_layer.png}
-    \caption{Capa de datos y repositorios en Android}
-    \label{fig:android_data_layer}
-    \small{Fuente: Android Developers \cite{android_guide_architecture}}
-\end{figure}
+Los repositorios implementan la lógica de sincronización, caché y transformación de datos. En aplicaciones offline-first, los repositorios priorizan la base de datos local y sincronizan con fuentes remotas en segundo plano.
 
 La Figura \ref{fig:android_data_layer} muestra cómo los repositorios abstraen las fuentes de datos subyacentes, permitiendo cambiar la implementación (por ejemplo, de SQLite a Room) sin afectar las capas superiores.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/data_layer_diagram.png}
+    \caption{Capa de datos y repositorios en Android}
+    \label{fig:android_data_layer}
+    \small{Fuente: Android Developers \cite{android_data_layer_guide}}
+\end{figure}
 
 
 
 \subsection{Patrón Model-View-ViewModel (MVVM)}
-Se utiliza el patrón MVVM para separar la lógica de presentación de la interfaz de usuario. La Figura \ref{fig:mvvm_pattern} muestra la interacción entre sus componentes.
+El patrón MVVM (Model-View-ViewModel) se utiliza para separar la lógica de presentación de la interfaz de usuario. La Figura \ref{fig:mvvm_pattern} muestra la interacción entre sus componentes.
 
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{images/viewmodel-lifecycle.png}
     \caption{Ciclo de vida del ViewModel en Android}
@@ -167,12 +157,12 @@ Se utiliza el patrón MVVM para separar la lógica de presentación de la interf
 \subsection{Inyección de Dependencias (Hilt)}
 La Inyección de Dependencias (DI) es un patrón de diseño donde los objetos reciben sus dependencias desde fuera en lugar de crearlas ellos mismos, promoviendo la Inversión de Control (IoC) \cite{dependency_injection_principles}.
 
-Se utiliza Hilt, la solución estándar de Google para DI en Android basada en Dagger. Hilt reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones. Por ejemplo, permite inyectar repositorios simulados durante las pruebas automatizadas.
+Hilt es la solución estándar de Google para DI en Android basada en Dagger. Reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones. Por ejemplo, permite inyectar repositorios simulados durante las pruebas automatizadas.
 
 \section{Algoritmia de Planificación (Timetabling)}
 \label{sec:algoritmia}
 
-El núcleo funcional de la aplicación aborda el problema de generación de horarios académicos, conocido formalmente en la literatura como University Course Timetabling Problem (UCTP).
+El problema de generación de horarios académicos es conocido formalmente en la literatura como University Course Timetabling Problem (UCTP).
 
 \subsection{Problema de Satisfacción de Restricciones (CSP)}
 El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricciones (CSP), definido por Russell y Norvig \cite{russell2021ai} como una terna $(X, D, C)$:
@@ -185,10 +175,10 @@ El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricc
 Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (por ejemplo, no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (por ejemplo, minimizar huecos libres).
 
 \subsection{Algoritmos de Búsqueda: Backtracking}
-Para resolver el CSP, se implementa el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo retrocede al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
+Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo retrocede al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
 
 \subsection{Heurísticas de Poda y Optimización}
-Dado que el espacio de búsqueda puede crecer exponencialmente, se aplican heurísticas para mejorar la eficiencia:
+Dado que el espacio de búsqueda puede crecer exponencialmente, se pueden aplicar heurísticas para mejorar la eficiencia:
 \begin{itemize}
     \item Poda (Pruning): Se descartan tempranamente las ramas que no pueden llevar a una solución válida. Por ejemplo, si una materia obligatoria se queda sin cupos válidos.
     \item Ordenamiento de Variables (Fail-First): Se intentan asignar primero las variables más restrictivas para detectar conflictos lo antes posible \cite{automated_timetabling}.
@@ -198,12 +188,12 @@ Dado que el espacio de búsqueda puede crecer exponencialmente, se aplican heur�
 \section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
 \label{sec:edge-ai}
 
-``TecnoTime'' integra capacidades de inteligencia artificial generativa ejecutándose directamente en el dispositivo móvil, un paradigma conocido como Edge AI.
+La Inteligencia Artificial en el Borde (Edge AI) permite integrar capacidades de inteligencia artificial generativa ejecutándose directamente en el dispositivo móvil.
 
 \subsection{Inferencia Local vs. Inferencia en la Nube}
 A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el dispositivo del usuario. El Cuadro \ref{tab:edge_vs_cloud} compara ambos enfoques.
 
-\begin{table}[h!]
+\begin{table}[H]
     \centering
     \begin{tabular}{|p{5cm}|p{5cm}|}
         \hline
@@ -223,7 +213,7 @@ A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el 
     \small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
 \end{table}
 
-En la implementación, se utiliza la librería llama.cpp a través de JNI (Java Native Interface) para ejecutar la inferencia de modelos de lenguaje de manera eficiente en la CPU del dispositivo Android.
+Librerías como llama.cpp permiten ejecutar la inferencia de modelos de lenguaje de manera eficiente en la CPU de dispositivos Android a través de JNI (Java Native Interface).
 
 \subsection{Modelos de Lenguaje (LLMs) y Cuantización}
 Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos con recursos limitados (memoria y batería), se utiliza la técnica de Cuantización. Este proceso reduce la precisión de los pesos del modelo (por ejemplo, de punto flotante de 16 bits a enteros de 4 bits), disminuyendo drásticamente el tamaño del modelo y el consumo de memoria con una pérdida mínima de precisión \cite{quantization_papers}. El formato de archivo utilizado es GGUF, optimizado para inferencia rápida en CPU.
@@ -234,18 +224,18 @@ Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos co
 La aplicación sigue una filosofía Offline-First, garantizando que la funcionalidad principal esté disponible sin conexión a internet, un requisito crítico en entornos con conectividad intermitente \cite{guda2025offline}.
 
 \subsection{Bases de Datos Relacionales Embebidas (Room)}
-Para la persistencia local se utiliza SQLite, un motor de base de datos relacional ligero embebido en Android. El acceso se gestiona a través de la librería Room, que proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
+SQLite es un motor de base de datos relacional ligero embebido en Android. Room proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
 
 \subsection{Estrategias de Sincronización y Offline-First}
 El patrón Offline-First invierte la dependencia tradicional de las aplicaciones móviles respecto a la conectividad de red. En lugar de asumir que la red siempre está disponible, este enfoque trata la conectividad como un recurso opcional y potencialmente intermitente.
 
 La Figura \ref{fig:offline_architecture} ilustra la arquitectura típica de una aplicación que sigue este patrón. Como se observa, la base de datos local actúa como la fuente primaria de datos, mientras que las operaciones de red se ejecutan de manera asíncrona en segundo plano.
 
-En la implementación de TecnoTime, la arquitectura adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local, garantizando una experiencia fluida incluso sin conexión.
+En una arquitectura Offline-First robusta, se adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local, garantizando una experiencia fluida incluso sin conexión.
 
-Las operaciones de red para actualizar los horarios se ejecutan en segundo plano utilizando WorkManager, un componente que actúa como planificador de tareas diferibles y garantizadas.
+Las operaciones de red pueden ejecutarse en segundo plano utilizando componentes como WorkManager, que actúa como planificador de tareas diferibles y garantizadas.
 
-Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Room notifica automáticamente a la UI mediante flujos reactivos (Flow) para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red, permitiendo que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
+Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Las librerías de persistencia modernas notifican automáticamente a la UI mediante flujos reactivos para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red, permitiendo que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
 
 \begin{figure}[H]
     \centering

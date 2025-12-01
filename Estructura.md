@@ -76,6 +76,8 @@ La carátula representa la portada del documento y debe contener la información
 - En este capítulo debe estar la parte teórica del proyecto.
 - Esta teoría generalmente está en referencia al área de ciencias de la computación o a la teoría de las materias que se lleva a cabo en la carrera.
 - Los temas a considerar en este capítulo estará en base al título del proyecto.
+- **Importante**: El marco teórico es únicamente para teoría, no para mencionar nada sobre el proyecto o problema que se está resolviendo (por ejemplo, no mencionar el nombre de la app como "TecnoTime" ni justificar por qué se adoptó cierta tecnología en el proyecto).
+- **Regla de Figuras y Cuadros**: Siempre que se mencione una figura o cuadro, este debe estar colocado **debajo** del párrafo que lo menciona. Jamás se debe poner primero el cuadro o figura y luego mencionarlo en un párrafo posterior.
 
 ### Capítulo III: Área de Aplicación
 
