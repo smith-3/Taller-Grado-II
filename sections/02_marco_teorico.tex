@@ -58,7 +58,7 @@ Clean Architecture, propuesta por Robert C. Martin \cite{martin2017-cleanarch}, 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/CleanArchitecture.jpg}
+    \includegraphics[width=0.75\textwidth]{images/CleanArchitecture.jpg}
     \caption{Diagrama conceptual de Clean Architecture}
     \label{fig:clean_architecture}
     \small{Fuente: Martin (2012) \cite{martin2012cleanarch_blog}}
@@ -90,8 +90,10 @@ El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI h
 
 Esta arquitectura se compone de tres capas principales, cada una con responsabilidades específicas:
 
-\subsubsection{Capa de UI (User Interface)}
-Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
+\begin{enumerate}
+    \item \textbf{Capa de UI (User Interface)}
+
+    Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
 
 Los componentes clave de esta capa incluyen:
 \begin{itemize}
@@ -104,21 +106,23 @@ La Figura \ref{fig:android_ui_layer} ilustra cómo estos componentes colaboran p
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/udf_cycle.png}
+    \includegraphics[width=0.75\textwidth]{images/udf_cycle.png}
     \caption{Ciclo de eventos y datos en el patrón UDF}
     \label{fig:android_ui_layer}
     \small{Fuente: Android Developers \cite{android_ui_layer_guide}}
 \end{figure}
 
-\subsubsection{Capa de Dominio}
-Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
+    \item \textbf{Capa de Dominio}
+
+    Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
 
 Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, "Generar Horario" o "Exportar a PDF") y orquesta la interacción entre múltiples repositorios si es necesario.
 
 Los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación al encapsular reglas de negocio complejas y reutilizables.
 
-\subsubsection{Capa de Datos}
-Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
+    \item \textbf{Capa de Datos}
+
+    Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
 
 Los repositorios implementan la lógica de sincronización, caché y transformación de datos. En aplicaciones offline-first, los repositorios priorizan la base de datos local y sincronizan con fuentes remotas en segundo plano.
 
@@ -132,6 +136,8 @@ La Figura \ref{fig:android_data_layer} muestra cómo los repositorios abstraen l
     \small{Fuente: Android Developers \cite{android_data_layer_guide}}
 \end{figure}
 
+\end{enumerate}
+
 
 
 \subsection{Patrón Model-View-ViewModel (MVVM)}
@@ -139,7 +145,7 @@ El patrón MVVM (Model-View-ViewModel) se utiliza para separar la lógica de pre
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/viewmodel-lifecycle.png}
+    \includegraphics[width=0.6\textwidth]{images/viewmodel-lifecycle.png}
     \caption{Ciclo de vida del ViewModel en Android}
     \label{fig:mvvm_pattern}
     \small{Fuente: Android Developers \cite{android_viewmodel_guide}}
@@ -159,10 +165,26 @@ La Inyección de Dependencias (DI) es un patrón de diseño donde los objetos re
 
 Hilt es la solución estándar de Google para DI en Android basada en Dagger. Reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones. Por ejemplo, permite inyectar repositorios simulados durante las pruebas automatizadas.
 
-\section{Algoritmia de Planificación (Timetabling)}
+\section{Fundamentos Algorítmicos y de Optimización}
 \label{sec:algoritmia}
 
-El problema de generación de horarios académicos es conocido formalmente en la literatura como University Course Timetabling Problem (UCTP).
+El problema de generación de horarios académicos es conocido formalmente en la literatura como University Course Timetabling Problem (UCTP). Este problema se aborda mediante diversas teorías y algoritmos de optimización.
+
+\subsection{Teoría de Grafos en la Planificación}
+La Teoría de Grafos proporciona un marco matemático robusto para modelar conflictos en problemas de planificación. El problema de horarios se puede representar como un problema de coloración de grafos (Graph Coloring Problem - GCP) \cite{lewis2015guide}.
+
+En este modelo:
+\begin{itemize}
+    \item Vértices (Nodos): Representan los eventos o clases a programar.
+    \item Aristas (Enlaces): Conectan dos vértices si existe un conflicto entre ellos (por ejemplo, mismo profesor, mismo grupo de estudiantes o misma aula).
+    \item Colores: Representan los periodos de tiempo disponibles.
+\end{itemize}
+
+El objetivo es asignar un color a cada vértice de tal manera que ningunos dos vértices adyacentes compartan el mismo color, utilizando el mínimo número de colores posible (número cromático).
+
+Algoritmos clásicos como Welsh-Powell o DSATUR (Degree of Saturation) son eficientes para encontrar soluciones en grafos de conflictos \cite{burke2004-state}. Sin embargo, en la práctica, las restricciones complejas de la vida real (preferencias de docentes, minimización de huecos, restricciones de capacidad) hacen que el modelo de coloración pura sea insuficiente o difícil de adaptar sin perder eficiencia.
+
+Por esta razón, aunque la teoría de grafos fundamenta el entendimiento de los conflictos, se optó por un enfoque más flexible basado en CSP y Backtracking para la implementación final.
 
 \subsection{Problema de Satisfacción de Restricciones (CSP)}
 El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricciones (CSP), definido por Russell y Norvig \cite{russell2021ai} como una terna $(X, D, C)$:
@@ -174,16 +196,26 @@ El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricc
 
 Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (por ejemplo, no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (por ejemplo, minimizar huecos libres).
 
-\subsection{Algoritmos de Búsqueda: Backtracking}
-Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Backtracking (Vuelta Atrás). Este es un algoritmo de búsqueda en profundidad que construye candidatos a solución de manera incremental. Si se añade una asignación que viola una restricción dura, el algoritmo retrocede al paso anterior y prueba con el siguiente valor del dominio, descartando esa rama del árbol de búsqueda \cite{cormen_algorithms}.
+\subsection{Algoritmos de Búsqueda y Backtracking}
+Para resolver el CSP planteado, se implementó el algoritmo de Backtracking (Vuelta Atrás). Este método realiza una búsqueda sistemática en el espacio de soluciones:
 
-\subsection{Heurísticas de Poda y Optimización}
-Dado que el espacio de búsqueda puede crecer exponencialmente, se pueden aplicar heurísticas para mejorar la eficiencia:
-\begin{itemize}
-    \item Poda (Pruning): Se descartan tempranamente las ramas que no pueden llevar a una solución válida. Por ejemplo, si una materia obligatoria se queda sin cupos válidos.
-    \item Ordenamiento de Variables (Fail-First): Se intentan asignar primero las variables más restrictivas para detectar conflictos lo antes posible \cite{automated_timetabling}.
-    \item Función Objetivo: Las soluciones válidas encontradas se evalúan mediante una función de puntuación ponderada que penaliza los huecos y bonifica la asignación de docentes preferidos.
-\end{itemize}
+\begin{enumerate}
+    \item Generación de Candidatos: El algoritmo construye soluciones de manera incremental, asignatura por asignatura.
+    \item Verificación de Restricciones: En cada paso, verifica si la asignación actual viola alguna restricción dura.
+    \item Retroceso (Backtrack): Si se encuentra un conflicto insalvable, el algoritmo retrocede al paso anterior y prueba con el siguiente grupo disponible, descartando la rama actual del árbol de búsqueda \cite{cormen_algorithms}.
+\end{enumerate}
+
+Este enfoque garantiza encontrar todas las combinaciones válidas posibles, lo cual es crucial para ofrecer al estudiante la totalidad de sus opciones.
+
+\subsection{Optimización Combinatoria y Selección}
+Dado que el número de combinaciones válidas puede ser muy grande, se aplica un proceso de Optimización Combinatoria para seleccionar las mejores opciones. El sistema no solo busca una solución factible, sino que busca las "mejores $k$" soluciones según criterios de calidad.
+
+Se utiliza un sistema de ranking donde cada horario generado recibe una puntuación basada en el cumplimiento de restricciones blandas. Posteriormente, se ordenan las soluciones de mayor a menor puntaje y se presentan al usuario solo las mejores opciones, optimizando así su toma de decisiones.
+
+\subsection{Análisis de Decisión Multi-criterio (MCDA)}
+Para evaluar la calidad de un horario, se emplea el Análisis de Decisión Multi-criterio (MCDA). Este enfoque permite considerar múltiples factores simultáneamente, asignando pesos específicos a cada criterio \cite{triantaphyllou2000multi}.
+
+En la implementación, esto se refleja a través del Patrón de Diseño \textit{Strategy}. El sistema permite cambiar dinámicamente la estrategia de evaluación (por ejemplo, "Priorizar mañanas libres", "Minimizar huecos", "Evitar cruces de materias"), calculando el puntaje total como una suma ponderada de estos criterios. Esto otorga al sistema la flexibilidad de adaptarse a las preferencias cambiantes de los estudiantes.
 
 \section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
 \label{sec:edge-ai}
@@ -244,4 +276,36 @@ Cuando la sincronización completa exitosamente, se actualiza la base de datos l
     \label{fig:offline_architecture}
     \small{Fuente: Couchbase Inc. (2023) \cite{couchbase_offlinefirst}}
 \end{figure}
+
+\section{Notificaciones y Widgets en Android}
+\label{sec:notificaciones-widgets}
+
+Las aplicaciones móviles modernas requieren mecanismos para interactuar con el usuario incluso cuando no están en primer plano. Android proporciona componentes específicos para este propósito: Notificaciones y App Widgets.
+
+\subsection{Sistema de Notificaciones}
+Las notificaciones son mensajes que Android muestra fuera de la interfaz de usuario de la aplicación para proporcionar recordatorios, comunicaciones de otras personas u otra información oportuna de la aplicación \cite{android_notifications}.
+
+A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, "Recordatorios de Clases", "Avisos Generales") y otorga al usuario el control final para modificar la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
+
+La Importancia de la notificación determina cuánto interrumpe al usuario (visual y auditivamente). Los niveles van desde "Urgente" (sonido y ventana emergente) hasta "Baja" (sin sonido ni interrupción visual).
+
+Existen dos tipos principales de implementación:
+\begin{itemize}
+    \item Notificaciones Locales: Programadas por la propia aplicación utilizando \texttt{AlarmManager} o \texttt{WorkManager}. Son ideales para recordatorios basados en el tiempo que no requieren conexión a internet, como los recordatorios de clases configurados en el dispositivo.
+    \item Notificaciones Remotas (Push): Enviadas desde un servidor externo a través de servicios como Firebase Cloud Messaging (FCM).
+\end{itemize}
+
+\subsection{App Widgets}
+Los App Widgets son vistas de aplicación en miniatura que se pueden incrustar en otras aplicaciones (como la pantalla de inicio) y recibir actualizaciones periódicas \cite{android_widgets}.
+
+La arquitectura de un Widget se basa en los siguientes componentes clave:
+\begin{itemize}
+    \item AppWidgetProvider: Una implementación de \texttt{BroadcastReceiver} que maneja el ciclo de vida del widget (actualización, habilitación, inhabilitación y eliminación).
+    \item RemoteViews: Debido a que el widget se ejecuta en un proceso distinto al de la aplicación principal (generalmente el proceso del "Launcher"), la interfaz de usuario no se puede manipular directamente. \texttt{RemoteViews} es una clase que describe una jerarquía de vistas que se puede mostrar en otro proceso. Actúa como un conjunto de instrucciones de renderizado que el sistema ejecuta de manera segura \cite{android_remoteviews}.
+\end{itemize}
+
+El ciclo de vida de actualización está definido por un intervalo de tiempo en el archivo de configuración XML, aunque también se pueden solicitar actualizaciones manuales cuando ocurren cambios en los datos de la aplicación, asegurando que la información mostrada en el widget esté siempre sincronizada.
+
+
+
 
