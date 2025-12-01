@@ -6,17 +6,17 @@ Este capítulo establece los fundamentos teóricos y tecnológicos relacionados 
 \section{Ingeniería de Software para Dispositivos Móviles}
 \label{sec:ingenieria-movil}
 
-El desarrollo de aplicaciones móviles ha transitado desde enfoques imperativos hacia paradigmas declarativos y reactivos, priorizando la eficiencia en el manejo de recursos limitados y la experiencia de usuario fluida.
+El desarrollo de aplicaciones móviles ha transitado desde enfoques imperativos hacia paradigmas declarativos y reactivos. Este cambio prioriza la eficiencia en el manejo de recursos limitados y asegura una interacción continua con el usuario.
 
 \subsection{Arquitectura de Plataforma Android}
 Android es un sistema operativo basado en el núcleo Linux, diseñado para dispositivos con pantalla táctil. Su arquitectura se divide en capas: el kernel de Linux, la capa de abstracción de hardware (HAL), el tiempo de ejecución de Android (ART) y el marco de trabajo de aplicaciones (Application Framework) \cite{android_arch}.
 
-El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema. Este enfoque ofrece un rendimiento superior en comparación con soluciones híbridas, especialmente en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}.
+El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema. En consecuencia, este enfoque proporciona un rendimiento optimizado en comparación con soluciones híbridas, aspecto relevante en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}.
 
 Kotlin es un lenguaje moderno y estáticamente tipado que interopera completamente con Java, ofreciendo características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
 
 \subsection{Paradigma de Interfaz Declarativa (Jetpack Compose)}
-Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). La tendencia actual en la industria, respaldada por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}, es el uso de marcos de trabajo declarativos.
+Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). Actualmente, el uso de marcos de trabajo declarativos se ha consolidado en la industria, respaldado por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}.
 
 El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre ambos paradigmas.
 
@@ -30,7 +30,7 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
         \hline
         El estado de la UI y el estado de la app pueden desincronizarse. & El estado es la única fuente de verdad. \\
         \hline
-        Mucho código repetitivo (boilerplate). & Código más conciso y legible. \\
+        Código redundante (boilerplate). & Código conciso y legible. \\
         \hline
     \end{tabular}
     \caption{Comparación entre UI Imperativa y Declarativa}
@@ -41,12 +41,12 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
 Jetpack Compose es el kit de herramientas moderno de Android para construir interfaces nativas. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
 
 
-Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza inteligentemente solo los componentes que dependen de los datos modificados, reduciendo la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
+Cuando el estado cambia, el marco de trabajo ejecuta un proceso de Recomposición. Este proceso actualiza selectivamente los componentes que dependen de los datos modificados. De esta forma, se reduce la complejidad de sincronización manual entre la vista y el modelo \cite{gupta2022modern}.
 
 \subsection{Ciclo de Vida y Gestión de Estado (UDF)}
 La gestión de estado es crítica en aplicaciones reactivas para garantizar la consistencia de los datos mostrados. Se utiliza el patrón Unidirectional Data Flow (UDF), donde el estado fluye en una sola dirección (de la lógica a la UI) y los eventos fluyen en sentido contrario (de la UI a la lógica).
 
-Para implementar este patrón, se emplean flujos reactivos mediante StateFlow de la librería Kotlin Coroutines. StateFlow es un flujo observable que emite actualizaciones de estado inmutables a la interfaz de usuario, asegurando que la UI siempre refleje el último estado válido producido por la capa de lógica de negocio \cite{reactive_kotlin}.
+Para implementar este patrón, se emplean flujos reactivos mediante StateFlow de la librería Kotlin Coroutines. StateFlow es un flujo observable que emite actualizaciones de estado inmutables a la interfaz de usuario. Por lo tanto, se garantiza que la interfaz refleje el último estado válido producido por la capa de lógica de negocio \cite{reactive_kotlin}.
 
 \section{Arquitectura de Software}
 \label{sec:arquitectura-software}
@@ -182,9 +182,9 @@ En este modelo:
 
 El objetivo es asignar un color a cada vértice de tal manera que ningunos dos vértices adyacentes compartan el mismo color, utilizando el mínimo número de colores posible (número cromático).
 
-Algoritmos clásicos como Welsh-Powell o DSATUR (Degree of Saturation) son eficientes para encontrar soluciones en grafos de conflictos \cite{burke2004-state}. Sin embargo, en la práctica, las restricciones complejas de la vida real (preferencias de docentes, minimización de huecos, restricciones de capacidad) hacen que el modelo de coloración pura sea insuficiente o difícil de adaptar sin perder eficiencia.
+Algoritmos clásicos como Welsh-Powell o DSATUR (Degree of Saturation) son eficientes para encontrar soluciones en grafos de conflictos \cite{burke2004-state}. No obstante, las restricciones inherentes a la planificación académica (preferencias de docentes, minimización de huecos, restricciones de capacidad) limitan la aplicabilidad directa del modelo de coloración pura.
 
-Por esta razón, aunque la teoría de grafos fundamenta el entendimiento de los conflictos, se optó por un enfoque más flexible basado en CSP y Backtracking para la implementación final.
+Por esta razón, aunque la teoría de grafos fundamenta el entendimiento de los conflictos, un enfoque alternativo y flexible es el uso de CSP y Backtracking.
 
 \subsection{Problema de Satisfacción de Restricciones (CSP)}
 El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricciones (CSP), definido por Russell y Norvig \cite{russell2021ai} como una terna $(X, D, C)$:
@@ -197,7 +197,7 @@ El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricc
 Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (por ejemplo, no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (por ejemplo, minimizar huecos libres).
 
 \subsection{Algoritmos de Búsqueda y Backtracking}
-Para resolver el CSP planteado, se implementó el algoritmo de Backtracking (Vuelta Atrás). Este método realiza una búsqueda sistemática en el espacio de soluciones:
+Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Backtracking (Vuelta Atrás). Este método realiza una búsqueda sistemática en el espacio de soluciones:
 
 \begin{enumerate}
     \item Generación de Candidatos: El algoritmo construye soluciones de manera incremental, asignatura por asignatura.
@@ -205,17 +205,17 @@ Para resolver el CSP planteado, se implementó el algoritmo de Backtracking (Vue
     \item Retroceso (Backtrack): Si se encuentra un conflicto insalvable, el algoritmo retrocede al paso anterior y prueba con el siguiente grupo disponible, descartando la rama actual del árbol de búsqueda \cite{cormen_algorithms}.
 \end{enumerate}
 
-Este enfoque garantiza encontrar todas las combinaciones válidas posibles, lo cual es crucial para ofrecer al estudiante la totalidad de sus opciones.
+Este enfoque permite identificar el conjunto completo de combinaciones válidas posibles. Dicha característica resulta fundamental para presentar al estudiante todas las opciones disponibles.
 
 \subsection{Optimización Combinatoria y Selección}
-Dado que el número de combinaciones válidas puede ser muy grande, se aplica un proceso de Optimización Combinatoria para seleccionar las mejores opciones. El sistema no solo busca una solución factible, sino que busca las "mejores $k$" soluciones según criterios de calidad.
+Dado que el número de combinaciones válidas puede ser muy grande, se aplica un proceso de Optimización Combinatoria para seleccionar las mejores opciones. Los algoritmos de optimización no solo buscan una solución factible, sino que buscan las "mejores $k$" soluciones según criterios de calidad.
 
-Se utiliza un sistema de ranking donde cada horario generado recibe una puntuación basada en el cumplimiento de restricciones blandas. Posteriormente, se ordenan las soluciones de mayor a menor puntaje y se presentan al usuario solo las mejores opciones, optimizando así su toma de decisiones.
+Se suele utilizar un sistema de ranking donde cada horario generado recibe una puntuación basada en el cumplimiento de restricciones blandas. Posteriormente, se ordenan las soluciones de mayor a menor puntaje y se presentan al usuario las opciones destacadas, facilitando el proceso de selección.
 
 \subsection{Análisis de Decisión Multi-criterio (MCDA)}
 Para evaluar la calidad de un horario, se emplea el Análisis de Decisión Multi-criterio (MCDA). Este enfoque permite considerar múltiples factores simultáneamente, asignando pesos específicos a cada criterio \cite{triantaphyllou2000multi}.
 
-En la implementación, esto se refleja a través del Patrón de Diseño \textit{Strategy}. El sistema permite cambiar dinámicamente la estrategia de evaluación (por ejemplo, "Priorizar mañanas libres", "Minimizar huecos", "Evitar cruces de materias"), calculando el puntaje total como una suma ponderada de estos criterios. Esto otorga al sistema la flexibilidad de adaptarse a las preferencias cambiantes de los estudiantes.
+En la práctica, esto se puede implementar a través del Patrón de Diseño \textit{Strategy}. Este patrón permite cambiar dinámicamente la estrategia de evaluación (por ejemplo, "Priorizar mañanas libres", "Minimizar huecos", "Evitar cruces de materias"), calculando el puntaje total como una suma ponderada de estos criterios. Esto otorga flexibilidad para adaptarse a las preferencias cambiantes.
 
 \section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
 \label{sec:edge-ai}
@@ -253,7 +253,7 @@ Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos co
 \section{Gestión y Persistencia de Datos}
 \label{sec:persistencia}
 
-La aplicación sigue una filosofía Offline-First, garantizando que la funcionalidad principal esté disponible sin conexión a internet, un requisito crítico en entornos con conectividad intermitente \cite{guda2025offline}.
+La filosofía Offline-First garantiza que la funcionalidad principal esté disponible sin conexión a internet, un requisito crítico en entornos con conectividad intermitente \cite{guda2025offline}.
 
 \subsection{Bases de Datos Relacionales Embebidas (Room)}
 SQLite es un motor de base de datos relacional ligero embebido en Android. Room proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
@@ -263,12 +263,6 @@ El patrón Offline-First invierte la dependencia tradicional de las aplicaciones
 
 La Figura \ref{fig:offline_architecture} ilustra la arquitectura típica de una aplicación que sigue este patrón. Como se observa, la base de datos local actúa como la fuente primaria de datos, mientras que las operaciones de red se ejecutan de manera asíncrona en segundo plano.
 
-En una arquitectura Offline-First robusta, se adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario siempre observa y muestra los datos de la base de datos local, garantizando una experiencia fluida incluso sin conexión.
-
-Las operaciones de red pueden ejecutarse en segundo plano utilizando componentes como WorkManager, que actúa como planificador de tareas diferibles y garantizadas.
-
-Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Las librerías de persistencia modernas notifican automáticamente a la UI mediante flujos reactivos para que refleje los cambios. Este diseño desacopla la experiencia de usuario de la latencia de la red, permitiendo que la aplicación funcione de manera óptima tanto en conexiones lentas como en ausencia total de conectividad.
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.65\textwidth]{images/offline_architecture_couchbase.png}
@@ -276,6 +270,12 @@ Cuando la sincronización completa exitosamente, se actualiza la base de datos l
     \label{fig:offline_architecture}
     \small{Fuente: Couchbase Inc. (2023) \cite{couchbase_offlinefirst}}
 \end{figure}
+
+En una arquitectura Offline-First robusta, se adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario observa y muestra los datos de la base de datos local, permitiendo la operatividad incluso sin conexión.
+
+Las operaciones de red pueden ejecutarse en segundo plano utilizando componentes como WorkManager, que actúa como planificador de tareas diferibles y garantizadas.
+
+Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Las librerías de persistencia modernas notifican automáticamente a la UI mediante flujos reactivos para que refleje los cambios. Este diseño desacopla la interacción del usuario de la latencia de la red, permitiendo que la aplicación mantenga su funcionalidad tanto en conexiones lentas como en ausencia total de conectividad.
 
 \section{Notificaciones y Widgets en Android}
 \label{sec:notificaciones-widgets}
@@ -285,7 +285,7 @@ Las aplicaciones móviles modernas requieren mecanismos para interactuar con el 
 \subsection{Sistema de Notificaciones}
 Las notificaciones son mensajes que Android muestra fuera de la interfaz de usuario de la aplicación para proporcionar recordatorios, comunicaciones de otras personas u otra información oportuna de la aplicación \cite{android_notifications}.
 
-A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, "Recordatorios de Clases", "Avisos Generales") y otorga al usuario el control final para modificar la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
+A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, "Recordatorios de Clases", "Avisos Generales") y facilita la gestión de la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
 
 La Importancia de la notificación determina cuánto interrumpe al usuario (visual y auditivamente). Los niveles van desde "Urgente" (sonido y ventana emergente) hasta "Baja" (sin sonido ni interrupción visual).
 
@@ -304,7 +304,7 @@ La arquitectura de un Widget se basa en los siguientes componentes clave:
     \item RemoteViews: Debido a que el widget se ejecuta en un proceso distinto al de la aplicación principal (generalmente el proceso del "Launcher"), la interfaz de usuario no se puede manipular directamente. \texttt{RemoteViews} es una clase que describe una jerarquía de vistas que se puede mostrar en otro proceso. Actúa como un conjunto de instrucciones de renderizado que el sistema ejecuta de manera segura \cite{android_remoteviews}.
 \end{itemize}
 
-El ciclo de vida de actualización está definido por un intervalo de tiempo en el archivo de configuración XML, aunque también se pueden solicitar actualizaciones manuales cuando ocurren cambios en los datos de la aplicación, asegurando que la información mostrada en el widget esté siempre sincronizada.
+El ciclo de vida de actualización está definido por un intervalo de tiempo en el archivo de configuración XML, aunque también se pueden solicitar actualizaciones manuales cuando ocurren cambios en los datos de la aplicación, garantizando la sincronización de la información visualizada.
 
 
 

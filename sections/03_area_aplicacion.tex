@@ -1,13 +1,13 @@
 \chapter{MARCO DE APLICACIÓN}
 \label{chap:area_aplicacion}
 
-Este capítulo describe el área de aplicación del proyecto, contextualizando el problema que TecnoTime busca resolver en el ámbito de la gestión de horarios académicos de la Facultad de Ciencias y Tecnología. Se presenta el contexto institucional, se identifican los actores involucrados, se describen las herramientas actuales y sus limitaciones, y se fundamenta la necesidad de una solución complementaria.
+Este capítulo describe el entorno operativo de la Facultad de Ciencias y Tecnología (FCyT) de la Universidad Mayor de San Simón (UMSS), donde se desarrolla el proceso de gestión de horarios académicos. Se detalla el contexto institucional, los actores que intervienen en el proceso, las herramientas utilizadas actualmente y las reglas de negocio que rigen la planificación académica.
 
 \section{Contexto institucional de la Facultad de Ciencias y Tecnología}
 
-La Facultad de Ciencias y Tecnología (FCyT) de la UMSS alberga ocho carreras de ingeniería: Informática, Sistemas, Civil, Electromecánica, Electrónica, Química, Alimentos y Licenciatura en Física. Cada carrera organiza su oferta académica en niveles diferenciados por turno (mañana, tarde, noche) y modalidad (presencial, semipresencial) \cite{fcyt_umss}.
+La Facultad de Ciencias y Tecnología (FCyT) de la UMSS alberga una amplia oferta académica que incluye las carreras de Alimentos, Biología, Biotecnología, Civil, Eléctrica, Electromecánica, Electrónica, Energía, Física, Industrial, Informática, Matemáticas, Mecánica, Química y Sistemas. Estas se imparten en diversos niveles y planes, abarcando ingenierías y licenciaturas, organizando su oferta académica \cite{fcyt_umss}.
 
-Los horarios académicos se publican semestralmente mediante el Sistema Académico de Gestión de Aulas y Ambientes (SAGAA) en formato PDF, como muestra la Figura \ref{fig:portal_sagaa}. Este formato estático genera dificultades en la consulta dinámica, actualización y personalización de información \cite{horarios_fcyt}.
+Los horarios académicos se publican semestralmente mediante el Sistema Académico de Gestión de Aulas y Ambientes (SAGAA) en formato PDF. La Figura \ref{fig:portal_sagaa} muestra la interfaz de publicación de estos documentos.
 
 \begin{figure}[H]
   \centering
@@ -17,29 +17,59 @@ Los horarios académicos se publican semestralmente mediante el Sistema Académi
   \small{Fuente: \cite{horarios_fcyt}}
 \end{figure}
 
-\section{Problemática en la gestión de horarios universitarios}
+\section{Problemática en el proceso actual}
 
-El sistema actual presenta limitaciones significativas. Los horarios se distribuyen exclusivamente en formato PDF, impidiendo búsqueda dinámica, personalización e integración con herramientas digitales. Además, los cambios no siempre se comunican efectivamente a los estudiantes afectados.
+El proceso de gestión y consulta de horarios presenta características específicas que impactan significativamente a la comunidad universitaria. La información oficial se distribuye exclusivamente en archivos estáticos (PDF), lo que implica que cualquier actualización, corrección de aulas o cambio de docentes depende enteramente de la republicación manual de estos documentos. Esta falta de dinamismo genera una brecha temporal entre la realidad operativa y la información disponible para el estudiante.
 
-Según encuesta aplicada a 126 estudiantes \cite{encuesta_fcyt_2025}, el 94\% utiliza dispositivos Android como plataforma principal para consultas académicas. Esta preferencia contrasta con la ausencia de aplicaciones nativas. Asimismo, el 80\% valida cambios mediante grupos de WhatsApp, evidenciando dispersión entre canales formales e informales.
+Según una encuesta aplicada a 126 estudiantes de la facultad \cite{encuesta_fcyt_2025}, el 94\% de la población estudiantil utiliza dispositivos móviles con sistema operativo Android para sus actividades académicas. En cuanto a la comunicación de cambios en la planificación, el 80\% de los encuestados indica que valida la información a través de grupos de mensajería instantánea (WhatsApp), lo que denota un flujo de información híbrido y poco eficiente que combina canales oficiales estáticos con canales informales dinámicos pero no verificados.
 
-La falta de herramientas móviles adecuadas obliga a repetir procesos de consulta. El 60\% califica como alta su frustración por repetir pasos y perder progreso entre sesiones. Los principales problemas incluyen dispersión de información entre PDF, web y mensajería; falta de funcionamiento offline; dificultad para consolidar horarios personales; y ausencia de recordatorios automáticos.
+Los estudiantes reportan que el proceso de consolidación de su horario personal es manual y propenso a errores, requiriendo la consulta simultánea de múltiples fuentes dispersas: los PDFs oficiales para verificar aulas, el sistema web de inscripción para registrar materias y los grupos de comunicación para confirmar la asistencia del docente. Esta fragmentación dificulta la obtención de una visión unificada y confiable de sus actividades académicas diarias.
 
-\section{Actores involucrados y afectación}
+\section{Actores involucrados}
 
-La problemática afecta principalmente a tres actores: los estudiantes, quienes requieren consulta frecuente y detección de conflictos; los docentes, afectados por la desinformación estudiantil ante cambios; y el personal administrativo, limitado por la imposibilidad de notificaciones automáticas al publicar actualizaciones.
+En el entorno de la gestión de horarios intervienen los siguientes actores principales:
 
-\section{Herramientas actuales y limitaciones}
+\begin{itemize}
+    \item Estudiantes: Son los usuarios finales de la información. Deben consultar la oferta académica, planificar su semestre evitando conflictos de horario y mantenerse informados sobre cambios de aulas o docentes.
+    \item Personal Administrativo (Jefaturas de Carrera y OPA): Responsables de la planificación, asignación de ambientes y publicación de los horarios oficiales en el portal SAGAA.
+\end{itemize}
 
-Los estudiantes utilizan principalmente el portal SAGAA para acceder a PDFs oficiales y el sistema web Cappuchino para organizar horarios.
+\section{Herramientas actuales}
+
+Actualmente, el proceso se apoya en dos herramientas institucionales principales: el portal SAGAA y el sistema Cappuchino.
 
 \subsection{Portal SAGAA}
 
-El portal SAGAA constituye la fuente oficial de horarios. Los estudiantes deben navegar por carpetas, identificar el PDF correspondiente, descargarlo y buscar manualmente su información entre múltiples páginas. Este proceso se repite cada vez que se requiere verificar cambios, generando pérdida de tiempo y posibles errores por consulta de versiones desactualizadas.
+El portal SAGAA (Sistema Académico de Gestión de Aulas y Ambientes) constituye el repositorio oficial de la información académica de la facultad. Su función principal en este contexto es el almacenamiento centralizado y la distribución pública de los horarios en formato PDF. Para acceder a la información, los estudiantes deben navegar a través de una estructura jerárquica, seleccionando primero su facultad, luego su carrera y finalmente el nivel o semestre correspondiente.
 
-\subsection{Sistema Cappuchino}
+Los documentos alojados en este portal representan la "versión oficial" de la planificación académica. Contienen la información definitiva y detallada sobre las materias habilitadas, los grupos disponibles, los docentes asignados y la distribución de aulas. Sin embargo, al tratarse de un repositorio de archivos, no ofrece funcionalidades interactivas de búsqueda, filtrado o notificación automática de cambios.
 
-Cappuchino es un sistema web desarrollado por SCESI que permite organizar horarios y detectar choques durante el periodo de inscripción \cite{cappuccino_umss}. La Figura \ref{fig:cappuchino_interfaz} muestra la interfaz principal de esta herramienta.
+Aunque la gran mayoría de los estudiantes utiliza herramientas de terceros para visualizar esta información de manera más amigable, existe un grupo de usuarios que, por desconocimiento de alternativas o preferencia por la fuente oficial, accede directamente a estos archivos \cite{encuesta_fcyt_2025}. La Figura \ref{fig:horario_pdf_informatica} muestra un ejemplo del formato de estos documentos, correspondiente a la carrera de Ingeniería Informática.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{images/sagaa_horario_informatica.png}
+  \caption{Ejemplo de horario en formato PDF (Ingeniería Informática)}
+  \label{fig:horario_pdf_informatica}
+  \small{Fuente: \cite{horarios_fcyt}}
+\end{figure}
+
+La estructura de estos documentos presenta la información en tablas con columnas definidas para el Nivel, Materia (Código y Nombre), Grupo, Tipo, Docente, Día, Hora y Aula. El formato de hora utilizado es numérico continuo, omitiendo los dos puntos separadores (por ejemplo, '945-1115' representa el intervalo de 09:45 a 11:15). De igual manera, los días de la semana se representan mediante abreviaturas de dos letras: LU (Lunes), MA (Martes), MI (Miércoles), JU (Jueves), VI (Viernes) y SA (Sábado).
+
+Un aspecto crítico para la planificación es la modalidad de inscripción de ciertas asignaturas, donde la componente teórica y práctica se gestionan como grupos independientes. En estos casos, el estudiante debe inscribirse obligatoriamente en un grupo de teoría y seleccionar por separado uno de los múltiples grupos de laboratorio disponibles, asegurando que no existan conflictos temporales entre ambos.
+
+Los códigos de tipo de clase permiten distinguir la naturaleza de la actividad:
+\begin{itemize}
+    \item T (Teoría): Clases exclusivamente teóricas enfocadas en conceptos y principios.
+    \item P (Práctica): Clases prácticas o de laboratorio con aplicación directa.
+    \item TP (Teoría-Práctica): Clases mixtas que combinan ambos enfoques en un solo grupo.
+\end{itemize}
+
+\subsection{Herramientas de Apoyo a la Planificación}
+
+Como complemento a los canales oficiales, han surgido herramientas desarrolladas por la comunidad estudiantil para facilitar la organización académica. La más destacada es Cappuchino, un sistema web creado por la Sociedad Científica de Estudiantes de Sistemas e Informática (SCESI) \cite{cappuccino_umss}. Su funcionalidad principal es asistir a los estudiantes durante el periodo de inscripción, permitiendo seleccionar materias y visualizar posibles choques de horario.
+
+Esta herramienta se ha consolidado como un recurso esencial en la etapa de planificación. A través de una interfaz gráfica interactiva, los estudiantes pueden simular su carga académica agregando asignaturas y probando diferentes combinaciones de grupos. El sistema facilita la detección de conflictos temporales mediante una representación visual por colores, lo que permite a los usuarios optimizar su distribución de tiempo antes de proceder al registro oficial. La Figura \ref{fig:cappuchino_interfaz} presenta la interfaz de usuario de este sistema.
 
 \begin{figure}[H]
   \centering
@@ -49,32 +79,57 @@ Cappuchino es un sistema web desarrollado por SCESI que permite organizar horari
   \small{Fuente: \cite{cappuccino_umss}}
 \end{figure}
 
-Si bien es valorada por su rapidez, presenta limitaciones: funcionamiento óptimo limitado al periodo de inscripción, ausencia de modo sin conexión, falta de personalización post-inscripción y ausencia de recordatorios. Según la encuesta \cite{encuesta_fcyt_2025}, el 48\% la utiliza únicamente durante inscripción, evidenciando que no cubre necesidades de consulta continua.
+\subsection{Portal WebSIS}
 
-\subsection{Flujo actual y puntos de fricción}
+El Portal WebSIS es el sistema oficial de información universitaria de la UMSS, utilizado por todas las facultades, no solo la FCyT. A diferencia de SAGAA y Cappuchino, que funcionan como herramientas de planificación previa, el WebSIS es la plataforma donde se formaliza la inscripción. Una vez inscrito, el estudiante puede visualizar su horario oficial, el cual refleja únicamente las materias y grupos registrados \cite{websis_horario}.
 
-El proceso típico involucra consultar SAGAA o Cappuchino, generar un horario base, validar con PDFs actualizados, verificar en WhatsApp modificaciones de última hora, ajustar manualmente selecciones y registrar en calendarios personales. La Figura \ref{fig:asis_proceso} resume este proceso, evidenciando los múltiples pasos y herramientas requeridos.
+\subsection{Flujo de información actual}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\textwidth]{images/diagrams/area_asis_proceso.png}
-  \caption{Proceso actual (AS-IS) de gestión de horarios}
-  \label{fig:asis_proceso}
-  \small{Fuente: Elaboración propia}
-\end{figure}
+El flujo de información comienza con la publicación de los PDFs en SAGAA. Posteriormente, los estudiantes utilizan Cappuchino para planificar su inscripción. Una vez finalizada la etapa de inscripción, la validación de horarios y aulas durante el semestre se realiza consultando nuevamente los PDFs o mediante comunicación informal entre pares.
 
-\section{Necesidad de una solución complementaria}
+\section{Reglas de Negocio y Restricciones}
 
-La brecha entre necesidades estudiantiles y capacidades actuales justifica una aplicación móvil complementaria. Los datos evidencian demandas concretas: 88\% solicita actualización automática, 78\% valora modo offline, 56\% requiere recordatorios y 51\% desea compartición estructurada \cite{encuesta_fcyt_2025}.
+El funcionamiento académico de la FCyT se rige por un conjunto de reglas y restricciones que definen la estructura de los horarios.
 
-La solución no pretende reemplazar sistemas oficiales, sino complementarlos facilitando consulta rápida, personalización, uso offline y coordinación social. Los beneficios incluyen reducción de tiempo en consultas repetitivas, disminución de choques no detectados, mejora en coordinación estudiantil y continuidad de uso fuera del periodo de inscripción.
+\subsection{Horarios y Turnos}
 
-\section{Visión de la solución esperada}
+Las actividades académicas se desarrollan bajo las siguientes pautas temporales:
 
-TecnoTime se concibe como herramienta complementaria que permita gestionar horarios eficientemente. Las funcionalidades esperadas incluyen: generación automática sin choques, consulta rápida con vista diaria y semanal, funcionamiento offline, recordatorios configurables, intercambio estructurado con compañeros y sincronización con fuente oficial.
+\begin{itemize}
+    \item Días de clase: Las actividades regulares se programan de lunes a viernes. Los días sábados se utilizan ocasionalmente para exámenes o clases de recuperación, dependiendo de la materia.
+    \item Turnos: La jornada académica se divide en tres turnos:
+    \begin{itemize}
+        \item Mañana: Comprende desde las 06:45 hasta las 12:45.
+        \item Tarde: Comprende desde las 12:45 hasta las 18:45.
+        \item Noche: Comprende desde las 18:45 hasta las 21:45.
+    \end{itemize}
+    \item Periodos: Las clases se organizan en periodos estándar de 1 hora y 30 minutos (ej. 06:45 - 08:15, 08:15 - 09:45).
+\end{itemize}
 
-% \section{Alcances y límites}
+\subsection{Estructura Académica}
 
-% El alcance se circunscribe a estudiantes de la FCyT. La solución se enfoca en gestión personal de horarios, integrándose con PDFs oficiales del portal SAGAA, priorizando funcionamiento offline y habilitando intercambio entre estudiantes.
+La oferta se organiza por carreras, niveles (semestres) y grupos. Cada materia puede tener múltiples grupos (ej. Grupo 1, Grupo 2), cada uno con su propio docente y horario asignado. Existen materias compartidas entre diferentes carreras (materias de servicio), lo que implica que estudiantes de distintas carreras pueden compartir el mismo grupo y horario.
 
-% Los límites son claros: no reemplaza el sistema oficial de inscripción, no modela capacidad de aulas ni cupos en tiempo real, no gestiona trámites administrativos y se enfoca inicialmente en Android. Los principales riesgos incluyen cambios en formato de PDFs, retrasos en publicación oficial y conectividad limitada, mitigados mediante proceso flexible de ingesta, caché local y arquitectura offline-first.
+\subsection{Publicación de Información}
+
+
+\section{Perfil Tecnológico y Hábitos de los Estudiantes}
+
+Para comprender mejor las necesidades de la población estudiantil, se realizó una encuesta a 126 estudiantes de la facultad \cite{encuesta_fcyt_2025}. Los resultados obtenidos delinean un perfil tecnológico claro y evidencian hábitos específicos en el manejo de la información académica.
+
+\subsection{Prevalencia de Dispositivos Móviles}
+
+El ecosistema móvil es predominante entre los estudiantes. El 94\% de los encuestados utiliza dispositivos con sistema operativo Android como su herramienta principal. Este dato es fundamental para definir la plataforma objetivo de cualquier solución tecnológica propuesta, asegurando el mayor alcance posible dentro de la comunidad universitaria.
+
+\subsection{Canales de Comunicación y Verificación}
+
+Ante la naturaleza estática de los horarios en PDF, los estudiantes han adoptado canales informales para validar la información. El 80\% de los participantes indica que utiliza grupos de WhatsApp para confirmar horarios, aulas y cambios de último momento. Esto refleja una necesidad crítica de inmediatez y confirmación social que los canales oficiales actuales no satisfacen plenamente.
+
+\subsection{Necesidades de Conectividad y Notificaciones}
+
+La infraestructura de conectividad en el campus y la dinámica estudiantil generan requerimientos específicos:
+\begin{itemize}
+    \item Acceso Offline: Un 77.7\% de los estudiantes considera vital contar con un "Modo sin conexión". La capacidad de consultar el horario sin depender de una conexión a internet activa es una de las características más demandadas, dada la inestabilidad de la red en ciertas zonas de la facultad.
+    \item Notificaciones: Existe una alta valoración hacia la recepción de alertas automáticas. Más del 50\% de los encuestados califica como muy útil recibir notificaciones antes del inicio de clases, lo que sugiere que una herramienta proactiva aportaría valor significativo a su gestión del tiempo.
+\end{itemize}
+

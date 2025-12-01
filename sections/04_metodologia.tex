@@ -5,7 +5,7 @@
 % --- Nota de cumplimiento (no teoría, solo aplicación) ---
 % (Hint EN: "Applied chapter, no theory dump.")
 
-\noindent Para el desarrollo de este proyecto se utilizó TecnoTime, una aplicación Android diseñada para optimizar la gestión de horarios académicos en la FCyT-UMSS. El desarrollo se estructuró en doce fases iterativas e incrementales, detalladas en el Cuadro~\ref{tab:fases_metodologia}, cada una con objetivos, entregables y criterios de aceptación específicos.
+\noindent En el presente proyecto se desarrolló TecnoTime, una aplicación Android diseñada para optimizar la gestión de horarios académicos en la FCyT-UMSS. El desarrollo se estructuró en doce fases iterativas e incrementales, detalladas en el Cuadro~\ref{tab:fases_metodologia}, cada una con objetivos, entregables y criterios de aceptación específicos.
 
 Este capítulo documenta la aplicación práctica de la metodología, las decisiones técnicas adoptadas, los artefactos generados y las evidencias verificables de cada fase.
 
@@ -106,65 +106,67 @@ El perfil de los encuestados abarca desde estudiantes de primeros semestres hast
 
 Los resultados de la encuesta aplicada a 126 estudiantes de la FCyT se presentan organizados por dimensiones temáticas, comenzando por el análisis de dispositivos utilizados y continuando con patrones de uso, coordinación social y demandas específicas.
 
-\subsubsection{Dispositivos utilizados}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Dispositivos utilizados}
 
-El análisis de dispositivos revela una marcada preferencia por plataformas móviles. El 94\% de los encuestados utiliza dispositivos Android como herramienta principal para consultas académicas, mientras que solo el 26\% dispone de computadora portátil de uso regular. Esta distribución confirma la necesidad de priorizar el desarrollo nativo para Android y optimizar la experiencia móvil.
+  El análisis de dispositivos revela una marcada preferencia por plataformas móviles. El 94\% de los encuestados utiliza dispositivos Android como herramienta principal para consultas académicas, mientras que solo el 26\% dispone de computadora portátil de uso regular. Esta distribución confirma la necesidad de priorizar el desarrollo nativo para Android y optimizar la experiencia móvil.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_dispositivo.png}
-  \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126).}
-  \label{fig:encuesta_dispositivo}
-  \small{Fuente: \cite{encuesta_fcyt_2025}.}
-\end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_dispositivo.png}
+    \caption[Distribución de dispositivos utilizados por los estudiantes (n=126)]{Distribución de dispositivos utilizados por los estudiantes (n=126).}
+    \label{fig:encuesta_dispositivo}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
 
-\subsubsection{Uso de Cappuchino}
+  \item \textbf{Uso de Cappuchino}
 
-La herramienta Cappuchino presenta un patrón de uso concentrado en periodos específicos. El 48\% de los estudiantes la utiliza únicamente durante el periodo de inscripción, mientras que el 44\% la consulta varias veces por semestre. Solo el 8\% reporta un uso diario o muy frecuente, evidenciando que la herramienta no cubre necesidades de consulta continua fuera del periodo de inscripción.
+  La herramienta Cappuchino presenta un patrón de uso concentrado en periodos específicos. El 48\% de los estudiantes la utiliza únicamente durante el periodo de inscripción, mientras que el 44\% la consulta varias veces por semestre. Solo el 8\% reporta un uso diario o muy frecuente, evidenciando que la herramienta no cubre necesidades de consulta continua fuera del periodo de inscripción.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
-  \caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126).}
-  \label{fig:encuesta_uso_capuchino}
-  \small{Fuente: \cite{encuesta_fcyt_2025}.}
-\end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
+    \caption[Frecuencia de uso de Cappuchino por los estudiantes (n=126)]{Frecuencia de uso de Cappuchino por los estudiantes (n=126).}
+    \label{fig:encuesta_uso_capuchino}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
 
-\subsubsection{Coordinación social mediante WhatsApp}
+  \item \textbf{Coordinación social mediante WhatsApp}
 
-El 80\% de los encuestados valida información de horarios y coordina cambios mediante grupos de WhatsApp, confirmando que la mensajería instantánea se ha convertido en un canal informal pero crítico para la gestión de información académica. Este hallazgo fundamenta la necesidad de habilitar intercambio estructurado de horarios compatible con plataformas de mensajería.
+  El 80\% de los encuestados valida información de horarios y coordina cambios mediante grupos de WhatsApp, confirmando que la mensajería instantánea se ha convertido en un canal informal pero crítico para la gestión de información académica. Este hallazgo fundamenta la necesidad de habilitar intercambio estructurado de horarios compatible con plataformas de mensajería.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\textwidth]{images/diagrams/encuesta_whatsapp.png}
-  \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126).}
-  \label{fig:encuesta_whatsapp}
-  \small{Fuente: \cite{encuesta_fcyt_2025}.}
-\end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/diagrams/encuesta_whatsapp.png}
+    \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126).}
+    \label{fig:encuesta_whatsapp}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
 
-\subsubsection{Frustración por repetir pasos}
+  \item \textbf{Frustración por repetir pasos}
 
-El 60\% de los estudiantes califica como alta su frustración (niveles 1-2-3 en escala de 1 a 5) por tener que repetir pasos para consultar horarios. Este indicador evidencia la necesidad de memoria de contexto y persistencia de selecciones para evitar procesos repetitivos en cada sesión de consulta.
+  El 60\% de los estudiantes califica como alta su frustración (niveles 1-2-3 en escala de 1 a 5) por tener que repetir pasos para consultar horarios. Este indicador evidencia la necesidad de memoria de contexto y persistencia de selecciones para evitar procesos repetitivos en cada sesión de consulta.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_frustracion.png}
-  \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126).}
-  \label{fig:encuesta_frustracion}
-  \small{Fuente: \cite{encuesta_fcyt_2025}.}
-\end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_frustracion.png}
+    \caption[Nivel de frustración por repetir pasos (n=126)]{Nivel de frustración por repetir pasos (n=126).}
+    \label{fig:encuesta_frustracion}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
 
-\subsubsection{Principales demandas identificadas}
+  \item \textbf{Principales demandas identificadas}
 
-Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases correspondientes del desarrollo (ver Cuadro~\ref{tab:fases_metodologia}: F4, F5, F7 y F8).
+  Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases correspondientes del desarrollo (ver Cuadro~\ref{tab:fases_metodologia}: F4, F5, F7 y F8).
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
-  \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126).}
-  \label{fig:encuesta_demandas}
-  \small{Fuente: \cite{encuesta_fcyt_2025}.}
-\end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
+    \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126).}
+    \label{fig:encuesta_demandas}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+\end{enumerate}
 
 \subsection{Derivación de requerimientos funcionales}
 
@@ -853,11 +855,11 @@ Cobertura objetivo. $\geq 75\%$ en módulos core (generator, parsing, sync, inte
 La validación del generador de horarios requiere un conjunto exhaustivo de casos de prueba que verifiquen tanto el cumplimiento de restricciones duras como la calidad de las soluciones propuestas. Estos casos críticos cubren escenarios extremos como materias con disponibilidad limitada, configuraciones que priorizan diferentes criterios, y situaciones de conflicto entre restricciones. Cada caso de prueba especifica las entradas exactas, los pasos de ejecución y los resultados esperados, permitiendo la verificación automatizada y la detección temprana de regresiones. Los casos implementados son:
 
 \begin{itemize}
-  \item TC-ONB-001: Onboarding completo. Entradas/Pasos: Abrir la aplicación, luego ir a Welcome, ingresar el nombre, ajustar el formato 24h, fines de semana y tema, sincronizar carreras, activar IA (opcional), continuar a Home. Resultado esperado: Preferencias persistidas; carreras visibles; IA permanece desactivada si no se activó. Evidencia: \texttt{WelcomeScreen}, \texttt{WelcomeViewModel}; captura <TBD>.
+  \item TC-ONB-001: Onboarding completo. Entradas/Pasos: Abrir la aplicación, luego ir a Welcome, ingresar el nombre, ajustar el formato 24h, fines de semana y tema, sincronizar carreras, activar IA (opcional), continuar a Home. Resultado esperado: Preferencias persistidas; carreras visibles; IA permanece desactivada si no se activó. Evidencia: \texttt{WelcomeScreen}, \texttt{WelcomeViewModel}; captura [Pendiente].
 
-  \item TC-ADD-002: Agregar materia con cambio de grupo. Entradas/Pasos: Seleccionar nivel, materia, grupo A (preview), confirmar, re-editar y cambiar a grupo B, confirmar. Resultado esperado: Selección final en grupo B; horarios asociados actualizados. Evidencia: \texttt{EditGroupScreen}; captura <TBD>.
+  \item TC-ADD-002: Agregar materia con cambio de grupo. Entradas/Pasos: Seleccionar nivel, materia, grupo A (preview), confirmar, re-editar y cambiar a grupo B, confirmar. Resultado esperado: Selección final en grupo B; horarios asociados actualizados. Evidencia: \texttt{EditGroupScreen}; captura [Pendiente].
 
-  \item TC-END-003: Finalizar materia (aprobado/abandonar). Entradas/Pasos: En Home, abrir card de materia, finalizar, elegir "Aprobado" y confirmar; repetir con otra en "Abandonar". Resultado esperado: Estado actualizado; materia aprobada no ofertada en generador; abandonar libera cupo. Evidencia: \texttt{EditGroupViewModel}; captura <TBD>.
+  \item TC-END-003: Finalizar materia (aprobado/abandonar). Entradas/Pasos: En Home, abrir card de materia, finalizar, elegir "Aprobado" y confirmar; repetir con otra en "Abandonar". Resultado esperado: Estado actualizado; materia aprobada no ofertada en generador; abandonar libera cupo. Evidencia: \texttt{EditGroupViewModel}; captura [Pendiente].
 
   \item TC-GEN-004: Generar sin choques (por defecto). Entradas/Pasos: En Generar: elegir 6 materias, \code{acceptConflicts=false}. Resultado esperado: 1-N horarios sin solapes; mensaje claro si no hay solución. Evidencia: \texttt{GenerateSchedulesUseCaseImpl}, \texttt{ScheduleGenerator}.
 
