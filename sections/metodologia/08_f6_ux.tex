@@ -1,0 +1,44 @@
+% ============================
+\section{F6: UX aplicada: onboarding, navegación, edición y widget}
+
+Esta fase refina la experiencia de usuario mediante flujos guiados, navegación optimizada y componentes de acceso rápido, reduciendo la fricción en tareas frecuentes y mejorando la usabilidad general de la aplicación.
+
+\subsection{Objetivo}
+Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual.
+
+\subsection{Desarrollo de la experiencia de usuario}
+Se diseñaron flujos guiados (onboarding, agregar/editar), navegación por días y un widget informativo; se consolidaron criterios de entrada/salida.
+
+Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:f6_resumen_ux} resume los flujos, comportamientos esperados e implementación de componentes de interfaz asociados a F6.
+
+\begin{table}[H]
+  \centering\small
+  \begin{tabularx}{\linewidth}{@{}p{3.0cm}p{4.5cm}>{\RaggedRight\arraybackslash}X@{}}
+    \hline
+    Flujo / Componente & Descripción & Implementación \\
+    \hline
+    Onboarding & Configuración inicial guiada (nombre, preferencias, carga de carreras). & WelcomeScreen, WelcomeViewModel \\
+    Agregar materia & Selección jerárquica: Nivel $\rightarrow$ Materia $\rightarrow$ Grupo (con preview). & AddSubjectFlowScreen, SelectLevelScreen, SelectSubjectScreen \\
+    Editar grupo & Cambio de grupo o eliminación de materia ya inscrita. & EditGroupScreen, EditGroupViewModel \\
+    Navegación principal & Pestañas por día con animación y acceso rápido a detalles. & HomeScreen, WeekDayTabsAnimated \\
+    Widget & Vista de solo lectura del horario actual en la pantalla de inicio. & ScheduleAppWidgetProvider, ScheduleRemoteViewsService \\
+    \hline
+  \end{tabularx}
+  \caption[Resumen de flujos y componentes de UX]{Resumen de flujos y componentes de UX.}
+  \label{tab:f6_resumen_ux}
+  \small{Fuente: Elaboración propia.}
+\end{table}
+
+\subsection{Resultados y verificación}
+Las mejoras de UX redujeron significativamente el número de pasos necesarios para configurar el horario inicial, validado mediante pruebas de usuario. El widget demostró una sincronización fiable con la base de datos local, actualizándose inmediatamente tras cambios en la aplicación principal.
+
+\textbf{Evidencias (código):}
+\begin{itemize}
+  \item Onboarding: WelcomeScreen, WelcomeViewModel.
+  \item Agregar materia: AddSubjectFlowScreen, AddSubjectViewModel, SelectLevelScreen, SelectSubjectScreen, SelectGroupScreen.
+  \item Editar grupo: EditGroupScreen, EditGroupViewModel.
+  \item Navegación: HomeScreen, WeekDayTabsAnimated.
+  \item Widget: ScheduleAppWidgetProvider, ScheduleRemoteViewsService, WidgetDateUtils.
+\end{itemize}
+
+% Rutas omitidas para simplificar; se emplean únicamente nombres de clases.

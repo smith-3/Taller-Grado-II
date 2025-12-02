@@ -1,0 +1,72 @@
+% ============================
+\section{F2: Modelo de dominio (entidades, reglas, mapeo)}
+
+Esta fase consolida la arquitectura de datos de TecnoTime, definiendo el modelo de dominio que sustenta todas las operaciones de la aplicación y garantiza la integridad referencial entre entidades.
+
+\subsection{Objetivo}
+Consolidar un modelo de dominio coherente con el área de aplicación, garantizando integridad y trazabilidad entre entidades y sus reglas.
+
+\subsection{Implementación del modelo de dominio}
+Se modelaron entidades y relaciones clave; se definieron índices/llaves para unicidad e integridad; y se implementaron mapeos entre ingreso (PDF/JSON), dominio y almacenamiento.
+
+\subsection{Entidades (derivadas del código)}
+El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento. Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real.
+
+Las entidades principales abarcan desde la representación de materias y grupos hasta la gestión de preferencias de usuario y configuraciones del sistema. A continuación se detallan las entidades fundamentales que componen este modelo:
+
+\begin{itemize}
+  \item Materia: domain/model/Subject.kt (Subject) (code, name, isElective, isApproved, isActive).
+  \item Grupo: Group (id, subjectCode, groupId, levelId, groupName, type, modality, isActive).
+  \item Bloque/Slot: GroupSchedule (day, startTime, endTime, aula/docente opcionales).
+  \item Carrera/Nivel: Career, Level; agregados: CareerWithLevels, LevelWithSubjects.
+  \item Docente/Aula: Teacher, Classroom.
+  \item Selección del usuario: SelectedSubject, SelectedSubjectWithGroup.
+  \item Preferencias/Usuario: UserSettings (24h, fines de semana, recordatorios, IA opt-in, etc.).
+\end{itemize}
+
+\subsection{Reglas e invariantes}
+La integridad del modelo de dominio se sustenta en un conjunto de reglas e invariantes que garantizan la consistencia de los datos a lo largo del ciclo de vida de la aplicación. Estas reglas abarcan desde restricciones de unicidad en identificadores hasta validaciones temporales que aseguran la coherencia de los horarios.
+
+La implementación de estas invariantes se realiza tanto a nivel de base de datos mediante índices y restricciones de integridad referencial, como a nivel de lógica de negocio mediante validaciones en los casos de uso. El cumplimiento estricto de estas reglas previene estados inconsistentes que podrían comprometer la funcionalidad del generador de horarios o la experiencia del usuario. Las reglas establecidas son:
+
+\begin{itemize}
+  \item Unicidad de Subject.code: SubjectEntity define índice único sobre code.
+  \item Unicidad compuesta (subjectCode, groupId): GroupEntity con índice compuesto único; FK a LevelEntity y SubjectEntity.
+  \item Temporal: GroupScheduleEntity asegura startTime–endTime para cada day y groupId; validación operativa start<end al normalizar/guardar.
+  \item Integridad referencial: FKs en GroupScheduleEntity hacia GroupEntity, TeacherEntity y ClassroomEntity (nulables cuando no hay asignación).
+\end{itemize}
+
+\subsection{Mapeos del ingreso al dominio y al almacenamiento}
+La arquitectura de TecnoTime implementa una clara separación entre las capas de ingreso de datos, dominio y persistencia, requiriendo transformaciones explícitas entre las representaciones de cada capa. Los mapeos bidireccionales permiten convertir datos desde formatos externos como PDF y JSON hacia el modelo de dominio, y posteriormente hacia entidades de base de datos para su almacenamiento persistente.
+
+Esta estrategia de mapeo explícito facilita la evolución independiente de cada capa, permite la validación de datos en cada transformación y simplifica las pruebas unitarias al aislar las responsabilidades de cada componente. Los principales componentes de mapeo implementados son:
+
+\begin{itemize}
+  \item DTO de horario compartible (domain/model/ShareableScheduleDto.kt (ShareableScheduleDto)) y analizadores PDF/JSON para el ingreso.
+  \item Mapeadores de dominio (p. ej., SubjectMapper, GroupMapper, GroupScheduleMapper, UserSettingsMapper) para transformar entre entidades y dominio.
+  \item Casos de uso para interoperabilidad JSON (domain/usecase/GenerateShareableScheduleJsonUseCase.kt (GenerateShareableScheduleJsonUseCase), LoadShareableScheduleUseCase, ImportSharedScheduleUseCase).
+\end{itemize}
+
+\subsection{Evidencias (código)}
+La implementación del modelo de dominio se materializa en un conjunto de clases Kotlin que reflejan fielmente el diseño conceptual presentado. Estas clases se organizan en el paquete domain/model y siguen los principios de inmutabilidad y encapsulamiento propios de la programación funcional.
+
+Las entidades de base de datos correspondientes se definen en el paquete data/local/entity utilizando las anotaciones de Room para especificar índices, relaciones y restricciones. La correspondencia uno a uno entre entidades de dominio y entidades de persistencia facilita el mantenimiento y la comprensión del código. Las clases principales que evidencian este modelo son:
+
+\begin{itemize}
+  \item Unicidad: SubjectEntity: índice unique(code); GroupEntity: índice compuesto unique(subject\_code, group\_id).
+  \item Modelos: Subject, Group, GroupSchedule, UserSettings.
+  \item Mapeo: GroupMapper incluye levelId, subjectCode y groupId como claves de relación.
+\end{itemize}
+
+Como apoyo visual, la Figura \ref{fig:f2_modelo_dominio_er} ilustra el diagrama entidad–relación del modelo de dominio, destacando entidades operativas, claves e integridad referencial utilizadas en la implementación.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagram_er.png}
+  \caption[Modelo de dominio: diagrama entidad–relación (ER)]{Modelo de dominio: diagrama entidad–relación (ER).}
+  \label{fig:f2_modelo_dominio_er}
+  \small{Fuente: elaboración propia.}
+\end{figure}
+
+\subsection{Resultados y verificación}
+El modelo de dominio fue validado mediante pruebas de integración que confirmaron la integridad referencial y la unicidad de claves compuestas. Los mapeos bidireccionales entre las capas de datos, dominio y presentación se verificaron exhaustivamente, asegurando la consistencia de la información en todo el flujo de la aplicación.

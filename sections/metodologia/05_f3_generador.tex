@@ -1,0 +1,129 @@
+% ============================
+\section{F3: Generador (restricciones, heurísticas, UI)}
+
+Esta fase se centró en la implementación del núcleo algorítmico de TecnoTime, abordando el problema de la generación automática de horarios como un desafío de satisfacción de restricciones (CSP). El desarrollo abarcó desde el diseño del motor de inferencia hasta la integración de una interfaz de usuario reactiva, permitiendo combinar restricciones académicas ineludibles con heurísticas de optimización personalizadas y criterios de preferencia definidos por el estudiante.
+
+\subsection{Objetivo}
+El objetivo principal fue desarrollar un algoritmo capaz de seleccionar automáticamente un grupo por cada materia inscrita, garantizando la ausencia de conflictos horarios (choques) como restricción base. Adicionalmente, se buscó optimizar la calidad de las soluciones generadas mediante la minimización de tiempos muertos (huecos) entre clases y la maximización de la afinidad con docentes seleccionados como favoritos, ofreciendo múltiples alternativas viables en tiempos de ejecución reducidos.
+
+\subsection{Desarrollo del generador de horarios}
+El desarrollo se inició con la parametrización formal del problema, definiendo las variables (materias), dominios (grupos disponibles) y restricciones (horarios y cupos). Se implementó un algoritmo de búsqueda con retroceso (backtracking) optimizado mediante técnicas de poda y heurísticas de ordenamiento de variables (MRV) y valores (LCV) para reducir el espacio de búsqueda.
+
+Paralelamente, se diseñó un sistema de puntuación multicriterio que evalúa cada combinación válida, asignando pesos configurables a los factores de optimización. Finalmente, se integró este motor con una interfaz de usuario en Jetpack Compose, permitiendo la configuración intuitiva de los parámetros de generación y la visualización comparativa de los resultados obtenidos.
+
+\subsection{Parámetros reales}
+El generador de horarios opera como un sistema configurable que acepta múltiples parámetros para adaptar su comportamiento a las preferencias específicas de cada estudiante. Estos parámetros controlan aspectos críticos como el número máximo de materias a considerar, la cantidad de soluciones alternativas a generar, y las estrategias de optimización a aplicar.
+
+La parametrización permite al usuario equilibrar entre la exhaustividad de la búsqueda y el tiempo de ejecución, así como priorizar diferentes criterios de calidad según sus necesidades individuales. Todos los parámetros se encapsulan en la clase ScheduleGenerationParams para garantizar la validación y consistencia de la configuración. Los parámetros configurables son:
+
+\begin{enumerate}
+  \item Límite de materias por horario: \(\leq\)20 y número de horarios generados: hasta 25. Parametrización en domain/model/ScheduleGenerationParams.kt (ScheduleGenerationParams) (totalSubjectsCount, numberOfSchedules).
+  \item Flags principales:
+    \begin{itemize}
+      \item Priorizar docentes favoritos (prioritizeFavoriteTeachers).
+      \item Minimizar huecos (minimizeGaps).
+      \item Aceptar choques controlados (acceptConflicts; desactivado por defecto).
+      \item Fijar grupos ya elegidos para regeneración parcial (fixedGroups).
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Estrategia operativa}
+La generación de horarios viables se aborda como un problema de satisfacción de restricciones (CSP) resuelto mediante búsqueda con retroceso (backtracking) mejorada con heurísticas de poda y ordenamiento. La estrategia operativa combina técnicas clásicas de inteligencia artificial con optimizaciones específicas del dominio académico, como la priorización de niveles inferiores para garantizar la progresión curricular y el manejo especial de series de materias correlativas.
+
+El algoritmo construye soluciones incrementalmente, descartando tempranamente las ramas que violan restricciones duras y evaluando las soluciones completas mediante una función de puntuación multicriterio que pondera choques, huecos y preferencias de docentes. Esta aproximación permite generar múltiples alternativas viables en tiempos compatibles con la ejecución en dispositivo móvil. Los componentes estratégicos implementados son:
+
+\begin{itemize}
+\item Selección incremental con poda temprana y un orden implícito MRV/LCV; se promueven los niveles bajos mediante promoteLowestLevels(...) y se asegura la progresión de series con enforceSeriesProgression(...) en GenerateSchedulesUseCaseImpl.
+\item Priorización de grupos con docentes favoritos mediante prioritizeGroupsByFavoriteTeacher(...): los favoritos sin conflicto prevalecen y, si acceptConflicts está habilitado, se consideran también los que generan conflicto.
+\item Se definió una fábrica de estrategias (ScheduleStrategyFactory), que integra: estrategia de aceptación de choques (AcceptConflictsStrategy, peso 1.0), estrategia para minimizar huecos (MinimizeGapsStrategy, peso 1.0 cuando está activa) y estrategia para priorizar docentes favoritos (PrioritizeTeachersStrategy, peso 2.0 cuando está activa) dentro de un compuesto (CompositeStrategy). Estas ponderaciones priorizan evitar choques (crítico), reducir huecos (confort) y favorecer docentes favoritos (preferencia fuerte cuando se habilita).
+\item El generador de horarios (ScheduleGenerator) conserva las mejores combinaciones (Top-N) y penaliza la ausencia de alternativas preferidas.
+\end{itemize}
+(Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\subsection{Interacción de usuario (pantallas reales)}
+La interfaz de usuario del generador de horarios se diseñó siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas. El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas.
+
+La implementación utiliza Jetpack Compose para construir interfaces declarativas y reactivas que responden automáticamente a cambios en el estado del generador. Los componentes de UI implementados son:
+
+\begin{itemize}
+  \item Pantalla de configuración (GenerateScheduleConfigScreen): Esta interfaz orquesta la entrada de datos mediante el GenerateScheduleViewModel, exponiendo selectores reactivos para las materias inscritas y controles deslizantes para los parámetros de optimización. Implementa validaciones en tiempo real que deshabilitan el botón de generación si no se cumplen las precondiciones mínimas (ej. selección de al menos una materia), garantizando que el motor de búsqueda reciba un estado consistente.
+  \item Pantalla de resultados (GenerateScheduleResultsScreen): Presenta las soluciones ordenadas por puntuación en una lista eficiente (LazyColumn), permitiendo al usuario expandir cada opción para una vista previa detallada (SchedulePreview). La interacción incluye la capacidad de "fijar" grupos específicos para refinamientos posteriores o aplicar la solución completa, lo cual desencadena una transacción en la base de datos local para actualizar las inscripciones del usuario.
+\end{itemize}
+(Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\subsection{Diagramas}
+La Figura \ref{fig:f3_secuencia_generacion} presenta la secuencia extremo a extremo del proceso de generación, abarcando desde la solicitud en la interfaz de usuario hasta la ejecución del evaluador de horarios.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f3_secuencia_generacion.png}
+\caption[Secuencia de generación de horarios]{Secuencia de generación de horarios.}
+  \label{fig:f3_secuencia_generacion}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+El diagrama de secuencia detalla el flujo de control desde que el usuario inicia la acción en la interfaz, desglosando el proceso en las siguientes etapas clave:
+
+\begin{itemize}
+    \item Inicio de la solicitud: El usuario configura los parámetros y solicita la generación. El ViewModel captura esta intención y delega la ejecución al caso de uso GenerateSchedulesUseCase.
+    \item Configuración de estrategia: El caso de uso orquesta la creación de una estrategia compuesta (CompositeStrategy) que integra las reglas seleccionadas, como la priorización de docentes favoritos o la minimización de huecos libres.
+    \item Exploración y evaluación: El motor de generación (ScheduleGenerator) explora el espacio de soluciones utilizando un algoritmo de backtracking con poda. Cada combinación válida es evaluada y puntuada según la estrategia definida.
+    \item Presentación de resultados: Las mejores N soluciones encontradas son devueltas al ViewModel, que actualiza el estado de la UI para mostrar los horarios propuestos al usuario de manera ordenada.
+\end{itemize}
+
+\noindent Para facilitar la lectura, la Figura~\ref{fig:f3_decisiones_generador} se organiza en dos paneles: (I) conformación del conjunto candidato (obligatorias, preferencia por docentes y orden de exploración) y (II) evaluación de combinaciones (penalización de huecos, tratamiento de choques y relajación cuando no hay opciones válidas).
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/diagrams/cap4_f3_decisiones_generador_part1.png}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/diagrams/cap4_f3_decisiones_generador_part2.png}
+  \end{minipage}
+\caption[Decisiones del generador]{Decisiones del generador.}
+  \label{fig:f3_decisiones_generador}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+El panel (I) ilustra el proceso de filtrado inicial donde se seleccionan los grupos candidatos. El algoritmo prioriza las materias obligatorias y, dentro de estas, los grupos asignados a docentes marcados como favoritos, estableciendo un orden de exploración que maximiza la probabilidad de encontrar soluciones preferentes tempranamente.
+
+El panel (II) detalla la lógica de evaluación: cada combinación completa recibe una puntuación que penaliza los huecos temporales entre clases y, si la configuración lo permite, aplica una penalización controlada por solapamientos horarios. En caso de no encontrar soluciones que cumplan todas las restricciones duras, el sistema puede relajar criterios secundarios para ofrecer las mejores alternativas posibles.
+
+\subsection{Resultados y verificación}
+El generador de horarios cumplió con el objetivo de producir $N$ combinaciones válidas en tiempos inferiores a 3 minutos para cargas típicas. Se verificó la correcta aplicación de las estrategias de ponderación, confirmando que la activación de flags (choques, huecos, favoritos) altera el ranking de soluciones según lo esperado. La regeneración parcial demostró tiempos de respuesta casi instantáneos (< 1s).
+
+\textbf{KPIs verificados:}
+\begin{itemize}
+  \item TTS (Time-To-Schedule) \(\leq\) 3 min para \(N{=}10\).
+  \item Regeneración parcial \(\leq\) 1 s por cambio.
+\end{itemize}
+
+% \begin{figure}[H]
+%   \centering
+%
+%   \caption{Decisiones y mantenimiento de Top-N (vista simplificada).}
+%   \label{fig:f3_generador}
+% \end{figure}
+
+\subsection{Criterios y pesos verificados}
+La evaluación combina tres estrategias y dos penalizaciones fijas. A continuación se describen las estrategias:
+\begin{itemize}
+  \item Choques: AcceptConflictsStrategy (peso 1.0). Siempre activo. Si acceptConflicts=false, un choque descarta la combinación (infinito); si true, aplica penalización baja por conflicto.
+  \item Huecos (gaps): MinimizeGapsStrategy (peso 1.0). Activo solo con minimizeGaps=true. Puntúa la suma de recesos entre bloques; menor es mejor.
+  \item Docentes favoritos: PrioritizeTeachersStrategy (peso 2.0). Activo con prioritizeFavoriteTeachers=true. Reduce el puntaje cuando hay bloques con docente favorito.
+  \item Penalización por preferidos ausentes: +1000.0 por cada código preferido no satisfecho.
+  \item Penalización por grupo no favorito: +1500.0 si, existiendo grupos favoritos para una materia, el elegido no es favorito.
+\end{itemize}
+(Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\subsection{Evidencias (código)}
+La implementación del generador de horarios se distribuye en múltiples componentes que separan claramente las responsabilidades de generación, evaluación y presentación. El núcleo algorítmico reside en las clases de casos de uso y generadores, mientras que las estrategias de evaluación se implementan como componentes independientes y componibles siguiendo el patrón Strategy. La capa de presentación orquesta la interacción con el usuario y la visualización de resultados mediante ViewModels que exponen el estado como flujos reactivos. Esta arquitectura facilita las pruebas unitarias de cada componente y permite la evolución independiente del algoritmo y la interfaz. Los componentes principales son:
+
+\begin{itemize}
+  \item Generación: GenerateSchedulesUseCaseImpl, ScheduleGenerator.
+  \item Estrategias y evaluación: ScheduleStrategyFactory, CompositeStrategy, AcceptConflictsStrategy, MinimizeGapsStrategy, PrioritizeTeachersStrategy.
+  \item UI y orquestación: GenerateScheduleConfigScreen, GenerateScheduleResultsScreen, GenerateScheduleViewModel.
+\end{itemize}

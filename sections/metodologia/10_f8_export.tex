@@ -1,0 +1,65 @@
+% ============================
+\section{F8: Export (imagen, PDF, Excel)}
+
+Esta fase se centró en ampliar las capacidades de interoperabilidad y portabilidad de TecnoTime, implementando un sistema robusto de exportación que permite transformar los horarios generados en formatos estándar de la industria. El desarrollo abordó la generación de documentos estáticos (PDF, imágenes) y hojas de cálculo (Excel), facilitando tanto el archivo personal como la impresión física de los cronogramas.
+
+Adicionalmente, se integraron mecanismos de compartición nativos del sistema operativo, permitiendo la distribución segura de estos archivos a través de aplicaciones de mensajería, correo electrónico o almacenamiento en la nube, adaptándose a los diversos contextos de uso de los estudiantes.
+
+\subsection{Objetivo}
+El objetivo principal fue dotar a la aplicación de herramientas versátiles para la externalización de la información, garantizando que los horarios puedan ser visualizados, impresos y compartidos fuera del entorno de la aplicación. Se buscó asegurar la fidelidad visual en los formatos gráficos y la utilidad de los datos en los formatos estructurados, manteniendo siempre la seguridad y privacidad mediante el uso de mecanismos de intercambio controlados por el sistema.
+
+\subsection{Implementación de módulos de exportación}
+La implementación técnica abarcó el desarrollo de generadores específicos para cada formato objetivo: renderizado de vistas a Bitmap para imágenes, construcción de documentos PDF mediante bibliotecas nativas y generación de libros de Excel utilizando Apache POI. Paralelamente, se mantuvo la capacidad de exportación en formato JSON para la interoperabilidad entre instancias de la aplicación.
+
+Todo el proceso de exportación se orquestó siguiendo las directrices de seguridad de Android, utilizando FileProvider para exponer los archivos generados mediante URIs seguras y delegando la acción de compartir al ShareSheet del sistema. Esto asegura que la aplicación no requiera permisos de almacenamiento excesivos y respeta el control del usuario sobre el destino de sus datos.
+
+A continuación se detallan los aspectos técnicos de la compartición, estructurando los formatos soportados, las reglas de exportación aplicadas y las clases implicadas en el proceso. Se destaca el uso de la hoja de compartir del sistema y FileProvider para la exposición segura de archivos.
+
+\subsection{Resultados y verificación}
+Los generadores de exportación produjeron archivos válidos en formatos PDF, imagen y Excel, cumpliendo con los estándares de cada especificación. Se verificó que la función de compartir invoca correctamente el ShareSheet del sistema y que los permisos se solicitan solo cuando es estrictamente necesario.
+
+A continuación se presentan los componentes de software desarrollados para dar soporte a las funcionalidades de exportación descritas, clasificados según su responsabilidad en la arquitectura:
+\begin{itemize}
+  \item UI/Orquestación: SettingsSendScheduleScreen, SettingsSendScheduleViewModel.
+  \item Generadores: GenerateWeeklyScheduleImageUseCase, GenerateWeeklySchedulePdfUseCase, GenerateScheduleExcelUseCase.
+  \item Interoperabilidad: GenerateShareableScheduleJsonUseCase.
+\end{itemize}
+
+El Cuadro \ref{tab:f8_tecnico} resume las consideraciones técnicas implementadas para la compartición segura de archivos, describiendo el manejo de permisos, la integración con el sistema operativo y las validaciones previas a la exportación.
+
+\begin{table}[H]
+  \centering\small
+  \begin{tabularx}{\linewidth}{@{}p{3.2cm}>{\RaggedRight\arraybackslash}X@{}}
+    \hline
+    Elemento & Descripción \\
+    \hline
+    Permisos & En Android < 13, se solicita almacenamiento para escritura si aplica; en versiones recientes se comparte vía URI con permisos de lectura temporales. \\
+    Share sheet & Se utiliza Intent.ACTION\_SEND con tipo MIME acorde al archivo y bandera FLAG\_GRANT\_READ\_URI\_PERMISSION. \\
+    Exposición de archivos & FileProvider otorga URI seguras para archivos generados. \\
+    Validaciones previas & Si no existen materias inscritas, no se permite exportar; se informa al usuario. \\
+    \hline
+  \end{tabularx}
+  \caption[Aspectos técnicos de compartición]{Aspectos técnicos de compartición.}
+  \label{tab:f8_tecnico}
+  \small{Fuente: Elaboración propia.}
+\end{table}
+
+La secuencia operativa de la exportación se detalla en dos partes. La Figura \ref{fig:f8_export_flow_part1} cubre la primera etapa, que abarca desde la validación de precondiciones (existencia de materias) hasta la selección del formato deseado y la preparación de los datos.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f8_export_flow_part1.png}
+  \caption[Flujo (1/2): validación, selección de formato y preparación]{Flujo (1/2): validación, selección de formato y preparación.}
+  \label{fig:f8_export_flow_part1}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+Continuando con el proceso, la Figura \ref{fig:f8_export_flow_part2} muestra la etapa final de confirmación, generación del archivo físico y su exposición segura a otras aplicaciones mediante FileProvider y el ShareSheet nativo de Android.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.45\linewidth]{images/diagrams/cap4_f8_export_flow_part2.png}
+  \caption[Flujo (2/2): confirmación, guardado y compartición]{Flujo (2/2): confirmación, guardado y compartición (FileProvider + share sheet).}
+  \label{fig:f8_export_flow_part2}
+  \small{Fuente: Elaboración propia.}
+\end{figure}

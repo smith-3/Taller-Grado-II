@@ -1,0 +1,16 @@
+% ============================
+\section{F11: Release (parámetros y tamaños)}
+
+Esta fase final del ciclo de desarrollo se centró en la preparación del artefacto de software para su distribución y despliegue en entornos productivos. El proceso abarcó la configuración optimizada del entorno de compilación, la aplicación de técnicas de reducción de tamaño y ofuscación de código, y la definición de una estrategia de entrega que garantice la integridad y el rendimiento de la aplicación en los dispositivos de los usuarios finales.
+
+\subsection{Objetivo}
+El objetivo principal fue generar un paquete de instalación (APK) optimizado, seguro y eficiente, minimizando su huella de almacenamiento sin comprometer la funcionalidad. Se buscó establecer un flujo de lanzamiento reproducible que asegure la compatibilidad con una amplia gama de dispositivos (API 24+) y gestione adecuadamente los recursos pesados, como los modelos de inteligencia artificial, fuera del paquete principal.
+
+\subsection{Preparación del lanzamiento y métricas}
+La preparación técnica para el lanzamiento se estructuró en torno a la optimización de los scripts de construcción en Gradle y la gestión eficiente de recursos.
+
+Se definieron los parámetros de compilación con un minSdk=24 para garantizar compatibilidad con dispositivos modernos y un targetSdk=35 para aprovechar las últimas optimizaciones de Android. Para la variante de producción (release), se activaron las herramientas de reducción de código y recursos (R8), habilitando minifyEnabled y shrinkResources para eliminar código muerto y ofuscar la lógica propietaria.
+
+En cuanto al tamaño del entregable, se adoptó una estrategia de descarga dinámica para el componente de IA. El APK base se mantuvo ligero ($<30$\,MB), excluyendo el modelo de lenguaje (Gemma 2B cuantizado, $\sim$229\,MB), el cual se descarga bajo demanda mediante el ModelInitializationService. Finalmente, se establecieron canales de distribución controlados para pruebas internas (QA) y despliegue, asegurando que cada versión esté firmada digitalmente y acompañada de sus respectivas notas de cambio.
+
+

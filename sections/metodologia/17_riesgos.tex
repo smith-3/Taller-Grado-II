@@ -1,0 +1,28 @@
+% ----------------------------------------------------------------------
+\section{Riesgos y mitigaciones}
+El desarrollo de TecnoTime enfrentó diversos riesgos técnicos y operativos que podrían haber comprometido el éxito del proyecto si no se hubieran identificado y mitigado tempranamente. Los riesgos abarcan desde la disponibilidad y formato de los datos fuente (PDFs oficiales) hasta las limitaciones de rendimiento en dispositivos de gama baja y la complejidad del algoritmo de generación de horarios.
+
+Para cada riesgo identificado se definió una estrategia de mitigación específica que reduce su probabilidad de ocurrencia o su impacto en caso de materializarse. El Cuadro \ref{tab:riesgos} documenta los riesgos principales, su nivel de criticidad y las medidas implementadas para controlarlos:
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{|p{6.6cm}|c|c|p{7.8cm}|}
+    \hline
+    Riesgo & P & I & Mitigación \\
+    \hline
+    Cambios en layout/ubicación de PDF & M & A & Parsers tolerantes; revisión manual; import local de PDF \\
+    \hline
+    Caída prolongada/saturación del sitio & M & A & Backoff + CB; cache local; diferir sync (ventanas); fallback PDF \\
+    \hline
+    Conectividad intermitente & A & M & Offline-first; política de reintentos; freshness gate antes de generar \\
+    \hline
+    Dispositivos de baja gama & M & M & UI ligera; optimización de consultas; IA opcional (opt-in) \\
+    \hline
+    Datos desactualizados & M & M & Freshness check previo a generación; auto-sync condicionado \\
+    \hline
+  \end{tabular}
+  \caption{Riesgos (P=probabilidad, I=impacto) y acciones.}
+  \label{tab:riesgos}
+  \small{Fuente: Elaboración propia.}
+\end{table}

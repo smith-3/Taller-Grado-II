@@ -1,0 +1,73 @@
+% ============================
+\section{F4: Prioridad sin conexión (frescura, políticas, fallback)}
+
+Esta fase establece la arquitectura offline-first de la aplicación, priorizando la disponibilidad y consistencia de datos locales mediante políticas de frescura, sincronización controlada y mecanismos de resiliencia.
+
+\subsection{Objetivo}
+Asegurar disponibilidad sin red priorizando la caché local, controlando frescura y habilitando recuperación manual por PDF.
+
+\subsection{Implementación de la lógica offline-first}
+Se implementaron verificaciones de conectividad y frescura, políticas de sincronización (ventanas/horarios), reintentos con backoff y circuit breaker y alternativa de respaldo (fallback) por PDF local.
+
+\subsection{Frescura}
+Antes de invocar el generador se valida conectividad y frescura de datos:
+\begin{itemize}
+  \item GenerateScheduleViewModel: ejecuta checkConnectivityAndSync() al cargar; usa NetworkConnectivityChecker y, con red disponible, dispara AutoSyncUseCase.
+  \item AutoSyncUseCase: compara Career.updatedDate remoto con lastSyncTime local y actualiza materias mediante RefreshSubjectsForCareerUseCase. Actualiza SyncPreferences.setLastSyncCheck().
+  \item SyncPreferences: define intervalo de verificación de 6\,h y evita consultas excesivas.
+  \item Durante la sincronización, GenerateScheduleViewModel marca isSyncing=true y bloquea generate/regenerate para mantener consistencia.
+\end{itemize}
+
+\subsection{Políticas}
+\(T_{fresh}=48\,h\): si los datos locales superan ese umbral, se prioriza sincronizar antes de generar. \(W_{nosync}=07{:}00\text{–}12{:}30\) (horario académico): se difieren sincronizaciones automáticas en ese rango para no interrumpir uso intensivo; el ajuste es configurable. Reintentos controlados con:
+\begin{itemize}
+  \item ExponentialBackoff: $t_0{=}2$\,s, $t_{max}{=}1$\,h, multiplicador 2.0 con jitter.
+  \item CircuitBreaker: umbral de 5 fallos y recuperación en 10\,min; integra AutoSyncUseCase para bloquear temporalmente el origen tras errores repetidos.
+\end{itemize}
+
+\subsection{Fallback}
+Sin conectividad se opera desde caché local (Room). Si el servicio cae pero existe PDF oficial actualizado, se habilita reingesta manual vía SyncCareerFromLocalPdfUseCase.
+
+\subsection{Resultados y verificación}
+La arquitectura offline-first demostró su eficacia al permitir la operación continua sin conectividad, sirviendo datos desde la caché local de Room. Las pruebas de estrés confirmaron que los mecanismos de backoff exponencial y circuit breaker protegen adecuadamente la fuente de datos ante fallos repetidos. El fallback manual mediante PDF local funcionó correctamente como medida de último recurso.
+
+\subsection{Evidencias (código)}
+La arquitectura offline-first de TecnoTime se sustenta en un conjunto de componentes que gestionan la sincronización diferida, el almacenamiento local prioritario y las políticas de frescura de datos. La implementación utiliza WorkManager para programar tareas de sincronización en segundo plano que respetan las restricciones de red y batería del dispositivo, mientras que Room proporciona la capa de persistencia local con soporte para observación reactiva de cambios.
+
+Los repositorios implementan el patrón Single Source of Truth, exponiendo siempre los datos locales a la UI y actualizándolos transparentemente cuando la sincronización completa exitosamente. Esta arquitectura garantiza una experiencia de usuario fluida independientemente de la conectividad de red. Los componentes que implementan esta funcionalidad son:
+
+\begin{itemize}
+  \item Gate del generador: GenerateScheduleViewModel (bandera isSyncing).
+  \item Chequeo y sincronización: NetworkConnectivityChecker, AutoSyncUseCase, SyncPreferences.
+  \item Fallback manual: SyncCareerFromLocalPdfUseCase.
+\end{itemize}
+
+El mecanismo de decisión para el uso de datos en caché se ilustra en la Figura \ref{fig:f4_offline}. Este diagrama muestra el ``gate'' de frescura que evalúa si los datos locales son lo suficientemente recientes o si es necesario iniciar una sincronización antes de permitir la generación de horarios.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
+  \caption[Gate de caché y frescura]{Gate de caché y frescura.}
+  \label{fig:f4_offline}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+Para garantizar la robustez del proceso de actualización, la Figura \ref{fig:f4_offline_sync} detalla el flujo de sincronización con sus mecanismos de protección. Se observa cómo el ExponentialBackoff gestiona los reintentos y el CircuitBreaker previene la saturación del servidor en caso de fallos persistentes.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/offline_first_sync.png}
+  \caption[Sincronización con backoff y circuit breaker]{Sincronización con backoff y circuit breaker.}
+  \label{fig:f4_offline_sync}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+Finalmente, la Figura \ref{fig:f4_offline_pdf} presenta la estrategia de respaldo (fallback) mediante PDF local. Este flujo alternativo permite al usuario cargar manualmente el archivo oficial cuando no existe conectividad, asegurando la continuidad operativa del sistema.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
+  \caption[Fallback por PDF local]{Fallback por PDF local.}
+  \label{fig:f4_offline_pdf}
+  \small{Fuente: Elaboración propia.}
+\end{figure}

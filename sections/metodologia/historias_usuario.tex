@@ -1,10 +1,16 @@
-\noindent Las historias de usuario se agrupan por área funcional y se presentan en tablas compactas. Cada fila incluye rol, necesidad, beneficio, criterios clave (G/W/T) y prioridad MoSCoW. Para ahorrar espacio se usan descripciones breves; los detalles narrativos permanecen en los capítulos correspondientes. La columna G/W/T resume el criterio Given–When–Then (Dado que / Cuando / Entonces) usado para describir escenarios de prueba.
+\noindent Las historias de usuario se han organizado agrupándolas por área funcional para facilitar su lectura y comprensión. Esta estructura modular permite visualizar claramente el alcance de cada componente del sistema a través de las tablas presentadas en las siguientes secciones.
+
+En cada una de las tablas presentadas, se desglosan los elementos fundamentales que componen la historia de usuario. Se identifica explícitamente el Rol del actor que interactúa con el sistema, la Necesidad puntual o funcionalidad que requiere, y el Beneficio directo que esta acción le aporta, asegurando así que cada requerimiento tenga un valor claro para el usuario final.
+
+Para garantizar la verificabilidad de cada historia, se incluyen los Criterios de Aceptación abreviados como G/W/T. Esta notación corresponde al formato Given-When-Then (Dado que / Cuando / Entonces), el cual describe el contexto inicial, la acción a realizar y el resultado esperado, sirviendo como base directa para las pruebas de aceptación. Asimismo, se asigna una Prioridad utilizando el método MoSCoW, clasificando cada historia según su criticidad para el lanzamiento.
+
+Finalmente, cabe destacar que, con el objetivo de optimizar el espacio en el documento y presentar la información de manera tabular y concisa, se han utilizado descripciones breves en las tablas. El detalle narrativo completo y las especificaciones técnicas profundas se mantienen en la documentación extendida del proyecto.
 
 \medskip
 
 \subsection{Onboarding \& Perfil}
 
-Este grupo de historias aborda la primera experiencia del usuario al abrir la aplicación, incluyendo la configuración inicial de preferencias personales, el registro del nombre para mensajes locales y la personalización de la interfaz.
+Este grupo de historias aborda la primera experiencia del usuario al abrir la aplicación, incluyendo la configuración inicial de preferencias personales, el registro del nombre para mensajes locales y la personalización de la interfaz, tal como se detalla en el Cuadro \ref{tab:hu_onboarding}.
 
 \begin{table}[H]
 \small
@@ -15,13 +21,13 @@ ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
 US-01 & Estudiante & Ver bienvenida y permisos & Entender la app antes de usar & G: primera apertura; W: ingreso; T: intro + permisos.\\[-0.4em]
  & & & & G: rechazo; W: continuo; T: explica funciones limitadas. & Must \\
-US-02 & Estudiante & Ingresar mi nombre & Personalizar mensajes/notif. & G: primera ejecución; W: guardo; T: se usa en UI/IA local. & Must \\
-US-03 & Estudiante & Configurar 12/24h, fines, días sin clase, tema & Ver horario a mi gusto & G: ajusto switch; W: cambio; T: ejemplo reacciona.\\[-0.4em]
+US-02 & Estudiante & Ingresar nombre de usuario & Personalizar mensajes/notif. & G: primera ejecución; W: guardo; T: se usa en UI/IA local. & Must \\
+US-03 & Estudiante & Configurar 12/24h, fines, días sin clase, tema & Visualizar horario personalizado & G: ajusto switch; W: cambio; T: ejemplo reacciona.\\[-0.4em]
  & & & & G: cambio tema; W: selecciono; T: UI cambia y persiste. & Must \\
 US-04 & Estudiante & Onboarding único & Evitar repeticiones & G: terminé onboarding; W: reabro; T: ingreso directo al Home. & Must \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Onboarding y Perfil}\label{tab:hu_onboarding}
+\caption{Historias de usuario: Onboarding y Perfil}\label{tab:hu_onboarding}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -29,7 +35,7 @@ US-04 & Estudiante & Onboarding único & Evitar repeticiones & G: terminé onboa
 
 \subsection{Carreras, Niveles y Progreso}
 
-Estas historias definen la gestión de la información académica base, permitiendo al estudiante sincronizar su carrera, visualizar su avance por niveles, marcar materias aprobadas y gestionar la fuente de datos oficial.
+Estas historias definen la gestión de la información académica base, permitiendo al estudiante sincronizar su carrera, visualizar su avance por niveles, marcar materias aprobadas y gestionar la fuente de datos oficial, como se muestra en el Cuadro \ref{tab:hu_carreras_1}.
 
 \begin{table}[H]
 \small
@@ -42,12 +48,33 @@ US-05 & Estudiante & Sincronizar carreras & Cargar horarios y materias & G: list
 US-06 & Estudiante & Ver niveles con \% & Entender avance & G: entro carrera; W: abro niveles; T: cards con anillo y \%. & Should \\
 US-07 & Estudiante & Marcar materia aprobada/no & Reflejar estado real & G: no aprobada; W: toco; T: pasa a ``aprobada''.\\[-0.4em]
  & & & & G: aprobada; W: revierto; T: diálogo + ``no aprobada''. & Must \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Carreras, niveles y progreso (Parte 1)}\label{tab:hu_carreras_1}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Complementariamente, se aborda la gestión avanzada de la fuente de datos, reconociendo que la información oficial puede variar o no estar siempre disponible. Se incluyen mecanismos para validar la integridad de los datos comparándolos con el documento PDF original proporcionado por la facultad.
+
+\par\vspace{0.5em}
+
+Además, se dota al sistema de flexibilidad ante contingencias. La capacidad de cargar manualmente archivos de horarios y la opción de desvincular una carrera errónea aseguran que el estudiante pueda mantener su planificación actualizada incluso en situaciones de falta de conectividad. Estas funcionalidades avanzadas se detallan en el Cuadro \ref{tab:hu_carreras_2}.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
 US-08 & Estudiante & Abrir PDF origen & Validar fuente oficial & G: card carrera; W: toco PDF; T: abre/descarga documento. & Should \\
 US-09 & Estudiante & Desincronizar carrera & Limpiar malla errónea & G: carrera sync; W: desincronizo; T: diálogo crítico + limpieza. & Must \\
 US-10 & Estudiante & Subir PDF manual & Actualizar sin web & G: en carrera; W: ``Sincronizar PDF''; T: parsea y actualiza. & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Carreras, niveles y progreso}\label{tab:hu_carreras}
+\caption{Historias de usuario: Carreras, niveles y progreso (Parte 2)}\label{tab:hu_carreras_2}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -55,7 +82,7 @@ US-10 & Estudiante & Subir PDF manual & Actualizar sin web & G: en carrera; W: `
 
 \subsection{Home, Navegación y Widget}
 
-Se describen las funcionalidades relacionadas con la navegación principal y el acceso rápido a la información, incluyendo la vista diaria de clases, el desplazamiento entre fechas y el uso de widgets en la pantalla de inicio.
+Se describen las funcionalidades relacionadas con la navegación principal y el acceso rápido a la información, incluyendo la vista diaria de clases, el desplazamiento entre fechas y el uso de widgets en la pantalla de inicio, detalladas en el Cuadro \ref{tab:hu_home}.
 
 \begin{table}[H]
 \small
@@ -71,7 +98,7 @@ US-14 & Estudiante & Vista semanal compacta & Visualizar distribución completa 
 US-15 & Estudiante & Widget con días & Consultar sin abrir app & G: widget; W: deslizo; T: materias visibles cambian. & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Home, navegación y widget}\label{tab:hu_home}
+\caption{Historias de usuario: Home, navegación y widget}\label{tab:hu_home}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -79,9 +106,15 @@ US-15 & Estudiante & Widget con días & Consultar sin abrir app & G: widget; W: 
 
 \subsection{Materias \& Grupos}
 
-Este conjunto detalla el flujo central de inscripción y gestión de materias, desde la selección guiada de niveles y grupos hasta la personalización visual y la administración del estado de las asignaturas.
-
 \begin{table}[H]
+El núcleo de la planificación académica reside en la selección de asignaturas. Se detalla el flujo de ``inscripción virtual'', un proceso guiado que permite al estudiante explorar la oferta académica filtrada por su nivel y seleccionar las materias que desea cursar.
+
+\par\vspace{0.5em}
+
+Este proceso se enriquece con información detallada para la toma de decisiones. Antes de confirmar una inscripción, el sistema presenta una vista previa completa de los grupos disponibles, incluyendo docentes y horarios. El Cuadro \ref{tab:hu_materias_1} detalla este flujo central de inscripción.
+
+\medskip
+
 \small
 \centering
 \begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
@@ -92,12 +125,33 @@ US-16 & Estudiante & Agregar materia guiada & Construir horario & G: pulso FAB; 
 US-17 & Estudiante & Seleccionar nivel & Elegir contenedor correcto & G: pantalla nivel; W: elijo; T: vuelve con nivel marcado. & Must \\
 US-18 & Estudiante & Seleccionar materia & Escoger código correcto & G: lista materias; W: toco; T: queda asignada. & Must \\
 US-19 & Estudiante & Ver preview de grupo & Decidir con info completa & G: lista grupos; W: elijo; T: muestra días/horas/docente antes de confirmar. & Must \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Materias y grupos (Parte 1)}\label{tab:hu_materias_1}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Más allá de la simple selección, se centra en la personalización y gestión continua de las materias. Se introducen capacidades para asignar colores y emojis a cada asignatura, facilitando su identificación visual rápida en el calendario y reduciendo la carga cognitiva del usuario.
+
+\par\vspace{0.5em}
+
+Finalmente, se contempla el ciclo de vida completo de la cursada. Las opciones para editar detalles de una materia ya inscrita o finalizarla (marcarla como aprobada o abandonada) permiten que el horario evolucione junto con el semestre del estudiante. Estas opciones se abordan en el Cuadro \ref{tab:hu_materias_2}.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
 US-20 & Estudiante & Personalizar color/emoji & Identificar visualmente & G: pantalla color/emoji; W: guardo; T: cards reflejan estilo. & Could \\
 US-21 & Estudiante & Editar desde card & Ajustar sin recrear & G: toco card; W: ``Editar''; T: cambio grupo/color/emoji. & Should \\
 US-22 & Estudiante & Finalizar materia & Impactar generaciones futuras & G: opción finalizar; W: elijo estado; T: se registra (aprobado/abandonar). & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Materias y grupos}\label{tab:hu_materias}
+\caption{Historias de usuario: Materias y grupos (Parte 2)}\label{tab:hu_materias_2}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -105,9 +159,15 @@ US-22 & Estudiante & Finalizar materia & Impactar generaciones futuras & G: opci
 
 \subsection{Profesores \& Favoritos}
 
-Historias enfocadas en la preferencia por docentes específicos, permitiendo al estudiante marcarlos como favoritos para influir posteriormente en la generación automática de horarios.
-
 \begin{table}[H]
+La elección de docentes es uno de los factores cualitativos más influyentes en la satisfacción del estudiante. Las historias formalizan esta preferencia, permitiendo al usuario marcar profesores específicos como ``favoritos'' dentro de la aplicación.
+
+\par\vspace{0.5em}
+
+Esta acción no es meramente informativa, sino que tiene un impacto funcional directo. La lista de favoritos actúa como un criterio heurístico de alto peso en los algoritmos de generación automática de horarios. Las historias enfocadas en esta preferencia docente se detallan en el Cuadro \ref{tab:hu_profes}.
+
+\medskip
+
 \small
 \centering
 \begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
@@ -117,34 +177,7 @@ ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 US-23 & Estudiante & Marcar docentes favoritos & Priorizarlos al generar & G: lista docentes; W: toco estrella; T: queda favorito. & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Profesores y favoritos}\label{tab:hu_profes}
-\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
-\end{table}
-
-\medskip
-
-\subsection{Exportar / Importar / Compartir}
-
-Se abordan las capacidades de interoperabilidad y portabilidad de la información, permitiendo compartir horarios en múltiples formatos y transferir la planificación completa entre dispositivos mediante archivos estructurados.
-
-\begin{table}[H]
-\small
-\centering
-\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
-\toprule
-ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
-\midrule
-US-36 & Estudiante & Exportar como imagen & Compartir fácilmente & G: hay materias; W: ``Enviar $\rightarrow$ Imagen''; T: confirmación + share sheet. & Should \\
-US-37 & Estudiante & Exportar como PDF & Imprimir/archivar & Igual que imagen con ``Enviar $\rightarrow$ PDF''. & Should \\
-US-38 & Estudiante & Exportar como Excel & Manipular en tabla & Igual que imagen con ``Enviar $\rightarrow$ Excel''. & Could \\
-US-39 & Estudiante & Enviar copia JSON & Compartir selectivamente & G: ``Enviar copia''; W: uso Todo/Limpiar/Compartir; T: JSON según selección. & Must \\
-US-40 & Estudiante & Bloquear exportar sin materias & Evitar archivos vacíos & G: 0 materias; W: exporto; T: muestra aviso y detiene acción. & Must \\
-US-41 & Estudiante & Importar JSON (app) & Añadir materias propias & G: ``Añadir horario''; W: elijo JSON; T: lista materias y evita duplicados. & Must \\
-US-42 & Estudiante & Abrir JSON externo & Importar directo & G: recibo JSON; W: ``Abrir con TecnoTime''; T: muestra UI importación. & Must \\
-US-43 & Estudiante & Importar otra carrera & Usarla si la sincronizo & G: JSON externa; W: importo; T: pregunta “¿Sincronizar?” y continúa si acepto. & Should \\
-\bottomrule
-\end{tabularx}
-\caption{Historias de usuario — Exportar, importar y compartir}\label{tab:hu_export}
+\caption{Historias de usuario: Profesores y favoritos}\label{tab:hu_profes}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -152,9 +185,15 @@ US-43 & Estudiante & Importar otra carrera & Usarla si la sincronizo & G: JSON e
 
 \subsection{Generador de Horarios}
 
-Estas historias especifican el funcionamiento del motor de generación automática, incluyendo la configuración de restricciones, la aplicación de criterios de optimización y la exploración de las propuestas de horario resultantes.
-
 \begin{table}[H]
+El generador automático de horarios es una herramienta de potencia combinatoria diseñada para simplificar problemas complejos de planificación. Se definen los parámetros de entrada que el usuario puede configurar para guiar este proceso, como el número deseado de materias y la cantidad de propuestas a generar.
+
+\par\vspace{0.5em}
+
+Además, se establecen las preferencias de optimización iniciales. El estudiante puede indicar si desea priorizar la inclusión de sus docentes favoritos o si prefiere minimizar los tiempos muertos (recesos) entre clases. En el Cuadro \ref{tab:hu_generador_1} se establecen estos parámetros iniciales.
+
+\medskip
+
 \small
 \centering
 \begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
@@ -165,17 +204,113 @@ US-24 & Estudiante & Abrir generador & Configurar parámetros & G: FAB; W: ``Gen
 US-25 & Estudiante & Definir \# materias/propuestas & Controlar resultado & G: tarjeta parámetros; W: ajusto; T: respeta [1..20], [1..25]. & Must \\
 US-26 & Estudiante & Priorizar profesores & Favorecer favoritos & G: opción ON; W: genero; T: intenta incluir favoritos. & Should \\
 US-27 & Estudiante & Minimizar recesos & Reducir tiempos muertos & G: opción ON; W: genero; T: se optimizan huecos. & Should \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Generador de horarios (Parte 1)}\label{tab:hu_generador_1}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Se profundiza en las reglas de negocio ``duras'' que gobiernan la validez de los horarios generados. Se detalla el manejo de conflictos de horario (choques), permitiendo al usuario decidir si acepta solapes bajo ciertas condiciones o si requiere una planificación libre de conflictos.
+
+\par\vspace{0.5em}
+
+Asimismo, se aborda la lógica de priorización académica. El sistema debe respetar las materias marcadas como obligatorias, asegurando su inclusión en todas las propuestas, y aplicar criterios pedagógicos como favorecer asignaturas de niveles inferiores. El Cuadro \ref{tab:hu_generador_2} detalla estas reglas de negocio.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
 US-28 & Estudiante & Aceptar choques & Permitir casos extremos & G: opción ON; W: genero; T: propone horarios con solapes controlados. & Could \\
 US-29 & Estudiante & Coherencia favoritos/choques & Evitar inconsistencias & G: fav ON, choques OFF; W: genero; T: sin choques (ON/ON sí permite). & Must \\
 US-30 & Estudiante & Marcar materias obligatorias & Forzar inclusión & G: marco oblig.; W: genero; T: respeta máximos/convierte excedentes. & Must \\
 US-31 & Estudiante & Favorecer niveles bajos & Progresión académica & G: config por defecto; W: genero; T: evita combinaciones incoherentes. & Should \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Generador de horarios (Parte 2)}\label{tab:hu_generador_2}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Una vez generadas las propuestas, la experiencia de selección es clave. Se describe la interfaz de exploración, que permite al estudiante navegar ágilmente entre múltiples opciones mediante gestos de deslizamiento y comparar visualmente la distribución semanal de cada alternativa.
+
+\par\vspace{0.5em}
+
+Para refinar la búsqueda, se incluyen herramientas de iteración. La capacidad de ``fijar'' ciertas materias o grupos que agradan al usuario permite regenerar el resto del horario respetando esas decisiones parciales. El Cuadro \ref{tab:hu_generador_3} describe estas herramientas de interfaz.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
 US-32 & Estudiante & Deslizar entre propuestas & Comparar rápido & G: propuestas listas; W: hago swipe; T: cambia 1..N. & Must \\
 US-33 & Estudiante & Vista semanal propuesta & Validar a alto nivel & G: propuesta; W: botón semanal; T: muestra semana. & Could \\
 US-34 & Estudiante & Fijar materias con switches & Regenerar respetando & G: propuesta; W: activo switch; T: nuevas propuestas las respetan. & Should \\
 US-35 & Estudiante & Cargar completo/parcial & Construir horario final & G: propuesta; W: ``Completo/Parcial''; T: aplica selección en Home. & Must \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Generador de horarios}\label{tab:hu_generador}
+\caption{Historias de usuario: Generador de horarios (Parte 3)}\label{tab:hu_generador_3}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\medskip
+
+\subsection{Exportar / Importar / Compartir}
+
+\begin{table}[H]
+La planificación académica es frecuentemente una actividad social y colaborativa. Se aborda la necesidad de compartir el horario generado, definiendo formatos visuales de alta fidelidad como imágenes y documentos PDF, ideales para su difusión en redes sociales o impresión física.
+
+\par\vspace{0.5em}
+
+Para usuarios avanzados o necesidades de interoperabilidad, se incluyen formatos estructurados. La exportación a hojas de cálculo (Excel) o archivos de datos (JSON) permite manipular la información en herramientas externas. El Cuadro \ref{tab:hu_export_1} se centra en estas capacidades de exportación.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
+US-36 & Estudiante & Exportar como imagen & Compartir fácilmente & G: hay materias; W: ``Enviar $\rightarrow$ Imagen''; T: confirmación + share sheet. & Should \\
+US-37 & Estudiante & Exportar como PDF & Imprimir/archivar & Igual que imagen con ``Enviar $\rightarrow$ PDF''. & Should \\
+US-38 & Estudiante & Exportar como Excel & Manipular en tabla & Igual que imagen con ``Enviar $\rightarrow$ Excel''. & Could \\
+US-39 & Estudiante & Enviar copia JSON & Compartir selectivamente & G: ``Enviar copia''; W: uso Todo/Limpiar/Compartir; T: JSON según selección. & Must \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Exportar, importar y compartir (Parte 1)}\label{tab:hu_export_1}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Complementando la exportación, se enfoca en la portabilidad y recuperación de datos. Se especifican los mecanismos para importar horarios desde archivos externos, facilitando la transferencia de la planificación entre dispositivos o la restauración de copias de seguridad.
+
+\par\vspace{0.5em}
+
+Este proceso incluye validaciones de integridad críticas. El sistema debe ser capaz de detectar duplicados, verificar la estructura de los archivos importados y ofrecer opciones inteligentes para fusionar la información nueva con la existente. El Cuadro \ref{tab:hu_export_2} especifica estos mecanismos de importación.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
+US-40 & Estudiante & Bloquear exportar sin materias & Evitar archivos vacíos & G: 0 materias; W: exporto; T: muestra aviso y detiene acción. & Must \\
+US-41 & Estudiante & Importar JSON (app) & Añadir materias propias & G: ``Añadir horario''; W: elijo JSON; T: lista materias y evita duplicados. & Must \\
+US-42 & Estudiante & Abrir JSON externo & Importar directo & G: recibo JSON; W: ``Abrir con TecnoTime''; T: muestra UI importación. & Must \\
+US-43 & Estudiante & Importar otra carrera & Usarla si la sincronizo & G: JSON externa; W: importo; T: pregunta “¿Sincronizar?” y continúa si acepto. & Should \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Exportar, importar y compartir (Parte 2)}\label{tab:hu_export_2}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -183,7 +318,7 @@ US-35 & Estudiante & Cargar completo/parcial & Construir horario final & G: prop
 
 \subsection{Recordatorios \& IA ``Simón''}
 
-Se definen las funcionalidades de asistencia proactiva, abarcando la configuración de recordatorios automatizados previos a las clases y la interacción opcional con el asistente de inteligencia artificial en el dispositivo.
+Se definen las funcionalidades de asistencia proactiva, abarcando la configuración de recordatorios automatizados previos a las clases y la interacción opcional con el asistente de inteligencia artificial en el dispositivo, las cuales se presentan en el Cuadro \ref{tab:hu_recordatorios}.
 
 \begin{table}[H]
 \small
@@ -192,14 +327,14 @@ Se definen las funcionalidades de asistencia proactiva, abarcando la configuraci
 \toprule
 ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
 \midrule
-US-44 & Estudiante & Activar/desactivar notificaciones & Ajustar mi flujo & G: ajustes recordatorio; W: apago switch; T: oculta anticipación. & Must \\
+US-44 & Estudiante & Activar/desactivar notificaciones & Ajustar flujo de avisos & G: ajustes recordatorio; W: apago switch; T: oculta anticipación. & Must \\
 US-45 & Estudiante & Definir tiempo de anticipación & Recibir avisos oportunos & G: notificaciones ON; W: elijo tiempo; T: se guarda y aplica. & Must \\
 US-46 & Estudiante & Activar IA (descarga opcional) & Controlar datos/espacio & G: activo IA; W: elijo Wi-Fi/datos; T: confirma tamaño e inicia descarga. & Should \\
 US-47 & Estudiante & Probar/eliminar IA & Gestionar almacenamiento & G: modelo listo; W: ``Probar''; T: respuesta. G: ``Eliminar''; W: confirmo; T: borra modelo. & Should \\
 US-48 & Estudiante & Mensajes motivacionales & Controlar tono & G: IA disponible; W: cambio switch; T: respeta preferencia. & Could \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Recordatorios e IA}\label{tab:hu_recordatorios}
+\caption{Historias de usuario: Recordatorios e IA}\label{tab:hu_recordatorios}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -207,7 +342,7 @@ US-48 & Estudiante & Mensajes motivacionales & Controlar tono & G: IA disponible
 
 \subsection{Offline, Actualizaciones \& Resiliencia}
 
-Historias técnicas orientadas a garantizar la disponibilidad del sistema sin conexión a internet, la consistencia de los datos y la robustez ante fallos en la comunicación con el servidor.
+Historias técnicas orientadas a garantizar la disponibilidad del sistema sin conexión a internet, la consistencia de los datos y la robustez ante fallos en la comunicación, descritas en el Cuadro \ref{tab:hu_offline}.
 
 \begin{table}[H]
 \small
@@ -223,7 +358,7 @@ US-52 & Sistema & Bloqueo temporal tras fallos & Evitar tormenta de peticiones &
 US-53 & Estudiante & Auto-actualización periódica & Mantener datos al día & G: ciclo programado; W: hay internet; T: sincroniza carrera/malla/modelo. & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Offline, actualizaciones y resiliencia}\label{tab:hu_offline}
+\caption{Historias de usuario: Offline, actualizaciones y resiliencia}\label{tab:hu_offline}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -231,9 +366,15 @@ US-53 & Estudiante & Auto-actualización periódica & Mantener datos al día & G
 
 \subsection{Soporte, Información y Preferencias}
 
-Se agrupan aquí las funcionalidades transversales de soporte al usuario y persistencia de configuraciones globales, asegurando una experiencia consistente y acceso a información del proyecto.
-
 \begin{table}[H]
+El soporte y la transparencia son vitales para la confianza del usuario. Se incluyen funcionalidades para acceder a información sobre el proyecto, notas de la versión y canales de contacto, fomentando una comunidad de usuarios informada y participativa.
+
+\par\vspace{0.5em}
+
+Asimismo, se garantiza la consistencia de la experiencia a través de la persistencia de preferencias. Configuraciones globales como el tema visual (claro/oscuro) o el formato de hora se guardan localmente. En el Cuadro \ref{tab:hu_soporte} se detallan estas funcionalidades transversales.
+
+\medskip
+
 \small
 \centering
 \begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
@@ -245,7 +386,7 @@ US-55 & Estudiante & Tema claro/oscuro persistente & Consistencia visual & G: el
 US-56 & Estudiante & Formato 12/24h persistente & Evitar confusiones & G: cambio formato; W: guardo; T: se refleja globalmente. & Must \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Soporte, información y preferencias}\label{tab:hu_soporte}
+\caption{Historias de usuario: Soporte, información y preferencias}\label{tab:hu_soporte}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}
 
@@ -253,9 +394,15 @@ US-56 & Estudiante & Formato 12/24h persistente & Evitar confusiones & G: cambio
 
 \subsection{Seguridad, Privacidad, Rendimiento y Accesibilidad}
 
-Este bloque final establece los requisitos no funcionales críticos convertidos en historias verificables, priorizando la privacidad de datos, el rendimiento en dispositivos de gama media y la claridad en la comunicación de errores.
-
 \begin{table}[H]
+La seguridad y el rendimiento son pilares técnicos del proyecto. Se establecen requisitos estrictos de privacidad, asegurando que los datos personales identificables (PII) nunca abandonen el dispositivo del usuario, cumpliendo con principios de privacidad por diseño.
+
+\par\vspace{0.5em}
+
+En paralelo, se abordan las restricciones de hardware comunes en el segmento estudiantil. Se definen métricas de rendimiento para garantizar una interfaz fluida en dispositivos de gama media y se optimiza el tamaño de la aplicación. El Cuadro \ref{tab:hu_seguridad_1} establece estos requisitos técnicos críticos.
+
+\medskip
+
 \small
 \centering
 \begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
@@ -266,11 +413,32 @@ US-57 & Estudiante & Privacidad del nombre & No exponer PII & G: ingreso nombre;
 US-58 & Estudiante & App < 30 MB (sin IA) & Instalar con poco espacio & G: build; W: compilo; T: APK/Bundle < 30 MB. & Should \\
 US-59 & Estudiante & Buen rendimiento en gama media & Uso cómodo & G: listas/scroll; W: navego; T: FPS aceptable sin ANR. & Should \\
 US-60 & Estudiante & Accesibilidad básica & Comprender opciones & G: tema claro/oscuro; W: interactúo; T: contraste/tamaño legible. & Could \\
+\bottomrule
+\end{tabularx}
+\caption{Historias de usuario: Seguridad, privacidad, rendimiento y accesibilidad (Parte 1)}\label{tab:hu_seguridad_1}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
+\end{table}
+
+\begin{table}[H]
+Finalmente, se centra en la usabilidad bajo condiciones de error. Se especifica la necesidad de mensajes de fallo claros y accionables, que guíen al usuario hacia una solución en lugar de simplemente reportar un problema técnico.
+
+\par\vspace{0.5em}
+
+También se considera la adecuación cultural del software. La localización correcta de formatos de fecha, número y moneda, junto con el uso de un lenguaje apropiado para la región (ES-BO), asegura que la aplicación se sienta natural. El Cuadro \ref{tab:hu_seguridad_2} aborda esta experiencia de usuario.
+
+\medskip
+
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}P{1.15cm}P{2.3cm}XP{2.3cm}XP{1.2cm}@{}}
+\toprule
+ID & Rol & Necesidad & Beneficio & Criterios G/W/T & Prioridad \\
+\midrule
 US-61 & Estudiante & Mensajes de error claros & Saber qué hacer & G: falla servidor; W: reintento; T: causa + alternativas offline/PDF. & Must \\
 US-62 & Estudiante & Manejo de vacíos/estados límite & Evitar confusiones & G: sin materias; W: voy al Home; T: mensaje ``No hay materias'' + CTA agregar/generar. & Must \\
 US-63 & Estudiante & Localización ES/formatos regionales & Coherencia cultural & G: región ES-BO; W: render; T: fechas/números correctos. & Should \\
 \bottomrule
 \end{tabularx}
-\caption{Historias de usuario — Seguridad, privacidad, rendimiento y accesibilidad}\label{tab:hu_seguridad}
+\caption{Historias de usuario: Seguridad, privacidad, rendimiento y accesibilidad (Parte 2)}\label{tab:hu_seguridad_2}
 \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}}
 \end{table}

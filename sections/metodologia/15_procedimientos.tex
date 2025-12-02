@@ -1,0 +1,36 @@
+% ----------------------------------------------------------------------
+\section{Procedimientos operativos}
+
+Los procedimientos operativos documentan los flujos de trabajo principales de la aplicación desde la perspectiva del sistema, describiendo las secuencias de acciones, validaciones y transformaciones que se ejecutan para completar cada operación crítica.
+
+\subsection{PR-001: Ingestión y normalización}
+Actor: Sistema. Objetivo: BD local vigente.
+\begin{enumerate}
+  \item \textbf{Precondiciones}
+  \begin{itemize}
+    \item Conectividad o PDF local.
+  \end{itemize}
+  \item \textbf{Postcondiciones}
+  \begin{itemize}
+    \item last\_sync actualizado, TC-004/005 verdes.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{PR-002: Generar horarios}
+Actor: Estudiante. Objetivo: obtener $N$ horarios.
+\begin{enumerate}
+  \item \textbf{Precondiciones}
+  \begin{itemize}
+    \item Selección de materias/flags.
+  \end{itemize}
+  \item \textbf{Postcondiciones}
+  \begin{itemize}
+    \item Top-$N$ sin solapes (por defecto), aplicación parcial/completa.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{PR-003: Configurar notificaciones}
+Actor: Estudiante. Objetivo: avisos antes de clase (10\,min por defecto).
+
+\subsection{PR-004: Exportar/Importar}
+Actor: Estudiante. Objetivo: compartir/clonar; validación de versión y carrera.

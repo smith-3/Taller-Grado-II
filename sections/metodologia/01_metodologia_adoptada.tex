@@ -1,0 +1,75 @@
+% ----------------------------------------------------------------------
+\section{Metodología adoptada: Kanban iterativo-incremental}
+
+Para el desarrollo de TecnoTime se adoptó la metodología Kanban en su variante iterativo-incremental, ajustada a un desarrollador único. Cada fase constituyó un incremento funcional con criterios de aceptación claros y revisión continua mediante tablero digital. Esta aproximación permitió priorizar funcionalidades según la evidencia de la encuesta aplicada y adaptarse a cambios en los requerimientos durante el desarrollo, tal como se detalla en el Cuadro~\ref{tab:fases_metodologia}.
+
+
+
+\begin{table}[H]
+  \centering\small
+  \begin{tabularx}{\linewidth}{@{}p{1.2cm}p{3.9cm}>{\RaggedRight\arraybackslash}X@{}}
+    \hline
+    Fase & Propósito principal & Entregables y evidencias \\
+    \hline
+    F0 & Identificar necesidades reales mediante estudio de campo & Instrumento de recolección (Google Forms), muestra de 126 estudiantes, análisis cuantitativo con hallazgos clave (94\% Android, 80\% coordina por WhatsApp, 88\% solicita actualización automática) y derivación de requerimientos funcionales trazables. \\
+    F1 & Incorporar horarios oficiales al sistema & Canal de descarga controlada de PDF, normalización a esquema Room y verificación de consistencia por carrera. \\
+    F2 & Definir el modelo de dominio & Entidades, reglas y agregados consolidados en la capa domain, acompañados de diagramas de referencia. \\
+    F3 & Generar horarios viables & Servicio de generación configurable, heurísticas MRV/LCV y pantallas para configurar y aplicar resultados. \\
+    F4 & Priorizar el uso sin conexión & Flujos de sincronización diferida, políticas de frescura y mecanismos de recuperación manual. \\
+    F5 & Intercambiar horarios & Contrato JSON (formato de intercambio de datos basado en texto) interoperable, flujo de importación/exportación y asistentes para compartir mediante WhatsApp. \\
+    F6 & Refinar la experiencia de usuario & Onboarding (pantallas iniciales de orientación), navegación principal, widget (componente visual que se muestra en la pantalla principal del dispositivo) de acceso rápido y guías contextuales. \\
+    F7 & Automatizar recordatorios e IA & Notificaciones programadas, plantillas reutilizables y asistente ``Simón'' con activación voluntaria. \\
+    F8 & Exportar resultados & Generadores de reporte en PDF, imagen y Excel con validación de formato. \\
+    F9 & Realizar aseguramiento de calidad & Batería de pruebas instrumentadas, casos manuales priorizados y checklist de aceptación. \\
+    F10 & Endurecer seguridad y privacidad & Gestión de permisos, cifrado de datos sensibles y revisión de políticas de respaldo. \\
+    F11 & Preparar liberación y métricas & Empaquetado en release, tablero de indicadores (TTS, adopción) y plan de seguimiento post despliegue. \\
+    \hline
+  \end{tabularx}
+  \caption[Aplicación de la metodología por fases]{Aplicación de la metodología por fases.}
+  \label{tab:fases_metodologia}
+  \small{Fuente: Elaboración propia.}
+\end{table}
+
+\subsection{Contexto empírico}
+El desarrollo de la aplicación móvil se inició desde cero, tomando como única fuente de datos el portal web de la facultad donde se publican los horarios en formato PDF \cite{horarios_fcyt}.
+
+El primer desafío técnico consistió en implementar un mecanismo de descarga y extracción de datos (scraping) capaz de transformar estos documentos no estructurados en información procesable.
+
+Aunque se tomaron como referencia visual y funcional otras aplicaciones existentes en el mercado para definir el alcance inicial, todo el código fuente de TecnoTime fue escrito específicamente para este proyecto.
+
+A partir de esta base de ingesta de datos, se ejecutaron iteraciones incrementales que añadieron funcionalidades clave: selección de materias, generación de horarios y validaciones con usuarios piloto.
+
+Las fases posteriores incorporaron intercambio JSON para envío y recepción de horarios, mejoras de experiencia de usuario (pantallas guía, configuración y widget), recordatorios y exportaciones en formatos comunes.
+
+Al cierre se integró la asistencia ``Simón'' como componente optativo y se documentaron controles de seguridad.
+
+\subsection{Factores de decisión}
+La encuesta aplicada a 126 estudiantes \cite{encuesta_fcyt_2025} orientó las prioridades del tablero:
+\begin{itemize}
+  \item Preferencia por Android (94,3\%): orientación exclusiva a componentes nativos y widget principal.
+  \item Coordinación por WhatsApp (80,3\%): intercambio de horarios mediante JSON y acciones directas de compartir.
+  \item Sincronización automática (88,4\%): verificación de frescura y actualización discreta sin intervención del usuario.
+  \item Uso sin conexión (77,7\%): arquitectura offline-first (prioriza el funcionamiento sin conexión) con caché local prioritaria.
+  \item Recordatorios (56,2\%): programación de notificaciones con plantillas y canales específicos.
+  \item Compartir horario (51,2\%): exportación a PDF, imagen y Excel con parámetros de periodo.
+\end{itemize}
+
+\subsection{Decisiones técnicas derivadas}
+En respuesta a estos factores, se definió una arquitectura Offline-First basada en Room como fuente de verdad, garantizando el acceso inmediato a la información sin dependencia de red. Para la interoperabilidad, se implementó un protocolo de intercambio de datos mediante archivos JSON ligeros, facilitando la coordinación externa.
+
+El desarrollo se realizó utilizando tecnologías nativas modernas (Jetpack Compose y Kotlin) para asegurar el rendimiento y la integración con el sistema, incluyendo el uso de widgets. Finalmente, el sistema de recordatorios se construyó sobre AlarmManager y WorkManager, permitiendo notificaciones locales precisas y autónomas.
+
+Estas decisiones definieron el alcance de los incrementos y la priorización de las historias de usuario en el tablero Kanban. Los artefactos y evidencias de código resultantes se encuentran documentados en el repositorio del proyecto \cite{tecnotime_repo}.
+
+\subsection{Arquitectura de la solución}
+La solución se apoya en una aplicación Android autosuficiente: la interacción sucede en la interfaz offline (Jetpack Compose), el motor de dominio coordina reglas y recordatorios, la ingesta procesa PDFs y la persistencia local resguarda horarios, configuraciones y políticas de frescura.
+
+El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} resume esta arquitectura offline-first.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{images/diagrams/cap4_arq_general.png}
+  \caption[Arquitectura general empleada en TecnoTime]{Arquitectura general empleada en TecnoTime.}
+  \label{fig:arquitectura_tecnotime}
+  \small{Fuente: Elaboración propia.}
+\end{figure}

@@ -1,0 +1,57 @@
+% ============================
+\section{F9: Pruebas y validación (QA)}
+
+Esta fase transversal se dedicó a la verificación sistemática de la calidad del software, asegurando que cada componente cumpla con los requisitos funcionales y no funcionales definidos. El proceso de aseguramiento de calidad (QA) se integró en cada etapa del desarrollo, desde la validación de unidades individuales hasta la verificación de flujos completos de usuario, garantizando la estabilidad y robustez de la aplicación antes de su liberación.
+\subsection{Objetivo}
+El objetivo principal fue certificar la corrección funcional de los módulos críticos del sistema, con especial énfasis en el motor de generación de horarios y la persistencia de datos. Se buscó minimizar la deuda técnica y prevenir regresiones mediante una estrategia de pruebas automatizadas que cubra los niveles unitario, de integración y de interfaz de usuario (end-to-end).
+
+\subsection{Ejecución de pruebas y aseguramiento de calidad}
+La estrategia de pruebas se estructuró siguiendo el modelo de la pirámide de pruebas, priorizando una base sólida de pruebas unitarias rápidas y aisladas para la lógica de negocio, complementada con pruebas de integración para los componentes de datos y pruebas E2E para los flujos críticos de usuario.
+
+Se implementaron suites de pruebas específicas para validar la robustez de los parsers de documentos, la integridad referencial en la base de datos local, la corrección de las heurísticas del generador de horarios y la fidelidad de los módulos de exportación e importación. Adicionalmente, se realizaron pruebas manuales exploratorias para evaluar la usabilidad y la experiencia de usuario en escenarios reales.
+
+\subsection{Resultados y verificación}
+La estrategia de aseguramiento de calidad alcanzó una cobertura superior al 75\% en los módulos críticos. La ejecución de la batería de pruebas E2E confirmó la estabilidad de los flujos principales, desde la ingesta de datos hasta la generación y exportación de horarios, asegurando que no existan regresiones en las funcionalidades clave.
+
+\subsection{Pirámide de pruebas}
+Se aplicó el enfoque unit/integration/UI:E2E, alineado al código real:
+  \begin{itemize}
+    \item Unitarias: utilitarios de tiempo y solapes (Utils), parsers PDF y mapeos (data/remote/pdf/*, data/mapper/*), heurísticas y strategy del generador (domain/service/*).
+    \item Integración: repositorios + Room (DAO/Entities) con casos de uso (ingesta/sync, generación, export/import): domain/repository/*, data/repository/*, domain/usecase/*.
+    \item UI/E2E: flujos críticos desde onboarding hasta generar, aplicar y exportar/importar, incluyendo widget y recordatorios.
+  \end{itemize}
+  (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+Cobertura objetivo. $\geq 75\%$ en módulos core (generator, parsing, sync, interop) y 100\% de flujos E2E críticos (listados abajo).
+
+\subsection{Casos críticos de validación (E2E y funcionales)}
+La validación del generador de horarios requiere un conjunto exhaustivo de casos de prueba que verifiquen tanto el cumplimiento de restricciones duras como la calidad de las soluciones propuestas. Estos casos críticos cubren escenarios extremos como materias con disponibilidad limitada, configuraciones que priorizan diferentes criterios, y situaciones de conflicto entre restricciones.
+
+Cada caso de prueba especifica las entradas exactas, los pasos de ejecución y los resultados esperados, permitiendo la verificación automatizada y la detección temprana de regresiones. Los casos implementados son:
+
+\begin{itemize}
+  \item TC-ONB-001: Onboarding completo. Entradas/Pasos: Abrir la aplicación, luego ir a Welcome, ingresar el nombre, ajustar el formato 24h, fines de semana y tema, sincronizar carreras, activar IA (opcional), continuar a Home. Resultado esperado: Preferencias persistidas; carreras visibles; IA permanece desactivada si no se activó. Evidencia: WelcomeScreen, WelcomeViewModel.
+
+  \item TC-ADD-002: Agregar materia con cambio de grupo. Entradas/Pasos: Seleccionar nivel, materia, grupo A (preview), confirmar, re-editar y cambiar a grupo B, confirmar. Resultado esperado: Selección final en grupo B; horarios asociados actualizados. Evidencia: EditGroupScreen.
+
+  \item TC-END-003: Finalizar materia (aprobado/abandonar). Entradas/Pasos: En Home, abrir card de materia, finalizar, elegir ``Aprobado'' y confirmar; repetir con otra en ``Abandonar''. Resultado esperado: Estado actualizado; materia aprobada no ofertada en generador; abandonar libera cupo. Evidencia: EditGroupViewModel.
+
+  \item TC-GEN-004: Generar sin choques (por defecto). Entradas/Pasos: En Generar: elegir 6 materias, acceptConflicts=false. Resultado esperado: 1-N horarios sin solapes; mensaje claro si no hay solución. Evidencia: GenerateSchedulesUseCaseImpl, ScheduleGenerator.
+
+  \item TC-GEN-005: Priorizar profesores ON + choques OFF. Entradas/Pasos: Activar prioritizeFavoriteTeachers=true, acceptConflicts=false. Resultado esperado: Excluir combinaciones con choque; priorizar grupos con docentes favoritos. Evidencia: ScheduleStrategyFactory, prioritizeGroupsByFavoriteTeacher(...).
+
+  \item TC-GEN-006: Priorizar profesores ON + choques ON. Entradas/Pasos: Activar ambos: favoritos y aceptar choques. Resultado esperado: Permitir combinaciones con choque; ranking favorece favoritos; se etiqueta conflicto. Evidencia: AcceptConflictsStrategy, PrioritizeTeachersStrategy.
+
+  \item TC-GEN-007: Obligatorias > límite. Entradas/Pasos: Marcar 8 obligatorias con totalSubjectsCount=6. Resultado esperado: Excedente pasa a opcional; se optimiza combinación final. Evidencia: GenerateSchedulesUseCaseImpl — promoteLowestLevels(...).
+
+  \item TC-EXP-008: Export imagen/PDF/Excel. Entradas/Pasos: Ejecutar export en Settings, confirmar. Resultado esperado: Archivo válido; share sheet abre con MIME correcto; bloqueo si horario vacío. Evidencia: SettingsSendScheduleScreen; GenerateWeeklyScheduleImageUseCase, GenerateWeeklySchedulePdfUseCase, GenerateScheduleExcelUseCase.
+
+  \item TC-JSON-009: Enviar copia JSON (parcial). Entradas/Pasos: Seleccionar parcialmente las materias, exportar JSON, compartir por WhatsApp. Resultado esperado: JSON con claves esperadas; sólo materias seleccionadas; app de destino recibe. Evidencia: GenerateShareableScheduleJsonUseCase, ShareableScheduleJsonGenerator.
+
+  \item TC-JSON-010: Importar JSON (no duplicar / otra carrera). Entradas/Pasos: Abrir JSON en TecnoTime, validar si ya inscritas, si carrera distinta, sincronizar. Resultado esperado: No duplicar inscritas/aprobadas; sugerir sync si carrera difiere; merge sin duplicados. Evidencia: LoadShareableScheduleUseCase, ImportSharedScheduleUseCase.
+
+  \item TC-NOT-011: Recordatorios (10 min; canales). Entradas/Pasos: Habilitar clases, establecer 10 min, programar notificación. Resultado esperado: Notificación en canal correcto y anticipación solicitada; respeta desactivación. Evidencia: TecnoTimeApp, NotificationServiceImpl, NotifyWorker.
+
+  \item TC-OFF-012: Offline con fallback PDF. Entradas/Pasos: Desconectar internet, generar, sincronizar por PDF local oficial. Resultado esperado: App opera con cache; si se provee PDF actual, re-ingesta manual exitosa. Evidencia: SyncCareerFromLocalPdfUseCase.
+\end{itemize}
+(Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).

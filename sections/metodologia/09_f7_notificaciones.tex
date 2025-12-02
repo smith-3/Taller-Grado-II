@@ -1,0 +1,17 @@
+% ============================
+\section{F7: Notificaciones e IA (Simón, opt-in)}
+
+Esta fase se enfocó en enriquecer la experiencia de usuario mediante la incorporación de asistencia proactiva y capacidades de inteligencia artificial generativa. El desarrollo priorizó la privacidad y la autonomía del usuario, implementando un sistema de recordatorios automatizados para la gestión del tiempo académico y un asistente conversacional ("Simón") basado en modelos de lenguaje grandes (LLMs) ejecutados localmente.
+
+Todo el módulo se diseñó bajo un estricto principio de "opt-in", asegurando que las funcionalidades avanzadas no comprometan el rendimiento base ni generen dependencias externas obligatorias.
+
+\subsection{Objetivo}
+El objetivo central fue dotar a la aplicación de capacidades de asistencia inteligente que operen en segundo plano sin interrumpir el flujo principal. Específicamente, se buscó garantizar la entrega puntual de notificaciones académicas (clases, exámenes) y ofrecer un asistente de IA capaz de responder consultas contextuales, todo ello ejecutándose exclusivamente en el dispositivo (on-device) para mantener la privacidad de los datos y funcionar sin conexión a internet.
+
+\subsection{Implementación de notificaciones e IA}
+La implementación técnica se dividió en dos componentes principales. Para las notificaciones, se configuraron canales de comunicación específicos en Android y se utilizó WorkManager para la programación eficiente de tareas en segundo plano, asegurando la precisión temporal incluso en modos de ahorro de energía.
+
+Por otro lado, la integración de IA se realizó mediante la incorporación de modelos cuantizados (ej. Gemma 2B) gestionados por MediaPipe LLM Inference. Se desarrolló un flujo de control granular que permite al usuario decidir explícitamente cuándo descargar el modelo, gestionar el espacio de almacenamiento ocupado y activar o desactivar la asistencia según sus necesidades, garantizando que el consumo de recursos (CPU/RAM) se mantenga bajo control.
+
+\subsection{Resultados y verificación}
+El sistema de notificaciones entregó recordatorios puntuales en los canales configurados, respetando las preferencias del usuario. La integración de IA operó bajo el modelo opt-in estricto, descargando el modelo solo tras la confirmación del usuario y ejecutando inferencias localmente sin impacto negativo en el rendimiento general de la aplicación.

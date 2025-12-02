@@ -1,0 +1,66 @@
+% ============================
+\section{F5: Interoperabilidad (JSON + WhatsApp)}
+
+Esta fase habilita el intercambio estructurado de horarios entre estudiantes, implementando un contrato JSON interoperable y flujos de exportación/importación compatibles con plataformas de mensajería instantánea.
+
+\subsection{Objetivo}
+Permitir compartir e importar horarios entre estudiantes de forma interoperable y segura.
+
+\subsection{Implementación de la interoperabilidad}
+Se añadieron exportaciones (PNG/PDF/Excel/JSON), un contrato JSON auto-contenido y flujos de envío/recepción por mensajería con validaciones e importación idempotente.
+
+\subsection{Exportar}
+Acciones: imagen (PNG), PDF, Excel y copia JSON del horario. Se solicita confirmación previa; si no hay materias inscritas, se bloquea la exportación con mensaje. Implementación de UI en SettingsSendScheduleScreen y orquestación en SettingsSendScheduleViewModel. Generación: GenerateWeeklyScheduleImageUseCase, GenerateWeeklySchedulePdfUseCase, GenerateScheduleExcelUseCase, GenerateShareableScheduleJsonUseCase. Compartición mediante FileProvider + Intent.ACTION\_SEND. (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\subsection{Enviar copia (JSON)}
+Permite selección parcial en SettingsSendScheduleViewModel. El generador JSON ShareableScheduleJsonGenerator produce claves: meta, careers, subjects, groups, teachers, classrooms, entries. (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\subsection{Importar (desde WhatsApp)}
+Al abrir el JSON con TecnoTime: LoadShareableScheduleUseCase valida y carga; ImportSharedScheduleUseCase realiza merge sin duplicados y maneja:
+\begin{itemize}
+  \item Materias ya inscritas/aprobadas (no duplicar; cambio de grupo si aplica).
+  \item Diferencia de carrera (autoSyncCareers para sincronizar primero si corresponde).
+  \item Persistencia idempotente en SelectedSubjectRepository y GroupScheduleRepository.
+\end{itemize}
+(Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
+
+\begin{itemize}[nosep,leftmargin=*]
+  \item loadEnrolledSubjects()
+  \item toggleSubjectSelection()
+  \item selectAllSubjects()
+  \item clearSelection()
+\end{itemize}
+
+% Rutas omitidas: se referencian por nombre de clase.
+
+El proceso de compartir horarios se visualiza en la Figura \ref{fig:f5_flow_export}. Este diagrama detalla el flujo de exportación, desde la selección de materias hasta la generación del archivo JSON y su envío a través de la hoja de compartir del sistema.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part1.png}
+\caption[Exportación del horario en la aplicación]{Exportación del horario en la aplicación.}
+  \label{fig:f5_flow_export}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+Complementariamente, la Figura \ref{fig:f5_flow_import} ilustra el flujo inverso de importación. Se muestra cómo la aplicación procesa un archivo JSON recibido, valida su contenido, detecta posibles duplicados y fusiona la información con el horario existente del usuario.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part2.png}
+\caption[Importación del horario en la aplicación]{Importación del horario en la aplicación.}
+  \label{fig:f5_flow_import}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+El intercambio define un bloque de metadatos y un cuerpo auto-contenido:
+\begin{itemize}
+  \item meta: \{version, min\_supported\}. Se usa control semántico (1.0.0). La aplicación acepta archivos cuya min\_supported $\leq$ versión actual del contrato.
+  \item careers: carreras implicadas (código y nombre) para habilitar/sincronizar si corresponde.
+  \item subjects, groups, teachers, classrooms: catálogos mínimos para enriquecer la vista previa y resolver identificadores.
+  \item entries: lista de EnrolledSchedulePreview.
+\end{itemize}
+Campos mínimos obligatorios por entry para garantizar la importación: subject.code, group.groupId y schedule (día y franja horaria). El resto de atributos enriquecen la experiencia (docente, aula, color/emoji, notificaciones) y se consumen cuando están disponibles.
+
+\subsection{Resultados y verificación}
+La interoperabilidad se validó mediante el intercambio exitoso de horarios entre dispositivos con diferentes configuraciones de carrera. Se confirmó que el contrato JSON es robusto ante cambios menores de versión y que el proceso de importación maneja correctamente la fusión de datos sin generar duplicados, sugiriendo la sincronización de carrera cuando es necesario.

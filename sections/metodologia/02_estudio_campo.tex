@@ -1,0 +1,167 @@
+% ----------------------------------------------------------------------
+\section{Estudio de campo y levantamiento de requerimientos}
+
+Esta sección documenta el proceso completo de investigación empírica realizado para fundamentar el desarrollo de TecnoTime. El objetivo principal fue validar las hipótesis iniciales sobre las dificultades que enfrentan los estudiantes en la gestión de sus horarios y obtener datos cuantitativos que respalden las decisiones de diseño.
+
+A través de este estudio, se buscó no solo identificar problemas, sino también descubrir patrones de comportamiento y preferencias tecnológicas que permitieran orientar la construcción de una solución verdaderamente útil y adoptable.
+
+El proceso abarca desde el diseño del instrumento de recolección hasta la derivación de requerimientos funcionales trazables, asegurando que cada funcionalidad del sistema responda a una necesidad real detectada en la población estudiantil.
+
+\subsection{Diseño del instrumento de recolección}
+
+Para fundamentar el desarrollo de TecnoTime en necesidades reales de los estudiantes de la FCyT, se diseñó un cuestionario estructurado orientado a capturar patrones de uso de herramientas actuales, puntos de dolor en la gestión de horarios y expectativas sobre funcionalidades deseadas en una aplicación móvil complementaria.
+
+El instrumento se organizó en cuatro bloques temáticos: caracterización del encuestado (carrera, semestre, dispositivos utilizados), uso de herramientas actuales (Cappuchino, PDFs oficiales, canales de comunicación), problemática percibida (frustración, repetición de pasos, dificultades de coordinación) y demandas específicas (actualización automática, modo sin conexión, recordatorios, compartir horarios).
+
+El cuestionario fue aplicado mediante Google Forms durante el periodo académico 2025-I, con participación voluntaria y anónima. El instrumento completo se presenta en el Anexo \ref{ann:instrumento}, mientras que los resultados tabulados se encuentran documentados en la subsección \ref{sec:historias_usuario} de este capítulo y en formato digital \cite{encuesta_fcyt_2025}.
+
+\subsection{Aplicación y características de la muestra}
+
+Se aplicó un muestreo por conveniencia dirigido a estudiantes de la Facultad de Ciencias y Tecnología de la UMSS, obteniendo un total de 126 respuestas válidas. La muestra incluyó estudiantes de diferentes carreras, niveles académicos y turnos, reflejando la diversidad de la población objetivo.
+
+El perfil de los encuestados abarca desde estudiantes de primeros semestres hasta niveles avanzados, con predominio de las carreras de Ingeniería Informática e Ingeniería de Sistemas. La participación fue voluntaria y la tasa de respuesta completa alcanzó el 95\% de los formularios iniciados, evidenciando el interés de los estudiantes en la problemática abordada.
+
+\subsection{Resultados cuantitativos de la encuesta}
+
+Los resultados de la encuesta aplicada a 126 estudiantes de la FCyT se presentan organizados por dimensiones temáticas, comenzando por el análisis de dispositivos utilizados y continuando con patrones de uso, coordinación social y demandas específicas.
+
+El análisis de estos datos permite identificar las brechas existentes entre las herramientas actuales y las expectativas de los estudiantes. A continuación, se detallan los hallazgos más relevantes que sustentan los requerimientos del sistema.
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Dispositivos utilizados}
+
+  El 94\% de los encuestados utiliza Android como herramienta principal, frente a un 26\% con acceso regular a computadora portátil. Esta marcada preferencia móvil justifica la prioridad del desarrollo nativo para Android, como se ilustra en la Figura \ref{fig:encuesta_dispositivo}.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/diagrams/encuesta_dispositivo.png}
+    \caption[Dispositivo utilizado para ver horarios (n=126)]{Dispositivo utilizado para ver horarios (n=126).}
+    \label{fig:encuesta_dispositivo}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+
+  \item \textbf{Patrones de consulta de horarios}
+
+  El uso se concentra en periodos específicos: 48\% consulta solo en inscripciones y 44\% varias veces al semestre. Apenas un 8\% accede diariamente, lo que evidencia que las herramientas actuales no fomentan una consulta continua, tal como se muestra en la Figura \ref{fig:encuesta_uso_capuchino}.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/diagrams/encuesta_uso_capuchino.png}
+    \caption[Frecuencia de acceso a la información de horarios (n=126)]{Frecuencia de acceso a la información de horarios (n=126).}
+    \label{fig:encuesta_uso_capuchino}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+
+  \item \textbf{Coordinación social mediante WhatsApp}
+
+  El 80\% de los encuestados valida información de horarios y coordina cambios mediante grupos de WhatsApp, confirmando que la mensajería instantánea se ha convertido en un canal informal pero crítico para la gestión de información académica. Este hallazgo fundamenta la necesidad de habilitar intercambio estructurado de horarios compatible con plataformas de mensajería, como se detalla en la Figura \ref{fig:encuesta_whatsapp}.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/diagrams/encuesta_whatsapp.png}
+    \caption[Coordinación social mediante WhatsApp (n=126)]{Coordinación social mediante WhatsApp (n=126).}
+    \label{fig:encuesta_whatsapp}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+
+  \item \textbf{Frustración con herramientas actuales}
+
+  El 60\% de los estudiantes reporta niveles altos de frustración (1-3) con las herramientas actuales. Este dato subraya la urgencia de mejorar la experiencia de usuario mediante memoria de contexto y persistencia, evitando así la repetición de pasos en cada consulta, tal como se refleja en la Figura \ref{fig:encuesta_frustracion}.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_frustracion.png}
+    \caption[Nivel de frustración con las herramientas actuales (n=126)]{Nivel de frustración con las herramientas actuales (n=126).}
+    \label{fig:encuesta_frustracion}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+
+  \item \textbf{Principales demandas identificadas}
+
+  Las demandas con mayor valoración por parte de los estudiantes incluyen: actualización automática de horarios (88\%), modo sin conexión (78\%), recordatorios antes de clase (56\%) y funcionalidad de compartir horarios (51\%). Estas prioridades guiaron la definición de las fases correspondientes del desarrollo, resumidas en la Figura \ref{fig:encuesta_demandas} (F4, F5, F7 y F8).
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/diagrams/encuesta_demandas.png}
+    \caption[Principales demandas de los estudiantes (n=126)]{Principales demandas de los estudiantes (n=126).}
+    \label{fig:encuesta_demandas}
+    \small{Fuente: \cite{encuesta_fcyt_2025}.}
+  \end{figure}
+\end{enumerate}
+
+\subsection{Derivación de requerimientos funcionales}
+
+Los hallazgos cuantitativos de la encuesta se tradujeron en requerimientos funcionales específicos mediante un proceso de trazabilidad que vincula cada demanda identificada con una funcionalidad concreta de la aplicación y un criterio de aceptación verificable, como se presenta en el Cuadro \ref{tab:derivacion_req}.
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
+    \hline
+    Hallazgo & Requerimiento derivado & Criterio de aceptación \\
+    \hline
+    94\% usa Android & Priorizar Android y vista móvil & Flujo usable sin laptop \\
+    \hline
+    60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
+    \hline
+    80\% coordina por WhatsApp & Intercambio estructurado en JSON & Compartir/abrir desde mensajería \\
+    \hline
+    78\% valora modo sin conexión & Operación offline-first & Consulta sin red \\
+    \hline
+    57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
+    \hline
+    88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
+    \hline
+  \end{tabular}
+  \caption[Trazabilidad de hallazgos a requerimientos funcionales]{Trazabilidad de hallazgos a requerimientos funcionales.}
+  \label{tab:derivacion_req}
+  \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}
+\end{table}
+
+\subsection{Proceso propuesto (TO-BE)}
+
+Con base en las demandas identificadas y los requerimientos derivados, se diseñó un proceso mejorado que aborda las limitaciones del flujo actual.
+
+El proceso propuesto con TecnoTime simplifica la gestión de horarios mediante: generación automática de combinaciones sin choques, memoria de contexto para evitar repetición de selecciones, intercambio estructurado compatible con mensajería, consulta diaria sin conexión y recordatorios configurables antes de clase. La Figura \ref{fig:area_tobe} ilustra este nuevo flujo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.35\textwidth]{images/diagrams/area_tobe_proceso.png}
+  \caption[Procesos propuestos (TO-BE) a nivel de uso]{Procesos propuestos (TO-BE) a nivel de uso con TecnoTime.}
+  \label{fig:area_tobe}
+  \small{Fuente: Elaboración propia.}
+\end{figure}
+
+El proceso propuesto reduce significativamente los pasos necesarios para consultar y actualizar horarios, elimina la dispersión de información entre múltiples canales y habilita funcionalidades de coordinación social mediante formatos estructurados.
+
+\subsection{Historias de usuario derivadas}\label{sec:historias_usuario}
+
+A partir de los requerimientos funcionales y el proceso TO-BE, se definieron 63 historias de usuario. Para su documentación se adoptó un formato estándar que facilita la comprensión y validación:
+
+\begin{itemize}
+    \item Estructura de la Historia: Sigue la plantilla ``Como [rol], necesito [funcionalidad], para [beneficio]'', identificando al actor, su objetivo y el valor obtenido.
+    \item Criterios de Aceptación (G/W/T): Se utiliza el formato \textit{Given-When-Then} (Dado que - Cuando - Entonces). Describe el escenario inicial (\textit{Given}), la acción del usuario (\textit{When}) y el resultado esperado (\textit{Then}), sirviendo como base para las pruebas.
+    \item Priorización (MoSCoW): Clasificación de importancia: \textit{Must} (Debe tener), \textit{Should} (Debería tener), \textit{Could} (Podría tener) y \textit{Won't} (No tendrá por ahora).
+\end{itemize}
+
+Las historias se organizaron en las siguientes áreas funcionales:
+
+\begin{itemize}[nosep]
+  \item Onboarding y configuración inicial de perfil
+  \item Gestión de carreras, niveles y seguimiento de progreso académico
+  \item Navegación en la pantalla principal, vista semanal y widget
+  \item Administración de materias y grupos
+  \item Gestión de profesores y favoritos
+  \item Generador de horarios con restricciones y optimización
+  \item Exportación, importación e intercambio de horarios
+  \item Recordatorios automatizados y asistente IA ``Simón''
+  \item Operación sin conexión, actualización automática y resiliencia
+  \item Soporte, información y preferencias del usuario
+  \item Seguridad, privacidad, rendimiento y accesibilidad
+\end{itemize}
+
+A continuación, se presentan las tablas detalladas con el conjunto completo de historias de usuario (US-01 a US-63).
+
+\input{sections/metodologia/historias_usuario}
+
+% ----------------------------------------------------------------------

@@ -1,0 +1,21 @@
+% ============================
+\section{F10: Seguridad y privacidad}
+
+Esta fase se dedicó a fortalecer la postura de seguridad y privacidad de la aplicación, implementando un modelo de defensa en profundidad que prioriza la minimización de datos y el procesamiento local. Se establecieron controles estrictos sobre los permisos del sistema y se integraron mecanismos de cifrado para la protección de la información sensible, asegurando que el usuario mantenga la soberanía total sobre sus datos académicos y personales.
+
+\subsection{Objetivo}
+El objetivo primordial fue garantizar la confidencialidad e integridad de la información del usuario mediante la adopción de principios de "privacidad por diseño". Se buscó reducir al mínimo la superficie de ataque limitando los permisos solicitados y eliminando cualquier dependencia de servicios en la nube para el procesamiento de datos críticos, asegurando así un funcionamiento seguro y autónomo.
+
+\subsection{Implementación de medidas de seguridad}
+La implementación de las medidas de seguridad se articuló en tres ejes fundamentales. Primero, se aplicó el principio de mínimo privilegio en la gestión de permisos, solicitando acceso a recursos sensibles (como notificaciones o almacenamiento) únicamente en el momento exacto de su uso y bajo demanda explícita del usuario.
+
+Segundo, se reforzó la persistencia de datos mediante el uso de almacenamiento interno protegido por el sistema operativo, inaccesible para otras aplicaciones. Finalmente, la integración del módulo de inteligencia artificial se diseñó para operar en un entorno aislado (sandbox), ejecutando todos los modelos de inferencia localmente y sin emitir telemetría o datos de uso a servidores externos.
+
+\subsection{Resultados y verificación}
+La auditoría de seguridad confirmó que la aplicación opera con el conjunto mínimo de permisos necesarios. Se verificó que no existe transmisión de telemetría obligatoria y que los datos sensibles permanecen en el almacenamiento local del dispositivo. La funcionalidad de IA respetó estrictamente el protocolo de activación voluntaria (opt-in).
+
+Datos mínimos (local). Sólo nombre de usuario y preferencias necesarias (24h, fines de semana, tema, notificaciones, IA). No se recolecta telemetría obligatoria ni se envían datos personales a terceros. Persistencia: Room/SharedPreferences locales, gestionado en UserSettings.
+
+Permisos mínimos. POST\_NOTIFICATIONS (Android 13+) para recordatorios; permisos de almacenamiento/compartir sólo cuando export/import lo requiere (vía FileProvider e Intent.ACTION\_SEND). Declaración en el AndroidManifest.
+
+IA on-device (opt-in). Descarga/uso del modelo bajo control del usuario: activar/desactivar IA, elegir medio de descarga (Wi‑Fi/datos), borrar el modelo. Sin telemetría obligatoria; procesamiento local.

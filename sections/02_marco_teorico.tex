@@ -51,7 +51,7 @@ Para implementar este patrón, se emplean flujos reactivos mediante StateFlow de
 \section{Arquitectura de Software}
 \label{sec:arquitectura-software}
 
-Para garantizar la mantenibilidad, testabilidad y escalabilidad del software, se siguen principios de diseño robustos y patrones arquitectónicos estandarizados en la industria.
+Para garantizar la mantenibilidad, facilidad de prueba y escalabilidad del software, se siguen principios de diseño robustos y patrones arquitectónicos estandarizados en la industria.
 
 \subsection{Clean Architecture y Regla de Dependencia}
 Clean Architecture, propuesta por Robert C. Martin \cite{martin2017-cleanarch}, estructura el código en capas concéntricas con responsabilidades claras, como se ilustra en la Figura \ref{fig:clean_architecture}.
@@ -76,9 +76,7 @@ La Regla de Dependencia establece que las dependencias de código fuente solo pu
 \subsection{Arquitectura Recomendada para Aplicaciones Android}
 Google propone una arquitectura en capas que combina los principios de Clean Architecture con las particularidades del ecosistema Android. Esta arquitectura promueve la separación de responsabilidades y facilita las pruebas unitarias, mejorando la mantenibilidad del código a largo plazo.
 
-La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura, mostrando cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas.
-
-El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores, mientras que los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
+La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura, mostrando cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas. El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores, mientras que los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
 
 \begin{figure}[H]
     \centering
@@ -116,7 +114,7 @@ La Figura \ref{fig:android_ui_layer} ilustra cómo estos componentes colaboran p
 
     Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
 
-Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, "Generar Horario" o "Exportar a PDF") y orquesta la interacción entre múltiples repositorios si es necesario.
+Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, ``Generar Horario'' o ``Exportar a PDF'') y orquesta la interacción entre múltiples repositorios si es necesario.
 
 Los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación al encapsular reglas de negocio complejas y reutilizables.
 
@@ -208,14 +206,14 @@ Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Back
 Este enfoque permite identificar el conjunto completo de combinaciones válidas posibles. Dicha característica resulta fundamental para presentar al estudiante todas las opciones disponibles.
 
 \subsection{Optimización Combinatoria y Selección}
-Dado que el número de combinaciones válidas puede ser muy grande, se aplica un proceso de Optimización Combinatoria para seleccionar las mejores opciones. Los algoritmos de optimización no solo buscan una solución factible, sino que buscan las "mejores $k$" soluciones según criterios de calidad.
+Dado que el número de combinaciones válidas puede ser muy grande, se aplica un proceso de Optimización Combinatoria para seleccionar las mejores opciones. Los algoritmos de optimización no solo buscan una solución factible, sino que buscan las ``mejores $k$'' soluciones según criterios de calidad.
 
 Se suele utilizar un sistema de ranking donde cada horario generado recibe una puntuación basada en el cumplimiento de restricciones blandas. Posteriormente, se ordenan las soluciones de mayor a menor puntaje y se presentan al usuario las opciones destacadas, facilitando el proceso de selección.
 
 \subsection{Análisis de Decisión Multi-criterio (MCDA)}
 Para evaluar la calidad de un horario, se emplea el Análisis de Decisión Multi-criterio (MCDA). Este enfoque permite considerar múltiples factores simultáneamente, asignando pesos específicos a cada criterio \cite{triantaphyllou2000multi}.
 
-En la práctica, esto se puede implementar a través del Patrón de Diseño \textit{Strategy}. Este patrón permite cambiar dinámicamente la estrategia de evaluación (por ejemplo, "Priorizar mañanas libres", "Minimizar huecos", "Evitar cruces de materias"), calculando el puntaje total como una suma ponderada de estos criterios. Esto otorga flexibilidad para adaptarse a las preferencias cambiantes.
+En la práctica, esto se puede implementar a través del Patrón de Diseño \textit{Strategy}. Este patrón permite cambiar dinámicamente la estrategia de evaluación (por ejemplo, ``Priorizar mañanas libres'', ``Minimizar huecos'', ``Evitar cruces de materias''), calculando el puntaje total como una suma ponderada de estos criterios. Esto otorga flexibilidad para adaptarse a las preferencias cambiantes.
 
 \section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
 \label{sec:edge-ai}
@@ -285,13 +283,13 @@ Las aplicaciones móviles modernas requieren mecanismos para interactuar con el 
 \subsection{Sistema de Notificaciones}
 Las notificaciones son mensajes que Android muestra fuera de la interfaz de usuario de la aplicación para proporcionar recordatorios, comunicaciones de otras personas u otra información oportuna de la aplicación \cite{android_notifications}.
 
-A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, "Recordatorios de Clases", "Avisos Generales") y facilita la gestión de la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
+A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, ``Recordatorios de Clases'', ``Avisos Generales'') y facilita la gestión de la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
 
-La Importancia de la notificación determina cuánto interrumpe al usuario (visual y auditivamente). Los niveles van desde "Urgente" (sonido y ventana emergente) hasta "Baja" (sin sonido ni interrupción visual).
+La Importancia de la notificación determina cuánto interrumpe al usuario (visual y auditivamente). Los niveles van desde ``Urgente'' (sonido y ventana emergente) hasta ``Baja'' (sin sonido ni interrupción visual).
 
 Existen dos tipos principales de implementación:
 \begin{itemize}
-    \item Notificaciones Locales: Programadas por la propia aplicación utilizando \texttt{AlarmManager} o \texttt{WorkManager}. Son ideales para recordatorios basados en el tiempo que no requieren conexión a internet, como los recordatorios de clases configurados en el dispositivo.
+    \item Notificaciones Locales: Programadas por la propia aplicación utilizando AlarmManager o WorkManager. Son ideales para recordatorios basados en el tiempo que no requieren conexión a internet, como los recordatorios de clases configurados en el dispositivo.
     \item Notificaciones Remotas (Push): Enviadas desde un servidor externo a través de servicios como Firebase Cloud Messaging (FCM).
 \end{itemize}
 
@@ -300,8 +298,8 @@ Los App Widgets son vistas de aplicación en miniatura que se pueden incrustar e
 
 La arquitectura de un Widget se basa en los siguientes componentes clave:
 \begin{itemize}
-    \item AppWidgetProvider: Una implementación de \texttt{BroadcastReceiver} que maneja el ciclo de vida del widget (actualización, habilitación, inhabilitación y eliminación).
-    \item RemoteViews: Debido a que el widget se ejecuta en un proceso distinto al de la aplicación principal (generalmente el proceso del "Launcher"), la interfaz de usuario no se puede manipular directamente. \texttt{RemoteViews} es una clase que describe una jerarquía de vistas que se puede mostrar en otro proceso. Actúa como un conjunto de instrucciones de renderizado que el sistema ejecuta de manera segura \cite{android_remoteviews}.
+    \item AppWidgetProvider: Una implementación de BroadcastReceiver que maneja el ciclo de vida del widget (actualización, habilitación, inhabilitación y eliminación).
+    \item RemoteViews: Debido a que el widget se ejecuta en un proceso distinto al de la aplicación principal (generalmente el proceso del ``Launcher''), la interfaz de usuario no se puede manipular directamente. RemoteViews es una clase que describe una jerarquía de vistas que se puede mostrar en otro proceso. Actúa como un conjunto de instrucciones de renderizado que el sistema ejecuta de manera segura \cite{android_remoteviews}.
 \end{itemize}
 
 El ciclo de vida de actualización está definido por un intervalo de tiempo en el archivo de configuración XML, aunque también se pueden solicitar actualizaciones manuales cuando ocurren cambios en los datos de la aplicación, garantizando la sincronización de la información visualizada.

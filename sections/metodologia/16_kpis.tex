@@ -1,0 +1,14 @@
+% ----------------------------------------------------------------------
+\section{Métricas (KPIs) y fórmulas}
+\label{sec:kpis}
+\noindent TTS (Time-To-Schedule). 
+$TTS = t_{\text{aplicado}} - t_{\text{click\_generar}}$ (objetivo $\leq 3$\,min para $N{=}10$).
+
+\noindent Gaps/día.
+$\displaystyle \text{Gaps}_{\text{prom}}=\frac{\sum_{d}{\text{minutos vacíos}(d)}}{\#\text{días activos}}$ (objetivo: tendencia a la baja).
+
+\noindent On-time reminders (medible).
+$\displaystyle \frac{\#\text{notifs abiertas }\geq X\text{ min antes}}{\#\text{notifs totales}}\times 100\%$ (objetivo $\geq 95\%$).
+
+\noindent Adopción JSON (medible).
+\% de export/import exitoso (objetivo $\uparrow$ en semanas pico); replicable por pruebas E2E (F5/F8).

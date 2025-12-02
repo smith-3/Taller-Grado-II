@@ -6,47 +6,44 @@
 
 \section{Conclusiones}
 
-\noindent Al concluir el desarrollo de TecnoTime, se presentan las siguientes conclusiones derivadas de los desafíos técnicos enfrentados, las soluciones implementadas y los aprendizajes obtenidos durante el proceso.
+\noindent En este capítulo se presentan las conclusiones obtenidas a partir del desarrollo del proyecto, en función del objetivo general y los objetivos específicos planteados.
 
-\begin{enumerate}
+\begin{itemize}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item \textbf{Desarrollo de aplicación móvil para organización de horarios académicos.} El mayor desafío fue adaptar el algoritmo de generación a preferencias heterogéneas de estudiantes. Inicialmente se consideró grafos para ``el mejor'' horario, pero usuarios mostraron preferencias variadas (días libres vs.\,compactos vs.\,docentes). Se adoptó estrategia multicriterio generando múltiples opciones configurables. La validación iterativa con usuarios evitó soluciones técnicamente correctas pero poco útiles.
+\item Al desarrollar el sistema de personalización, se identificó que los estudiantes poseen preferencias de organización contradictorias (días libres vs. horarios compactos), lo que impedía ofrecer una solución única. Este obstáculo se superó implementando una estrategia multicriterio que permite al usuario configurar sus propias prioridades, cumpliendo así el objetivo de flexibilidad.
 
-\item \textbf{Organización de carga académica mediante selección guiada.} En fases finales surgió problema crítico: materias con componente teórico y laboratorio (p.\,ej., Física I) no se distinguían en el sistema web de la facultad. Se extendió el modelo de datos tratándolos como materias independientes con vinculación lógica, modificando el parser de PDFs. La arquitectura limpia facilitó esta extensión tardía sin comprometer componentes existentes.
+\item Durante la implementación del módulo de ajuste manual, surgió la dificultad de garantizar el acceso rápido a la información del horario sin obligar al usuario a navegar constantemente por la aplicación. Se solucionó este problema mediante el desarrollo de un widget de escritorio que persiste la información seleccionada, facilitando la consulta inmediata.
 
-\item \textbf{Ajuste manual de horarios y persistencia de preferencias.} El scraping de PDFs generaba errores por símbolos especiales y falta de datos de docentes, rompiendo integridad referencial. Se implementó formateo riguroso con validación y contingencias inteligentes reutilizando docentes de semestres anteriores. Separar teórico/laboratorio requirió migraciones complejas tardías. La limpieza de datos resultó tan crítica como el diseño del esquema.
+\item La funcionalidad de descarga e intercambio de horarios enfrentó fallos técnicos en dispositivos de gama media debido al alto consumo de memoria al generar imágenes de alta resolución. Esta limitación se resolvió optimizando el motor de renderizado y la gestión de memoria, logrando que la exportación sea eficiente y accesible para todos los dispositivos.
 
-\item \textbf{Facilitar descarga e intercambio de horarios.} La generación de imagen y PDF renderiza HTML del horario en componente web interno; Excel se genera directamente sin renderizado visual. El desafío fue alto consumo de memoria al crear imágenes grandes (~28 MB), causando errores en dispositivos de gama baja. Se solucionó liberando memoria tras comprimir, calculando dimensiones dinámicamente y ejecutando en hilo principal con control de cancelación.
+\item Para la sugerencia de horarios optimizados, el enfoque inicial basado en grafos resultó ineficiente para manejar la complejidad de múltiples restricciones simultáneas. Se optó por reemplazarlo con un algoritmo de backtracking heurístico, el cual demostró ser capaz de minimizar los tiempos de espera entre clases de manera efectiva.
 
-\item \textbf{Generación de horarios optimizados.} El enfoque inicial con grafos mostró limitaciones: complejidad elevada, única solución generada y falta de escalabilidad a múltiples criterios. Se implementó backtracking heurístico con poda inteligente y evaluación multicriterio, generando top-N soluciones. Heurísticas eficientes con criterios claros superaron el enfoque teóricamente óptimo en escenarios reales.
+\item En la optimización de la interfaz de usuario, las pruebas iniciales revelaron que los flujos de navegación resultaban confusos para los estudiantes, dificultando el uso de la herramienta. Se abordó este problema mediante un rediseño iterativo y la incorporación de un onboarding interactivo, asegurando una experiencia de usuario clara e intuitiva.
 
-\item \textbf{Optimización de experiencia móvil.} Las primeras versiones generaban confusión sobre funcionalidades y flujos. El feedback reveló mal entendimiento del usuario. Se implementó onboarding interactivo, rediseño de pantallas basado en testing con usuarios reales, y tooltips contextuales en puntos críticos. La interfaz intuitiva requiere iteración con usuarios reales, no diseño único basado en suposiciones del desarrollador.
+\item La ingesta de datos académicos presentó el mayor desafío técnico debido a la inconsistencia y falta de estructura en los archivos PDF de la facultad. Fue necesario reestructurar el parser y el modelo de datos para manejar estas irregularidades, permitiendo distinguir correctamente entre componentes teóricos y prácticos.
 
-\end{enumerate}
+\item Aunque el proyecto enfrentó desafíos significativos relacionados con la calidad de los datos y la diversidad de dispositivos, la aplicación móvil desarrollada logró gestionar los horarios de manera eficiente. La validación con usuarios confirmó que las soluciones técnicas adoptadas permitieron superar estas barreras, cumpliendo satisfactoriamente el objetivo general del proyecto.
 
-\vspace{0.5em}
-\noindent El desarrollo de TecnoTime demostró que construir software útil requiere validación continua con usuarios, resiliencia ante datos imperfectos, arquitectura flexible que permita incorporar cambios significativos, e iteración constante basada en feedback real. Las suposiciones iniciales sobre preferencias de horarios y flujos de UI fueron desafiadas por la realidad.
-
-\noindent Los desafíos enfrentados, desde algoritmos inadecuados hasta problemas de scraping y UI confusa, fueron oportunidades de aprendizaje que fortalecieron tanto el producto final como las competencias técnicas adquiridas.
+\end{itemize}
 
 \section{Recomendaciones}
 
 \noindent A partir de las limitaciones identificadas durante el desarrollo y el feedback de los usuarios, se presentan las siguientes recomendaciones orientadas a extender la funcionalidad de TecnoTime y mejorar su utilidad en el contexto académico real.
 
-\begin{enumerate}
+\begin{itemize}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item \textbf{Edición manual de horarios generados.} Los docentes frecuentemente cambian grupos o salones sin que esto se refleje en los PDFs oficiales. Se recomienda implementar funcionalidad de edición que permita al estudiante modificar horarios generados: cambiar grupos, docentes, aulas y horarios de clases específicas. Esto evitaría que el usuario deba regenerar todo el horario por un único cambio y aumentaría la utilidad real de la aplicación ante inconsistencias en datos oficiales.
+\item Se recomienda implementar una funcionalidad de edición manual profunda que permita modificar horarios ya generados (cambiar grupos o aulas específicas). Esto cubriría los casos donde los docentes realizan cambios informales no reflejados en los datos oficiales, aumentando la utilidad de la aplicación ante la realidad operativa de la facultad.
 
-\item \textbf{Integración de actividades personales y extracurriculares.} TecnoTime actualmente solo gestiona horarios académicos formales, pero los estudiantes tienen otras actividades: deportes, reuniones estudiantiles, trabajos, compromisos personales. Se recomienda permitir agregar eventos personalizados con título, horario, recurrencia y ubicación, visualizándolos junto a clases académicas. Esto transformaría la aplicación en un gestor integral del tiempo del estudiante.
+\item Se sugiere integrar la gestión de actividades personales y extracurriculares. Permitir a los estudiantes agregar eventos propios (deportes, trabajo) junto con su carga académica transformaría la aplicación en un gestor integral del tiempo, cubriendo una necesidad que excede el ámbito puramente académico.
 
-\item \textbf{Sistema de notas y recordatorios académicos.} La aplicación carece de funcionalidad para registrar fechas de exámenes, entregas de trabajos o recordatorios académicos vinculados a materias. Se recomienda implementar un módulo de notas asociadas a cada materia, permitiendo agregar eventos importantes (exámenes, laboratorios, presentaciones) con notificaciones configurables. Esta funcionalidad complementaría la organización temporal con gestión de tareas académicas.
+\item Se recomienda desarrollar un módulo de notas y recordatorios académicos vinculados a las materias. La capacidad de registrar fechas de exámenes y entregas complementaría la organización temporal, ofreciendo una herramienta más completa para el seguimiento del rendimiento académico.
 
-\item \textbf{Extensión a otras facultades y universidades.} La arquitectura actual depende del formato específico de PDFs de la FCyT. Para extender TecnoTime a otras facultades o universidades, se requiere que las instituciones publiquen horarios en formato estructurado similar o proporcionen endpoint oficial. De no ser posible, sería necesario desarrollar parsers específicos por facultad, aumentando significativamente el esfuerzo de mantenimiento. La estandarización de formatos institucionales facilitaría esta expansión.
+\item Para extender el sistema a otras facultades, se recomienda estandarizar los formatos de entrada de datos. La dependencia actual del formato específico de los PDFs de la FCyT es una limitante; se sugiere promover la implementación de servicios web institucionales (API) que provean la información de horarios de manera estructurada y confiable.
 
-\item \textbf{Despliegue institucional y mantenimiento de datos.} Se recomienda formalizar un canal de distribución oficial (intranet/tienda institucional), firmar digitalmente versiones, y establecer monitoreo del formato y ubicación de PDFs antes de cada periodo de inscripciones. Un endpoint oficial de la universidad reemplazaría la ingesta desde PDF, mejorando confiabilidad y eliminando la fragilidad del scraping.
+\item Se recomienda a la institución formalizar un canal de distribución oficial y establecer protocolos de verificación de los archivos de horarios. Mantener una ubicación y formato consistentes para los documentos fuente antes de cada periodo de inscripciones es fundamental para garantizar la disponibilidad y confiabilidad del servicio para los estudiantes.
 
-\item \textbf{Notificaciones inteligentes y funcionalidades avanzadas.} Como extensión futura, podrían explorarse notificaciones inteligentes basadas en IA para recordatorios contextuales, detección de conflictos en tiempo real, o sugerencias de redistribución de carga académica. Sin embargo, estas mejoras son secundarias frente a las necesidades puntuales de edición manual, actividades personales y sistema de notas identificadas como prioritarias.
+\item Se sugiere explorar en trabajos futuros la incorporación de notificaciones inteligentes basadas en inteligencia artificial. Estas podrían ofrecer recordatorios contextuales o sugerencias de redistribución de carga académica en tiempo real, elevando el nivel de asistencia que la aplicación proporciona al estudiante.
 
-\end{enumerate}
+\end{itemize}
