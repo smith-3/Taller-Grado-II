@@ -2,11 +2,24 @@
 
 % Ajustes de bibliografía
 \renewcommand{\bibname}{Bibliografía}
-\usepackage[style=alphabetic, backend=biber]{biblatex}
+\usepackage[style=apa, backend=biber]{biblatex}
+\DeclareLanguageMapping{spanish}{spanish-apa}
 \addbibresource{bibliografia.bib}
-% Remove bold from bibliography labels
-\DeclareFieldFormat{labelalpha}{#1}
-\DeclareFieldFormat{extraalpha}{#1}
+
+% Ignore shorthand fields to ensure APA style (Author, Year)
+\DeclareSourcemap{
+  \maps[datatype=bibtex]{
+    \map{
+      \step[fieldset=shorthand, null]
+    }
+  }
+}
+
+% Force square brackets for citations [Author, Year] instead of (Author, Year)
+\AtBeginDocument{
+  \renewcommand{\mkbibparens}[1]{\mkbibbrackets{#1}}
+  \renewcommand{\cite}[1]{\parencite{#1}}
+}
 
 % Paquetes y estilo
 \input{base/packages}
