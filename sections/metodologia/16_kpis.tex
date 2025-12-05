@@ -1,14 +1,22 @@
 % ----------------------------------------------------------------------
 \section{Métricas (KPIs) y fórmulas}
 \label{sec:kpis}
-\noindent TTS (Time-To-Schedule). 
-$TTS = t_{\text{aplicado}} - t_{\text{click\_generar}}$ (objetivo $\leq 3$\,min para $N{=}10$).
 
-\noindent Gaps/día.
-$\displaystyle \text{Gaps}_{\text{prom}}=\frac{\sum_{d}{\text{minutos vacíos}(d)}}{\#\text{días activos}}$ (objetivo: tendencia a la baja).
+Para evaluar el desempeño y la aceptación del sistema, se han definido indicadores clave de rendimiento (KPIs). Estos métricas permiten cuantificar la eficiencia de los algoritmos de generación, la calidad de los horarios resultantes y la fiabilidad de las funciones auxiliares.
 
-\noindent On-time reminders (medible).
-$\displaystyle \frac{\#\text{notifs abiertas }\geq X\text{ min antes}}{\#\text{notifs totales}}\times 100\%$ (objetivo $\geq 95\%$).
+\begin{enumerate}
+    \item TTS (Time-To-Schedule): Mide la latencia percibida en la generación.
+    \[ TTS = t_{aplicado} - t_{click\_generar} \]
+    El objetivo es mantener este valor por debajo de 3 segundos para $N=10$ combinaciones, asegurando una experiencia de usuario fluida durante la exploración de alternativas.
 
-\noindent Adopción JSON (medible).
-\% de export/import exitoso (objetivo $\uparrow$ en semanas pico); replicable por pruebas E2E (F5/F8).
+    \item Gaps/día: Evalúa la compacidad del horario generado.
+    \[ Gaps_{prom} = \frac{\sum_{d} \text{minutos vacíos}(d)}{\text{\#días activos}} \]
+    Se busca una tendencia a la baja en esta métrica, priorizando horarios con bloques de clases continuos para optimizar el tiempo del estudiante en la universidad.
+
+    \item On-time reminders: Mide la fiabilidad de las notificaciones.
+    \[ \text{Reliability} = \frac{\text{\#notifs abiertas } \ge X \text{ min antes}}{\text{\#notifs totales}} \times 100\% \]
+    El objetivo es superar el 95\% de entregas puntuales, validando que el mecanismo de alarmas del sistema operativo no sea interrumpido por optimizaciones de batería.
+
+    \item Adopción JSON: Indicador de viralidad y utilidad social.
+    Se mide como el porcentaje de operaciones de exportación e importación exitosas respecto al total de intentos. Se espera un incremento sostenido durante las semanas de inscripción, validado mediante pruebas de extremo a extremo (E2E).
+\end{enumerate}

@@ -26,7 +26,9 @@ A continuación se detallan los aspectos técnicos de la compartición, estructu
 \subsection{Resultados y verificación}
 Los generadores de exportación produjeron archivos válidos en formatos PDF, imagen (PNG) y Excel (XLSX), cumpliendo con los estándares de cada especificación. Se verificó que la función de compartir invoca correctamente el ShareSheet del sistema y que los permisos se gestionan adecuadamente según la versión de Android.
 
-Adicionalmente, se realizaron pruebas exhaustivas de interoperabilidad para garantizar que los archivos generados fueran legibles por aplicaciones de terceros comunes, como Google Drive, WhatsApp y visores de PDF nativos. Se validó la integridad de los datos exportados comparándolos con la base de datos local, asegurando que no hubiera pérdida de información durante la transformación. En el caso de las imágenes, se verificó la resolución y legibilidad en diferentes densidades de pantalla, confirmando que el texto de los horarios permaneciera nítido incluso al hacer zoom. Finalmente, se comprobó el flujo de permisos en dispositivos con Android 10 hasta Android 14, confirmando que la aplicación solicita acceso al almacenamiento solo cuando es estrictamente necesario y respeta las denegaciones del usuario sin bloquearse.
+Adicionalmente, se realizaron pruebas de interoperabilidad para garantizar la legibilidad de los archivos en aplicaciones externas como Google Drive y WhatsApp. Se validó la integridad de los datos exportados comparándolos con la base de datos local, asegurando que no hubiera pérdida de información.
+
+Para las imágenes, se verificó la nitidez del texto en diversas densidades de pantalla. Finalmente, se comprobó el flujo de permisos en versiones de Android 10 a 14, confirmando que la aplicación solicita acceso al almacenamiento solo cuando es necesario y maneja adecuadamente las denegaciones.
 
 A continuación se presentan los componentes de software desarrollados para dar soporte a las funcionalidades de exportación descritas, clasificados según su responsabilidad en la arquitectura:
 \begin{itemize}

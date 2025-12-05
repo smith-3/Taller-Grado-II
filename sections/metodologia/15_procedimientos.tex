@@ -1,36 +1,48 @@
 % ----------------------------------------------------------------------
 \section{Procedimientos operativos}
 
-Los procedimientos operativos documentan los flujos de trabajo principales de la aplicación desde la perspectiva del sistema, describiendo las secuencias de acciones, validaciones y transformaciones que se ejecutan para completar cada operación crítica.
+Los procedimientos operativos documentan los flujos de trabajo principales de la aplicación desde la perspectiva del sistema. Describen las secuencias de acciones, validaciones y transformaciones que se ejecutan para completar cada operación crítica, asegurando la consistencia del estado de la aplicación.
 
 \subsection{PR-001: Ingestión y normalización}
-Actor: Sistema. Objetivo: BD local vigente.
+Este procedimiento es ejecutado automáticamente por el sistema, teniendo como objetivo principal mantener la Base de Datos local vigente y sincronizada con la fuente oficial de la universidad.
+
 \begin{enumerate}
-  \item \textbf{Precondiciones}
+  \item Precondiciones
   \begin{itemize}
-    \item Conectividad o PDF local.
+    \item El dispositivo debe contar con conectividad a internet validada (NetworkConnectivityChecker) o disponer de un archivo PDF previamente descargado en el almacenamiento local.
+    \item El servicio de sincronización no debe estar bloqueado por una ejecución en curso o por el mecanismo de Circuit Breaker debido a fallos recientes.
   \end{itemize}
-  \item \textbf{Postcondiciones}
+  \item Postcondiciones
   \begin{itemize}
-    \item last\_sync actualizado, TC-004/005 verdes.
+    \item La marca de tiempo last\_sync se actualiza para cada carrera procesada exitosamente, habilitando el uso de datos en caché.
+    \item Los casos de prueba TC-004 y TC-005 pasan a estado verde, confirmando la integridad referencial de las nuevas materias y grupos insertados.
   \end{itemize}
 \end{enumerate}
 
 \subsection{PR-002: Generar horarios}
-Actor: Estudiante. Objetivo: obtener $N$ horarios.
+El actor principal de este flujo es el estudiante, quien interactúa con la aplicación con el objetivo de obtener $N$ propuestas de horario óptimas que se ajusten a sus necesidades académicas.
+
 \begin{enumerate}
-  \item \textbf{Precondiciones}
+  \item Precondiciones
   \begin{itemize}
-    \item Selección de materias/flags.
+    \item El estudiante ha seleccionado un conjunto de materias candidatas y ha configurado sus preferencias (turnos, docentes favoritos).
+    \item Existen grupos disponibles en la base de datos local para las materias seleccionadas que permiten al menos una combinación válida.
   \end{itemize}
-  \item \textbf{Postcondiciones}
+  \item Postcondiciones
   \begin{itemize}
-    \item Top-$N$ sin solapes (por defecto), aplicación parcial/completa.
+    \item El sistema presenta las Top-$N$ combinaciones generadas mediante el algoritmo de backtracking, ordenadas por puntaje de preferencia.
+    \item Las soluciones garantizan cero solapes de horario (salvo configuración explícita) y permiten la inscripción parcial o completa de las materias.
   \end{itemize}
 \end{enumerate}
 
 \subsection{PR-003: Configurar notificaciones}
-Actor: Estudiante. Objetivo: avisos antes de clase (10\,min por defecto).
+Este procedimiento es iniciado por el estudiante con el objetivo de recibir avisos anticipados antes de cada clase, mejorando su puntualidad y organización.
+
+El sistema calcula los momentos de disparo restando un offset configurable (10 minutos por defecto) a la hora de inicio de cada clase registrada en el horario semanal. Las alarmas se programan utilizando el servicio de sistema Android, asegurando su ejecución exacta incluso si la aplicación está cerrada. La configuración persiste localmente y se recalcula automáticamente si el estudiante modifica su inscripción de grupos.
 
 \subsection{PR-004: Exportar/Importar}
-Actor: Estudiante. Objetivo: compartir/clonar; validación de versión y carrera.
+Ejecutado por el estudiante, este flujo tiene el objetivo de compartir o clonar la planificación académica entre dispositivos o compañeros.
+
+La exportación genera un archivo JSON estandarizado que encapsula la estructura completa del horario, incluyendo carreras, materias, grupos y docentes. Este archivo incluye metadatos de versión para garantizar la compatibilidad futura. Durante la importación, el sistema valida la estructura del JSON y verifica que la versión del esquema sea soportada. Si la validación es exitosa, se clona la configuración en el dispositivo destino.
+
+

@@ -1,13 +1,13 @@
 % ============================
 \section{F2: Modelo de dominio (entidades, reglas, mapeo)}
 
-Esta fase consolida la arquitectura de datos de TecnoTime, definiendo el modelo de dominio que sustenta todas las operaciones de la aplicación y garantiza la integridad referencial entre entidades.
+Esta fase consolida la arquitectura de datos de TecnoTime, estableciendo un modelo de dominio robusto que actúa como el núcleo de la lógica de negocio. Siguiendo los principios de Clean Architecture, este modelo desacopla las reglas académicas de la interfaz de usuario y la persistencia, definiendo las estructuras fundamentales que soportan la generación de horarios, la gestión de preferencias y la interoperabilidad del sistema.
 
 \subsection{Objetivo}
-Consolidar un modelo de dominio coherente con el área de aplicación, garantizando integridad y trazabilidad entre entidades y sus reglas.
+El objetivo principal es formalizar las reglas de negocio del contexto académico en un esquema de datos estricto. Se busca garantizar la integridad referencial entre materias, grupos y docentes, asegurando que todas las operaciones del sistema, desde la visualización hasta la exportación, operen sobre datos consistentes y validados, independientemente de la fuente de origen (PDF o JSON).
 
 \subsection{Implementación del modelo de dominio}
-Se modelaron entidades y relaciones clave; se definieron índices/llaves para unicidad e integridad; y se implementaron mapeos entre ingreso (PDF/JSON), dominio y almacenamiento.
+La implementación se articula en tres ejes fundamentales derivados del análisis del código. Primero, se definieron entidades ricas (Subject, Group, UserSettings) que encapsulan tanto estado como comportamiento. Segundo, se establecieron invariantes de integridad mediante índices únicos y claves foráneas en la capa de persistencia (Room). Finalmente, se implementaron estrategias de mapeo bidireccional que transforman estos modelos para su transporte (ShareableScheduleDto) y almacenamiento, manteniendo una clara separación de responsabilidades.
 
 \subsection{Entidades (derivadas del código)}
 El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento. Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real.
@@ -45,16 +45,21 @@ Esta estrategia de mapeo explícito facilita la evolución independiente de cada
   \item Persistencia: Los repositorios transforman entidades de dominio a entidades de Room (e.g., Subject a SubjectEntity) asegurando que la estructura relacional se mantenga en la base de datos SQLite.
 \end{itemize}
 
-\subsection{Evidencias (código)}
-La implementación del modelo de dominio se materializa en un conjunto de clases Kotlin que reflejan fielmente el diseño conceptual presentado. Estas clases se organizan en el paquete domain/model y siguen los principios de inmutabilidad y encapsulamiento propios de la programación funcional.
+\subsection{Implementación técnica del dominio}
+La implementación del modelo de dominio se materializa en un conjunto de clases Kotlin que reflejan fielmente el diseño conceptual presentado. Estas clases, organizadas en el paquete domain model, siguen los principios de inmutabilidad y encapsulamiento propios de la programación funcional, utilizando data classes para garantizar la integridad de los datos en memoria.
 
-Las entidades de base de datos correspondientes se definen en el paquete data/local/entity utilizando las anotaciones de Room para especificar índices, relaciones y restricciones. La correspondencia uno a uno entre entidades de dominio y entidades de persistencia facilita el mantenimiento y la comprensión del código. Las clases principales que evidencian este modelo son:
-
+Componentes principales del modelo:
 \begin{itemize}
-  \item Modelos de Dominio: com.fragmind.tecnotime.domain.model contiene las clases Subject, Group, GroupSchedule, UserSettings.
-  \item Entidades de Datos: com.fragmind.tecnotime.data.local.entity contiene SubjectEntity, GroupEntity, GroupScheduleEntity, UserSettingsEntity.
-  \item Casos de Uso: com.fragmind.tecnotime.domain.usecase contiene la lógica de negocio como GenerateShareableScheduleJsonUseCase.
+  \item Subject: Representa la entidad fundamental de la materia. Se define por un código único que actúa como identificador, un nombre descriptivo y un conjunto de banderas de estado booleanas. La propiedad isElective distingue las materias optativas, isApproved permite marcar las materias ya cursadas y aprobadas por el alumno, y isActive gestiona la vigencia de la materia en el plan de estudios actual.
+  \item Group: Modela la unidad académica de cursada vinculada a una materia específica mediante el subjectCode. Cada grupo posee un identificador único y atributos detallados como el groupId visible para el usuario (ej. ``1'', ``A''), el levelId que lo asocia a un nivel o semestre específico, y el tipo de grupo que diferencia entre clases teóricas y prácticas. Además, incluye la modalidad de dictado y un estado de actividad.
+  \item GroupSchedule: Define los bloques temporales asociados a un grupo. Esta entidad valida la coherencia temporal asegurando que la hora de inicio sea anterior a la de fin y utiliza el enumerado WeekDay para garantizar días válidos. Vincula cada horario con un aula (classroomId) y un docente (teacherId), permitiendo una representación detallada de la agenda semanal.
+  \item UserSettings: Centraliza las preferencias de personalización del usuario en un registro único. Abarca configuraciones de visualización como el tema oscuro (themeDark) y el formato de hora, así como opciones avanzadas de inteligencia artificial. Estas incluyen banderas para habilitar el monitoreo emocional, mensajes motivacionales y el uso de IA en notificaciones, permitiendo una experiencia adaptativa.
+  \item ShareableScheduleDto: Estructura de transferencia de datos diseñada para la exportación e importación de horarios. Encapsula una lista de carreras, metadatos de versión y una colección de entradas de horario (entries). Esta clase actúa como un contrato de datos que facilita la interoperabilidad entre diferentes instancias de la aplicación, asegurando que toda la información necesaria para reconstruir un horario esté contenida en un único objeto transferible.
 \end{itemize}
+
+En la capa de persistencia, las entidades definidas en data local entity actúan como espejo del dominio pero enriquecidas con anotaciones de la librería Room. La clase SubjectEntity mapea la tabla subjects y establece un índice único sobre el campo code para asegurar la identidad de cada materia. De manera similar, GroupEntity representa la tabla groups y define un índice compuesto sobre el código de materia y el identificador de grupo para evitar duplicados. Además, esta entidad implementa restricciones de integridad referencial mediante claves foráneas hacia las tablas de niveles y materias, configuradas con reglas de borrado en cascada para mantener la consistencia de la base de datos.
+
+La lógica de negocio se orquesta a través de casos de uso ubicados en el paquete domain usecase. Un componente destacado es GenerateShareableScheduleJsonUseCase, el cual encapsula la complejidad de la exportación de horarios. Este caso de uso coordina la obtención de información académica y horarios semanales, filtra los datos según las materias seleccionadas por el usuario y transforma la información resultante en una estructura de transferencia optimizada, asegurando que los datos exportados sean completos y coherentes para su uso externo.
 
 Como apoyo visual, la Figura \ref{fig:f2_modelo_dominio_er} ilustra el diagrama entidad–relación del modelo de dominio, destacando entidades operativas, claves e integridad referencial utilizadas en la implementación.
 
