@@ -15,13 +15,11 @@ El modelo de dominio de TecnoTime constituye la representación conceptual del p
 Las entidades principales abarcan desde la representación de materias y grupos hasta la gestión de preferencias de usuario y configuraciones del sistema. A continuación se detallan las entidades fundamentales que componen este modelo:
 
 \begin{itemize}
-  \item Materia: domain/model/Subject.kt (Subject) (code, name, isElective, isApproved, isActive).
-  \item Grupo: Group (id, subjectCode, groupId, levelId, groupName, type, modality, isActive).
-  \item Bloque/Slot: GroupSchedule (day, startTime, endTime, aula/docente opcionales).
-  \item Carrera/Nivel: Career, Level; agregados: CareerWithLevels, LevelWithSubjects.
-  \item Docente/Aula: Teacher, Classroom.
-  \item Selección del usuario: SelectedSubject, SelectedSubjectWithGroup.
-  \item Preferencias/Usuario: UserSettings (24h, fines de semana, recordatorios, IA opt-in, etc.).
+  \item Subject: domain/model/Subject.kt (code, name, isElective, isApproved, isActive).
+  \item Group: domain/model/Group.kt (id, subjectCode, groupId, levelId, groupName, type, modality, isActive).
+  \item GroupSchedule: domain/model/GroupSchedule.kt (id, groupId, day, startTime, endTime, classroomId, teacherId, isActive).
+  \item UserSettings: domain/model/UserSettings.kt (id, userName, use24Hours, showWeekend, isFirstLaunch, showFreeDays, themeDark, enableClassNotifications, classNotificationAdvanceMinutes, enableNoteReminders, noteReminderAdvanceMinutes, enableAi, enableAiInClassNotifications, enableAiInNoteReminders, enableAiEmotionalMonitoring, enableAiMotivationalMessages).
+  \item ShareableScheduleDto: domain/model/ShareableScheduleDto.kt (meta, careers, entries).
 \end{itemize}
 
 \subsection{Reglas e invariantes}
@@ -30,10 +28,10 @@ La integridad del modelo de dominio se sustenta en un conjunto de reglas e invar
 La implementación de estas invariantes se realiza tanto a nivel de base de datos mediante índices y restricciones de integridad referencial, como a nivel de lógica de negocio mediante validaciones en los casos de uso. El cumplimiento estricto de estas reglas previene estados inconsistentes que podrían comprometer la funcionalidad del generador de horarios o la experiencia del usuario. Las reglas establecidas son:
 
 \begin{itemize}
-  \item Unicidad de Subject.code: SubjectEntity define índice único sobre code.
-  \item Unicidad compuesta (subjectCode, groupId): GroupEntity con índice compuesto único; FK a LevelEntity y SubjectEntity.
-  \item Temporal: GroupScheduleEntity asegura startTime–endTime para cada day y groupId; validación operativa start<end al normalizar/guardar.
-  \item Integridad referencial: FKs en GroupScheduleEntity hacia GroupEntity, TeacherEntity y ClassroomEntity (nulables cuando no hay asignación).
+  \item Unicidad de Materia: SubjectEntity define @Index(value = [\textquotedbl code\textquotedbl], unique = true).
+  \item Unicidad de Grupo: GroupEntity define @Index(value = [\textquotedbl subject\_code\textquotedbl, \textquotedbl group\_id\textquotedbl], unique = true) y claves foráneas hacia LevelEntity y SubjectEntity con borrado en cascada (ForeignKey.CASCADE).
+  \item Integridad de Horario: GroupScheduleEntity define claves foráneas hacia GroupEntity (CASCADE), ClassroomEntity (SET\_NULL) y TeacherEntity (SET\_NULL).
+  \item Validaciones de Negocio: GroupSchedule asegura que startTime sea menor a endTime y que los días correspondan a la enumeración WeekDay.
 \end{itemize}
 
 \subsection{Mapeos del ingreso al dominio y al almacenamiento}
@@ -42,9 +40,9 @@ La arquitectura de TecnoTime implementa una clara separación entre las capas de
 Esta estrategia de mapeo explícito facilita la evolución independiente de cada capa, permite la validación de datos en cada transformación y simplifica las pruebas unitarias al aislar las responsabilidades de cada componente. Los principales componentes de mapeo implementados son:
 
 \begin{itemize}
-  \item DTO de horario compartible (domain/model/ShareableScheduleDto.kt (ShareableScheduleDto)) y analizadores PDF/JSON para el ingreso.
-  \item Mapeadores de dominio (p. ej., SubjectMapper, GroupMapper, GroupScheduleMapper, UserSettingsMapper) para transformar entre entidades y dominio.
-  \item Casos de uso para interoperabilidad JSON (domain/usecase/GenerateShareableScheduleJsonUseCase.kt (GenerateShareableScheduleJsonUseCase), LoadShareableScheduleUseCase, ImportSharedScheduleUseCase).
+  \item Ingreso de Datos: GenerateShareableScheduleJsonUseCase orquesta la obtención de información académica (GetAcademicInfoUseCase) y horarios semanales (GetWeeklyEnrolledScheduleUseCase), filtrando por materias seleccionadas.
+  \item Transferencia de Datos: ShareableScheduleDto estructura la información para exportación/importación, encapsulando metadatos, carreras y entradas de horario.
+  \item Persistencia: Los repositorios transforman entidades de dominio a entidades de Room (e.g., Subject a SubjectEntity) asegurando que la estructura relacional se mantenga en la base de datos SQLite.
 \end{itemize}
 
 \subsection{Evidencias (código)}
@@ -53,9 +51,9 @@ La implementación del modelo de dominio se materializa en un conjunto de clases
 Las entidades de base de datos correspondientes se definen en el paquete data/local/entity utilizando las anotaciones de Room para especificar índices, relaciones y restricciones. La correspondencia uno a uno entre entidades de dominio y entidades de persistencia facilita el mantenimiento y la comprensión del código. Las clases principales que evidencian este modelo son:
 
 \begin{itemize}
-  \item Unicidad: SubjectEntity: índice unique(code); GroupEntity: índice compuesto unique(subject\_code, group\_id).
-  \item Modelos: Subject, Group, GroupSchedule, UserSettings.
-  \item Mapeo: GroupMapper incluye levelId, subjectCode y groupId como claves de relación.
+  \item Modelos de Dominio: com.fragmind.tecnotime.domain.model contiene las clases Subject, Group, GroupSchedule, UserSettings.
+  \item Entidades de Datos: com.fragmind.tecnotime.data.local.entity contiene SubjectEntity, GroupEntity, GroupScheduleEntity, UserSettingsEntity.
+  \item Casos de Uso: com.fragmind.tecnotime.domain.usecase contiene la lógica de negocio como GenerateShareableScheduleJsonUseCase.
 \end{itemize}
 
 Como apoyo visual, la Figura \ref{fig:f2_modelo_dominio_er} ilustra el diagrama entidad–relación del modelo de dominio, destacando entidades operativas, claves e integridad referencial utilizadas en la implementación.

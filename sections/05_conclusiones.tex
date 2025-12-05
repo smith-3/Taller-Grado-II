@@ -11,19 +11,19 @@
 \begin{itemize}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item Al desarrollar el sistema de personalización, se identificó que los estudiantes poseen preferencias de organización contradictorias (días libres vs. horarios compactos), lo que impedía ofrecer una solución única. Este obstáculo se superó implementando una estrategia multicriterio que permite al usuario configurar sus propias prioridades, cumpliendo así el objetivo de flexibilidad.
+\item Al desarrollar el sistema de personalización, se identificó que los estudiantes poseen preferencias de organización contradictorias. Este obstáculo se superó implementando la clase ScheduleGeneratorUseCaseImpl, la cual utiliza un objeto GenerateParams para filtrar opciones basándose en días permitidos, evasión de conflictos y priorización de docentes favoritos, cumpliendo así el objetivo de flexibilidad mediante una configuración granular.
 
-\item Durante la implementación del módulo de ajuste manual, surgió la dificultad de garantizar el acceso rápido a la información del horario sin obligar al usuario a navegar constantemente por la aplicación. Se solucionó este problema mediante el desarrollo de un widget de escritorio que persiste la información seleccionada, facilitando la consulta inmediata.
+\item Durante la implementación del módulo de acceso rápido, se requería persistencia de datos sin navegación compleja. Se solucionó este problema mediante el ScheduleAppWidgetProvider, que utiliza RemoteViews y SharedPreferences para almacenar y visualizar el horario seleccionado directamente en el escritorio del dispositivo, facilitando la consulta inmediata sin abrir la aplicación principal.
 
-\item La funcionalidad de descarga e intercambio de horarios enfrentó fallos técnicos en dispositivos de gama media debido al alto consumo de memoria al generar imágenes de alta resolución. Esta limitación se resolvió optimizando el motor de renderizado y la gestión de memoria, logrando que la exportación sea eficiente y accesible para todos los dispositivos.
+\item La funcionalidad de exportación enfrentó limitaciones de memoria al generar imágenes de alta resolución. Esta limitación se resolvió con la implementación de HtmlToBitmapImageGeneratorImpl, que emplea un WebView fuera de pantalla y un Canvas para renderizar el HTML del horario directamente a un Bitmap optimizado, logrando una exportación eficiente en formato PNG.
 
-\item Para la sugerencia de horarios optimizados, el enfoque inicial basado en grafos resultó ineficiente para manejar la complejidad de múltiples restricciones simultáneas. Se optó por reemplazarlo con un algoritmo de backtracking heurístico, el cual demostró ser capaz de minimizar los tiempos de espera entre clases de manera efectiva.
+\item Para la sugerencia de horarios optimizados, se reemplazó el enfoque inicial por un algoritmo recursivo implementado en la función backtrack dentro de ScheduleGeneratorUseCaseImpl. Este algoritmo integra una heurística computeGapPenalty que penaliza los tiempos muertos entre clases, minimizando eficazmente las ventanas vacías en las combinaciones generadas.
 
-\item En la optimización de la interfaz de usuario, las pruebas iniciales revelaron que los flujos de navegación resultaban confusos para los estudiantes, dificultando el uso de la herramienta. Se abordó este problema mediante un rediseño iterativo y la incorporación de un onboarding interactivo, asegurando una experiencia de usuario clara e intuitiva.
+\item En la optimización de la interfaz de usuario, se abordó la confusión en la navegación mediante la clase AiManagementOnboardingScreen. Esta implementación utiliza componentes AnimatedEntrance para guiar al usuario paso a paso, asegurando una experiencia de introducción clara y reduciendo la curva de aprendizaje inicial.
 
-\item La ingesta de datos académicos presentó el mayor desafío técnico debido a la inconsistencia y falta de estructura en los archivos PDF de la facultad. Fue necesario reestructurar el parser y el modelo de datos para manejar estas irregularidades, permitiendo distinguir correctamente entre componentes teóricos y prácticos.
+\item La ingesta de datos académicos presentó desafíos debido a la estructura irregular de los archivos fuente. Fue necesario implementar la clase PdfParser con expresiones regulares que utilizan grupos con nombre (courseLine y scheduleLine) y una estrategia de mergeTeacherLines para normalizar las líneas de texto fragmentadas, permitiendo una extracción de datos robusta.
 
-\item Aunque el proyecto enfrentó desafíos significativos relacionados con la calidad de los datos y la diversidad de dispositivos, la aplicación móvil desarrollada logró gestionar los horarios de manera eficiente. La validación con usuarios confirmó que las soluciones técnicas adoptadas permitieron superar estas barreras, cumpliendo satisfactoriamente el objetivo general del proyecto.
+\item Aunque el proyecto enfrentó desafíos significativos relacionados con la calidad de los datos y la diversidad de dispositivos, la arquitectura implementada logró gestionar los horarios de manera eficiente. La validación técnica confirmó que componentes como el ScheduleGeneratorUseCaseImpl y el PdfParser permitieron superar estas barreras, cumpliendo satisfactoriamente el objetivo general del proyecto.
 
 \end{itemize}
 
@@ -34,16 +34,16 @@
 \begin{itemize}
 \setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
 
-\item Se recomienda implementar una funcionalidad de edición manual profunda que permita modificar horarios ya generados (cambiar grupos o aulas específicas). Esto cubriría los casos donde los docentes realizan cambios informales no reflejados en los datos oficiales, aumentando la utilidad de la aplicación ante la realidad operativa de la facultad.
+\item Se recomienda implementar una funcionalidad de edición manual profunda en el repositorio de horarios. Actualmente, la inmutabilidad de los datos generados por ScheduleGeneratorUseCaseImpl impide reflejar cambios informales; permitir la modificación directa de los objetos GroupSchedule aumentaría la utilidad de la aplicación ante cambios de último momento.
 
-\item Se sugiere integrar la gestión de actividades personales y extracurriculares. Permitir a los estudiantes agregar eventos propios (deportes, trabajo) junto con su carga académica transformaría la aplicación en un gestor integral del tiempo, cubriendo una necesidad que excede el ámbito puramente académico.
+\item Se sugiere integrar la gestión de actividades personales extendiendo el modelo de datos actual. Permitir que el algoritmo de backtrack considere eventos externos como restricciones adicionales transformaría la aplicación en un gestor integral del tiempo, cubriendo necesidades más allá del ámbito académico.
 
-\item Se recomienda desarrollar un módulo de notas y recordatorios académicos vinculados a las materias. La capacidad de registrar fechas de exámenes y entregas complementaría la organización temporal, ofreciendo una herramienta más completa para el seguimiento del rendimiento académico.
+\item Se recomienda desarrollar un módulo de recordatorios vinculado a las entidades SubjectInfo. La capacidad de asociar metadatos de fechas de exámenes a las materias parseadas complementaría la organización temporal, ofreciendo una herramienta más completa para el seguimiento del rendimiento.
 
-\item Para extender el sistema a otras facultades, se recomienda estandarizar los formatos de entrada de datos. La dependencia actual del formato específico de los PDFs de la FCyT es una limitante; se sugiere promover la implementación de servicios web institucionales (API) que provean la información de horarios de manera estructurada y confiable.
+\item Para extender el sistema a otras facultades, se recomienda abstraer la lógica de ingestión de datos. La dependencia actual de las expresiones regulares específicas en PdfParser es una limitante rígida; se sugiere promover la implementación de una API REST institucional que provea objetos JSON estructurados, eliminando la necesidad de parsing de texto no estructurado.
 
-\item Se recomienda a la institución formalizar un canal de distribución oficial y establecer protocolos de verificación de los archivos de horarios. Mantener una ubicación y formato consistentes para los documentos fuente antes de cada periodo de inscripciones es fundamental para garantizar la disponibilidad y confiabilidad del servicio para los estudiantes.
+\item Se recomienda a la institución formalizar un canal de distribución oficial para los archivos de horarios. La variabilidad en el formato de entrada que requiere ajustes constantes en las Regex del PdfParser podría mitigarse estableciendo un protocolo de validación de documentos fuente antes de su publicación.
 
-\item Se sugiere explorar en trabajos futuros la incorporación de notificaciones inteligentes basadas en inteligencia artificial. Estas podrían ofrecer recordatorios contextuales o sugerencias de redistribución de carga académica en tiempo real, elevando el nivel de asistencia que la aplicación proporciona al estudiante.
+\item Se sugiere explorar en trabajos futuros la incorporación de modelos de aprendizaje automático en el dispositivo. Estos podrían analizar los patrones de uso almacenados en UserSettingsRepository para ofrecer sugerencias proactivas de redistribución de carga académica, elevando el nivel de asistencia personalizada.
 
 \end{itemize}

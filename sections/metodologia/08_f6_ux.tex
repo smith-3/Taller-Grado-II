@@ -1,13 +1,27 @@
 % ============================
 \section{F6: UX aplicada: onboarding, navegación, edición y widget}
 
-Esta fase refina la experiencia de usuario mediante flujos guiados, navegación optimizada y componentes de acceso rápido, reduciendo la fricción en tareas frecuentes y mejorando la usabilidad general de la aplicación.
+Esta fase refina la experiencia de usuario mediante flujos guiados, navegación optimizada y componentes de acceso rápido, reduciendo la fricción en tareas frecuentes y mejorando la usabilidad general de la aplicación. La implementación de la interfaz de usuario se basa en Jetpack Compose y Material Design 3, siguiendo el patrón de arquitectura MVVM (Model-View-ViewModel) para separar la lógica de presentación de la interfaz gráfica.
 
 \subsection{Objetivo}
-Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual.
+Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual, aprovechando las capacidades declarativas de Jetpack Compose para crear interfaces reactivas y adaptables a diferentes tamaños de pantalla.
 
 \subsection{Desarrollo de la experiencia de usuario}
 Se diseñaron flujos guiados (onboarding, agregar/editar), navegación por días y un widget informativo; se consolidaron criterios de entrada/salida.
+
+\begin{enumerate}
+    \item \textbf{Arquitectura de Interfaz}
+    
+    La aplicación utiliza una arquitectura basada en componentes (Composables) que observan el estado expuesto por los ViewModels. Jetpack Compose se utiliza como el framework moderno para la interfaz de usuario nativa. El patrón MVVM permite que los ViewModels, como WelcomeViewModel y HomeViewModel, gestionen el estado de la UI y la lógica de negocio, exponiendo flujos de datos (StateFlow) que la vista consume. El sistema de temas, implementado en Theme.kt, soporta modos claro y oscuro, así como colores dinámicos en versiones recientes de Android.
+
+    \item \textbf{Componentes Principales}
+    
+    El flujo de Onboarding, implementado en WelcomeScreen.kt, utiliza AnimatedEntrance para animaciones escalonadas de entrada y lógica responsiva para adaptar el diseño en dispositivos pequeños.
+
+    La navegación principal en HomeScreen.kt implementa un HorizontalPager infinito para el desplazamiento entre días, donde la función getVisibleDayForPage calcula dinámicamente el día visible.
+
+    El Widget (ScheduleAppWidgetProvider.kt) proporciona una vista rápida del horario en la pantalla de inicio utilizando RemoteViews, actualizándose mediante eventos del sistema y compartiendo las preferencias de tema con la aplicación principal.
+\end{enumerate}
 
 Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:f6_resumen_ux} resume los flujos, comportamientos esperados e implementación de componentes de interfaz asociados a F6.
 
@@ -33,12 +47,6 @@ Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:
 Las mejoras de UX redujeron significativamente el número de pasos necesarios para configurar el horario inicial, validado mediante pruebas de usuario. El widget demostró una sincronización fiable con la base de datos local, actualizándose inmediatamente tras cambios en la aplicación principal.
 
 \textbf{Evidencias (código):}
-\begin{itemize}
-  \item Onboarding: WelcomeScreen, WelcomeViewModel.
-  \item Agregar materia: AddSubjectFlowScreen, AddSubjectViewModel, SelectLevelScreen, SelectSubjectScreen, SelectGroupScreen.
-  \item Editar grupo: EditGroupScreen, EditGroupViewModel.
-  \item Navegación: HomeScreen, WeekDayTabsAnimated.
-  \item Widget: ScheduleAppWidgetProvider, ScheduleRemoteViewsService, WidgetDateUtils.
-\end{itemize}
+Se destacan las clases WelcomeScreen y WelcomeViewModel para el onboarding; AddSubjectFlowScreen y sus ViewModels asociados para la agregación de materias; EditGroupScreen para la edición; HomeScreen y WeekDayTabsAnimated para la navegación; y ScheduleAppWidgetProvider junto a ScheduleRemoteViewsService para el widget.
 
 % Rutas omitidas para simplificar; se emplean únicamente nombres de clases.

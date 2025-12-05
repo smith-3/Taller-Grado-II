@@ -6,27 +6,52 @@ Esta fase establece la arquitectura offline-first de la aplicación, priorizando
 \subsection{Objetivo}
 Asegurar disponibilidad sin red priorizando la caché local, controlando frescura y habilitando recuperación manual por PDF.
 
-\subsection{Implementación de la lógica offline-first}
-Se implementaron verificaciones de conectividad y frescura, políticas de sincronización (ventanas/horarios), reintentos con backoff y circuit breaker y alternativa de respaldo (fallback) por PDF local.
+\subsection{Implementación de Persistencia Local (Room)}
+La arquitectura offline-first se sustenta en el uso de la librería Android Jetpack Room, que proporciona una capa de abstracción sobre SQLite para permitir un acceso robusto a la base de datos.
 
-\subsection{Frescura}
-Antes de invocar el generador se valida conectividad y frescura de datos:
+\subsubsection{Entidades de Datos}
+El modelo de datos local se define mediante entidades anotadas. La clase SubjectEntity representa la tabla subjects, que almacena la información de las materias. Sus campos principales incluyen:
 \begin{itemize}
-  \item GenerateScheduleViewModel: ejecuta checkConnectivityAndSync() al cargar; usa NetworkConnectivityChecker y, con red disponible, dispara AutoSyncUseCase.
-  \item AutoSyncUseCase: compara Career.updatedDate remoto con lastSyncTime local y actualiza materias mediante RefreshSubjectsForCareerUseCase. Actualiza SyncPreferences.setLastSyncCheck().
-  \item SyncPreferences: define intervalo de verificación de 6\,h y evita consultas excesivas.
-  \item Durante la sincronización, GenerateScheduleViewModel marca isSyncing=true y bloquea generate/regenerate para mantener consistencia.
+    \item code: Identificador único de la materia (clave primaria).
+    \item name: Nombre descriptivo de la materia.
+    \item is\_approved: Estado que indica si la materia ha sido aprobada por el estudiante.
+    \item is\_elective: Indicador de si la materia es electiva.
+    \item is\_active: Estado lógico para el borrado suave o deshabilitación.
 \end{itemize}
 
-\subsection{Políticas}
-\(T_{fresh}=48\,h\): si los datos locales superan ese umbral, se prioriza sincronizar antes de generar. \(W_{nosync}=07{:}00\text{–}12{:}30\) (horario académico): se difieren sincronizaciones automáticas en ese rango para no interrumpir uso intensivo; el ajuste es configurable. Reintentos controlados con:
+\subsubsection{Objetos de Acceso a Datos (DAOs)}
+El acceso a la base de datos se realiza a través de interfaces DAO (Data Access Object). SubjectDao define las operaciones CRUD y consultas complejas. Un aspecto clave es el uso de tipos de retorno reactivos como Flow, lo que permite a la interfaz de usuario observar cambios en los datos y actualizarse automáticamente.
 \begin{itemize}
-  \item ExponentialBackoff: $t_0{=}2$\,s, $t_{max}{=}1$\,h, multiplicador 2.0 con jitter.
-  \item CircuitBreaker: umbral de 5 fallos y recuperación en 10\,min; integra AutoSyncUseCase para bloquear temporalmente el origen tras errores repetidos.
+    \item upsert(subject): Inserta o actualiza una materia utilizando la estrategia de conflicto REPLACE.
+    \item getSubjectsForCareerAndLevelFlow(careerCode, levelId): Retorna un flujo reactivo de materias filtradas por carrera y nivel, realizando un JOIN con las tablas groups y career\_subject\_groups.
 \end{itemize}
 
-\subsection{Fallback}
-Sin conectividad se opera desde caché local (Room). Si el servicio cae pero existe PDF oficial actualizado, se habilita reingesta manual vía SyncCareerFromLocalPdfUseCase.
+\subsection{Repositorio y Fuente de Verdad}
+Se implementa el patrón Repository para mediar entre las fuentes de datos y la capa de dominio. SubjectRepositoryImpl actúa como la ``Single Source of Truth'' (Fuente Única de Verdad).
+\begin{itemize}
+    \item Los métodos del repositorio, como getSubjectsForCareerFlow, exponen datos directamente desde la base de datos local (DAO).
+    \item Las operaciones de red no retornan datos directamente a la UI, sino que actualizan la base de datos local, lo que a su vez dispara la emisión de nuevos datos a través de los flujos observados.
+\end{itemize}
+
+\subsection{Sincronización y Frescura de Datos}
+La lógica de sincronización se encapsula en el caso de uso AutoSyncUseCase, que orquesta la actualización de datos en segundo plano.
+
+\begin{enumerate}
+    \item \textbf{Detección de Cambios}
+    
+    Antes de iniciar una descarga completa, el sistema verifica si existen actualizaciones comparando la fecha de modificación remota (remoteInfo.updatedDate) con la fecha de la última sincronización local (localCareer.lastSyncTime). Si las fechas coinciden, se evita el consumo innecesario de red.
+
+    \item \textbf{Manejo de Errores y Resiliencia}
+    
+    Para garantizar la robustez ante fallos de red o indisponibilidad del servidor, se implementan mecanismos de protección:
+\end{enumerate}
+\begin{itemize}
+    \item Circuit Breaker: El componente CircuitBreaker envuelve las llamadas al scraper. Si se detectan fallos consecutivos (por ejemplo, 5 errores), el circuito se ``abre'' temporalmente, impidiendo nuevas solicitudes para evitar saturar el servidor o la red.
+    \item Exponential Backoff: En caso de errores recuperables (como timeouts), se programa un reintento automático utilizando una estrategia de espera exponencial (ExponentialBackoff), donde el tiempo de espera se duplica tras cada intento fallido, reduciendo la carga en el servidor.
+\end{itemize}
+
+\subsection{Fallback Manual}
+Como medida de último recurso, cuando no hay conectividad y la base de datos está vacía o desactualizada, se habilita la funcionalidad de ``Ingesta Manual''. El caso de uso SyncCareerFromLocalPdfUseCase permite al usuario seleccionar un archivo PDF oficial descargado previamente. El sistema procesa este archivo localmente para poblar la base de datos Room, asegurando la operatividad total de la aplicación en entornos completamente desconectados.
 
 \subsection{Resultados y verificación}
 La arquitectura offline-first demostró su eficacia al permitir la operación continua sin conectividad, sirviendo datos desde la caché local de Room. Las pruebas de estrés confirmaron que los mecanismos de backoff exponencial y circuit breaker protegen adecuadamente la fuente de datos ante fallos repetidos. El fallback manual mediante PDF local funcionó correctamente como medida de último recurso.

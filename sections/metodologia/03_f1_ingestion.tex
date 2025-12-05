@@ -9,12 +9,12 @@ Se implementó un flujo ETL (Extracción, Transformación y Carga) autónomo en 
 Transformar horarios oficiales (PDF) a un modelo estructurado, validando la integridad referencial de materias y docentes. Se minimiza el impacto en los servidores mediante caché y sincronización diferencial.
 
 \subsubsection{4.2.1 Verificación de caché y decisión}
-Al abrir el generador se valida conectividad y vigencia de datos. Si el contenido local está fresco, se usa cache; de lo contrario, se inicia sincronización automática.
+Al abrir el generador se valida conectividad y vigencia de datos. Si el contenido local está vigente, se usa cache; de lo contrario, se inicia sincronización automática.
 \begin{itemize}
   \item Control en la interfaz: GenerateScheduleViewModel ejecuta checkConnectivityAndSync() y bloquea acciones durante sincronización.
   \item Conectividad: NetworkConnectivityChecker discrimina entre online/offline.
-  \item Frescura: AutoSyncUseCase compara updatedDate remoto con lastSyncTime local (por carrera) y decide actualizar.
-  \item Preferencias: SyncPreferences limita chequeos con una ventana (p. ej., 6 horas) para evitar consultas excesivas.
+    \item Frescura: AutoSyncUseCase compara updatedDate remoto con lastSyncTime local (por carrera) y decide actualizar.
+    \item Preferencias: SyncPreferences limita verificaciones con una ventana (p. ej., 6 horas) para evitar consultas excesivas.
 \end{itemize}
 
 Para visualizar el entorno en el que opera esta fase, la Figura \ref{fig:c4_context_f1} presenta el diagrama de contexto C4 (Nivel 1). En este diagrama se observa cómo el Sistema de Horarios interactúa con el estudiante y con los sistemas externos de la universidad (Portal Web), destacando los límites del sistema y sus principales dependencias externas para la obtención de datos.
@@ -28,16 +28,48 @@ Para visualizar el entorno en el que opera esta fase, la Figura \ref{fig:c4_cont
 \end{figure}
 
 \subsubsection{4.2.2 Ingesta, análisis y persistencia con frescura}
-Ante una actualización, el flujo descarga el PDF oficial, extrae su contenido y lo analiza sintácticamente para estructurar entidades clave como materias, grupos y horarios. Posteriormente, estos datos se normalizan y persisten en la base de datos local Room, garantizando la integridad y consistencia del modelo de dominio.
+Ante una actualización, el flujo descarga el PDF oficial y delega el procesamiento al componente PdfParser (ubicado en data.remote.pdf). Este componente implementa una estrategia de análisis sintáctico basada en expresiones regulares (Regex) para estructurar la información no estructurada del documento, manejando la complejidad inherente a los reportes generados por el sistema universitario.
 
-Para proteger la estabilidad de la fuente externa, se aplican patrones de resiliencia robustos. El retroceso exponencial gestiona los reintentos ante fallos transitorios de red, mientras que el cortacircuito previene la saturación del servidor interrumpiendo temporalmente las solicitudes tras detectar errores repetidos.
+El proceso de análisis se divide en dos etapas principales:
+\begin{enumerate}
+    \item Fusión de líneas (Merge): Para resolver la fragmentación de nombres de docentes que, debido a su longitud, se distribuyen en múltiples líneas visuales en el PDF, el algoritmo mergeTeacherLines implementa una máquina de estados simple. Acumula secuencialmente en un buffer temporal cualquier línea de texto que no coincida con los patrones estructurales (como cabeceras o líneas de horario completas) ni con patrones de ruido (e.g., ``Procesado CPD'', ``Página X de Y''). Este contenido acumulado se antepone a la siguiente línea de horario válida detectada, reconstruyendo así la fila lógica completa antes de aplicar la extracción por expresiones regulares.
+    
+    \item Extracción de patrones: Se implementaron dos expresiones regulares principales para la identificación de entidades:
+    
+    \begin{itemize}
+        \item Cabecera de materia (courseLine): Diseñada para capturar la línea que introduce una nueva asignatura.
+        \begin{itemize}
+            \item Patrón: \textasciicircum([A-Z])\textbackslash s+(\textbackslash d\{7\})\textbackslash s+(.+)\$
+            \item Estructura: Captura el Nivel (Grupo 1), el Código de 7 dígitos (Grupo 2) y el Nombre de la materia (Grupo 3).
+        \end{itemize}
+        
+        \item Línea de horario (scheduleLine): Utiliza el modo VERBOSE para procesar una estructura compleja con grupos nombrados:
+        \begin{itemize}
+            \item \textit{group}: Identifica el código del grupo (e.g., 1, A, 1A).
+            \item \textit{type}: Captura opcionalmente el tipo de clase entre corchetes (e.g., [P]).
+            \item \textit{teacher}: Extrae el nombre del docente. Dado que este campo tiene longitud variable, se utiliza un \textit{lookahead} positivo (?=\textbackslash s+[A-Z]\{2\}\textbackslash s+\textbackslash d) para detener la captura exactamente antes de que comience el patrón de día y hora.
+            \item \textit{day}: Captura la abreviación del día de dos letras (e.g., LU, MA).
+            \item \textit{hour}: Captura el intervalo de tiempo, permitiendo espacios flexibles.
+            \item \textit{classroom}: Captura el identificador del aula al final de la línea.
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+Los datos extraídos se mapean a objetos intermedios SubjectInfo, donde se aplica lógica de negocio adicional para manejar casos especiales:
 \begin{itemize}
-  \item Descubrimiento/descarga: ScheduleScraper ubica recursos y PdfDownloader obtiene el PDF.
-  \item Extracción y análisis: PdfExtractor obtiene texto; PdfParser (componente que analiza y transforma datos de entrada) aplica expresiones regulares tolerantes para cabeceras, grupos, días y horas, consolidando líneas y docentes.
-  \item Normalización/persistencia: ImportCareerSchedulesUseCase proyecta entidades y persiste con índices únicos compuestos (Room) y políticas ON CONFLICT.
-  \item Frescura: tras actualizar, se registra lastSyncTime por carrera y se guarda el instante del chequeo en SyncPreferences.
-  \item Robustez: ExponentialBackoff y CircuitBreaker controlan reintentos y abren/cierran el circuito ante fallas repetidas.
-  \item Respaldo: si no hay red, se permite importación manual desde PDF local y se opera totalmente en caché.
+    \item Herencia de docentes: Si una línea de horario no especifica docente (campo vacío o ``[``), se hereda el último docente válido detectado en el bloque, asumiendo que pertenece al mismo grupo.
+    \item Docentes por designar: Se normalizan valores vacíos a ``POR DESIGNAR DOCENTE''.
+    \item Separación de Laboratorios: El caso de uso ImportCareerSchedulesUseCase detecta grupos híbridos (e.g., ``1A'' con tipo ``[P]'') mediante la función shouldSplitAsLab. Estos se separan en una ``materia virtual'' con sufijo \_LAB (e.g., ``FISICA GENERAL\_LAB'') para diferenciar académicamente la carga teórica de la práctica en la persistencia.
+\end{itemize}
+
+La persistencia en la base de datos Room aplica políticas de conflicto (Upsert) para mantener la integridad referencial. Si se detecta un horario existente para un mismo grupo, día y hora, se actualizan únicamente los campos de aula y docente si han cambiado, preservando la identidad del registro.
+
+Para proteger la estabilidad de la fuente externa y la experiencia del usuario, se aplican patrones de resiliencia:
+\begin{itemize}
+  \item Descubrimiento/descarga: ScheduleScraper localiza la URL del recurso y PdfDownloader gestiona la descarga segura al almacenamiento local.
+  \item Frescura: Tras una actualización exitosa, se registra el lastSyncTime por carrera y se guarda el instante de la verificación en SyncPreferences, evitando consultas redundantes dentro de una ventana de tiempo configurable (e.g., 6 horas).
+  \item Robustez: ExponentialBackoff gestiona los reintentos ante fallos transitorios de red (e.g., timeouts), mientras que CircuitBreaker previene la saturación del servidor interrumpiendo temporalmente las solicitudes tras detectar una tasa de error elevada.
+  \item Respaldo: En ausencia de conectividad, el sistema permite la importación manual desde un archivo PDF local y opera totalmente en modo offline utilizando los datos en caché.
 \end{itemize}
 
 Descendiendo al siguiente nivel de abstracción, la Figura \ref{fig:c4_container_f1} (C4 Nivel 2) muestra los contenedores principales. Se destaca la aplicación móvil como el contenedor central que orquesta la lógica, interactuando con la base de datos local (Room) para la persistencia y con el sistema de archivos para la gestión de los PDFs descargados.
@@ -50,7 +82,13 @@ Descendiendo al siguiente nivel de abstracción, la Figura \ref{fig:c4_container
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
-Adentrándonos en la estructura interna de la aplicación, la Figura \ref{fig:c4_component_f1} (C4 Nivel 3) desglosa los componentes específicos de la fase de ingestión. Se pueden identificar el ScheduleScraper encargado del descubrimiento de recursos, el PdfDownloader para la descarga segura, y los componentes de procesamiento PdfExtractor y PdfParser que transforman el documento en datos estructurados.
+Para comprender en profundidad cómo el sistema maneja la complejidad de los datos no estructurados, es necesario descender un nivel más en la arquitectura. A continuación, se explora la descomposición del contenedor de la aplicación móvil, revelando los módulos internos que orquestan la lógica de negocio. Este nivel de detalle permite visualizar las interacciones precisas entre los objetos encargados de la adquisición y el procesamiento.
+
+Adentrándonos en la estructura interna de la aplicación, la Figura \ref{fig:c4_component_f1} (C4 Nivel 3) desglosa
+los componentes específicos de la fase de ingestión. Se pueden identificar el ScheduleScraper
+encargado del descubrimiento de recursos, el PdfDownloader para la descarga segura, y los
+componentes de procesamiento PdfExtractor y PdfParser que transforman el documento en datos
+estructurados.
 
 \begin{figure}[H]
   \centering
@@ -60,7 +98,7 @@ Adentrándonos en la estructura interna de la aplicación, la Figura \ref{fig:c4
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
-Finalmente, la Figura \ref{fig:c4_code_f1} (C4 Nivel 4) presenta el diagrama de clases detallado, mostrando las relaciones entre las clases de implementación, los casos de uso como AutoSyncUseCase e ImportCareerSchedulesUseCase, y las entidades de datos, proporcionando una vista técnica precisa de cómo se implementa la lógica de sincronización y persistencia.
+La Figura \ref{fig:c4_code_f1} (C4 Nivel 4) presenta el diagrama de clases detallado, mostrando las relaciones entre las clases de implementación, los casos de uso como AutoSyncUseCase e ImportCareerSchedulesUseCase, y las entidades de datos, proporcionando una vista técnica precisa de cómo se implementa la lógica de sincronización y persistencia.
 
 \begin{figure}[H]
   \centering
