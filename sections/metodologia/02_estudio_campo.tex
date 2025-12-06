@@ -94,28 +94,22 @@ El análisis de estos datos permite identificar las brechas existentes entre las
 Los hallazgos cuantitativos de la encuesta se tradujeron en requerimientos funcionales específicos mediante un proceso de trazabilidad que vincula cada demanda identificada con una funcionalidad concreta de la aplicación y un criterio de aceptación verificable, como se presenta en el Cuadro \ref{tab:derivacion_req}.
 
 \begin{table}[H]
-  \centering
-  \small
-  \begin{tabular}{|p{5.0cm}|p{7.5cm}|p{3.5cm}|}
-    \hline
-    Hallazgo & Requerimiento derivado & Criterio de aceptación \\
-    \hline
-    94\% usa Android & Priorizar Android y vista móvil & Flujo usable sin laptop \\
-    \hline
-    60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
-    \hline
-    80\% coordina por WhatsApp & Intercambio estructurado en JSON & Compartir/abrir desde mensajería \\
-    \hline
-    78\% valora modo sin conexión & Operación offline-first & Consulta sin red \\
-    \hline
-    57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
-    \hline
-    88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
-    \hline
-  \end{tabular}
-  \caption[Trazabilidad de hallazgos a requerimientos funcionales]{Trazabilidad de hallazgos a requerimientos funcionales.}
-  \label{tab:derivacion_req}
-  \small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{5.0cm} p{7.5cm} p{3.5cm}}
+\toprule
+Hallazgo & Requerimiento derivado & Criterio de aceptación \\
+\midrule
+94\% usa Android & Priorizar Android y vista móvil & Flujo usable sin laptop \\
+60\% frustración por repetir pasos & Memoria de carrera/nivel/materias & Ingreso sin repetir selección \\
+80\% coordina por WhatsApp & Intercambio estructurado en JSON & Compartir/abrir desde mensajería \\
+78\% valora modo sin conexión & Operación offline-first & Consulta sin red \\
+57\% valora notificaciones & Recordatorios previos a clase & Alertas configurables \\
+88\% solicita actualización automática & Actualización desde fuente oficial & Fecha visible de actualización \\
+\bottomrule
+\end{tabularx}
+\caption{Trazabilidad de hallazgos a requerimientos funcionales.}\label{tab:derivacion_req}
+\small{Fuente: Elaboración propia basada en \cite{encuesta_fcyt_2025}.}
 \end{table}
 
 \subsection{Proceso propuesto (TO-BE)}

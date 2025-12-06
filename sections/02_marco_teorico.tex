@@ -21,21 +21,19 @@ Tradicionalmente, las interfaces en Android se construían manipulando un árbol
 El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre ambos paradigmas.
 
 \begin{table}[H]
-    \centering
-    \begin{tabular}{|p{6cm}|p{6cm}|}
-        \hline
-        Enfoque Imperativo (XML) & Enfoque Declarativo (Compose) \\
-        \hline
-        Se manipula manualmente el árbol de vistas (DOM/Views). & La UI se describe como una función del estado. \\
-        \hline
-        El estado de la UI y el estado de la app pueden desincronizarse. & El estado es la única fuente de verdad. \\
-        \hline
-        Código redundante (boilerplate). & Código conciso y legible. \\
-        \hline
-    \end{tabular}
-    \caption{Comparación entre UI Imperativa y Declarativa}
-    \label{tab:imperative_vs_declarative}
-    \small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{6cm} p{6cm}}
+\toprule
+Enfoque Imperativo (XML) & Enfoque Declarativo (Compose) \\
+\midrule
+Se manipula manualmente el árbol de vistas (DOM/Views). & La UI se describe como una función del estado. \\
+El estado de la UI y el estado de la app pueden desincronizarse. & El estado es la única fuente de verdad. \\
+Código redundante (boilerplate). & Código conciso y legible. \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación entre UI Imperativa y Declarativa.}\label{tab:imperative_vs_declarative}
+\small{Fuente: Basado en Singh et al. (2025) \cite{singh2025comparative}}
 \end{table}
 
 Jetpack Compose es el kit de herramientas moderno de Android para construir interfaces nativas. En este paradigma, la interfaz se describe como una función del estado actual de la aplicación.
@@ -224,23 +222,20 @@ La Inteligencia Artificial en el Borde (Edge AI) permite integrar capacidades de
 A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el dispositivo del usuario. El Cuadro \ref{tab:edge_vs_cloud} compara ambos enfoques.
 
 \begin{table}[H]
-    \centering
-    \begin{tabular}{|p{5cm}|p{5cm}|}
-        \hline
-        Edge AI (Local) & Cloud AI (Nube) \\
-        \hline
-        Procesamiento en el dispositivo. & Procesamiento en servidores remotos. \\
-        \hline
-        Privacidad total (datos no salen). & Riesgo de privacidad al enviar datos. \\
-        \hline
-        Latencia baja (tiempo real). & Latencia depende de la red. \\
-        \hline
-        Funciona sin internet (Offline). & Requiere conexión constante. \\
-        \hline
-    \end{tabular}
-    \caption{Comparación entre Edge AI y Cloud AI}
-    \label{tab:edge_vs_cloud}
-    \small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{5cm} p{5cm}}
+\toprule
+Edge AI (Local) & Cloud AI (Nube) \\
+\midrule
+Procesamiento en el dispositivo. & Procesamiento en servidores remotos. \\
+Privacidad total (datos no salen). & Riesgo de privacidad al enviar datos. \\
+Latencia baja (tiempo real). & Latencia depende de la red. \\
+Funciona sin internet (Offline). & Requiere conexión constante. \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación entre Edge AI y Cloud AI.}\label{tab:edge_vs_cloud}
+\small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
 \end{table}
 
 Librerías como llama.cpp permiten ejecutar la inferencia de modelos de lenguaje de manera eficiente en la CPU de dispositivos Android a través de JNI (Java Native Interface).

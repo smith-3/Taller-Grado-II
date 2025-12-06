@@ -92,13 +92,7 @@ El panel (I) ilustra el proceso de filtrado inicial donde se seleccionan los gru
 El panel (II) detalla la lógica de evaluación: cada combinación completa recibe una puntuación que penaliza los huecos temporales entre clases y, si la configuración lo permite, aplica una penalización controlada por solapamientos horarios. En caso de no encontrar soluciones que cumplan todas las restricciones duras, el sistema puede relajar criterios secundarios para ofrecer las mejores alternativas posibles.
 
 \subsection{Resultados y verificación}
-El generador de horarios cumplió con el objetivo de producir $N$ combinaciones válidas en tiempos inferiores a 3 minutos para cargas típicas. Se verificó la correcta aplicación de las estrategias de ponderación, confirmando que la activación de flags (choques, huecos, favoritos) altera el ranking de soluciones según lo esperado. La regeneración parcial demostró tiempos de respuesta casi instantáneos (< 1s).
-
-\textbf{KPIs verificados:}
-\begin{itemize}
-  \item TTS (Time-To-Schedule) \(\leq\) 3 min para \(N{=}10\).
-  \item Regeneración parcial \(\leq\) 1 s por cambio.
-\end{itemize}
+El generador de horarios cumplió con el objetivo de producir $N=10$ combinaciones válidas con un TTS $\leq$ 3 min para cargas típicas. Asimismo, la regeneración parcial demostró tiempos de respuesta casi instantáneos ($\leq$ 1 s por cambio), verificándose además la correcta aplicación de las estrategias de ponderación en el ranking de soluciones.
 
 % \begin{figure}[H]
 %   \centering

@@ -15,9 +15,10 @@
   }
 }
 
-% Force square brackets for citations [Author, Year] instead of (Author, Year)
+
+
+% Ensure \cite uses parentheses (Author, Year)
 \AtBeginDocument{
-  \renewcommand{\mkbibparens}[1]{\mkbibbrackets{#1}}
   \renewcommand{\cite}[1]{\parencite{#1}}
 }
 
@@ -67,6 +68,10 @@
 
     % Bibliografía
     \printbibliography
+
+    % Glosario
+    \input{sections/06_glosario}
+    \clearpage
 
     % Anexos (opcional)
     \appendix

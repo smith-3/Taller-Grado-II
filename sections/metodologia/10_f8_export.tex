@@ -41,20 +41,20 @@ A continuación se presentan los componentes de software desarrollados para dar 
 El Cuadro \ref{tab:f8_tecnico} resume las consideraciones técnicas implementadas para la compartición segura de archivos, describiendo el manejo de permisos, la integración con el sistema operativo y las validaciones previas a la exportación.
 
 \begin{table}[H]
-  \centering\small
-  \begin{tabularx}{\linewidth}{@{}p{3.2cm}>{\RaggedRight\arraybackslash}X@{}}
-    \hline
-    Elemento & Descripción \\
-    \hline
-    Permisos & En Android < 13, se solicita WRITE\_EXTERNAL\_STORAGE; en versiones recientes (13+) no se requieren permisos de escritura gracias al uso de cache y FileProvider. \\
-    Share sheet & Se utiliza Intent.ACTION\_SEND con tipos MIME específicos (image/png, application/pdf, application/vnd.ms-excel) y la bandera FLAG\_GRANT\_READ\_URI\_PERMISSION. \\
-    Exposición de archivos & FileProvider otorga URIs seguras (content://) para los archivos generados en el directorio de cache de la aplicación. \\
-    Validaciones previas & El ViewModel verifica que existan materias inscritas antes de permitir la exportación; si la lista está vacía, se bloquea la acción. \\
-    \hline
-  \end{tabularx}
-  \caption[Aspectos técnicos de compartición]{Aspectos técnicos de compartición.}
-  \label{tab:f8_tecnico}
-  \small{Fuente: Elaboración propia.}
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}p{3.2cm}>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+Elemento & Descripción \\
+\midrule
+Permisos & En Android < 13, se solicita WRITE\_EXTERNAL\_STORAGE; en versiones recientes (13+) no se requieren permisos de escritura gracias al uso de cache y FileProvider. \\
+Share sheet & Se utiliza Intent.ACTION\_SEND con tipos MIME específicos (image/png, application/pdf, application/vnd.ms-excel) y la bandera FLAG\_GRANT\_READ\_URI\_PERMISSION. \\
+Exposición de archivos & FileProvider otorga URIs seguras (content://) para los archivos generados en el directorio de cache de la aplicación. \\
+Validaciones previas & El ViewModel verifica que existan materias inscritas antes de permitir la exportación; si la lista está vacía, se bloquea la acción. \\
+\bottomrule
+\end{tabularx}
+\caption{Aspectos técnicos de compartición.}\label{tab:f8_tecnico}
+\small{Fuente: Elaboración propia.}
 \end{table}
 
 La secuencia operativa de la exportación se detalla en dos partes. La Figura \ref{fig:f8_export_flow_part1} cubre la primera etapa, que abarca desde la validación de precondiciones (existencia de materias) hasta la selección del formato deseado y la preparación de los datos.
