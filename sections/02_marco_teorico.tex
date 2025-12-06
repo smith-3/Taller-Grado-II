@@ -1,7 +1,42 @@
 \chapter{MARCO TEÓRICO}
 \label{chap:marco-teorico}
 
-Este capítulo establece los fundamentos teóricos y tecnológicos relacionados con la ingeniería de software móvil moderna, la arquitectura de software escalable, los algoritmos de optimización y la inteligencia artificial en el borde (Edge AI).
+Este capítulo establece los fundamentos teóricos y tecnológicos relacionados con la ingeniería de software móvil moderna, la arquitectura de software escalable, los algoritmos de optimización y la inteligencia artificial en el borde (Edge AI). Además, se abordan las técnicas de adquisición y procesamiento de datos desde fuentes heterogéneas, como páginas web y documentos estructurados.
+
+El marco conceptual presentado proporciona la base necesaria para comprender las decisiones de diseño e implementación descritas en capítulos posteriores, fundamentando cada elección tecnológica en principios establecidos por la comunidad académica y la industria del desarrollo de software.
+
+\section{Metodologías de Desarrollo de Software}
+\label{sec:metodologias}
+
+Las metodologías de desarrollo de software establecen el marco de trabajo para organizar, planificar y ejecutar proyectos de software. Se distinguen dos enfoques principales: las metodologías tradicionales (como Waterfall) y las metodologías ágiles.
+
+\subsection{Metodologías Ágiles}
+Las metodologías ágiles surgieron como respuesta a las limitaciones de los enfoques tradicionales en entornos de alta incertidumbre. El Manifiesto Ágil (2001) establece cuatro valores fundamentales: priorizar individuos sobre procesos, software funcional sobre documentación, colaboración con el cliente sobre contratos, y respuesta al cambio sobre seguir un plan \cite{agile_manifesto}.
+
+\subsection{Kanban}
+Kanban es un método de gestión visual del trabajo que limita el trabajo en progreso (WIP) para maximizar el flujo y la eficiencia. Originado en el sistema de producción de Toyota, se adaptó al desarrollo de software para visualizar el flujo de trabajo, identificar cuellos de botella y promover la mejora continua \cite{kanban_anderson}.
+
+El Cuadro \ref{tab:metodologia_comparison} compara las principales metodologías ágiles utilizadas en desarrollo de software.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Kanban & Scrum \\
+\midrule
+Iteraciones & Flujo continuo & Sprints fijos (2-4 semanas) \\
+Roles Definidos & Flexibles & Product Owner, Scrum Master \\
+Límite de Trabajo & WIP por columna & Capacidad del sprint \\
+Cambios & En cualquier momento & Solo entre sprints \\
+Reuniones & Opcionales & Ceremonias obligatorias \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de metodologías ágiles.}\label{tab:metodologia_comparison}
+\small{Fuente: Basado en Anderson (2010) \cite{kanban_anderson} y Schwaber (2004) \cite{scrum_schwaber}}
+\end{table}
+
+Kanban resulta especialmente adecuado para proyectos con un desarrollador único, donde la flexibilidad para cambiar prioridades y la ausencia de ceremonias formales maximizan la productividad.
 
 \section{Ingeniería de Software para Dispositivos Móviles}
 \label{sec:ingenieria-movil}
@@ -13,7 +48,77 @@ Android es un sistema operativo basado en el núcleo Linux, diseñado para dispo
 
 El desarrollo nativo, utilizando el Android SDK (Software Development Kit), permite un acceso directo a las APIs del sistema. En consecuencia, este enfoque proporciona un rendimiento optimizado en comparación con soluciones híbridas, aspecto relevante en tareas intensivas como la inferencia de modelos de IA \cite{android_programming}.
 
-Kotlin es un lenguaje moderno y estáticamente tipado que interopera completamente con Java, ofreciendo características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona.
+El desarrollo móvil nativo se realiza principalmente en dos plataformas dominantes: Android e iOS. El Cuadro \ref{tab:android_vs_ios} presenta una comparación de las características principales de ambas plataformas.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{4cm} p{4cm} p{4cm}}
+\toprule
+Característica & Android & iOS \\
+\midrule
+Sistema Operativo Base & Linux Kernel & Darwin (UNIX) \\
+Lenguaje Principal & Kotlin/Java & Swift/Objective-C \\
+IDE Oficial & Android Studio & Xcode \\
+Cuota de Mercado Global & Aproximadamente 70\% & Aproximadamente 28\% \\
+Código Fuente & Open Source (AOSP) & Propietario \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación entre plataformas Android e iOS.}\label{tab:android_vs_ios}
+\small{Fuente: Basado en StatCounter (2024) \cite{statcounter_mobile} y documentación oficial \cite{android_arch}}
+\end{table}
+
+La elección de plataforma depende de factores como el mercado objetivo, los recursos disponibles y los requisitos técnicos específicos. Android presenta ventajas en términos de cuota de mercado global y flexibilidad del ecosistema abierto.
+
+Kotlin es un lenguaje moderno y estáticamente tipado que interopera completamente con Java. El Cuadro \ref{tab:kotlin_vs_java} presenta una comparación entre estos lenguajes.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Kotlin & Java \\
+\midrule
+Null Safety & Nativo (tipos nullables) & Opcional (anotaciones) \\
+Concurrencia & Coroutines (ligeras) & Threads (pesados) \\
+Código Boilerplate & Mínimo & Extenso \\
+Data Classes & Nativo (data class) & Manual o Lombok \\
+Soporte Google & Preferido desde 2019 & Histórico \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación entre Kotlin y Java para Android.}\label{tab:kotlin_vs_java}
+\small{Fuente: Basado en Kotlin Documentation \cite{kotlin_docs} y Android Developers \cite{android_programming}}
+\end{table}
+
+Kotlin ofrece características como Coroutines y Flow para la gestión eficiente de la concurrencia asíncrona, reduciendo significativamente el código repetitivo en comparación con Java.
+
+% SECCIÓN COMENTADA - Entorno de Desarrollo Integrado
+% \\subsection{Entorno de Desarrollo Integrado para Android}
+% 
+% Un Entorno de Desarrollo Integrado (IDE) proporciona herramientas integradas para escribir, depurar y compilar código. Para el desarrollo de aplicaciones Android, existen diversas opciones disponibles en el mercado.
+% 
+% El Cuadro \\ref{tab:ide_comparison} presenta una comparación entre los principales IDEs utilizados en el desarrollo Android.
+% 
+% \\begin{table}[H]
+% \\small
+% \\centering
+% \\begin{tabularx}{\\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+% \\toprule
+% Característica \& Android Studio \& Visual Studio Code \\\\
+% \\midrule
+% Desarrollador \& Google/JetBrains \& Microsoft \\\\
+% Soporte Nativo Android \& Completo (oficial) \& Mediante extensiones \\\\
+% Emulador Integrado \& Sí \& No \\\\
+% Gradle Integration \& Nativa \& Manual \\\\
+% Jetpack Compose Preview \& Sí \& No \\\\
+% \\bottomrule
+% \\end{tabularx}
+% \\caption{Comparación de IDEs para desarrollo Android.}\\label{tab:ide_comparison}
+% \\small{Fuente: Android Developers \\cite{android_studio}}
+% \\end{table}
+% 
+% Android Studio es el IDE oficial recomendado por Google para el desarrollo de aplicaciones Android. Basado en IntelliJ IDEA de JetBrains, proporciona un entorno optimizado con herramientas especializadas como el Layout Inspector, el Database Inspector para Room, y soporte nativo para Jetpack Compose \\cite{android_studio}.
+% FIN SECCIÓN COMENTADA
 
 \subsection{Paradigma de Interfaz Declarativa (Jetpack Compose)}
 Tradicionalmente, las interfaces en Android se construían manipulando un árbol de vistas XML (enfoque imperativo). Actualmente, el uso de marcos de trabajo declarativos se ha consolidado en la industria, respaldado por estudios comparativos de rendimiento y mantenibilidad \cite{singh2025comparative, jain2023compose}.
@@ -23,13 +128,13 @@ El Cuadro \ref{tab:imperative_vs_declarative} resume las diferencias clave entre
 \begin{table}[H]
 \small
 \centering
-\begin{tabularx}{\linewidth}{p{6cm} p{6cm}}
+\begin{tabularx}{\linewidth}{p{4cm} p{4cm} p{4cm}}
 \toprule
-Enfoque Imperativo (XML) & Enfoque Declarativo (Compose) \\
+Característica & Enfoque Imperativo (XML) & Enfoque Declarativo (Compose) \\
 \midrule
-Se manipula manualmente el árbol de vistas (DOM/Views). & La UI se describe como una función del estado. \\
-El estado de la UI y el estado de la app pueden desincronizarse. & El estado es la única fuente de verdad. \\
-Código redundante (boilerplate). & Código conciso y legible. \\
+Manipulación de Vistas & Se manipula manualmente el árbol de vistas. & La UI se describe como una función del estado. \\
+Gestión de Estado & El estado de la UI puede desincronizarse. & El estado es la única fuente de verdad. \\
+Código & Código redundante (boilerplate). & Código conciso y legible. \\
 \bottomrule
 \end{tabularx}
 \caption{Comparación entre UI Imperativa y Declarativa.}\label{tab:imperative_vs_declarative}
@@ -74,92 +179,36 @@ La Regla de Dependencia establece que las dependencias de código fuente solo pu
 \subsection{Arquitectura Recomendada para Aplicaciones Android}
 Google propone una arquitectura en capas que combina los principios de Clean Architecture con las particularidades del ecosistema Android. Esta arquitectura promueve la separación de responsabilidades y facilita las pruebas unitarias, mejorando la mantenibilidad del código a largo plazo.
 
-La Figura \ref{fig:android_architecture} presenta una vista general de esta arquitectura, mostrando cómo las diferentes capas interactúan entre sí mediante interfaces bien definidas. El flujo de datos es unidireccional. Los eventos de usuario fluyen desde la UI hacia las capas inferiores, mientras que los datos fluyen en sentido contrario, desde los repositorios hacia la interfaz.
+El Cuadro \ref{tab:architecture_comparison} presenta una comparación entre los principales patrones arquitectónicos utilizados en el desarrollo de aplicaciones móviles.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.55\textwidth]{images/android_app_architecture.png}
-    \caption{Arquitectura recomendada para aplicaciones Android}
-    \label{fig:android_architecture}
-    \small{Fuente: Android Developers \cite{android_guide_architecture}}
-\end{figure}
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Clean Architecture & MVC (Model-View-Controller) \\
+\midrule
+Separación de Capas & Múltiples capas concéntricas & Tres capas principales \\
+Dirección de Dependencias & Hacia el dominio (centro) & Bidireccional \\
+Testabilidad & Alta (lógica aislada) & Moderada \\
+Complejidad Inicial & Mayor & Menor \\
+Mantenibilidad & Alta a largo plazo & Decrece con el crecimiento \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de patrones arquitectónicos.}\label{tab:architecture_comparison}
+\small{Fuente: Basado en Martin (2017) \cite{martin2017-cleanarch} y Gamma et al. (1995) \cite{gamma1995-patterns}}
+\end{table}
 
-Esta arquitectura se compone de tres capas principales, cada una con responsabilidades específicas:
-
-\begin{enumerate}
-    \item \textbf{Capa de UI (User Interface)}
-
-    Responsable de renderizar los datos en la pantalla y capturar las interacciones del usuario. En aplicaciones modernas de Android, utiliza Jetpack Compose para construir interfaces declarativas y reactivas.
-
-Los componentes clave de esta capa incluyen:
-\begin{itemize}
-    \item Composables: Funciones que describen la UI como una función del estado.
-    \item ViewModels: Gestionan el estado de la UI y sobreviven a cambios de configuración.
-    \item UI State: Representación inmutable del estado actual de la pantalla.
-\end{itemize}
-
-La Figura \ref{fig:android_ui_layer} ilustra cómo estos componentes colaboran para mantener la UI sincronizada con el estado de la aplicación.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/udf_cycle.png}
-    \caption{Ciclo de eventos y datos en el patrón UDF}
-    \label{fig:android_ui_layer}
-    \small{Fuente: Android Developers \cite{android_ui_layer_guide}}
-\end{figure}
-
-    \item \textbf{Capa de Dominio}
-
-    Opcional pero altamente recomendada en aplicaciones complejas. Su propósito es encapsular la lógica de negocio que puede ser reutilizada por múltiples ViewModels, evitando duplicación de código.
-
-Los casos de uso (Use Cases) son el componente principal de esta capa. Cada caso de uso representa una acción específica del usuario (por ejemplo, ``Generar Horario'' o ``Exportar a PDF'') y orquesta la interacción entre múltiples repositorios si es necesario.
-
-Los casos de uso actúan como intermediarios entre los ViewModels y los repositorios, simplificando la lógica de presentación al encapsular reglas de negocio complejas y reutilizables.
-
-    \item \textbf{Capa de Datos}
-
-    Fuente única de verdad (Single Source of Truth) de la aplicación. Expone los datos a través de repositorios, que pueden combinar información de múltiples fuentes: bases de datos locales, APIs remotas, o archivos del sistema.
-
-Los repositorios implementan la lógica de sincronización, caché y transformación de datos. En aplicaciones offline-first, los repositorios priorizan la base de datos local y sincronizan con fuentes remotas en segundo plano.
-
-La Figura \ref{fig:android_data_layer} muestra cómo los repositorios abstraen las fuentes de datos subyacentes, permitiendo cambiar la implementación (por ejemplo, de SQLite a Room) sin afectar las capas superiores.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/data_layer_diagram.png}
-    \caption{Capa de datos y repositorios en Android}
-    \label{fig:android_data_layer}
-    \small{Fuente: Android Developers \cite{android_data_layer_guide}}
-\end{figure}
-
-\end{enumerate}
-
-
-
-\subsection{Patrón Model-View-ViewModel (MVVM)}
-El patrón MVVM (Model-View-ViewModel) se utiliza para separar la lógica de presentación de la interfaz de usuario. La Figura \ref{fig:mvvm_pattern} muestra la interacción entre sus componentes.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/viewmodel-lifecycle.png}
-    \caption{Ciclo de vida del ViewModel en Android}
-    \label{fig:mvvm_pattern}
-    \small{Fuente: Android Developers \cite{android_viewmodel_guide}}
-\end{figure}
-
-
-
+Clean Architecture presenta ventajas en términos de mantenibilidad y testabilidad a largo plazo, aunque requiere una inversión inicial mayor en la estructuración del código. Esta arquitectura se compone de tres capas principales:
 
 \begin{itemize}
-    \item Model: Representa los datos y la lógica de negocio (Capa de Dominio).
-    \item View: La interfaz de usuario (Compose) que observa el estado.
-    \item ViewModel: Actúa como intermediario, exponiendo el estado de la UI y procesando las interacciones del usuario. En Android, los ViewModels están diseñados para sobrevivir a cambios de configuración, como la rotación de pantalla \cite{pro_android_kotlin}.
+    \item Capa de UI: Responsable de renderizar los datos y capturar las interacciones del usuario. Utiliza Jetpack Compose para construir interfaces declarativas. Los componentes clave incluyen Composables (funciones que describen la UI) y ViewModels (gestionan el estado y sobreviven a cambios de configuración).
+    \item Capa de Dominio: Encapsula la lógica de negocio reutilizable. Los Casos de Uso representan acciones específicas del usuario y orquestan la interacción entre repositorios.
+    \item Capa de Datos: Fuente única de verdad (Single Source of Truth). Expone los datos a través de repositorios que combinan múltiples fuentes (bases de datos locales, APIs remotas) \cite{android_data_layer_guide}.
 \end{itemize}
 
 \subsection{Inyección de Dependencias (Hilt)}
-La Inyección de Dependencias (DI) es un patrón de diseño donde los objetos reciben sus dependencias desde fuera en lugar de crearlas ellos mismos, promoviendo la Inversión de Control (IoC) \cite{dependency_injection_principles}.
-
-Hilt es la solución estándar de Google para DI en Android basada en Dagger. Reduce el código repetitivo y gestiona el ciclo de vida de los componentes, facilitando la modularidad y permitiendo el intercambio de implementaciones. Por ejemplo, permite inyectar repositorios simulados durante las pruebas automatizadas.
+La Inyección de Dependencias (DI) es un patrón donde los objetos reciben sus dependencias desde fuera, promoviendo la Inversión de Control (IoC) \cite{dependency_injection_principles}. Hilt es la solución estándar de Google para DI en Android, reduciendo el código repetitivo y facilitando la modularidad.
 
 \section{Fundamentos Algorítmicos y de Optimización}
 \label{sec:algoritmia}
@@ -193,7 +242,7 @@ El UCTP se modela matemáticamente como un Problema de Satisfacción de Restricc
 Las restricciones se clasifican en Duras (Hard), que deben cumplirse obligatoriamente (por ejemplo, no solapamiento de horarios), y Blandas (Soft), que expresan preferencias deseables pero no obligatorias (por ejemplo, minimizar huecos libres).
 
 \subsection{Algoritmos de Búsqueda y Backtracking}
-Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Backtracking (Vuelta Atrás). Este método realiza una búsqueda sistemática en el espacio de soluciones:
+Para resolver problemas de tipo CSP, comúnmente se utiliza el algoritmo de Backtracking (Vuelta Atrás). Este método realiza una búsqueda sistemática en el espacio de soluciones, explorando las posibles asignaciones de manera incremental y descartando ramas que violan las restricciones establecidas:
 
 \begin{enumerate}
     \item Generación de Candidatos: El algoritmo construye soluciones de manera incremental, asignatura por asignatura.
@@ -216,89 +265,157 @@ En la práctica, esto se puede implementar a través del Patrón de Diseño \tex
 \section{Inteligencia Artificial en Dispositivos Móviles (Edge AI)}
 \label{sec:edge-ai}
 
-La Inteligencia Artificial en el Borde (Edge AI) permite integrar capacidades de inteligencia artificial generativa ejecutándose directamente en el dispositivo móvil.
+La Inteligencia Artificial en el Borde (Edge AI) permite integrar capacidades de inteligencia artificial generativa ejecutándose directamente en el dispositivo móvil. Este paradigma elimina la dependencia de servidores externos, garantizando la privacidad de los datos del usuario y reduciendo la latencia de respuesta. Además, posibilita el funcionamiento de características inteligentes en escenarios sin conectividad a internet.
 
-\subsection{Inferencia Local vs. Inferencia en la Nube}
-A diferencia de la IA en la nube, la Edge AI procesa los datos localmente en el dispositivo del usuario. El Cuadro \ref{tab:edge_vs_cloud} compara ambos enfoques.
+\subsection{Frameworks de Inferencia en Dispositivos}
+Existen diversas librerías para implementar inferencia de modelos en dispositivos móviles. El Cuadro \ref{tab:edge_frameworks} presenta una comparación de las principales opciones disponibles.
 
 \begin{table}[H]
 \small
 \centering
-\begin{tabularx}{\linewidth}{p{5cm} p{5cm}}
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
 \toprule
-Edge AI (Local) & Cloud AI (Nube) \\
+Característica & llama.cpp & TensorFlow Lite \\
 \midrule
-Procesamiento en el dispositivo. & Procesamiento en servidores remotos. \\
-Privacidad total (datos no salen). & Riesgo de privacidad al enviar datos. \\
-Latencia baja (tiempo real). & Latencia depende de la red. \\
-Funciona sin internet (Offline). & Requiere conexión constante. \\
+Tipo de Modelo & LLMs (texto) & Modelos generales \\
+Lenguaje Base & C++ (JNI) & C++ / Java \\
+Cuantización & GGUF (4-bit) & INT8/FP16 \\
+Tamaño de Modelos & 1-7GB típico & KB a MB \\
+Caso de Uso Principal & IA Generativa & Visión/Clasificación \\
 \bottomrule
 \end{tabularx}
-\caption{Comparación entre Edge AI y Cloud AI.}\label{tab:edge_vs_cloud}
-\small{Fuente: Basado en Pothineni (2024) \cite{pothineni2024offline} y Shi et al. (2023) \cite{edge_ai_arxiv}}
+\caption{Comparación de frameworks de Edge AI.}\label{tab:edge_frameworks}
+\small{Fuente: Basado en Gholami et al. \cite{quantization_papers} y Gerganov \cite{llama_cpp}}
 \end{table}
 
-Librerías como llama.cpp permiten ejecutar la inferencia de modelos de lenguaje de manera eficiente en la CPU de dispositivos Android a través de JNI (Java Native Interface).
+La selección del framework depende del tipo de modelo y los requisitos de la aplicación. Para modelos de lenguaje grande (LLMs), librerías como llama.cpp ofrecen optimizaciones específicas mediante cuantización agresiva en formato GGUF, permitiendo ejecutar la inferencia de manera eficiente en la CPU de dispositivos Android a través de JNI (Java Native Interface) \cite{llama_cpp}.
 
 \subsection{Modelos de Lenguaje (LLMs) y Cuantización}
-Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos con recursos limitados (memoria y batería), se utiliza la técnica de Cuantización. Este proceso reduce la precisión de los pesos del modelo (por ejemplo, de punto flotante de 16 bits a enteros de 4 bits), disminuyendo drásticamente el tamaño del modelo y el consumo de memoria con una pérdida mínima de precisión \cite{quantization_papers}. El formato de archivo utilizado es GGUF, optimizado para inferencia rápida en CPU.
+Para viabilizar la ejecución de Large Language Models (LLMs) en dispositivos con recursos limitados, se utiliza la técnica de Cuantización. Este proceso reduce la precisión de los pesos del modelo (de punto flotante de 16 bits a enteros de 4 bits), disminuyendo el tamaño y consumo de memoria con pérdida mínima de precisión \cite{quantization_papers}. El formato GGUF está optimizado para inferencia rápida en CPU.
+
+\subsection{Fine-Tuning y Arquitecturas Líquidas}
+El Fine-Tuning es el proceso de adaptar un modelo pre-entrenado a un dominio o tarea específica. El Cuadro \ref{tab:finetuning_comparison} presenta las principales técnicas disponibles.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Full Fine-Tuning & LoRA/QLoRA \\
+\midrule
+Parámetros Entrenados & Todos & Subconjunto reducido \\
+Requisitos de GPU & Muy altos (16-80GB) & Moderados (4-16GB) \\
+Tiempo de Entrenamiento & Extenso & Reducido \\
+Riesgo de Overfitting & Mayor & Menor \\
+Flexibilidad & Máxima & Limitada \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de técnicas de Fine-Tuning.}\label{tab:finetuning_comparison}
+\small{Fuente: Basado en Hu et al. (2021) \cite{lora_paper} y Hugging Face \cite{llm_finetuning}}
+\end{table}
+
+Las arquitecturas Liquid Foundation Models (LFM) representan un enfoque híbrido que combina diferentes tipos de capas neuronales, optimizando el balance entre rendimiento y eficiencia computacional \cite{liquidai_lfm}.
+
+\subsection{Parámetros de Muestreo en Generación de Texto}
+La generación de texto en LLMs utiliza diversos parámetros de muestreo (sampling) que controlan la aleatoriedad y calidad de las respuestas:
+
+\begin{itemize}
+    \item Temperature: Controla la aleatoriedad. Valores bajos (0.1-0.5) producen respuestas más determinísticas, mientras valores altos (0.8-1.5) generan mayor variedad.
+    \item Top-P (Nucleus Sampling): Limita la selección a tokens cuya probabilidad acumulada no exceda el umbral P.
+    \item Top-K: Restringe la selección a los K tokens más probables.
+    \item Repeat Penalty: Penaliza la repetición de tokens para evitar bucles en la generación.
+\end{itemize}
+
+La combinación adecuada de estos parámetros permite optimizar la generación según el caso de uso específico \cite{holtzman2020curious}.
+
+\section{Adquisición y Procesamiento de Datos}
+\label{sec:adquisicion-datos}
+
+Las aplicaciones móviles frecuentemente requieren obtener y procesar datos de fuentes externas heterogéneas, como páginas web y documentos PDF.
+
+\subsection{Web Scraping}
+El Web Scraping es la técnica de extracción automática de datos desde páginas web. El Cuadro \ref{tab:scraping_comparison} compara las principales bibliotecas disponibles.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Jsoup & Selenium \\
+\midrule
+Tipo & Parser HTML estático & Automatización de navegador \\
+JavaScript & No ejecuta & Ejecuta completamente \\
+Rendimiento & Rápido y ligero & Lento (carga navegador) \\
+Complejidad & Baja & Alta \\
+Uso en Android & Nativo & No recomendado \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de tecnologías de Web Scraping.}\label{tab:scraping_comparison}
+\small{Fuente: Basado en Mitchell (2018) \cite{mitchell2018scraping} y documentación oficial \cite{jsoup_docs}}
+\end{table}
+
+Jsoup es una biblioteca Java que proporciona una API similar a jQuery para navegar y manipular el DOM, permitiendo extraer datos mediante selectores CSS \cite{jsoup_docs}.
+
+\subsection{Extracción de Texto desde Documentos PDF}
+El procesamiento de documentos PDF requiere bibliotecas especializadas capaces de interpretar el formato binario del documento. PDFBox es una biblioteca de código abierto de Apache que permite leer, crear y manipular documentos PDF, incluyendo la extracción de texto estructurado \cite{pdfbox_docs}.
+
+El proceso típico incluye: descarga del archivo, apertura del documento, iteración sobre páginas, extracción de texto mediante PDFTextStripper, y finalmente parsing del contenido extraído con expresiones regulares para identificar patrones específicos.
+
+\subsection{Patrones de Resiliencia en Comunicación de Red}
+Las aplicaciones que dependen de servicios externos deben implementar mecanismos de tolerancia a fallos. El Cuadro \ref{tab:resilience_comparison} compara los principales patrones.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Circuit Breaker & Retry Simple \\
+\midrule
+Mecanismo & Bloquea tras N fallos & Reintenta inmediatamente \\
+Protección del Servidor & Sí (reduce carga) & No (puede saturar) \\
+Recuperación & Automática con half-open & Manual \\
+Complejidad & Moderada & Baja \\
+Combinación Recomendada & Con Exponential Backoff & Solo para errores transitorios \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de patrones de resiliencia.}\label{tab:resilience_comparison}
+\small{Fuente: Basado en Nygard (2018) \cite{nygard2018release}}
+\end{table}
+
+El patrón Exponential Backoff complementa estas estrategias incrementando progresivamente los intervalos de reintento, reduciendo la carga sobre servicios saturados.
 
 \section{Gestión y Persistencia de Datos}
 \label{sec:persistencia}
 
-La filosofía Offline-First garantiza que la funcionalidad principal esté disponible sin conexión a internet, un requisito crítico en entornos con conectividad intermitente \cite{guda2025offline}.
+La filosofía Offline-First garantiza funcionalidad sin conexión a internet \cite{guda2025offline}. Las aplicaciones móviles requieren soluciones de persistencia optimizadas. El Cuadro \ref{tab:db_comparison} compara las principales tecnologías disponibles.
 
-\subsection{Bases de Datos Relacionales Embebidas (Room)}
-SQLite es un motor de base de datos relacional ligero embebido en Android. Room proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}.
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\toprule
+Característica & Room (SQLite) & Realm \\
+\midrule
+Tipo de Base de Datos & Relacional (SQL) & Orientada a Objetos \\
+Lenguaje de Consulta & SQL estándar & Consultas propias \\
+Verificación en Compilación & Sí & No \\
+Soporte Oficial Google & Sí (Jetpack) & No \\
+Curva de Aprendizaje & Moderada & Baja \\
+\bottomrule
+\end{tabularx}
+\caption{Comparación de tecnologías de base de datos para Android.}\label{tab:db_comparison}
+\small{Fuente: Basado en Android Developers \cite{room_db} y Silberschatz et al. \cite{database_concepts}}
+\end{table}
+
+SQLite es un motor de base de datos relacional ligero embebido en Android. Room proporciona una capa de abstracción orientada a objetos sobre SQLite, permitiendo definir Entidades y DAOs con verificación de consultas SQL en tiempo de compilación \cite{database_concepts}. Esta combinación ofrece ventajas en términos de integración con el ecosistema Android y verificación de errores en tiempo de compilación \cite{room_db}.
 
 \subsection{Estrategias de Sincronización y Offline-First}
-El patrón Offline-First invierte la dependencia tradicional de las aplicaciones móviles respecto a la conectividad de red. En lugar de asumir que la red siempre está disponible, este enfoque trata la conectividad como un recurso opcional y potencialmente intermitente.
-
-La Figura \ref{fig:offline_architecture} ilustra la arquitectura típica de una aplicación que sigue este patrón. Como se observa, la base de datos local actúa como la fuente primaria de datos, mientras que las operaciones de red se ejecutan de manera asíncrona en segundo plano.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{images/offline_architecture_couchbase.png}
-    \caption{Arquitectura típica de una aplicación Offline-First}
-    \label{fig:offline_architecture}
-    \small{Fuente: Couchbase Inc. (2023) \cite{couchbase_offlinefirst}}
-\end{figure}
-
-En una arquitectura Offline-First robusta, se adopta el principio de Single Source of Truth (SSOT). La interfaz de usuario observa y muestra los datos de la base de datos local, permitiendo la operatividad incluso sin conexión.
-
-Las operaciones de red pueden ejecutarse en segundo plano utilizando componentes como WorkManager, que actúa como planificador de tareas diferibles y garantizadas.
-
-Cuando la sincronización completa exitosamente, se actualiza la base de datos local. Las librerías de persistencia modernas notifican automáticamente a la UI mediante flujos reactivos para que refleje los cambios. Este diseño desacopla la interacción del usuario de la latencia de la red, permitiendo que la aplicación mantenga su funcionalidad tanto en conexiones lentas como en ausencia total de conectividad.
+El patrón Offline-First trata la conectividad como un recurso opcional. La base de datos local actúa como fuente primaria de datos (Single Source of Truth), mientras que las operaciones de red se ejecutan en segundo plano mediante WorkManager \cite{couchbase_offlinefirst}. Las librerías de persistencia modernas notifican automáticamente a la UI mediante flujos reactivos cuando la sincronización completa.
 
 \section{Notificaciones y Widgets en Android}
 \label{sec:notificaciones-widgets}
 
-Las aplicaciones móviles modernas requieren mecanismos para interactuar con el usuario incluso cuando no están en primer plano. Android proporciona componentes específicos para este propósito: Notificaciones y App Widgets.
-
-\subsection{Sistema de Notificaciones}
-Las notificaciones son mensajes que Android muestra fuera de la interfaz de usuario de la aplicación para proporcionar recordatorios, comunicaciones de otras personas u otra información oportuna de la aplicación \cite{android_notifications}.
-
-A partir de Android 8.0 (API nivel 26), todas las notificaciones deben asignarse a un Canal de Notificación (Notification Channel). Esto permite agrupar las notificaciones por tipo (por ejemplo, ``Recordatorios de Clases'', ``Avisos Generales'') y facilita la gestión de la configuración de cada canal, como el sonido, la vibración y la importancia, sin tener que bloquear todas las notificaciones de la aplicación \cite{android_notification_channels}.
-
-La Importancia de la notificación determina cuánto interrumpe al usuario (visual y auditivamente). Los niveles van desde ``Urgente'' (sonido y ventana emergente) hasta ``Baja'' (sin sonido ni interrupción visual).
-
-Existen dos tipos principales de implementación:
-\begin{itemize}
-    \item Notificaciones Locales: Programadas por la propia aplicación utilizando AlarmManager o WorkManager. Son ideales para recordatorios basados en el tiempo que no requieren conexión a internet, como los recordatorios de clases configurados en el dispositivo.
-    \item Notificaciones Remotas (Push): Enviadas desde un servidor externo a través de servicios como Firebase Cloud Messaging (FCM).
-\end{itemize}
+Android proporciona mecanismos para interactuar con el usuario fuera de la aplicación: Notificaciones y App Widgets. Las notificaciones requieren asignarse a un Canal (Notification Channel) desde Android 8.0 \cite{android_notifications}. Existen dos tipos: Locales (programadas con WorkManager) y Remotas (vía Firebase Cloud Messaging).
 
 \subsection{App Widgets}
-Los App Widgets son vistas de aplicación en miniatura que se pueden incrustar en otras aplicaciones (como la pantalla de inicio) y recibir actualizaciones periódicas \cite{android_widgets}.
-
-La arquitectura de un Widget se basa en los siguientes componentes clave:
-\begin{itemize}
-    \item AppWidgetProvider: Una implementación de BroadcastReceiver que maneja el ciclo de vida del widget (actualización, habilitación, inhabilitación y eliminación).
-    \item RemoteViews: Debido a que el widget se ejecuta en un proceso distinto al de la aplicación principal (generalmente el proceso del ``Launcher''), la interfaz de usuario no se puede manipular directamente. RemoteViews es una clase que describe una jerarquía de vistas que se puede mostrar en otro proceso. Actúa como un conjunto de instrucciones de renderizado que el sistema ejecuta de manera segura \cite{android_remoteviews}.
-\end{itemize}
-
-El ciclo de vida de actualización está definido por un intervalo de tiempo en el archivo de configuración XML, aunque también se pueden solicitar actualizaciones manuales cuando ocurren cambios en los datos de la aplicación, garantizando la sincronización de la información visualizada.
-
-
-
-
+Los App Widgets son vistas miniatura incrustables en la pantalla de inicio \cite{android_widgets}. Su arquitectura se basa en AppWidgetProvider (BroadcastReceiver que maneja el ciclo de vida) y RemoteViews (describe vistas ejecutables en otro proceso) \cite{android_remoteviews}.

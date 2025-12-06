@@ -6,15 +6,24 @@ Para evaluar el desempeño y la aceptación del sistema, se han definido indicad
 
 \begin{enumerate}
     \item TTS (Time-To-Schedule): Mide la latencia percibida en la generación.
-    \[ TTS = t_{aplicado} - t_{click\_generar} \]
+    \begin{equation}
+        TTS = t_{aplicado} - t_{click\_generar}
+    \end{equation}
+    \addformulaentry{Time-To-Schedule (TTS)}
     El objetivo es mantener este valor por debajo de 3 segundos para $N=10$ combinaciones, asegurando una experiencia de usuario fluida durante la exploración de alternativas.
 
     \item Gaps/día: Evalúa la compacidad del horario generado.
-    \[ Gaps_{prom} = \frac{\sum_{d} \text{minutos vacíos}(d)}{\text{\#días activos}} \]
+    \begin{equation}
+        Gaps_{prom} = \frac{\sum_{d} \text{minutos vacíos}(d)}{\text{\#días activos}}
+    \end{equation}
+    \addformulaentry{Promedio de huecos por día (Gaps/día)}
     Se busca una tendencia a la baja en esta métrica, priorizando horarios con bloques de clases continuos para optimizar el tiempo del estudiante en la universidad.
 
     \item On-time reminders: Mide la fiabilidad de las notificaciones.
-    \[ \text{Reliability} = \frac{\text{\#notifs abiertas } \ge X \text{ min antes}}{\text{\#notifs totales}} \times 100\% \]
+    \begin{equation}
+        \text{Reliability} = \frac{\text{\#notifs abiertas } \ge X \text{ min antes}}{\text{\#notifs totales}} \times 100\%
+    \end{equation}
+    \addformulaentry{Fiabilidad de recordatorios (On-time reminders)}
     El objetivo es superar el 95\% de entregas puntuales, validando que el mecanismo de alarmas del sistema operativo no sea interrumpido por optimizaciones de batería.
 
     \item Adopción JSON: Indicador de viralidad y utilidad social.

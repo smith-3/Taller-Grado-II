@@ -47,7 +47,13 @@
     \tableofcontents
     \listoffigures
     \listoftables
-    % \lstlistoflistings
+    % Configuración del Índice de Fórmulas
+    \newcommand{\listformulasname}{Índice de Fórmulas}
+    \newlistof{formulas}{for}{\listformulasname}
+    \newcommand{\addformulaentry}[1]{%
+      \addcontentsline{for}{formulas}{\protect\numberline{\theequation}#1}%
+    }
+    \listofformulas
 
     \clearpage
 
