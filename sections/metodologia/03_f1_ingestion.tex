@@ -47,12 +47,12 @@ El proceso de análisis se divide en dos etapas principales:
         
         \item Línea de horario (scheduleLine): Utiliza el modo VERBOSE para procesar una estructura compleja con grupos nombrados:
         \begin{itemize}
-            \item \textit{group}: Identifica el código del grupo (e.g., 1, A, 1A).
-            \item \textit{type}: Captura opcionalmente el tipo de clase entre corchetes (e.g., [P]).
-            \item \textit{teacher}: Extrae el nombre del docente. Dado que este campo tiene longitud variable, se utiliza un \textit{lookahead} positivo (?=\textbackslash s+[A-Z]\{2\}\textbackslash s+\textbackslash d) para detener la captura exactamente antes de que comience el patrón de día y hora.
-            \item \textit{day}: Captura la abreviación del día de dos letras (e.g., LU, MA).
-            \item \textit{hour}: Captura el intervalo de tiempo, permitiendo espacios flexibles.
-            \item \textit{classroom}: Captura el identificador del aula al final de la línea.
+            \item group: Identifica el código del grupo (e.g., 1, A, 1A).
+            \item type: Captura opcionalmente el tipo de clase entre corchetes (e.g., [P]).
+            \item teacher: Extrae el nombre del docente. Dado que este campo tiene longitud variable, se utiliza un lookahead positivo (?=\textbackslash s+[A-Z]\{2\}\textbackslash s+\textbackslash d) para detener la captura exactamente antes de que comience el patrón de día y hora.
+            \item day: Captura la abreviación del día de dos letras (e.g., LU, MA).
+            \item hour: Captura el intervalo de tiempo, permitiendo espacios flexibles.
+            \item classroom: Captura el identificador del aula al final de la línea.
         \end{itemize}
     \end{itemize}
 \end{enumerate}
