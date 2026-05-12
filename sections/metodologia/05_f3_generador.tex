@@ -1,15 +1,19 @@
 % ============================
 \section{Fase 3: Generador (restricciones, heurísticas, UI)}
 
-Esta fase se centró en la implementación del núcleo algorítmico de TecnoTime, abordando el problema de la generación automática de horarios como un desafío de satisfacción de restricciones (CSP). El desarrollo abarcó desde el diseño del motor de inferencia hasta la integración de una interfaz de usuario reactiva, permitiendo combinar restricciones académicas ineludibles con heurísticas de optimización personalizadas y criterios de preferencia definidos por el estudiante.
+Esta fase se centra en la implementación del núcleo algorítmico de TecnoTime, abordando el problema de la generación automática de horarios como un desafío de satisfacción de restricciones (CSP). El desarrollo abarca desde el diseño del motor de inferencia hasta la integración de una interfaz de usuario reactiva, permitiendo combinar restricciones académicas ineludibles con heurísticas de optimización personalizadas y criterios de preferencia definidos por el estudiante.
 
 \subsection{Objetivo}
-El objetivo principal fue desarrollar un algoritmo capaz de seleccionar automáticamente un grupo por cada materia inscrita, garantizando la ausencia de conflictos horarios (choques) como restricción base. Adicionalmente, se buscó optimizar la calidad de las soluciones generadas mediante la minimización de tiempos muertos (huecos) entre clases y la maximización de la afinidad con docentes seleccionados como favoritos, ofreciendo múltiples alternativas viables en tiempos de ejecución reducidos.
+El objetivo principal es desarrollar un algoritmo capaz de seleccionar automáticamente un grupo por cada materia inscrita, garantizando la ausencia de conflictos horarios (choques) como restricción base. Adicionalmente, se busca optimizar la calidad de las soluciones generadas mediante la minimización de tiempos muertos (huecos) entre clases y la maximización de la afinidad con docentes seleccionados como favoritos, ofreciendo múltiples alternativas viables en tiempos de ejecución reducidos.
 
 \subsection{Desarrollo del generador de horarios}
-El desarrollo se estructuró en torno a dos componentes principales: el orquestador de casos de uso (GenerateSchedulesUseCaseImpl) y el motor de backtracking (ScheduleGenerator). El proceso comienza con la preparación de candidatos, donde se recupera la jerarquía de materias mediante GetAddableSubjectsHierarchyUseCase y se aplica un filtrado inicial basado en las preferencias del usuario (materias específicas, grupos fijos).
+El desarrollo se estructura en torno a dos componentes principales: el orquestador de casos de uso (GenerateSchedulesUseCaseImpl) y el motor de backtracking (ScheduleGenerator). El proceso comienza con la preparación de candidatos, donde se recupera la jerarquía de materias mediante GetAddableSubjectsHierarchyUseCase y se aplica un filtrado inicial basado en las preferencias del usuario (materias específicas, grupos fijos).
 
-Posteriormente, el motor ScheduleGenerator explora el espacio de soluciones utilizando un algoritmo de búsqueda en profundidad (DFS) con poda. Este algoritmo construye combinaciones incrementales, verificando restricciones duras (choques, series) en cada paso y evaluando las soluciones completas mediante una estrategia de puntuación inyectada (ScheduleEvaluationStrategy).
+El diseño inicial del motor de generación se basa en un enfoque de coloración de grafos (Graph Coloring). En este modelo, cada grupo de materia se representa como un vértice del grafo, y se traza una arista entre dos vértices cuando sus bloques horarios presentan solapamiento. El objetivo consiste en encontrar una coloración válida donde grupos del mismo color pudieran coexistir sin conflictos, reduciendo el problema de scheduling a la búsqueda de un conjunto independiente máximo.
+
+Sin embargo, durante las pruebas en dispositivos móviles reales, este enfoque presenta limitaciones significativas. La complejidad NP-completa inherente al problema de coloración de grafos genera tiempos de ejecución exponenciales conforme aumenta el número de materias candidatas. Adicionalmente, la construcción explícita del grafo de conflictos y las estructuras auxiliares de búsqueda consumen memoria excesiva en terminales con recursos limitados, provocando excepciones de memoria insuficiente en dispositivos de gama media.
+
+Por estas razones, se opta por reemplazar Graph Coloring con un algoritmo de búsqueda en profundidad (DFS) con poda basado en backtracking. Este algoritmo construye combinaciones incrementales, verificando restricciones duras (choques, series) en cada paso sin necesidad de construir el grafo completo en memoria. Las soluciones válidas se evalúan mediante una estrategia de puntuación inyectada (ScheduleEvaluationStrategy), permitiendo mantener únicamente las mejores alternativas.
 
 \subsection{Parámetros reales}
 El generador de horarios opera como un sistema configurable que acepta múltiples parámetros para adaptar su comportamiento a las preferencias específicas de cada estudiante. Estos parámetros controlan aspectos críticos como el número máximo de materias a considerar, la cantidad de soluciones alternativas a generar, y las estrategias de optimización a aplicar.
@@ -40,7 +44,7 @@ La generación de horarios se ejecuta en un pipeline secuencial implementado en 
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
 \subsection{Interacción de usuario (pantallas reales)}
-La interfaz de usuario del generador de horarios se diseñó siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas. El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas.
+La interfaz de usuario del generador de horarios se diseña siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas. El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas.
 
 La implementación utiliza Jetpack Compose para construir interfaces declarativas y reactivas que responden automáticamente a cambios en el estado del generador. Los componentes de UI implementados son:
 
@@ -92,7 +96,7 @@ El panel (I) ilustra el proceso de filtrado inicial donde se seleccionan los gru
 El panel (II) detalla la lógica de evaluación: cada combinación completa recibe una puntuación que penaliza los huecos temporales entre clases y, si la configuración lo permite, aplica una penalización controlada por solapamientos horarios. En caso de no encontrar soluciones que cumplan todas las restricciones duras, el sistema puede relajar criterios secundarios para ofrecer las mejores alternativas posibles.
 
 \subsection{Resultados y verificación}
-El generador de horarios cumplió con el objetivo de producir $N=10$ combinaciones válidas con un TTS $\leq$ 3 min para cargas típicas. Asimismo, la regeneración parcial demostró tiempos de respuesta casi instantáneos ($\leq$ 1 s por cambio), verificándose además la correcta aplicación de las estrategias de ponderación en el ranking de soluciones.
+El generador de horarios cumple con el objetivo de producir $N=10$ combinaciones válidas con un TTS $\leq$ 3 min para cargas típicas. Asimismo, la regeneración parcial demuestra tiempos de respuesta casi instantáneos ($\leq$ 1 s por cambio), verificándose además la correcta aplicación de las estrategias de ponderación en el ranking de soluciones.
 
 % \begin{figure}[H]
 %   \centering

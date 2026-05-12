@@ -7,7 +7,7 @@ Esta fase consolida la arquitectura de datos de TecnoTime, estableciendo un mode
 El objetivo principal es formalizar las reglas de negocio del contexto académico en un esquema de datos estricto. Se busca garantizar la integridad referencial entre materias, grupos y docentes, asegurando que todas las operaciones del sistema, desde la visualización hasta la exportación, operen sobre datos consistentes y validados, independientemente de la fuente de origen (PDF o JSON).
 
 \subsection{Implementación del modelo de dominio}
-La implementación se articula en tres ejes fundamentales derivados del análisis del código. Primero, se definieron entidades ricas (Subject, Group, UserSettings) que encapsulan tanto estado como comportamiento. Segundo, se establecieron invariantes de integridad mediante índices únicos y claves foráneas en la capa de persistencia (Room). Finalmente, se implementaron estrategias de mapeo bidireccional que transforman estos modelos para su transporte (ShareableScheduleDto) y almacenamiento, manteniendo una clara separación de responsabilidades.
+La implementación se articula en tres ejes fundamentales derivados del análisis del código. Primero, se definen entidades ricas (Subject, Group, UserSettings) que encapsulan tanto estado como comportamiento. Segundo, se establecen invariantes de integridad mediante índices únicos y claves foráneas en la capa de persistencia (Room). Finalmente, se implementan estrategias de mapeo bidireccional que transforman estos modelos para su transporte (ShareableScheduleDto) y almacenamiento, manteniendo una clara separación de responsabilidades.
 
 \subsection{Entidades (derivadas del código)}
 El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento. Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real.
@@ -57,19 +57,45 @@ Componentes principales del modelo:
   \item ShareableScheduleDto: Estructura de transferencia de datos diseñada para la exportación e importación de horarios. Encapsula una lista de carreras, metadatos de versión y una colección de entradas de horario (entries). Esta clase actúa como un contrato de datos que facilita la interoperabilidad entre diferentes instancias de la aplicación, asegurando que toda la información necesaria para reconstruir un horario esté contenida en un único objeto transferible.
 \end{itemize}
 
-En la capa de persistencia, las entidades definidas en data local entity actúan como espejo del dominio pero enriquecidas con anotaciones de la librería Room. La clase SubjectEntity mapea la tabla subjects y establece un índice único sobre el campo code para asegurar la identidad de cada materia. De manera similar, GroupEntity representa la tabla groups y define un índice compuesto sobre el código de materia y el identificador de grupo para evitar duplicados. Además, esta entidad implementa restricciones de integridad referencial mediante claves foráneas hacia las tablas de niveles y materias, configuradas con reglas de borrado en cascada para mantener la consistencia de la base de datos.
+En la capa de persistencia, las entidades definidas en data local entity actúan como espejo del dominio pero enriquecidas con anotaciones de la librería Room. La clase SubjectEntity mapea la tabla subjects y establece un índice único sobre el campo code para asegurar la identidad de cada materia. De manera similar, GroupEntity representa la tabla groups y define un índice compuesto sobre el código de materia y el identificador de grupo para evitar duplicados.
+
+Además, la entidad GroupEntity implementa restricciones de integridad referencial mediante claves foráneas hacia las tablas de niveles y materias, configuradas con reglas de borrado en cascada para mantener la consistencia de la base de datos.
 
 La lógica de negocio se orquesta a través de casos de uso ubicados en el paquete domain usecase. Un componente destacado es GenerateShareableScheduleJsonUseCase, el cual encapsula la complejidad de la exportación de horarios. Este caso de uso coordina la obtención de información académica y horarios semanales, filtra los datos según las materias seleccionadas por el usuario y transforma la información resultante en una estructura de transferencia optimizada, asegurando que los datos exportados sean completos y coherentes para su uso externo.
 
-Como apoyo visual, la Figura \ref{fig:f2_modelo_dominio_er} ilustra el diagrama entidad–relación del modelo de dominio, destacando entidades operativas, claves e integridad referencial utilizadas en la implementación.
+La Figura \ref{fig:f2_er_estructura} presenta la estructura académica base del modelo de dominio. Esta sección define las entidades fundamentales que representan la organización curricular: carreras, niveles o semestres, materias y la relación muchos-a-muchos que vincula materias con carreras específicas.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagram_er.png}
-  \caption[Modelo de dominio: diagrama entidad–relación (ER)]{Modelo de dominio: diagrama entidad–relación (ER).}
-  \label{fig:f2_modelo_dominio_er}
+  \includegraphics[width=1\linewidth]{images/diagrams/er_part1_estructura_academica.png}
+  \caption{Diagrama ER: estructura académica.}
+  \label{fig:f2_er_estructura}
+  \small{Fuente: elaboración propia.}
+\end{figure}
+
+En este diagrama, Career representa la carrera académica con su código único, nombre y facultad. Cada carrera contiene múltiples niveles (Level) que corresponden a semestres con turno y modalidad. La entidad Subject almacena las materias con sus créditos y horas semanales. La tabla intermedia Career\_Subject establece la relación muchos-a-muchos, permitiendo que una materia pertenezca a varias carreras y viceversa.
+
+La Figura \ref{fig:f2_er_grupos} ilustra las entidades relacionadas con la programación de clases. Esta sección modela los grupos de cada materia, los docentes asignados, las aulas disponibles y los bloques horarios que definen cuándo y dónde se imparte cada grupo.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/er_part2_grupos_horarios.png}
+  \caption{Diagrama ER: grupos y horarios.}
+  \label{fig:f2_er_grupos}
+  \small{Fuente: elaboración propia.}
+\end{figure}
+
+En este diagrama, la entidad Group actúa como punto central vinculando materias con niveles específicos. Cada grupo puede tener múltiples horarios definidos en Group\_Schedule, donde se especifica el día, hora de inicio y fin, además de las referencias opcionales al docente y aula asignados. Las relaciones con Teacher y Classroom permiten la planificación detallada de recursos académicos.
+
+La Figura \ref{fig:f2_er_selecciones} muestra las entidades que gestionan las selecciones del usuario y los eventos generados. Esta sección permite almacenar los grupos elegidos por el estudiante y materializar los horarios resultantes como eventos en el calendario.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{images/diagrams/er_part3_selecciones_eventos.png}
+  \caption{Diagrama ER: selecciones y eventos.}
+  \label{fig:f2_er_selecciones}
   \small{Fuente: elaboración propia.}
 \end{figure}
 
 \subsection{Resultados y verificación}
-El modelo de dominio fue validado mediante pruebas de integración que confirmaron la integridad referencial y la unicidad de claves compuestas. Los mapeos bidireccionales entre las capas de datos, dominio y presentación se verificaron exhaustivamente, asegurando la consistencia de la información en todo el flujo de la aplicación.
+El modelo de dominio se valida mediante pruebas de integración que confirman la integridad referencial y la unicidad de claves compuestas. Los mapeos bidireccionales entre las capas de datos, dominio y presentación se verifican exhaustivamente, asegurando la consistencia de la información en todo el flujo de la aplicación.

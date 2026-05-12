@@ -20,14 +20,14 @@ El modelo de datos local se define mediante entidades anotadas. La clase Subject
 \end{itemize}
 
 \subsubsection{Objetos de Acceso a Datos (DAOs)}
-El acceso a la base de datos se realiza a través de interfaces DAO (Data Access Object). SubjectDao define las operaciones CRUD y consultas complejas. Un aspecto clave es el uso de tipos de retorno reactivos como Flow, lo que permite a la interfaz de usuario observar cambios en los datos y actualizarse automáticamente.
+El acceso a la base de datos se realiza a través de interfaces DAO (Data Access Object). SubjectDao define las operaciones CRUD y consultas complejas. Un aspecto clave es el uso de tipos de retorno reactivos como Flow, lo que permite a la interfaz de usuario observar cambios en los datos y actualizarse automáticamente:
 \begin{itemize}
     \item upsert(subject): Inserta o actualiza una materia utilizando la estrategia de conflicto REPLACE.
     \item getSubjectsForCareerAndLevelFlow(careerCode, levelId): Retorna un flujo reactivo de materias filtradas por carrera y nivel, realizando un JOIN con las tablas groups y career\_subject\_groups.
 \end{itemize}
 
 \subsection{Repositorio y Fuente de Verdad}
-Se implementa el patrón Repository para mediar entre las fuentes de datos y la capa de dominio. SubjectRepositoryImpl actúa como la ``Single Source of Truth'' (Fuente Única de Verdad).
+Se implementa el patrón Repository para mediar entre las fuentes de datos y la capa de dominio. SubjectRepositoryImpl actúa como la ``Single Source of Truth'' (Fuente Única de Verdad):
 \begin{itemize}
     \item Los métodos del repositorio, como getSubjectsForCareerFlow, exponen datos directamente desde la base de datos local (DAO).
     \item Las operaciones de red no retornan datos directamente a la UI, sino que actualizan la base de datos local, lo que a su vez dispara la emisión de nuevos datos a través de los flujos observados.
@@ -54,7 +54,7 @@ La lógica de sincronización se encapsula en el caso de uso AutoSyncUseCase, qu
 Como medida de último recurso, cuando no hay conectividad y la base de datos está vacía o desactualizada, se habilita la funcionalidad de ``Ingesta Manual''. El caso de uso SyncCareerFromLocalPdfUseCase permite al usuario seleccionar un archivo PDF oficial descargado previamente. El sistema procesa este archivo localmente para poblar la base de datos Room, asegurando la operatividad total de la aplicación en entornos completamente desconectados.
 
 \subsection{Resultados y verificación}
-La arquitectura offline-first demostró su eficacia al permitir la operación continua sin conectividad, sirviendo datos desde la caché local de Room. Las pruebas de estrés confirmaron que los mecanismos de backoff exponencial y circuit breaker protegen adecuadamente la fuente de datos ante fallos repetidos. El fallback manual mediante PDF local funcionó correctamente como medida de último recurso.
+La arquitectura offline-first demuestra su eficacia al permitir la operación continua sin conectividad, sirviendo datos desde la caché local de Room. Las pruebas de estrés confirman que los mecanismos de backoff exponencial y circuit breaker protegen adecuadamente la fuente de datos ante fallos repetidos. El fallback manual mediante PDF local funciona correctamente como medida de último recurso.
 
 \subsection{Evidencias (código)}
 La arquitectura offline-first de TecnoTime se sustenta en un conjunto de componentes que gestionan la sincronización diferida, el almacenamiento local prioritario y las políticas de frescura de datos. La implementación utiliza WorkManager para programar tareas de sincronización en segundo plano que respetan las restricciones de red y batería del dispositivo, mientras que Room proporciona la capa de persistencia local con soporte para observación reactiva de cambios.
@@ -71,28 +71,34 @@ El mecanismo de decisión para el uso de datos en caché se ilustra en la Figura
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
+  \includegraphics[width=0.45\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
   \caption[Gate de caché y frescura]{Gate de caché y frescura.}
   \label{fig:f4_offline}
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
+El diagrama detalla el flujo de decisión donde la aplicación prioriza siempre la visualización inmediata de datos. Si no hay red o no hay cambios remotos, se utiliza la caché local. Solo se bloquea la generación si es estrictamente necesario actualizar datos críticos para garantizar la consistencia.
+
 Para garantizar la robustez del proceso de actualización, la Figura \ref{fig:f4_offline_sync} detalla el flujo de sincronización con sus mecanismos de protección. Se observa cómo el ExponentialBackoff gestiona los reintentos y el CircuitBreaker previene la saturación del servidor en caso de fallos persistentes.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/offline_first_sync.png}
+  \includegraphics[width=0.7\linewidth]{images/diagrams/offline_first_sync.png}
   \caption[Sincronización con backoff y circuit breaker]{Sincronización con backoff y circuit breaker.}
   \label{fig:f4_offline_sync}
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
+Este flujo muestra la robustez del proceso de sincronización. El sistema implementa esperas exponenciales para reintentos sin saturar la red y un interruptor de circuito (Circuit Breaker) que detiene las peticiones si detecta fallos continuos en el servidor, protegiendo tanto al cliente como al backend.
+
 Finalmente, la Figura \ref{fig:f4_offline_pdf} presenta la estrategia de respaldo (fallback) mediante PDF local. Este flujo alternativo permite al usuario cargar manualmente el archivo oficial cuando no existe conectividad, asegurando la continuidad operativa del sistema.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
+  \includegraphics[width=0.5\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
   \caption[Fallback por PDF local]{Fallback por PDF local.}
   \label{fig:f4_offline_pdf}
   \small{Fuente: Elaboración propia.}
 \end{figure}
+
+El proceso de recuperación manual permite al usuario cargar un horario oficial en formato PDF directamente desde el almacenamiento del dispositivo. El sistema procesa este archivo localmente para actualizar la base de datos interna sin necesidad de conexión a internet, actuando como mecanismo de última instancia.

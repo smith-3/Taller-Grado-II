@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------------
-\section{Metodología adoptada: Kanban iterativo-incremental}
+\section{Fases del desarrollo}
 
-Para el desarrollo de TecnoTime se adoptó la metodología Kanban en su variante iterativo-incremental, ajustada a un desarrollador único. Cada fase constituyó un incremento funcional con criterios de aceptación claros y revisión continua mediante tablero digital. Esta aproximación permitió priorizar funcionalidades según la evidencia de la encuesta aplicada y adaptarse a cambios en los requerimientos durante el desarrollo, tal como se detalla en el Cuadro~\ref{tab:fases_metodologia}.
+El proyecto se estructura en doce fases iterativas e incrementales siguiendo el enfoque Kanban, cada una con objetivos, entregables y criterios de aceptación específicos. La definición de estas fases permite gestionar el alcance de manera controlada, priorizando funcionalidades según la evidencia obtenida en el estudio de campo y adaptando el desarrollo a los cambios en los requerimientos. El Cuadro~\ref{tab:fases_metodologia} presenta el propósito y los entregables de cada fase.
 
 
 
@@ -26,25 +26,25 @@ Fase 10 & Endurecer seguridad y privacidad & Gestión de permisos, cifrado de da
 Fase 11 & Preparar liberación y métricas & Empaquetado en release, tablero de indicadores (TTS, adopción) y plan de seguimiento post despliegue. \\
 \bottomrule
 \end{tabularx}
-\caption{Aplicación de la metodología por fases.}\label{tab:fases_metodologia}
+\caption{Fases del desarrollo del proyecto.}\label{tab:fases_metodologia}
 \small{Fuente: Elaboración propia.}
 \end{table}
 
 \subsection{Contexto empírico}
-El desarrollo de la aplicación móvil se inició desde cero, tomando como única fuente de datos el portal web de la facultad donde se publican los horarios en formato PDF \cite{horarios_fcyt}.
+El desarrollo de la aplicación móvil se inicia desde cero, tomando como única fuente de datos el portal web de la facultad donde se publican los horarios en formato PDF \cite{horarios_fcyt}.
 
-El primer desafío técnico consistió en implementar un mecanismo de descarga y extracción de datos (scraping) capaz de transformar estos documentos no estructurados en información procesable.
+El primer desafío técnico consiste en implementar un mecanismo de descarga y extracción de datos (scraping) capaz de transformar estos documentos no estructurados en información procesable.
 
-Aunque se tomaron como referencia visual y funcional otras aplicaciones existentes en el mercado para definir el alcance inicial, todo el código fuente de TecnoTime fue escrito específicamente para este proyecto.
+Aunque se toman como referencia visual y funcional otras aplicaciones existentes en el mercado para definir el alcance inicial, todo el código fuente de TecnoTime es escrito específicamente para este proyecto.
 
-A partir de esta base de ingesta de datos, se ejecutaron iteraciones incrementales que añadieron funcionalidades clave: selección de materias, generación de horarios y validaciones con usuarios piloto.
+A partir de esta base de ingesta de datos, se ejecutan iteraciones incrementales que añaden funcionalidades clave: selección de materias, generación de horarios y validaciones con usuarios piloto.
 
-Las fases posteriores incorporaron intercambio JSON para envío y recepción de horarios, mejoras de experiencia de usuario (pantallas guía, configuración y widget), recordatorios y exportaciones en formatos comunes.
+Las fases posteriores incorporan intercambio JSON para envío y recepción de horarios, mejoras de experiencia de usuario (pantallas guía, configuración y widget), recordatorios y exportaciones en formatos comunes.
 
-Al cierre se integró la asistencia ``Simón'' como componente optativo y se documentaron controles de seguridad.
+Al cierre se integra la asistencia ``Simón'' como componente optativo y se documentan controles de seguridad.
 
 \subsection{Factores de decisión}
-La encuesta aplicada a 126 estudiantes \cite{encuesta_fcyt_2025} orientó las prioridades del tablero:
+La encuesta aplicada a 126 estudiantes \cite{encuesta_fcyt_2025} orienta las prioridades del tablero:
 \begin{itemize}
   \item Preferencia por Android (94,3\%): orientación exclusiva a componentes nativos y widget principal.
   \item Coordinación por WhatsApp (80,3\%): intercambio de horarios mediante JSON y acciones directas de compartir.
@@ -55,21 +55,21 @@ La encuesta aplicada a 126 estudiantes \cite{encuesta_fcyt_2025} orientó las pr
 \end{itemize}
 
 \subsection{Decisiones técnicas derivadas}
-En respuesta a estos factores, se definió una arquitectura Offline-First basada en Room como fuente de verdad, garantizando el acceso inmediato a la información sin dependencia de red. Para la interoperabilidad, se implementó un protocolo de intercambio de datos mediante archivos JSON ligeros, facilitando la coordinación externa.
+En respuesta a estos factores, se define una arquitectura Offline-First basada en Room como fuente de verdad, garantizando el acceso inmediato a la información sin dependencia de red. Para la interoperabilidad, se implementa un protocolo de intercambio de datos mediante archivos JSON ligeros, facilitando la coordinación externa.
 
-El desarrollo se realizó utilizando tecnologías nativas modernas (Jetpack Compose y Kotlin) para asegurar el rendimiento y la integración con el sistema, incluyendo el uso de widgets. Finalmente, el sistema de recordatorios se construyó sobre AlarmManager y WorkManager, permitiendo notificaciones locales precisas y autónomas.
+El desarrollo se realiza utilizando tecnologías nativas modernas (Jetpack Compose y Kotlin) para asegurar el rendimiento y la integración con el sistema, incluyendo el uso de widgets. Finalmente, el sistema de recordatorios se construye sobre AlarmManager y WorkManager, permitiendo notificaciones locales precisas y autónomas.
 
-Estas decisiones definieron el alcance de los incrementos y la priorización de las historias de usuario en el tablero Kanban. Los artefactos y evidencias de código resultantes se encuentran documentados en el repositorio del proyecto \cite{tecnotime_repo}.
+Estas decisiones definen el alcance de los incrementos y la priorización de las historias de usuario en el tablero Kanban. Los artefactos y evidencias de código resultantes se encuentran documentados en el repositorio del proyecto \cite{tecnotime_repo}.
 
-\subsection{Arquitectura de la solución}
+\subsection{Estructura del sistema implementado}
 La solución se apoya en una aplicación Android autosuficiente: la interacción sucede en la interfaz offline (Jetpack Compose), el motor de dominio coordina reglas y recordatorios, la ingesta procesa PDFs y la persistencia local resguarda horarios, configuraciones y políticas de frescura.
 
-El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} resume esta arquitectura offline-first.
+El asistente IA opera sobre el mismo contexto y la única integración externa es el portal UMSS que publica los PDFs oficiales. La Figura \ref{fig:arquitectura_tecnotime} ilustra la estructura general del sistema.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{images/diagrams/cap4_arq_general.png}
-  \caption[Arquitectura general empleada en TecnoTime]{Arquitectura general empleada en TecnoTime.}
+  \caption[Estructura general de TecnoTime]{Estructura general de TecnoTime.}
   \label{fig:arquitectura_tecnotime}
   \small{Fuente: Elaboración propia.}
 \end{figure}

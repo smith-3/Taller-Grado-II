@@ -1,34 +1,45 @@
 % ============================
 \section{Fase 8: Export (imagen, PDF, Excel)}
 
-Esta fase se centró en ampliar las capacidades de interoperabilidad y portabilidad de TecnoTime, implementando un sistema robusto de exportación que permite transformar los horarios generados en formatos estándar de la industria. El desarrollo abordó la generación de documentos estáticos (PDF, imágenes) y hojas de cálculo (Excel), facilitando tanto el archivo personal como la impresión física de los cronogramas.
+Esta fase se centra en ampliar las capacidades de interoperabilidad y portabilidad de TecnoTime, implementando un sistema robusto de exportación que permite transformar los horarios generados en formatos estándar de la industria. El desarrollo aborda la generación de documentos estáticos (PDF, imágenes) y hojas de cálculo (Excel), facilitando tanto el archivo personal como la impresión física de los cronogramas.
 
-Adicionalmente, se integraron mecanismos de compartición nativos del sistema operativo, permitiendo la distribución segura de estos archivos a través de aplicaciones de mensajería, correo electrónico o almacenamiento en la nube, adaptándose a los diversos contextos de uso de los estudiantes.
+Adicionalmente, se integran mecanismos de compartición nativos del sistema operativo, permitiendo la distribución segura de estos archivos a través de aplicaciones de mensajería, correo electrónico o almacenamiento en la nube, adaptándose a los diversos contextos de uso de los estudiantes.
 
 \subsection{Objetivo}
-El objetivo principal fue dotar a la aplicación de herramientas versátiles para la externalización de la información, garantizando que los horarios puedan ser visualizados, impresos y compartidos fuera del entorno de la aplicación. Se buscó asegurar la fidelidad visual en los formatos gráficos y la utilidad de los datos en los formatos estructurados, manteniendo siempre la seguridad y privacidad mediante el uso de mecanismos de intercambio controlados por el sistema.
+El objetivo principal es dotar a la aplicación de herramientas versátiles para la externalización de la información, garantizando que los horarios puedan ser visualizados, impresos y compartidos fuera del entorno de la aplicación. Se busca asegurar la fidelidad visual en los formatos gráficos y la utilidad de los datos en los formatos estructurados, manteniendo siempre la seguridad y privacidad mediante el uso de mecanismos de intercambio controlados por el sistema.
 
 \subsection{Implementación de módulos de exportación}
-La implementación técnica fue orquestada principalmente por el SettingsSendScheduleViewModel, que actúa como el punto central de coordinación entre la interfaz de usuario y la lógica de negocio. Este componente gestiona los estados de exportación (ExportResult) y delega la generación de archivos a casos de uso especializados, asegurando una separación clara de responsabilidades.
+La implementación técnica es orquestada principalmente por el SettingsSendScheduleViewModel, que actúa como el punto central de coordinación entre la interfaz de usuario y la lógica de negocio. Este componente gestiona los estados de exportación (ExportResult) y delega la generación de archivos a casos de uso especializados, asegurando una separación clara de responsabilidades.
 
-Los casos de uso implementados para cada formato son:
-\begin{itemize}
-    \item GenerateWeeklySchedulePdfUseCase: Utiliza bibliotecas nativas de Android para dibujar el horario en un documento PDF vectorial, ideal para impresión.
-    \item GenerateScheduleExcelUseCase: Emplea la librería Apache POI para construir libros de Excel (.xlsx), permitiendo a los usuarios manipular los datos posteriormente.
-    \item GenerateWeeklyScheduleImageUseCase: Se apoya en la clase utilitaria ImageGenerator para renderizar las vistas del horario en un mapa de bits y exportarlo como imagen PNG de alta resolución.
-    \item GenerateShareableScheduleJsonUseCase: Serializa la estructura del horario a un formato JSON estandarizado para la importación en otros dispositivos.
-\end{itemize}
+El Cuadro \ref{tab:modulos_exportacion} resume los módulos de exportación desarrollados, especificando el caso de uso responsable y la tecnología base utilizada para la generación de cada formato.
+
+\begin{table}[H]
+\small
+\centering
+\begin{tabularx}{\linewidth}{@{}p{1.5cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{4cm}@{}}
+\toprule
+Formato & Caso de Uso Responsable & Tecnología / Biblioteca \\
+\midrule
+PDF  & GenerateWeeklySchedulePdfUseCase & Nativa Android (PdfDocument, Canvas) \\
+Excel  & GenerateScheduleExcelUseCase & Apache POI para Android \\
+Imagen & GenerateWeeklyScheduleImageUseCase & Renderizado de View a Bitmap \\
+JSON & GenerateShareableScheduleJsonUseCase & Kotlin Serialization (JSON) \\
+\bottomrule
+\end{tabularx}
+\caption{Módulos de exportación implementados.}\label{tab:modulos_exportacion}
+\small{Fuente: Elaboración propia.}
+\end{table}
 
 Todo el proceso de exportación se adhiere estrictamente a las directrices de seguridad de Android (``Scoped Storage''). Se utiliza FileProvider para exponer los archivos generados mediante URIs de contenido (content://) seguras, otorgando permisos de lectura temporales a la aplicación receptora. La acción de compartir se delega al ``Share Sheet'' del sistema mediante un Intent con la acción ACTION\_SEND, lo que garantiza que el usuario mantenga el control total sobre el destino de sus datos.
 
 A continuación se detallan los aspectos técnicos de la compartición, estructurando los formatos soportados, las reglas de exportación aplicadas y las clases implicadas en el proceso.
 
 \subsection{Resultados y verificación}
-Los generadores de exportación produjeron archivos válidos en formatos PDF, imagen (PNG) y Excel (XLSX), cumpliendo con los estándares de cada especificación. Se verificó que la función de compartir invoca correctamente el ShareSheet del sistema y que los permisos se gestionan adecuadamente según la versión de Android.
+Los generadores de exportación producen archivos válidos en formatos PDF, imagen (PNG) y Excel (XLSX), cumpliendo con los estándares de cada especificación. Se verifica que la función de compartir invoca correctamente el ShareSheet del sistema y que los permisos se gestionan adecuadamente según la versión de Android.
 
-Adicionalmente, se realizaron pruebas de interoperabilidad para garantizar la legibilidad de los archivos en aplicaciones externas como Google Drive y WhatsApp. Se validó la integridad de los datos exportados comparándolos con la base de datos local, asegurando que no hubiera pérdida de información.
+Adicionalmente, se realizan pruebas de interoperabilidad para garantizar la legibilidad de los archivos en aplicaciones externas como Google Drive y WhatsApp. Se valida la integridad de los datos exportados comparándolos con la base de datos local, asegurando que no hubiera pérdida de información.
 
-Para las imágenes, se verificó la nitidez del texto en diversas densidades de pantalla. Finalmente, se comprobó el flujo de permisos en versiones de Android 10 a 14, confirmando que la aplicación solicita acceso al almacenamiento solo cuando es necesario y maneja adecuadamente las denegaciones.
+Para las imágenes, se verifica la nitidez del texto en diversas densidades de pantalla. Finalmente, se comprueba el flujo de permisos en versiones de Android 10 a 14, confirmando que la aplicación solicita acceso al almacenamiento solo cuando es necesario y maneja adecuadamente las denegaciones.
 
 A continuación se presentan los componentes de software desarrollados para dar soporte a las funcionalidades de exportación descritas, clasificados según su responsabilidad en la arquitectura:
 \begin{itemize}

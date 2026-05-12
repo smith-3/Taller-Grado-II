@@ -7,7 +7,7 @@ Esta fase refina la experiencia de usuario mediante flujos guiados, navegación 
 Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual, aprovechando las capacidades declarativas de Jetpack Compose para crear interfaces reactivas y adaptables a diferentes tamaños de pantalla.
 
 \subsection{Desarrollo de la experiencia de usuario}
-Se diseñaron flujos guiados (onboarding, agregar/editar), navegación por días y un widget informativo; se consolidaron criterios de entrada/salida.
+Se diseñan flujos guiados (onboarding, agregar/editar), navegación por días y un widget informativo; se consolidan criterios de entrada/salida:
 
 \begin{enumerate}
     \item \textbf{Arquitectura de Interfaz}
@@ -44,7 +44,7 @@ Widget & Vista de solo lectura del horario actual en la pantalla de inicio. & Sc
 \end{table}
 
 \subsection{Resultados y verificación}
-Las mejoras de UX redujeron significativamente el número de pasos necesarios para configurar el horario inicial, validado mediante pruebas de usuario. El widget demostró una sincronización fiable con la base de datos local, actualizándose inmediatamente tras cambios en la aplicación principal.
+Las mejoras de UX reducen significativamente el número de pasos necesarios para configurar el horario inicial, validado mediante pruebas de usuario. El widget demuestra una sincronización fiable con la base de datos local, actualizándose inmediatamente tras cambios en la aplicación principal.
 
 A nivel de implementación, el código refleja los componentes de UX diseñados. El onboarding es gestionado por WelcomeScreen y WelcomeViewModel, la agregación de materias por AddSubjectFlowScreen, y la edición por EditGroupScreen. La navegación principal se apoya en HomeScreen y WeekDayTabsAnimated, mientras que el widget utiliza ScheduleAppWidgetProvider y ScheduleRemoteViewsService.
 

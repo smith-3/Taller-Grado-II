@@ -3,7 +3,7 @@
 
 Esta fase establece el pipeline fundamental para la adquisición y normalización de datos académicos provenientes de los documentos PDF oficiales de la UMSS. Dada la naturaleza no estructurada y la variabilidad del formato fuente, esta etapa es crítica para garantizar la calidad y consistencia de la información que alimentará al generador de horarios.
 
-Para ello, se implementó un flujo ETL (Extracción, Transformación y Carga) autónomo que se ejecuta íntegramente en el dispositivo del usuario (Edge Computing). Esta estrategia descentralizada no solo optimiza el uso de recursos limitados del servidor, sino que también permite la operatividad del sistema incluso en entornos con conectividad intermitente o nula.
+Para ello, se implementa un flujo ETL (Extracción, Transformación y Carga) autónomo que se ejecuta íntegramente en el dispositivo del usuario (Edge Computing). Esta estrategia descentralizada no solo optimiza el uso de recursos limitados del servidor, sino que también permite la operatividad del sistema incluso en entornos con conectividad intermitente o nula.
 
 \subsection{Objetivo}
 El objetivo principal es transformar la información semi-estructurada de los horarios oficiales a un modelo de datos relacional estrictamente tipado y normalizado. Durante este proceso, se valida rigurosamente la integridad referencial de entidades clave como materias, grupos y docentes, asegurando que no existan inconsistencias en la base de datos local.
@@ -36,10 +36,10 @@ El proceso de análisis se divide en dos etapas principales:
 \begin{enumerate}
     \item Fusión de líneas (Merge): Para resolver la fragmentación de nombres de docentes que, debido a su longitud, se distribuyen en múltiples líneas visuales en el PDF, el algoritmo mergeTeacherLines implementa una máquina de estados simple. Acumula secuencialmente en un buffer temporal cualquier línea de texto que no coincida con los patrones estructurales (como cabeceras o líneas de horario completas) ni con patrones de ruido (e.g., ``Procesado CPD'', ``Página X de Y''). Este contenido acumulado se antepone a la siguiente línea de horario válida detectada, reconstruyendo así la fila lógica completa antes de aplicar la extracción por expresiones regulares.
     
-    \item Extracción de patrones: Se implementaron dos expresiones regulares principales para la identificación de entidades:
+    \item Extracción de patrones: Se implementan dos expresiones regulares principales para la identificación de entidades:
     
     \begin{itemize}
-        \item Cabecera de materia (courseLine): Diseñada para capturar la línea que introduce una nueva asignatura.
+        \item Cabecera de materia (courseLine): Diseñada para capturar la línea que introduce una nueva asignatura:
         \begin{itemize}
             \item Patrón: \textasciicircum([A-Z])\textbackslash s+(\textbackslash d\{7\})\textbackslash s+(.+)\$
             \item Estructura: Captura el Nivel (Grupo 1), el Código de 7 dígitos (Grupo 2) y el Nombre de la materia (Grupo 3).
@@ -110,7 +110,7 @@ La Figura \ref{fig:c4_code_f1} (C4 Nivel 4) presenta el diagrama de clases detal
 \end{figure}
 
 \subsection{Resultados y verificación}
-Esta fase estableció los cimientos para la adquisición de datos. Se verificó la consistencia de la base de datos por carrera, nivel, materia y grupo, asegurando que el lastSyncTime se actualice correctamente tras una ingesta exitosa. Las pruebas confirmaron la robustez del proceso ante fallos de red mediante los mecanismos de backoff y circuit breaker.
+Esta fase establece los cimientos para la adquisición de datos. Se verifica la consistencia de la base de datos por carrera, nivel, materia y grupo, asegurando que el lastSyncTime se actualice correctamente tras una ingesta exitosa. Las pruebas confirman la robustez del proceso ante fallos de red mediante los mecanismos de backoff y circuit breaker:
 
 \begin{enumerate}
   \item Evidencias (código): La implementación integra AutoSyncUseCase y SyncPreferences para la sincronización. Se emplean ScheduleScraper y PdfParser para la ingesta, asegurando resiliencia mediante ExponentialBackoff y CircuitBreaker.

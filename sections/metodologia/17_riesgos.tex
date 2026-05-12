@@ -1,8 +1,8 @@
 % ----------------------------------------------------------------------
 \section{Riesgos y mitigaciones}
-El desarrollo de TecnoTime enfrentó diversos riesgos técnicos y operativos que podrían haber comprometido el éxito del proyecto si no se hubieran identificado y mitigado tempranamente. Los riesgos abarcan desde la disponibilidad y formato de los datos fuente (PDFs oficiales) hasta las limitaciones de rendimiento en dispositivos de gama baja y la complejidad del algoritmo de generación de horarios.
+El desarrollo de TecnoTime enfrenta diversos riesgos técnicos y operativos que pueden comprometer el éxito del proyecto si no se identifican y mitigan tempranamente. Los riesgos abarcan desde la disponibilidad y formato de los datos fuente (PDFs oficiales) hasta las limitaciones de rendimiento en dispositivos de gama baja y la complejidad del algoritmo de generación de horarios.
 
-Para cada riesgo identificado se definió una estrategia de mitigación específica que reduce su probabilidad de ocurrencia o su impacto en caso de materializarse. El Cuadro \ref{tab:riesgos} documenta los riesgos principales, su nivel de criticidad y las medidas implementadas para controlarlos:
+Para cada riesgo identificado se define una estrategia de mitigación específica que reduce su probabilidad de ocurrencia o su impacto en caso de materializarse. El Cuadro \ref{tab:riesgos} documenta los riesgos principales, su nivel de criticidad y las medidas implementadas para controlarlos:
 
 \begin{table}[H]
 \small
@@ -16,6 +16,7 @@ Caída prolongada/saturación del sitio & M & A & Backoff + CB; cache local; dif
 Conectividad intermitente & A & M & Offline-first; política de reintentos; freshness gate antes de generar \\
 Dispositivos de baja gama & M & M & UI ligera; optimización de consultas; IA opcional (opt-in) \\
 Datos desactualizados & M & M & Freshness check previo a generación; auto-sync condicionado \\
+Complejidad algorítmica NP-completa & A & A & Reemplazo de Graph Coloring por Backtracking con poda; verificación incremental \\
 \bottomrule
 \end{tabularx}
 \caption{Riesgos (P=probabilidad, I=impacto) y acciones.}\label{tab:riesgos}

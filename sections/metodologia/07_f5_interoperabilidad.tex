@@ -7,7 +7,9 @@ Esta fase se centra en habilitar un mecanismo robusto y estructurado para el int
 El objetivo principal es permitir que los estudiantes compartan e importen sus horarios de manera interoperable, segura y eficiente. Esto implica eliminar la necesidad de transcripción manual, reducir errores en la comunicación de grupos y horarios, y garantizar que la información compartida sea compatible entre diferentes versiones de la aplicación, preservando la integridad de los datos académicos del usuario receptor.
 
 \subsection{Implementación de la interoperabilidad}
-La implementación técnica abarca la creación de múltiples formatos de exportación, incluyendo representaciones visuales (PNG, PDF) y estructuradas (Excel, JSON). El núcleo de la interoperabilidad reside en un contrato JSON auto-contenido, generado y validado por componentes específicos de la capa de dominio. Se establecieron flujos de envío y recepción que utilizan los proveedores de contenido del sistema Android para interactuar con aplicaciones externas, incorporando validaciones estrictas de esquema y una lógica de importación idempotente que previene la duplicación de datos.
+La implementación técnica habilita la creación de múltiples formatos de exportación, abarcando representaciones visuales (PNG, PDF) para consumo directo y estructuradas (Excel, JSON) para manipulación de datos. Esta arquitectura flexible permite desacoplar la lógica de generación, delegando la construcción de cada formato a casos de uso especializados que garantizan la fidelidad de la información presentada.
+
+El núcleo de la interoperabilidad se fundamenta en un contrato JSON auto-contenido, generado y validado exclusivamente por la capa de dominio. Para asegurar un intercambio seguro, se integran flujos que utilizan FileProvider de Android, exponiendo los archivos mediante URIs de contenido temporales. Este mecanismo incorpora validaciones estrictas y una lógica de importación idempotente que previene la corrupción o duplicación de datos en el dispositivo destino.
 
 \subsection{Exportar}
 La exportación es orquestada por el SettingsSendScheduleViewModel, que gestiona los estados de la interfaz y delega la generación de archivos a casos de uso específicos. Las opciones disponibles incluyen:
@@ -36,7 +38,7 @@ El archivo JSON generado sigue un contrato estricto definido en ShareableSchedul
 \subsection{Importar (desde WhatsApp)}
 Al recibir un archivo JSON, la aplicación utiliza el LoadShareableScheduleUseCase para validar la integridad de la estructura y asegurar el cumplimiento del contrato de versión definido en los metadatos. Posteriormente, el ImportSharedScheduleUseCase orquesta la lógica de importación, la cual comienza verificando y sincronizando automáticamente las carreras faltantes si es necesario.
 
-A continuación, cruza los datos entrantes con el repositorio local (SelectedSubjectRepository) para identificar materias ya aprobadas o inscritas, aplicando una estrategia de fusión inteligente que actualiza los grupos y horarios sin duplicar registros existentes, garantizando así la consistencia de la base de datos académica del usuario. Finalmente, el caso de uso retorna un resultado detallado (ImportResult) que informa a la interfaz sobre el éxito de la operación o la presencia de duplicados omitidos.
+A continuación, cruza los datos entrantes con el repositorio local (SelectedSubjectRepository) para identificar materias ya aprobadas o inscritas, aplicando una estrategia de fusión inteligente que actualiza los grupos y horarios sin duplicar registros existentes, garantizando así la consistencia de la base de datos académica del usuario. Finalmente, el caso de uso retorna un resultado detallado (ImportResult) que informa a la interfaz sobre el éxito de la operación o la presencia de duplicados omitidos:
 
 \begin{itemize}
   \item Sincronización de Carreras: Si el parámetro autoSyncCareers está activo, se verifica si las carreras del horario compartido están habilitadas en el dispositivo receptor. Si no lo están, se habilitan y sincronizan automáticamente.
@@ -57,21 +59,29 @@ El proceso de compartir horarios se visualiza en la Figura \ref{fig:f5_flow_expo
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part1.png}
+  \includegraphics[width=0.35\linewidth]{images/diagrams/cap4_f5_share_import_flow_part1.png}
 \caption[Exportación del horario en la aplicación]{Exportación del horario en la aplicación.}
   \label{fig:f5_flow_export}
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
-Complementariamente, la Figura \ref{fig:f5_flow_import} ilustra el flujo inverso de importación. Se muestra cómo la aplicación procesa un archivo JSON recibido, valida su contenido, detecta posibles duplicados y fusiona la información con el horario existente del usuario.
+El diagrama ilustra el flujo técnico de exportación orquestado por el GenerateShareableScheduleJsonUseCase. Este componente no solo serializa las materias seleccionadas, sino que construye un paquete de datos completo y auto-contenido.
+
+El proceso inicia recopilando los catálogos de referencia (carreras, docentes, aulas) para asegurar la integridad referencial. Posteriormente, estructura la información bajo un esquema versionado que incluye metadatos de compatibilidad (min\_supported), garantizando que el receptor pueda reconstruir fielmente el horario independientemente de su configuración local de base de datos o conectividad.
+
+Complementariamente, el flujo inverso de importación permite incorporar horarios externos. Se muestra cómo la aplicación procesa un archivo JSON recibido, valida su contenido, detecta posibles duplicados y fusiona la información con el horario existente del usuario.
+
+El diagrama detalla la lógica de sincronización inteligente que protege la base de datos local, tal como se aprecia en la Figura \ref{fig:f5_flow_import}. El sistema analiza la estructura del archivo entrante para verificar versiones y dependencias de carrera, aplicando posteriormente una estrategia de fusión que incorpora únicamente los horarios nuevos y descarta registros redundantes para evitar inconsistencias.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/cap4_f5_share_import_flow_part2.png}
+  \includegraphics[width=0.55\linewidth]{images/diagrams/cap4_f5_share_import_flow_part2.png}
 \caption[Importación del horario en la aplicación]{Importación del horario en la aplicación.}
   \label{fig:f5_flow_import}
   \small{Fuente: Elaboración propia.}
 \end{figure}
 
+El diagrama de importación detalla cómo el sistema procesa un archivo JSON externo. Incluye pasos críticos de validación de estructura, detección de conflictos (como materias ya aprobadas) y la lógica de sincronización automática de carreras si el horario compartido pertenece a un programa académico no habilitado en el dispositivo receptor.
+
 \subsection{Resultados y verificación}
-La interoperabilidad se validó mediante el intercambio exitoso de horarios entre dispositivos con diferentes configuraciones de carrera. Se confirmó que el contrato JSON es robusto ante cambios menores de versión y que el proceso de importación maneja correctamente la fusión de datos sin generar duplicados, sugiriendo la sincronización de carrera cuando es necesario.
+La interoperabilidad se valida mediante el intercambio exitoso de horarios entre dispositivos con diferentes configuraciones de carrera. Se confirma que el contrato JSON es robusto ante cambios menores de versión y que el proceso de importación maneja correctamente la fusión de datos sin generar duplicados, sugiriendo la sincronización de carrera cuando es necesario.

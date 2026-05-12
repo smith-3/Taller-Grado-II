@@ -3,21 +3,57 @@
 \markboth{GLOSARIO Y ACRÓNIMOS}{GLOSARIO Y ACRÓNIMOS}
 
 \begin{description}
+    \item[ANR] Application Not Responding (Aplicación No Responde). Error en Android que ocurre cuando la interfaz de usuario se bloquea por más de 5 segundos.
     \item[API] Application Programming Interface (Interfaz de Programación de Aplicaciones). Conjunto de definiciones y protocolos que se utiliza para desarrollar e integrar el software de las aplicaciones.
     \item[APK] Android Package Kit. Formato de archivo de paquete utilizado por el sistema operativo Android para la distribución e instalación de aplicaciones móviles.
+    \item[ART] Android Runtime (Tiempo de Ejecución de Android). Entorno de ejecución que reemplazó a Dalvik para ejecutar aplicaciones Android con mejor rendimiento.
+    \item[Backtracking] Algoritmo de búsqueda recursiva que explora soluciones candidatas y retrocede al encontrar caminos inválidos, descartando ramas sin explorar exhaustivamente.
+    \item[Circuit Breaker] Patrón de diseño que previene llamadas repetidas a servicios con fallos recurrentes, permitiendo la recuperación del sistema.
+    \item[Clean Architecture] Patrón arquitectónico con capas concéntricas donde las dependencias apuntan hacia el dominio interno, facilitando el mantenimiento y las pruebas.
+    \item[Compose] Jetpack Compose. Framework declarativo de Google para construir interfaces de usuario nativas en Android mediante funciones componibles.
+    \item[CSP] Constraint Satisfaction Problem (Problema de Satisfacción de Restricciones). Problema matemático donde se buscan valores que cumplan un conjunto de restricciones.
     \item[DAO] Data Access Object (Objeto de Acceso a Datos). Patrón de diseño que proporciona una interfaz abstracta para algún tipo de base de datos u otro mecanismo de persistencia.
+    \item[DFS] Depth-First Search (Búsqueda en Profundidad). Algoritmo que explora ramas completas de un árbol o grafo antes de retroceder.
+    \item[DI] Dependency Injection (Inyección de Dependencias). Patrón que proporciona dependencias a objetos en lugar de crearlas internamente, mejorando la modularidad.
+    \item[E2E] End-to-End (Extremo a Extremo). Pruebas que validan el flujo completo de una aplicación desde la perspectiva del usuario.
+    \item[Exponential Backoff] Estrategia de reintento que aumenta exponencialmente el tiempo de espera entre intentos fallidos para reducir la carga en servicios.
+    \item[FCM] Firebase Cloud Messaging. Servicio de Google para enviar notificaciones push a dispositivos móviles.
+    \item[Flow] API reactiva en Kotlin para manejar flujos de datos asíncronos de manera declarativa y eficiente.
+    \item[GGUF] Formato de archivo optimizado para almacenar modelos de inteligencia artificial cuantizados, permitiendo su ejecución en dispositivos con recursos limitados.
+    \item[Graph Coloring] Problema de teoría de grafos que consiste en asignar colores a vértices de modo que vértices adyacentes no compartan el mismo color.
+    \item[HAL] Hardware Abstraction Layer (Capa de Abstracción de Hardware). Capa en la arquitectura Android que proporciona interfaces estándar para el hardware del dispositivo.
     \item[HTTP] Hypertext Transfer Protocol (Protocolo de Transferencia de Hipertexto). Protocolo de comunicación que permite las transferencias de información en la World Wide Web.
     \item[IDE] Integrated Development Environment (Entorno de Desarrollo Integrado). Aplicación informática que proporciona servicios integrales para facilitarle al desarrollador o programador el desarrollo de software.
+    \item[IoC] Inversion of Control (Inversión de Control). Principio de diseño donde el flujo de control es delegado a un framework externo en lugar de ser controlado por el código del desarrollador.
     \item[JSON] JavaScript Object Notation (Notación de Objetos de JavaScript). Formato ligero de intercambio de datos, fácil de leer y escribir para humanos y fácil de analizar y generar para máquinas.
-    \item[JVM] Java Virtual Machine (Máquina Virtual de Java). Máquina virtual de proceso nativo, es decir, ejecutable en una plataforma específica, capaz de interpretar y ejecutar instrucciones expresadas en un código binario especial (el bytecode de Java).
+    \item[JVM] Java Virtual Machine (Máquina Virtual de Java). Máquina virtual de proceso nativo capaz de interpretar y ejecutar instrucciones expresadas en bytecode de Java.
+    \item[Kanban] Metodología ágil de gestión visual del trabajo que utiliza tableros para visualizar el flujo de tareas y limitar el trabajo en progreso.
+    \item[Kotlin] Lenguaje de programación moderno, conciso y seguro, oficial para el desarrollo de aplicaciones Android desde 2017.
+    \item[KPI] Key Performance Indicator (Indicador Clave de Rendimiento). Métrica utilizada para evaluar el éxito de una actividad en relación con objetivos específicos.
     \item[LLM] Large Language Model (Gran Modelo de Lenguaje). Modelo de inteligencia artificial entrenado en grandes cantidades de datos de texto para entender y generar lenguaje humano.
-    \item[MVVM] Model-View-ViewModel (Modelo-Vista-Modelo de Vista). Patrón de arquitectura de software que facilita la separación del desarrollo de la interfaz gráfica de usuario de la lógica de negocio o back-end.
+    \item[LoRA] Low-Rank Adaptation (Adaptación de Bajo Rango). Técnica de fine-tuning eficiente que adapta modelos grandes modificando solo un subconjunto de parámetros.
+    \item[MoSCoW] Método de priorización de requerimientos que clasifica funcionalidades en Must (debe), Should (debería), Could (podría) y Won't (no se hará).
+    \item[MVVM] Model-View-ViewModel (Modelo-Vista-Modelo de Vista). Patrón de arquitectura de software que facilita la separación del desarrollo de la interfaz gráfica de usuario de la lógica de negocio.
+    \item[NP-completa] Clase de problemas computacionales para los cuales no se conoce un algoritmo que los resuelva en tiempo polinómico, pero cuyas soluciones pueden verificarse eficientemente.
+    \item[Offline-First] Arquitectura de software que prioriza el funcionamiento sin conexión a internet, utilizando bases de datos locales como fuente principal de datos.
+    \item[Onboarding] Proceso de introducción guiada que familiariza a nuevos usuarios con las funcionalidades principales de una aplicación.
+    \item[OPA] Oficina de Planificación Académica. Unidad administrativa universitaria responsable de la planificación, asignación de ambientes y coordinación de horarios académicos.
     \item[PDF] Portable Document Format (Formato de Documento Portátil). Formato de almacenamiento para documentos digitales independiente de plataformas de software o hardware.
     \item[PII] Personally Identifiable Information (Información de Identificación Personal). Cualquier información que pueda utilizarse para distinguir o rastrear la identidad de una persona.
+    \item[QA] Quality Assurance (Aseguramiento de la Calidad). Conjunto de actividades sistemáticas para garantizar que un producto cumple con los requisitos de calidad.
+    \item[Regex] Regular Expressions (Expresiones Regulares). Secuencias de caracteres que definen patrones de búsqueda para procesamiento de texto.
+    \item[RemoteViews] API de Android que permite describir vistas que pueden ser mostradas en otros procesos, como widgets en la pantalla de inicio.
+    \item[Room] Biblioteca de persistencia de Android que proporciona una capa de abstracción sobre SQLite para un acceso más robusto a la base de datos.
+    \item[Scoped Storage] Modelo de almacenamiento introducido en Android 10 que restringe el acceso de las aplicaciones a directorios específicos para mejorar la privacidad.
+    \item[SCRUM] Marco de trabajo ágil que organiza el desarrollo en iteraciones llamadas sprints, con roles definidos y reuniones estructuradas.
     \item[SDK] Software Development Kit (Kit de Desarrollo de Software). Conjunto de herramientas de desarrollo de software que permite a los desarrolladores crear aplicaciones para un sistema concreto.
-    \item[SQL] Structured Query Language (Lenguaje de Consulta Estructurado). Lenguaje de dominio específico utilizado en programación, diseñado para administrar, y recuperar información de sistemas de gestión de bases de datos relacionales.
+    \item[SQL] Structured Query Language (Lenguaje de Consulta Estructurado). Lenguaje de dominio específico utilizado para administrar y recuperar información de bases de datos relacionales.
+    \item[SQLite] Motor de base de datos relacional embebido, ligero y autocontenido, ampliamente utilizado en aplicaciones móviles.
+    \item[UDF] Unidirectional Data Flow (Flujo de Datos Unidireccional). Patrón arquitectónico donde los datos fluyen en una sola dirección, facilitando el manejo del estado.
     \item[UI] User Interface (Interfaz de Usuario). Espacio donde se producen las interacciones entre seres humanos y máquinas.
     \item[URL] Uniform Resource Locator (Localizador Uniforme de Recursos). Dirección única que se utiliza para localizar un recurso en Internet.
-    \item[UX] User Experience (Experiencia de Usuario). Conjunto de factores y elementos relativos a la interacción del usuario con un entorno o dispositivo concretos, cuyo resultado es la generación de una percepción positiva o negativa de dicho servicio, producto o dispositivo.
+    \item[UX] User Experience (Experiencia de Usuario). Conjunto de factores relativos a la interacción del usuario con un entorno o dispositivo, generando una percepción positiva o negativa.
+    \item[WebView] Componente de Android que permite renderizar contenido web dentro de una aplicación nativa.
+    \item[WorkManager] API de Android para programar tareas en segundo plano con garantía de ejecución, incluso si la aplicación se cierra o el dispositivo se reinicia.
     \item[XML] eXtensible Markup Language (Lenguaje de Marcado Extensible). Lenguaje de marcado que define un conjunto de reglas para la codificación de documentos.
 \end{description}

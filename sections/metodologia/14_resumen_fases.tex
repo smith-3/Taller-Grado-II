@@ -8,9 +8,10 @@ Esta sección consolida la información operativa de cada fase del desarrollo, p
 
 
 \subsection{Fase 1: Ingesta de PDF a BD}
+Los aspectos operativos de esta fase se resumen a continuación:
 \begin{itemize}
   \item Objetivo (Goal): Transformar horarios oficiales (PDF) a datos locales sin saturar la fuente.
-  \item Actividades realizadas: Descubrimiento de URLs, descarga con rate limit, parsing tolerante, normalización, persistencia y marcas de freshness.
+  \item Actividades desarrolladas: Descubrimiento de URLs, descarga con rate limit, parsing tolerante, normalización, persistencia y marcas de freshness.
   \item Entradas a salidas: Del Remoto (PDF/Scraper) al Local (Room: materias, grupos, bloques).
   \item DoD: BD consistente por carrera/nivel/materia/grupo, last\_sync actualizado, reintentos acotados.
   \item Riesgo clave: Cambios de formato/ubicación del PDF, mitigado con parser flexible y fallback por PDF local.
@@ -23,7 +24,7 @@ La claridad y completitud del modelo de dominio facilita la comunicación entre 
 
 \begin{itemize}
   \item Objetivo: Entidades, relaciones y mapeos consistentes para soporte de generador y export.
-  \item Actividades realizadas: Definición de entidades (Subject, Group, GroupSchedule, Teacher, Classroom, Settings), índices/keys y mappers.
+  \item Actividades desarrolladas: Definición de entidades (Subject, Group, GroupSchedule, Teacher, Classroom, Settings), índices/keys y mappers.
   \item Entradas a salidas: Del Modelo (dominio) al Local (entities) y a UseCases (servicios).
   \item DoD: Unicidad en códigos; integridad referencial; mapeos ida/vuelta probados.
   \item Riesgo: Desalineación dominio/BD $\rightarrow$ mitigado con pruebas de carga y revisión cruzada.
@@ -36,20 +37,20 @@ El generador debe producir múltiples alternativas viables en tiempos compatible
 
 \begin{itemize}
   \item Objetivo: Producir Top-$N$ horarios sin choques por defecto, optimizando huecos y favoritos.
-  \item Actividades realizadas: Backtracking con MRV/LCV, poda temprana, composite scoring (choques/gaps/favoritos), aplicación parcial/completa.
+  \item Actividades desarrolladas: Backtracking con MRV/LCV, poda temprana, composite scoring (choques/gaps/favoritos), aplicación parcial/completa.
   \item Entradas a salidas: De UseCases (Generate/Apply) a UI (configuración y resultados).
   \item DoD: $N$ candidatos válidos; flags influyen en ranking; aplicar parcial/total actualiza selección.
   \item Riesgo: Explosión combinatoria, mitigada con poda y priorización por nivel.
 \end{itemize}
 
 \subsection{Fase 4: Prioridad sin conexión (offline-first)}
-La Fase 4 establece la arquitectura offline-first que prioriza el almacenamiento local y garantiza la funcionalidad de la aplicación independientemente de la conectividad de red. Esta decisión arquitectónica responde directamente a las necesidades identificadas en la encuesta, donde el 78% de estudiantes valoró el funcionamiento sin conexión.
+La Fase 4 establece la arquitectura offline-first que prioriza el almacenamiento local y garantiza la funcionalidad de la aplicación independientemente de la conectividad de red. Esta decisión arquitectónica responde directamente a las necesidades identificadas en la encuesta, donde el 78% de estudiantes valora el funcionamiento sin conexión.
 
 La implementación incluye políticas de frescura de datos, sincronización diferida en segundo plano y mecanismos de recuperación ante fallos de red. Los componentes clave son:
 
 \begin{itemize}
   \item Objetivo: Operación robusta con conectividad intermitente y protección de la fuente.
-  \item Actividades realizadas: Cache local, freshness gate previo al generador, backoff+circuit breaker, ventana de no-sync, fallback por PDF local.
+  \item Actividades desarrolladas: Cache local, freshness gate previo al generador, backoff+circuit breaker, ventana de no-sync, fallback por PDF local.
   \item Entradas a salidas: Del Local (cache) y UseCases (AutoSync) a datos frescos cuando hay red.
   \item DoD: App funcional sin internet; bloqueo de generación durante sync; reintentos espaciados.
   \item Riesgo: Saturar origen, mitigado con CB y ventanas controladas.
@@ -62,7 +63,7 @@ El diseño del formato de intercambio balancea completitud de información, comp
 
 \begin{itemize}
   \item Objetivo: Compartir e importar horarios de forma confiable entre usuarios.
-  \item Actividades realizadas: Export JSON total/parcial con versión; import con validación (duplicados, carrera distinta) y merge idempotente.
+  \item Actividades desarrolladas: Export JSON total/parcial con versión; import con validación (duplicados, carrera distinta) y merge idempotente.
   \item Entradas a salidas: De UseCases (Share/Import) a UI (enviar/abrir) y Local (fusión).
   \item DoD: JSON válido; import no duplica; sugiere sincronizar carrera distinta antes de fusionar.
   \item Riesgo: Deriva de esquema: mitigado con versionado y validaciones.
@@ -71,11 +72,11 @@ El diseño del formato de intercambio balancea completitud de información, comp
 \subsection{Fase 6: UX aplicada}
 La Fase 6 refina la experiencia de usuario mediante la implementación de patrones de UX móvil que facilitan la adopción y el uso cotidiano de la aplicación. Esta fase incluye el diseño del flujo de onboarding que guía a nuevos usuarios a través de la configuración inicial, la implementación del widget de pantalla principal que proporciona acceso inmediato al horario actual, y la optimización de la navegación para minimizar el número de toques necesarios para completar tareas comunes.
 
-El diseño de UX se validó mediante pruebas con usuarios piloto que identificaron puntos de fricción y oportunidades de mejora. Los aspectos principales son:
+El diseño de UX se valida mediante pruebas con usuarios piloto que identifican puntos de fricción y oportunidades de mejora. Los aspectos principales son:
 
 \begin{itemize}
   \item Objetivo: Reducir fricción: onboarding, ajustes, agregar/editar, vista semanal, widget.
-  \item Actividades realizadas: Flujos guiados, preview de grupo, selección por nivel/materia, valores por defecto sensatos, widget de acceso rápido.
+  \item Actividades desarrolladas: Flujos guiados, preview de grupo, selección por nivel/materia, valores por defecto sensatos, widget de acceso rápido.
   \item Entradas$\rightarrow$Salidas: UI (welcome, settings, home, add/edit, weekly) + Widget.
   \item DoD: Menos pasos para armar horario; preview consistente; widget sincronizado.
   \item Riesgo: Sobrecarga de opciones: mitigada con progressive disclosure.
@@ -88,20 +89,20 @@ El asistente IA utiliza modelos cuantizados en formato GGUF que permiten la infe
 
 \begin{itemize}
   \item Objetivo: Recordatorios puntuales y mensajería opcional con IA on-device.
-  \item Actividades realizadas: Canales separados (clases/mensajes), WorkManager, plantillas; gestión del modelo IA (descarga/borrado; Wi-Fi/datos; sin telemetría).
+  \item Actividades desarrolladas: Canales separados (clases/mensajes), WorkManager, plantillas; gestión del modelo IA (descarga/borrado; Wi-Fi/datos; sin telemetría).
   \item Entradas a salidas: De Notif (canales+workers) e IA (local) a avisos y textos opcionales.
   \item DoD: Notifs antes de clase (10 min por defecto) y configurables; IA desactivada por defecto, activable y reversible.
   \item Riesgo: Tamaño de modelo/almacenamiento: mitigado con descarga bajo demanda y opción de eliminar.
 \end{itemize}
 
 \subsection{Fase 8: Exportaciones}
-La Fase 8 implementa las capacidades de exportación de horarios en múltiples formatos (PDF, imagen, Excel) que facilitan la distribución y el uso de los horarios fuera de la aplicación. Esta funcionalidad responde a la necesidad identificada en la encuesta donde el 51% de estudiantes solicitó capacidades de compartir horarios.
+La Fase 8 implementa las capacidades de exportación de horarios en múltiples formatos (PDF, imagen, Excel) que facilitan la distribución y el uso de los horarios fuera de la aplicación. Esta funcionalidad responde a la necesidad identificada en la encuesta donde el 51% de estudiantes solicita capacidades de compartir horarios.
 
 La generación de cada formato requiere transformaciones específicas: el PDF utiliza bibliotecas de renderizado vectorial, la imagen captura la vista de Compose como bitmap, y el Excel estructura los datos en hojas de cálculo con formato condicional. La implementación garantiza que los horarios exportados sean legibles, completos y mantengan la información de contexto necesaria. Los elementos son:
 
 \begin{itemize}
   \item Objetivo: Compartir horario como imagen, PDF o Excel.
-  \item Actividades realizadas: Confirmación previa, bloqueo si horario vacío, generación por formato y share sheet.
+  \item Actividades desarrolladas: Confirmación previa, bloqueo si horario vacío, generación por formato y share sheet.
   \item Entradas a salidas: De UseCases (Image/PDF/Excel) a UI (enviar/guardar).
   \item DoD: Archivos contienen materia, grupo, día, hora, aula, docente; MIME correcto; bloqueo sin materias.
   \item Riesgo: Permisos/espacio: mitigado con FileProvider y validaciones previas.
@@ -114,7 +115,7 @@ La cobertura de pruebas se enfoca en los módulos de mayor riesgo: el generador 
 
 \begin{itemize}
   \item Objetivo: Asegurar calidad funcional y de flujo extremo a extremo.
-  \item Actividades realizadas: Unitarias (tiempo/solapes/parsers/estrategias), integración (repos+usecases), UI/E2E (onboarding hasta generar, aplicar y exportar/importar).
+  \item Actividades desarrolladas: Unitarias (tiempo/solapes/parsers/estrategias), integración (repos+usecases), UI/E2E (onboarding hasta generar, aplicar y exportar/importar).
   \item Entradas a salidas: De Tests (TCs) a reporte de verificación y issues cerrados.
   \item DoD: $\geq 75\%$ cobertura en módulos núcleo; E2E críticos verdes.
   \item Riesgo: Falsos positivos E2E, mitigado con datos semilla estables.
@@ -127,7 +128,7 @@ El asistente de IA opera completamente en el dispositivo sin enviar datos a serv
 
 \begin{itemize}
   \item Objetivo: Datos y permisos mínimos; control explícito del usuario.
-  \item Actividades realizadas: Sólo nombre y preferencias locales; permisos just-in-time; IA local sin envío de datos.
+  \item Actividades desarrolladas: Sólo nombre y preferencias locales; permisos just-in-time; IA local sin envío de datos.
   \item Entradas$\rightarrow$Salidas: Manifest + AppInit (canales) + Settings (opt-in IA).
   \item DoD: App funciona con permisos mínimos; IA 100\% opt-in/opt-out.
   \item Riesgo: Uso involuntario de IA: mitigado con toggles y borrado del modelo.
@@ -140,7 +141,7 @@ Las métricas definidas permiten evaluar el éxito de la aplicación: tiempo pro
 
 \begin{itemize}
   \item Objetivo: Empaque optimizado y medición de adopción/uso.
-  \item Actividades realizadas: Shrink/optimize; firma y notas; umbrales (APK < 30 MB sin IA; IA ~200–230 MB opcional); KPIs (TTS, gaps/día, on-time, adopción JSON).
+  \item Actividades desarrolladas: Shrink/optimize; firma y notas; umbrales (APK < 30 MB sin IA; IA ~200–230 MB opcional); KPIs (TTS, gaps/día, on-time, adopción JSON).
   \item Entradas a salidas: Del Build (release) a Artefactos y Métricas base.
   \item DoD: Compilación release estable; tamaños dentro de umbrales; KPIs medibles definidos.
   \item Riesgo: Aumento de tamaño por libs: mitigado con revisión de dependencias y splits.
