@@ -1,0 +1,59 @@
+%%{init: {
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "18px"
+  },
+  "er": {
+    "layoutDirection": "TB",
+    "entityPadding": 20,
+    "useMaxWidth": true
+  }
+}}%%
+
+erDiagram
+    CAREER {
+        varchar code PK
+        varchar name
+        varchar short_name
+        varchar faculty
+        int plan_year
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    LEVEL {
+        int id PK
+        varchar career_code FK
+        int number
+        varchar name
+        enum shift "M | T | N"
+        enum modality "presencial | virtual | mixta"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    SUBJECT {
+        varchar code PK
+        varchar name
+        varchar acronym
+        int credits
+        int weekly_hours
+        enum status "activa | inactiva"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    CAREER_SUBJECT {
+        int id PK
+        varchar career_code FK
+        varchar subject_code FK
+        int semester
+        boolean is_mandatory
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    CAREER ||--o{ LEVEL : "tiene"
+    CAREER ||--o{ CAREER_SUBJECT : "incluye"
+    SUBJECT ||--o{ CAREER_SUBJECT : "pertenece a"

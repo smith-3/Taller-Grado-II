@@ -1,0 +1,18 @@
+%%{init: {
+  'theme': 'default',
+  'themeVariables': {
+    'xyChart': {
+      'plotColorPalette': '#4CAF50, #F44336, #2196F3'
+    }
+  }
+}}%%
+xychart-beta
+    title "Sistema operativo del teléfono (%, n=123)"
+    x-axis ["Android", "iOS", "Otro"]
+    y-axis "Porcentaje (%)" 0 --> 100
+    %% Android -> verde
+    bar [94.3, -1.9, -1.9]
+    %% iOS -> rojo
+    bar [-1.9, 3.3, -1.9]
+    %% Otro -> azul
+    bar [-1.9, -1.9, 2.4]
