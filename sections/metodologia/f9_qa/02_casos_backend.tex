@@ -1,0 +1,168 @@
+\subsection{Validación integral del sistema}
+Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudiantes de las carreras de Ingeniería Química e Ingeniería Informática de la UMSS, quienes utilizan versiones tempranas de la aplicación. Este proceso iterativo permite identificar problemas que no se han anticipado en el diseño inicial y aplicar correcciones antes de la liberación final. A continuación se documentan los casos de prueba organizados por componente funcional:
+
+\begin{enumerate}
+  \item Parseo e ingesta de datos
+  
+  Esta categoría valida los componentes responsables de extraer, transformar y persistir la información académica desde las fuentes externas. Los casos de prueba verifican la robustez del sistema ante formatos inconsistentes y caracteres especiales:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item PDF-001 (Parseo de PDF con líneas partidas): Valida la función mergeTeacherLines en PdfParser.kt. El PDF oficial presenta líneas cortadas arbitrariamente, nombres de docentes fragmentados y caracteres especiales que dificultan la extracción. Resultado esperado: información correctamente fusionada y asociada.
+    
+    \item PARSE-002 (Scraper web): Valida CareerWebScraper para extracción de datos desde la página oficial de la universidad. Se prueban escenarios con cambios en la estructura HTML y tiempos de respuesta variables. Resultado esperado: datos extraídos correctamente o error controlado.
+    
+    \item PARSE-003 (Mapeo de entidades): Valida los mappers en data/mapper para conversión entre DTOs remotos y entidades locales. Se verifican transformaciones de fechas, formatos numéricos y relaciones. Resultado esperado: entidades persistidas con integridad referencial.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_parseo} presenta los resultados obtenidos para esta categoría, detallando el estado inicial de cada prueba, las acciones correctivas implementadas cuando fueron necesarias, y el estado final de validación:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  PDF-001 & Fallido. Información fragmentada, docentes sin asociar. & Implementación de mergeTeacherLines con buffer temporal. & Validado. \\
+  \addlinespace
+  PARSE-002 & Fallido. Error ante cambios en estructura HTML. & Selectores CSS más robustos con fallbacks. & Validado. \\
+  \addlinespace
+  PARSE-003 & Exitoso. Mapeo correcto de entidades. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Parseo e ingesta de datos.}\label{tab:qa_parseo}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de líneas fragmentadas (PDF-001), se implementa la función mergeTeacherLines en el componente PdfParser. Esta función utiliza un buffer temporal que acumula fragmentos de texto hasta detectar una línea completa de horario mediante expresiones regulares.
+  
+  Cuando se identifica un patrón válido de horario, el buffer se vacía y la línea completa se agrega a la lista de salida. Para los casos donde el nombre del docente no aparece en el PDF, se implementa una lógica de herencia que asocia el grupo con el docente del grupo anterior del mismo nivel y materia.
+  
+  \item Navegación e interfaz de usuario
+  
+  Esta categoría valida los componentes de navegación del calendario, flujos de usuario y experiencia general de la aplicación. Se verifica la precisión del cálculo de fechas en la navegación horizontal, la correcta respuesta a gestos de deslizamiento la claridad de los diálogos de confirmación durante el proceso de onboarding:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item NAV-002 (Navegación horizontal del calendario): Valida getDayAndWeekForInfinitePage en CalendarNavigationService.kt. El swipe horizontal debe avanzar exactamente un día, no múltiples. Resultado esperado: navegación fluida día por día.
+    
+    \item NAV-003 (Navegación a fecha específica): Valida calculateDateForDayWithWeekOffset. Al seleccionar una fecha en el selector, debe navegar a esa fecha exacta. Resultado esperado: fecha correcta mostrada.
+    
+    \item UX-006 (Onboarding y diálogos): Valida WelcomeScreen, SetupScreen y ConfirmationDialog. Los usuarios deben comprender cada paso del flujo inicial y las consecuencias de cada acción. Resultado esperado: flujo claro sin confusiones.
+    
+    \item NAV-004 (Widget de horario): Valida TecnoTimeWidget para mostrar el horario del día actual en la pantalla de inicio. Resultado esperado: widget actualizado correctamente.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_navegacion} presenta los resultados obtenidos para esta categoría, documentando las fallas detectadas durante las pruebas iniciales y las correcciones que permiten validar cada caso exitosamente:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  NAV-002 & Fallido. Avanzaba 3 días por swipe. & Refactorización con división modular. & Validado. \\
+  \addlinespace
+  NAV-003 & Fallido. Navegaba al día anterior. & Corrección del mapeo DAY\_OF\_WEEK. & Validado. \\
+  \addlinespace
+  UX-006 & Fallido. Usuarios confundidos. & Diálogos de confirmación agregados. & Validado. \\
+  \addlinespace
+  NAV-004 & Exitoso. Widget funcional. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Navegación e interfaz de usuario.}\label{tab:qa_navegacion}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de navegación (NAV-002), se refactoriza el servicio CalendarNavigationService implementando la función getDayAndWeekForInfinitePage. Esta función calcula la página correspondiente a cada día utilizando división modular (Math.floorDiv y Math.floorMod), donde cada deslizamiento horizontal representa exactamente un día visible en una secuencia infinita.
+  
+  El sistema utiliza una página base central (1000) como punto de referencia, permitiendo navegación tanto hacia el pasado como hacia el futuro sin límites artificiales. Esta arquitectura garantiza una experiencia fluida independientemente de la cantidad de semanas que el usuario navegue.
+  
+  \item Motor de generación de horarios
+  
+  Esta categoría valida el núcleo algorítmico del sistema: el generador de horarios con sus estrategias de evaluación y optimización. Se prueban múltiples combinaciones de parámetros incluyendo priorización de docentes, tolerancia a conflictos y minimización de huecos entre clases:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item MAT-004 (División Teoría/Laboratorio): Valida la lógica de separación automática cuando una materia tiene componentes teóricos y prácticos. Resultado esperado: dos registros independientes para inscripción separada.
+    
+    \item GEN-004 (Generar sin choques): Valida GenerateSchedulesUseCaseImpl con acceptConflicts=false. Debe generar horarios válidos sin solapes o mostrar mensaje claro si no existen. Resultado esperado: combinaciones válidas o mensaje explicativo.
+    
+    \item GEN-005 (Priorizar profesores, choques OFF): Valida PrioritizeTeachersStrategy con peso ajustado. Debe excluir choques y priorizar docentes favoritos. Resultado esperado: ranking correcto de favoritos.
+    
+    \item GEN-006 (Priorizar profesores, choques ON): Valida AcceptConflictsStrategy con ALLOWED\_CONFLICT\_PENALTY. Permite choques pero los penaliza. Resultado esperado: conflictos etiquetados visualmente.
+    
+    \item GEN-007 (Obligatorias mayor a límite): Valida promoteLowestLevels para manejar exceso de materias obligatorias. Resultado esperado: excedente pasa a opcional.
+    
+    \item GEN-008 (Minimizar huecos): Valida MinimizeGapsStrategy para reducir tiempos muertos entre clases. Resultado esperado: horarios compactos priorizados.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_generador} presenta los resultados obtenidos para esta categoría, siendo la que mayor cantidad de ajustes requiere debido a la complejidad de las heurísticas involucradas:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  MAT-004 & Fallido. Confusión en inscripción. & División automática por identificador. & Validado. \\
+  \addlinespace
+  GEN-004 & Fallido. Sin mensaje claro. & Mensaje explicativo agregado. & Validado. \\
+  \addlinespace
+  GEN-005 & Fallido. Priorización incorrecta. & Peso aumentado de 1.0 a 2.0. & Validado. \\
+  \addlinespace
+  GEN-006 & Fallido. Sin etiqueta visual. & Indicador de conflicto agregado. & Validado. \\
+  \addlinespace
+  GEN-007 & Exitoso. Promoción automática. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  GEN-008 & Exitoso. Huecos minimizados. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Motor de generación de horarios.}\label{tab:qa_generador}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver los problemas de priorización del generador (GEN-005 y GEN-006), se ajustan las constantes de penalización en la estrategia AcceptConflictsStrategy. Se define una penalización estricta de 1000 puntos para conflictos no permitidos (STRICT\_CONFLICT\_PENALTY) que efectivamente descarta esas combinaciones del ranking.
+  
+  Para conflictos permitidos se establece una penalización moderada de 50 puntos (ALLOWED\_CONFLICT\_PENALTY) que reduce la puntuación pero mantiene la combinación como opción válida. Adicionalmente, se aumenta el peso de la estrategia PrioritizeTeachersStrategy de 1.0 a 2.0 para que los docentes favoritos tengan mayor influencia en el ranking final.
+  
+  \item Exportación e importación
+  
+  Esta categoría valida los módulos de interoperabilidad que permiten compartir y respaldar información. Se verifican los formatos de exportación (imagen, PDF, Excel y JSON) así como la importación de horarios compartidos entre usuarios y el respaldo completo de datos:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item EXP-008 (Export imagen, PDF y Excel): Valida GenerateWeeklyScheduleImageUseCase, GenerateWeeklySchedulePdfUseCase y GenerateScheduleExcelUseCase. Resultado esperado: archivos válidos con MIME correcto.
+    
+    \item JSON-009 (Enviar copia JSON parcial): Valida GenerateShareableScheduleJsonUseCase. Solo materias seleccionadas deben incluirse. Resultado esperado: JSON estructurado correctamente.
+    
+    \item JSON-010 (Importar JSON): Valida ImportSharedScheduleUseCase. No debe duplicar materias existentes. Resultado esperado: merge sin duplicados.
+    
+    \item EXP-009 (Backup completo): Valida BackupAllDataJsonUseCase para respaldo total de datos. Resultado esperado: archivo JSON con toda la información.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_export} presenta los resultados obtenidos para esta categoría, donde se identifican problemas críticos relacionados con la validación de datos antes de la exportación:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  EXP-008 & Fallido. Error si horario vacío. & Validación previa agregada. & Validado. \\
+  \addlinespace
+  JSON-009 & Exitoso. JSON correcto. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  JSON-010 & Fallido. Duplicaba materias. & Validación de existentes agregada. & Validado. \\
+  \addlinespace
+  EXP-009 & Exitoso. Backup completo. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Exportación e importación.}\label{tab:qa_export}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de duplicación en la importación (JSON-010), se implementa una validación previa en ImportSharedScheduleUseCase que consulta los grupos actualmente inscritos antes de procesar el archivo JSON entrante. El sistema filtra los grupos importados comparando el identificador de materia (subjectId) con los registros existentes.
+  
+  El proceso inserta únicamente aquellos grupos que no están previamente inscritos o aprobados. Al finalizar la operación, se retorna un resultado detallado indicando la cantidad de grupos importados exitosamente y la cantidad omitidos por duplicación, proporcionando retroalimentación clara al usuario.
+  

@@ -1,0 +1,197 @@
+  \item Notificaciones y sincronización
+  
+  Esta categoría valida los servicios de comunicación con el usuario y las estrategias de sincronización de datos. Se prueban escenarios con conectividad intermitente, reintentos automáticos y operación en modo offline para garantizar la disponibilidad del sistema:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item SYNC-005 (Sincronización inteligente): Valida la estrategia de reintentos exponenciales ante caídas del servidor. Resultado esperado: operación exitosa o fallback a PDF local.
+    
+    \item SYNC-006 (Auto-sync en background): Valida AutoSyncUseCase para sincronización automática periódica. Resultado esperado: datos actualizados sin intervención del usuario.
+    
+    \item NOT-011 (Recordatorios de clases): Valida NotificationServiceImpl y NotifyWorker. Resultado esperado: notificaciones en canal y tiempo correctos.
+    
+    \item NOT-012 (Simon IA): Valida SimonNotificationUseCase para notificaciones del asistente inteligente. Resultado esperado: mensajes contextuales generados correctamente.
+    
+    \item OFF-012 (Modo offline): Valida SyncCareerFromLocalPdfUseCase con patrón offline-first. Resultado esperado: operación completa con caché local.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_sync} presenta los resultados obtenidos para esta categoría, confirmando que los servicios de notificación y sincronización funcionan correctamente en condiciones normales y de conectividad limitada:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  SYNC-005 & Fallido. Sin manejo de caídas. & Reintentos exponenciales y fallback. & Validado. \\
+  \addlinespace
+  SYNC-006 & Exitoso. Sync automático. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  NOT-011 & Exitoso. Notificaciones correctas. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  NOT-012 & Exitoso. Mensajes contextuales. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  OFF-012 & Exitoso. Operación offline. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Notificaciones y sincronización.}\label{tab:qa_sync}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  \item Gestión de materias y docentes
+  
+  Esta categoría valida los flujos de administración de materias inscritas y la gestión de preferencias de docentes, incluyendo las operaciones de alta, modificación y baja de inscripciones. Se verifica la correcta persistencia de los cambios en la base de datos local y la sincronización de las preferencias con el motor de generación de horarios:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item SUBJ-013 (Agregar materia completa): Valida el flujo AddSubjectFlowScreen desde la selección de carrera hasta la confirmación del grupo. Se verifica la navegación por SelectCareerScreen, SelectLevelScreen, SelectSubjectScreen y SelectGroupScreen. Resultado esperado: materia inscrita correctamente con horarios asociados.
+    
+    \item SUBJ-014 (Cambiar grupo de materia): Valida EditGroupScreen y EditGroupSelectScreen para modificar el grupo de una materia ya inscrita. Resultado esperado: horarios actualizados sin duplicar la inscripción.
+    
+    \item SUBJ-015 (Personalizar materia): Valida EditColorScreen y EditEmojiScreen para cambiar el color y emoji de una materia. Resultado esperado: cambios reflejados en todas las vistas donde aparece la materia.
+    
+    \item TEACH-016 (Marcar docente favorito): Valida TeacherFavoritesScreen para marcar y desmarcar docentes como favoritos. Se verifica que los cambios persistan en TeacherRepository y afecten al generador de horarios. Resultado esperado: preferencia guardada correctamente.
+    
+    \item TEACH-017 (Onboarding de favoritos): Valida TeacherFavoritesIntroScreen para la introducción del sistema de favoritos. Se verifica que el usuario comprenda el impacto de marcar favoritos en la generación de horarios. Resultado esperado: flujo claro y navegación correcta.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_materias} presenta los resultados obtenidos para esta categoría, donde se valida la correcta integración entre las pantallas de gestión y los repositorios de datos:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  SUBJ-013 & Exitoso. Flujo completo funcional. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  SUBJ-014 & Fallido. Duplicaba inscripción. & Validación de inscripción existente. & Validado. \\
+  \addlinespace
+  SUBJ-015 & Exitoso. Personalización funcional. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  TEACH-016 & Fallido. No persistía al reiniciar. & Corrección en TeacherRepository. & Validado. \\
+  \addlinespace
+  TEACH-017 & Exitoso. Onboarding claro. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Gestión de materias y docentes.}\label{tab:qa_materias}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de duplicación de inscripciones (SUBJ-014), se implementa una validación previa en el caso de uso que verifica si la materia ya está inscrita antes de procesar el cambio de grupo. Esta verificación consulta la base de datos local para determinar el estado actual de la inscripción.
+  
+  Si existe una inscripción activa, el sistema actualiza el grupo en lugar de crear un nuevo registro, manteniendo la integridad de los datos y evitando entradas duplicadas en la base de datos. Este enfoque garantiza que el historial de inscripciones permanezca limpio y que las estadísticas de uso reflejen correctamente el comportamiento real del usuario.
+  
+  \item Persistencia y base de datos
+  
+  Esta categoría valida la capa de persistencia del sistema, incluyendo las operaciones CRUD en los repositorios, la integridad referencial entre tablas y el correcto funcionamiento de las transacciones en la base de datos Room. Se verifica el comportamiento ante operaciones concurrentes y la recuperación de datos después de cierres inesperados de la aplicación:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item DB-018 (Integridad referencial): Valida las relaciones entre CareerRepository, LevelRepository, SubjectRepository y GroupRepository. Resultado esperado: eliminación en cascada y referencias consistentes.
+    
+    \item DB-019 (Transacciones atómicas): Valida que las operaciones compuestas en ScheduleImportRepositoryImpl se ejecuten de forma atómica. Resultado esperado: rollback completo ante fallos parciales.
+    
+    \item DB-020 (Consultas con relaciones): Valida las queries con JOINs en GroupScheduleRepositoryImpl y SelectedSubjectRepositoryImpl. Resultado esperado: datos relacionados correctamente cargados.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_db} presenta los resultados obtenidos para esta categoría, donde se verifica la consistencia de los datos ante operaciones concurrentes y fallos simulados:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  DB-018 & Exitoso. Cascada correcta. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  DB-019 & Fallido. Datos inconsistentes. & Transacciones con @Transaction. & Validado. \\
+  \addlinespace
+  DB-020 & Exitoso. JOINs correctos. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Persistencia y base de datos.}\label{tab:qa_db}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de inconsistencia en transacciones (DB-019), se implementa la anotación @Transaction en los métodos del DAO que realizan operaciones compuestas.
+  
+  Esta anotación garantiza que todas las operaciones dentro del método se ejecuten de forma atómica, revirtiendo los cambios automáticamente si alguna operación falla durante la ejecución.
+  
+  \item Configuración y preferencias de usuario
+  
+  Esta categoría valida el módulo de configuración del sistema, incluyendo la persistencia de preferencias, la aplicación de temas visuales y la correcta sincronización de ajustes entre sesiones:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item CONF-021 (Persistencia de preferencias): Valida UserSettingsRepositoryImpl para guardar y recuperar configuraciones del usuario. Resultado esperado: preferencias mantenidas entre reinicios de la aplicación.
+    
+    \item CONF-022 (Aplicación de tema): Valida la correcta aplicación del tema claro/oscuro desde SettingsScreen. Resultado esperado: cambio inmediato sin reinicio.
+    
+    \item CONF-023 (Días visibles del calendario): Valida la configuración de días visibles en la vista semanal. Resultado esperado: calendario respeta la configuración del usuario.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_config} presenta los resultados obtenidos para esta categoría, confirmando que las preferencias del usuario se mantienen correctamente entre sesiones:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  CONF-021 & Exitoso. Persistencia correcta. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  CONF-022 & Exitoso. Tema aplicado. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  CONF-023 & Fallido. No actualizaba vista. & Recomposición forzada del calendario. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Configuración y preferencias.}\label{tab:qa_config}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de actualización de días visibles (CONF-023), se implementa un mecanismo de recomposición que fuerza la reconstrucción del componente de calendario cuando cambian las preferencias.
+  
+  Este enfoque utiliza un estado observable que notifica a los componentes dependientes cuando hay cambios en la configuración, garantizando que la interfaz refleje inmediatamente las nuevas preferencias.
+  
+  \item Asistente inteligente Simon
+  
+  Esta categoría valida el módulo de inteligencia artificial del sistema, incluyendo la generación de mensajes contextuales, la gestión del modelo de IA local y la integración con el sistema de notificaciones:
+  
+  \begin{enumerate}[label=\alph*)]
+    \item AI-024 (Generación de mensajes): Valida SimonNotificationUseCase para generar mensajes contextuales basados en el horario del usuario. Resultado esperado: mensajes relevantes y personalizados.
+    
+    \item AI-025 (Gestión del modelo): Valida la descarga, almacenamiento y carga del modelo de IA en el dispositivo. Resultado esperado: modelo disponible offline tras primera descarga.
+    
+    \item AI-026 (Templates de respuesta): Valida SimonTemplate y SimonResponse para estructurar las respuestas del asistente. Resultado esperado: respuestas coherentes según el contexto.
+    
+    \item AI-027 (Integración con notificaciones): Valida SimonNotificationData para enviar notificaciones generadas por IA. Resultado esperado: notificaciones entregadas en el momento correcto.
+  \end{enumerate}
+  
+  El Cuadro \ref{tab:qa_simon} presenta los resultados obtenidos para esta categoría, donde se valida la correcta integración entre el modelo de IA y el sistema de notificaciones:
+  
+  \begin{table}[H]
+  \small
+  \centering
+  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \toprule
+  Caso & Resultado Inicial & Acción Correctiva & Estado \\
+  \midrule
+  AI-024 & Exitoso. Mensajes contextuales. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  AI-025 & Fallido. Error en descarga. & Retry con backoff exponencial. & Validado. \\
+  \addlinespace
+  AI-026 & Exitoso. Templates correctos. & Ninguna requerida. & Validado. \\
+  \addlinespace
+  AI-027 & Exitoso. Notificaciones correctas. & Ninguna requerida. & Validado. \\
+  \bottomrule
+  \end{tabularx}
+  \caption{Resultados de pruebas: Asistente inteligente Simon.}\label{tab:qa_simon}
+  \small{Fuente: Elaboración propia.}
+  \end{table}
+  
+  Para resolver el problema de descarga del modelo (AI-025), se implementa un mecanismo de reintentos con backoff exponencial que maneja automáticamente las fallas de conectividad.
+  
+  El sistema intenta la descarga hasta tres veces con intervalos crecientes antes de mostrar un mensaje de error al usuario, mejorando la experiencia en condiciones de red inestables.
+  
+\end{enumerate}

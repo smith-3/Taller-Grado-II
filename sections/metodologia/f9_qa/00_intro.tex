@@ -1,0 +1,12 @@
+Esta fase transversal se dedica a la verificación sistemática de la calidad del software, asegurando que cada componente cumpla con los requisitos funcionales y no funcionales definidos. El proceso de aseguramiento de calidad (QA) se integra en cada etapa del desarrollo, desde la validación de unidades individuales hasta la verificación de flujos completos de usuario, garantizando la estabilidad y robustez de la aplicación antes de su liberación.
+
+\subsection{Objetivo}
+El objetivo principal es certificar la corrección funcional de los módulos críticos del sistema, con especial énfasis en el motor de generación de horarios y la persistencia de datos. Se busca minimizar la deuda técnica y prevenir regresiones mediante una estrategia de pruebas automatizadas que cubra los niveles unitario, de integración y de interfaz de usuario (end-to-end).
+
+\subsection{Ejecución de pruebas y aseguramiento de calidad}
+La estrategia de pruebas se estructura siguiendo el modelo de la pirámide de pruebas, priorizando una base sólida de pruebas unitarias rápidas y aisladas para la lógica de negocio, complementada con pruebas de integración para los componentes de datos y pruebas E2E para los flujos críticos de usuario.
+
+Se implementan suites de pruebas específicas para validar la robustez de los parsers de documentos, la integridad referencial en la base de datos local, la corrección de las heurísticas del generador de horarios y la fidelidad de los módulos de exportación e importación. Adicionalmente, se realizan pruebas manuales exploratorias para evaluar la usabilidad en escenarios reales.
+
+\subsection{Resultados y verificación}
+La estrategia de aseguramiento de calidad alcanza una cobertura superior al 75\% en los módulos críticos. La ejecución de la batería de pruebas E2E confirma la estabilidad de los flujos principales, desde la ingesta de datos hasta la generación y exportación de horarios, asegurando que no existan regresiones en las funcionalidades clave.

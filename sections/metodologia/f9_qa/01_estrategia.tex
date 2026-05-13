@@ -1,0 +1,9 @@
+\subsection{Pirámide de pruebas}
+Se aplica el enfoque unit/integration/UI:E2E, alineado al código real. Las pruebas unitarias cubren los utilitarios de tiempo y detección de solapes, los parsers de PDF y mapeos de datos, así como las heurísticas y estrategias del generador de horarios ubicadas en domain/service.
+
+Las pruebas de integración verifican la interacción entre repositorios y la base de datos Room, incluyendo los casos de uso de ingesta, sincronización, generación y exportación/importación, abarcando los módulos domain/repository, data/repository y domain/usecase.
+
+Las pruebas de interfaz de usuario (E2E) validan los flujos críticos completos, desde el onboarding inicial hasta la generación, aplicación y exportación de horarios, incluyendo el widget y las notificaciones de recordatorio. Las rutas completas de los módulos probados se encuentran en el Anexo \ref{ann:trazabilidad-tecnotime}.
+
+La cobertura objetivo fue de 75 por ciento o superior en los módulos críticos (generador, parseo, sincronización e interoperabilidad) y 100 por ciento de los flujos E2E críticos documentados a continuación.
+
