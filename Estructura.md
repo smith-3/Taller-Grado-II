@@ -6,6 +6,19 @@
 
 ## Contenido del Documento
 
+## Reglas Críticas (Obligatorio)
+
+### Figuras, Tablas y Cuadros
+- **Ubicación:** Siempre deben colocarse **DEBAJO** del párrafo que las menciona.
+- **Orden:** Primero se menciona en el texto (ej. "como se ve en la Figura 1"), y luego se inserta la figura. Jamás poner la figura antes de su mención.
+- **Fuente:** Todas las figuras, tablas y cuadros deben incluir su fuente (ej. "Fuente: Elaboración propia" o "Fuente: López, 2019").
+
+### Restricciones de Redacción
+- **Capítulos I, II y III:** Prohibido mencionar el nombre del proyecto o solución (ej. "TecnoTime"). Estos capítulos deben enfocarse en el problema, la teoría y el contexto real, no en la solución propuesta.
+
+---
+
+
 El documento debe incluir los siguientes elementos en orden:
 
 - Carátula del documento
@@ -81,9 +94,18 @@ La carátula representa la portada del documento y debe contener la información
 
 ### Capítulo III: Área de Aplicación
 
-- En este capítulo debe estar la descripción a detalle del problema, es decir debe estar descrito todo el proceso manual que se realiza en una institución o empresa.
-- En otras palabras en este capítulo está descrito todo el estudio de campo que se ha realizado para sacar los requerimientos del software.
-- También debe estar en este capítulo toda la información bien estructurada que se necesita para el desarrollo del software o que estará dentro del software.
+- **Enfoque:** Este capítulo debe describir únicamente el contexto real donde se aplicará el software (ej. FCyT, UMSS). Debe responder a: ¿Dónde se aplica?, ¿Quiénes lo usan?, ¿Qué proceso se mejora?, ¿Cómo funciona actualmente?, ¿Qué problemas tiene?.
+- **Estudio de Campo:** Describe todo el proceso manual actual y la investigación realizada para extraer los requerimientos.
+- **Prohibiciones Específicas:**
+    - No mencionar el nombre del proyecto (ej. "TecnoTime").
+    - No mencionar teorías, análisis técnico o metodologías de desarrollo (eso va en Cap. II y IV).
+    - No comparar con otros sistemas existentes (ej. "Cappuchino") para emitir juicios de valor competitivos o decir que nuestra solución es mejor.
+    - No incluir secciones de "Solución propuesta" o "Visión de la solución".
+- **Elementos requeridos:**
+    - Datos reales de entrevistas, observaciones o encuestas.
+    - Definición de Actores y Roles.
+    - Datos relevantes, Catálogos y Reglas del negocio (Horarios, Turnos, Inscripciones).
+    - Restricciones del entorno físico o institucional.
 
 **Importante**: En los capítulos 1, 2 y 3 no olvidar las referencias bibliográficas en la redacción. También las referencias bibliográficas deben estar en la fuente de las figuras, tablas, etc.
 

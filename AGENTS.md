@@ -31,8 +31,7 @@ Este proyecto tiene reglas estrictas documentadas en archivos Markdown. **Debes 
 
 | Archivo | Cuándo consultarlo |
 | :--- | :--- |
-| **`@Estructura.md`** | **CRÍTICO.** Contiene prohibiciones específicas (ej. no mencionar "TecnoTime" en el Marco Teórico) y reglas de ubicación de figuras. |
-| **`Estructura.md`** | Para entender qué debe contener cada capítulo y el orden jerárquico del documento. |
+| **`Estructura.md`** | **CRÍTICO.** Contiene el orden de capítulos, contenido requerido y las **reglas obligatorias de figuras y prohibiciones de redacción.** |
 | **`Redaccion.md`** | Para asegurar el tono formal, evitar eufemismos prohibidos, usar sinónimos recomendados y respetar el modo impersonal (3ra persona). |
 | **`plan_*.md`** | Para conocer la hoja de ruta de una sección específica antes de expandir contenido. |
 | **`Encuesta.md`** | Para extraer datos reales si se está trabajando en el Capítulo III (Área de Aplicación). |
@@ -60,7 +59,7 @@ npx -y @mermaid-js/mermaid-cli \
 
 ### B. Uso en LaTeX
 - Toda figura Mermaid debe insertarse desde su `.png`, no desde el `.mmd`.
-- Se debe cumplir la regla de `@Estructura.md`: primero se menciona la figura en el párrafo y luego se inserta.
+- Se debe cumplir la regla de `Estructura.md`: primero se menciona la figura en el párrafo y luego se inserta.
 - Usar `\caption[...] {...}` cuando el título largo pueda afectar el índice de figuras.
 - Ajustar el ancho (`width`) para legibilidad real en PDF. No usar diagramas que requieran zoom excesivo.
 - Mantener etiquetas descriptivas y estables, por ejemplo `\label{fig:cap4_f3_decisiones_generador}`.
@@ -73,7 +72,7 @@ npx -y @mermaid-js/mermaid-cli \
 
 ## 5. Flujo de Trabajo Sugerido
 1. **Identificar la Tarea:** ¿Es una corrección de estilo o una reestructuración de contenido?
-2. **Cargar Contexto:** Leer el archivo `.tex` objetivo Y el archivo `.md` de reglas correspondiente (mínimo `@Estructura.md` y `Redaccion.md`).
+2. **Cargar Contexto:** Leer el archivo `.tex` objetivo Y el archivo `.md` de reglas correspondiente (mínimo `Estructura.md` y `Redaccion.md`).
 3. **Verificar Prohibiciones:** Asegurarse de no violar reglas estructurales (ej. no poner figuras antes de ser mencionadas).
 4. **Planificar Recursos Visuales:** Si una explicación técnica mejora con tabla, flujo o diagrama, crear/actualizar el `.mmd` en `images/diagrams/`, generar el `.png` y referenciarlo correctamente en LaTeX.
 5. **Aplicar Cambios:** Realizar la edición en el archivo fuente.
