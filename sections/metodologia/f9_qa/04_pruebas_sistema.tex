@@ -218,7 +218,9 @@ La ejecución constituye evidencia técnica válida en el dispositivo HONOR/Huaw
 
   \item Pruebas de aceptación de usuario
 
-Las pruebas de aceptación (UAT) validan la autonomía del estudiante mediante un piloto de 15 alumnos de Ingeniería Química e Informática (FCyT), representativos del estudio de campo previo. Los escenarios ejecutados se resumen en el Cuadro \ref{tab:qa_uat_escenarios}:
+Las pruebas de aceptación de usuario se realizaron mediante la distribución de la aplicación en el canal de pruebas de Google Play. Este mecanismo permitió que estudiantes instalaran la aplicación en sus propios dispositivos, bajo condiciones reales de uso, sin depender de un laboratorio controlado ni de un único equipo de evaluación. En esta etapa participaron aproximadamente 56 usuarios, quienes accedieron al paquete publicado y utilizaron los flujos principales de la aplicación.
+
+La recolección de retroalimentación no se realizó mediante un formulario estructurado, debido a la baja disponibilidad de los usuarios para completar instrumentos extensos después de probar una aplicación móvil. Por ello, se adoptó una validación exploratoria basada en comentarios recibidos por WhatsApp, observaciones directas y reseñas registradas en el canal de pruebas de Google Play. Este enfoque permitió identificar problemas de uso, dudas de navegación y aspectos funcionales que requerían ajuste antes de la liberación. Los escenarios evaluados se resumen en el Cuadro \ref{tab:qa_uat_escenarios}:
 
 \begin{center}
 \begin{minipage}{\linewidth}
@@ -227,70 +229,71 @@ Las pruebas de aceptación (UAT) validan la autonomía del estudiante mediante u
 \toprule
 Código & Escenario & Procedimiento & Evidencia \\
 \midrule
-UAT-01 & Configuración inicial & Registrar datos básicos y completar el flujo de bienvenida. & Captura y tiempo de ejecución. \\
-UAT-02 & Selección académica & Seleccionar carrera, nivel, materia y grupo. & Capturas del flujo. \\
-UAT-03 & Visualización del horario & Verificar que las materias agregadas aparezcan en la vista semanal. & Captura del horario. \\
-UAT-04 & Generación automática & Generar alternativas de horario y seleccionar una opción válida. & Captura de resultados. \\
-UAT-05 & Eventos y recordatorios & Crear un evento académico y activar recordatorios. & Captura de formulario y notificación. \\
-UAT-06 & Exportación o compartición & Generar un archivo o contenido compartible del horario. & Captura del archivo generado. \\
-UAT-07 & Asistente Simón & Activar notificaciones inteligentes y verificar un mensaje generado. & Captura de notificación. \\
+UAT-01 & Instalación desde Google Play & Descargar la aplicación desde el canal de prueba e iniciar sesión de uso local. & Registro de instalación y acceso. \\
+UAT-02 & Configuración inicial & Registrar datos básicos, seleccionar carrera y completar el flujo de bienvenida. & Comentarios de usuarios y capturas. \\
+UAT-03 & Selección académica & Seleccionar nivel, materia y grupo dentro del flujo de inscripción. & Reportes por WhatsApp y observación directa. \\
+UAT-04 & Visualización del horario & Verificar que las materias agregadas aparezcan en la vista diaria y semanal. & Capturas compartidas por usuarios. \\
+UAT-05 & Generación automática & Generar alternativas de horario y seleccionar una opción válida. & Comentarios sobre resultados y mensajes de error. \\
+UAT-06 & Exportación o compartición & Generar un archivo o contenido compartible del horario. & Pruebas de intercambio por WhatsApp. \\
+UAT-07 & Recordatorios y notificaciones & Activar recordatorios y verificar la recepción de avisos. & Retroalimentación cualitativa de uso. \\
 \bottomrule
 \end{tabularx}
-\captionof{table}{Escenarios definidos para las pruebas de aceptación de usuario.}\label{tab:qa_uat_escenarios}
+\captionof{table}{Escenarios evaluados en las pruebas de aceptación de usuario.}\label{tab:qa_uat_escenarios}
 Fuente: Elaboración propia.
 \end{minipage}
 \end{center}
 
-Para medir la mejora de experiencia frente a herramientas existentes se definieron indicadores comparables. Las métricas de desempeño y satisfacción proyectadas para esta fase se resumen en la Tabla \ref{tab:qa_uat_metricas}:
+Los comentarios recopilados se organizaron por tipo de observación, priorizando aquellos que afectaban la continuidad del flujo principal. Esta clasificación permitió convertir la retroalimentación informal en evidencia verificable de aceptación, sin presentar el proceso como una encuesta formal. La Tabla \ref{tab:qa_uat_retroalimentacion} resume los criterios de análisis utilizados:
 
 \begin{center}
 \begin{minipage}{\linewidth}
 \centering
-\begin{tabularx}{\linewidth}{@{}p{4.2cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{3cm}@{}}
+\begin{tabularx}{\linewidth}{@{}p{3.1cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{3.4cm}@{}}
 \toprule
-Indicador & Cálculo & Resultado \\
+Categoría & Aspecto observado & Evidencia utilizada \\
 \midrule
-Tasa de finalización & Tareas completadas / tareas asignadas $\times$ 100. & 100\% (15/15). \\
-Tiempo (Bienvenida) & Tiempo promedio en flujo inicial. & 35 segundos. \\
-Tiempo (Generación) & Tiempo promedio en motor de horarios. & 22 segundos. \\
-Errores críticos & Fallos que impiden completar la tarea. & 0\%. \\
-Satisfacción general & Promedio de respuestas Likert de 1 a 5. & 4.6 / 5.0. \\
-Facilidad de uso & Promedio de respuestas sobre navegación. & 4.4 / 5.0. \\
+Usabilidad & Comprensión del flujo inicial, navegación entre pantallas y claridad de mensajes. & Comentarios por WhatsApp y reseñas del canal de prueba. \\
+Funcionalidad & Selección de materias, generación de horarios, visualización semanal y exportación. & Reportes de uso y capturas compartidas. \\
+Estabilidad & Instalación, apertura de la aplicación, persistencia local y continuidad del flujo. & Registro de distribución en Google Play. \\
+Retroalimentación & Problemas reportados, dudas frecuentes y ajustes solicitados antes de producción. & Comentarios cualitativos agrupados por incidencia. \\
 \bottomrule
 \end{tabularx}
-\captionof{table}{Resultados de aceptación y métricas de experiencia de usuario.}\label{tab:qa_uat_metricas}
+\captionof{table}{Clasificación de la retroalimentación de aceptación de usuario.}\label{tab:qa_uat_retroalimentacion}
 Fuente: Elaboración propia.
 \end{minipage}
 \end{center}
 
-Los resultados del piloto confirman una alta tasa de aceptación, con el total de los participantes completando los flujos críticos. Se observó una leve curva de aprendizaje en dos estudiantes respecto al formulario de parámetros del generador, quienes requirieron un tiempo adicional para comprender las restricciones de búsqueda antes de obtener sus resultados satisfactoriamente.
+La evidencia visual del canal de pruebas se encuentra documentada en la Figura \ref{fig:qa_playstore_reviews}, donde se registran valoraciones y comentarios emitidos desde Google Play Console. De forma complementaria, los reportes recibidos por WhatsApp permitieron detectar ajustes menores de navegación, comprensión de mensajes y uso de la exportación compartida.
 
-La eficiencia del sistema destaca en la generación de horarios, logrando tiempos de respuesta de entre 10 y 30 segundos una vez configuradas las materias. Con un promedio de satisfacción de 4.6 sobre 5.0, los datos respaldan la viabilidad técnica y funcional de la aplicación en el contexto académico evaluado, cumpliendo con las expectativas de facilidad de uso de la comunidad universitaria.
+Los resultados de aceptación confirman que la aplicación pudo ser instalada y utilizada por estudiantes en sus propios dispositivos. La validación no se interpreta como una encuesta estadística, sino como una prueba exploratoria de aceptación funcional y usabilidad en condiciones reales. En consecuencia, la evidencia obtenida respalda la viabilidad del sistema para su uso académico y permitió realizar ajustes antes de la publicación definitiva.
 
   \item Pruebas de compatibilidad
 
-Las pruebas de compatibilidad verifican que la aplicación se instale, inicie y mantenga sus flujos principales en el entorno de ejecución objetivo. Esta validación es crítica dado el ecosistema fragmentado de Android, por lo que se priorizó el uso de dispositivos físicos que representen la gama media utilizada por los estudiantes de la facultad.
+Las pruebas de compatibilidad verifican que la aplicación se instale, inicie y mantenga sus flujos principales en el entorno de ejecución objetivo. Esta validación es crítica dado el ecosistema fragmentado de Android, por lo que se combinaron tres mecanismos: ejecución en dispositivo físico, validación con dispositivos virtuales de Android Studio y revisión de compatibilidad mediante Google Play Console.
 
-La selección se centra en un dispositivo con capacidades de hardware estándar y una versión de sistema operativo representativa del mercado actual. El entorno físico definido para documentar la compatibilidad del sistema se especifica en la Tabla \ref{tab:qa_compat_entornos}:
+Android Studio permite crear dispositivos virtuales Android (AVD) con diferentes niveles de API, resoluciones y perfiles de hardware, lo que facilita evaluar la aplicación sin contar físicamente con cada modelo de teléfono \cite{android_emulator,android_avd}. Asimismo, Google Play Console proporciona un catálogo de dispositivos certificados compatibles con la aplicación publicada, permitiendo revisar la cobertura de modelos soportados por el paquete distribuido \cite{google_play_device_catalog}. Los entornos considerados para documentar la compatibilidad del sistema se especifican en la Tabla \ref{tab:qa_compat_entornos}:
 
 \begin{center}
 \begin{minipage}{\linewidth}
 \centering
-\begin{tabularx}{\linewidth}{@{}p{1.8cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{2.8cm}>{\RaggedRight\arraybackslash}p{2.6cm}>{\RaggedRight\arraybackslash}p{2.6cm}@{}}
+\begin{tabularx}{\linewidth}{@{}p{1.7cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{2.8cm}>{\RaggedRight\arraybackslash}p{2.5cm}>{\RaggedRight\arraybackslash}p{2.6cm}@{}}
 \toprule
 Código & Entorno & Versión & Resolución & Hardware \\
 \midrule
 COMP-01 & Dispositivo físico validado & Android 13, API 33 & 1080x2388, 480 dpi & HONOR ANY-LX3, 8 núcleos, 7.9 GB RAM \\
+COMP-02 & Emulador Android Studio & API mínima soportada & Perfil teléfono, densidad media/alta & AVD con recursos controlados \\
+COMP-03 & Emulador Android Studio & API intermedia & Perfil teléfono FHD & AVD de gama media \\
+COMP-04 & Catálogo Google Play & Dispositivos certificados compatibles & Múltiples resoluciones & Modelos filtrados por Play Console \\
 \bottomrule
 \end{tabularx}
-\captionof{table}{Entorno físico definido para pruebas de compatibilidad.}\label{tab:qa_compat_entornos}
+\captionof{table}{Entornos considerados para pruebas de compatibilidad.}\label{tab:qa_compat_entornos}
 Fuente: Elaboración propia.
 \end{minipage}
 \end{center}
 
-La selección de este hardware específico permitió validar la gestión de recursos bajo una densidad de píxeles y potencia de procesamiento representativa de la gama media. Se puso especial énfasis en la estabilidad del motor de renderizado y la persistencia de datos locales, confirmando que la arquitectura desacoplada del sistema responde con eficiencia ante las especificaciones técnicas del dispositivo físico evaluado.
+La selección del dispositivo físico permitió validar la gestión de recursos bajo una densidad de píxeles y potencia de procesamiento representativa de la gama media. Los emuladores permitieron contrastar la instalación y navegación en configuraciones controladas de Android Studio, mientras que Google Play Console permitió revisar la compatibilidad ampliada del paquete distribuido. La Figura \ref{fig:qa_playstore_device_catalog} documenta esta cobertura mediante el catálogo de dispositivos certificados de la plataforma.
 
-En este entorno se comprobó la instalación del paquete de aplicación, el inicio exitoso y la ejecución de los flujos críticos de usuario sin degradación del rendimiento. El registro consolidado de los resultados de compatibilidad obtenidos en el dispositivo de prueba se presenta en el Cuadro \ref{tab:qa_compat_resultados}:
+En estos entornos se comprobó la instalación del paquete de aplicación, el inicio exitoso y la ejecución de los flujos críticos de usuario sin degradación visible del rendimiento. El registro consolidado de los resultados de compatibilidad se presenta en el Cuadro \ref{tab:qa_compat_resultados}:
 
 \begin{center}
 \begin{minipage}{\linewidth}
@@ -300,6 +303,9 @@ En este entorno se comprobó la instalación del paquete de aplicación, el inic
 Código & Verificación & Evidencia & Estado \\
 \midrule
 COMP-01 & Instalación, inicio, pruebas instrumentadas y Macrobenchmark en dispositivo físico. & Reportes Gradle, Android Test, Macrobenchmark y trazas Perfetto. & Validado. \\
+COMP-02 & Instalación e inicio en API mínima soportada mediante Android Studio. & Ejecución en AVD. & Validado. \\
+COMP-03 & Navegación principal y visualización en resolución FHD mediante Android Studio. & Ejecución en AVD. & Validado. \\
+COMP-04 & Revisión de cobertura de modelos certificados compatibles. & Catálogo de dispositivos de Google Play Console. & Validado. \\
 \bottomrule
 \end{tabularx}
 \captionof{table}{Registro de resultados de compatibilidad.}\label{tab:qa_compat_resultados}
@@ -307,5 +313,5 @@ Fuente: Elaboración propia.
 \end{minipage}
 \end{center}
 
-Adicionalmente, la compatibilidad extendida con el resto del ecosistema Android se gestiona y verifica mediante la consola de Google Play, la cual proporciona un catálogo de miles de modelos certificados que cumplen con los requisitos mínimos del sistema. Esta estrategia asegura que la aplicación sea funcional en una amplia variedad de terminales sin requerir pruebas manuales exhaustivas en cada modelo individual.
+La compatibilidad extendida con el ecosistema Android se gestiona mediante Google Play Console, la cual proporciona un catálogo de modelos certificados que cumplen los requisitos del paquete publicado. Esta estrategia no reemplaza las pruebas funcionales, pero permite justificar la cobertura de distribución en una amplia variedad de terminales sin requerir pruebas manuales exhaustivas en cada modelo individual.
 \end{enumerate}
