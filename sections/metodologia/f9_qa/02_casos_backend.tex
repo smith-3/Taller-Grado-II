@@ -16,10 +16,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   
   El Cuadro \ref{tab:qa_parseo} presenta los resultados obtenidos para esta categoría, detallando el estado inicial de cada prueba, las acciones correctivas implementadas cuando fueron necesarias, y el estado final de validación:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -30,9 +30,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   PARSE-003 & Exitoso. Mapeo correcto de entidades. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Parseo e ingesta de datos.}\label{tab:qa_parseo}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Parseo e ingesta de datos.}\label{tab:qa_parseo}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de líneas fragmentadas (PDF-001), se implementa la función mergeTeacherLines en el componente PdfParser. Esta función utiliza un buffer temporal que acumula fragmentos de texto hasta detectar una línea completa de horario mediante expresiones regulares.
   
@@ -54,10 +55,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   
   El Cuadro \ref{tab:qa_navegacion} presenta los resultados obtenidos para esta categoría, documentando las fallas detectadas durante las pruebas iniciales y las correcciones que permiten validar cada caso exitosamente:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -70,9 +71,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   NAV-004 & Exitoso. Widget funcional. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Navegación e interfaz de usuario.}\label{tab:qa_navegacion}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Navegación e interfaz de usuario.}\label{tab:qa_navegacion}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de navegación (NAV-002), se refactoriza el servicio CalendarNavigationService implementando la función getDayAndWeekForInfinitePage. Esta función calcula la página correspondiente a cada día utilizando división modular (Math.floorDiv y Math.floorMod), donde cada deslizamiento horizontal representa exactamente un día visible en una secuencia infinita.
   
@@ -98,10 +100,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   
   El Cuadro \ref{tab:qa_generador} presenta los resultados obtenidos para esta categoría, siendo la que mayor cantidad de ajustes requiere debido a la complejidad de las heurísticas involucradas:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -118,9 +120,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   GEN-008 & Exitoso. Huecos minimizados. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Motor de generación de horarios.}\label{tab:qa_generador}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Motor de generación de horarios.}\label{tab:qa_generador}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver los problemas de priorización del generador (GEN-005 y GEN-006), se ajustan las constantes de penalización en la estrategia AcceptConflictsStrategy. Se define una penalización estricta de 1000 puntos para conflictos no permitidos (STRICT\_CONFLICT\_PENALTY) que efectivamente descarta esas combinaciones del ranking.
   
@@ -142,10 +145,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   
   El Cuadro \ref{tab:qa_export} presenta los resultados obtenidos para esta categoría, donde se identifican problemas críticos relacionados con la validación de datos antes de la exportación:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -158,9 +161,10 @@ Durante el desarrollo se realizan pruebas con usuarios reales, incluyendo estudi
   EXP-009 & Exitoso. Backup completo. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Exportación e importación.}\label{tab:qa_export}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Exportación e importación.}\label{tab:qa_export}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de duplicación en la importación (JSON-010), se implementa una validación previa en ImportSharedScheduleUseCase que consulta los grupos actualmente inscritos antes de procesar el archivo JSON entrante. El sistema filtra los grupos importados comparando el identificador de materia (subjectId) con los registros existentes.
   

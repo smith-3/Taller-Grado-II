@@ -16,10 +16,10 @@
   
   El Cuadro \ref{tab:qa_sync} presenta los resultados obtenidos para esta categoría, confirmando que los servicios de notificación y sincronización funcionan correctamente en condiciones normales y de conectividad limitada:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -34,13 +34,16 @@
   OFF-012 & Exitoso. Operación offline. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Notificaciones y sincronización.}\label{tab:qa_sync}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Notificaciones y sincronización.}\label{tab:qa_sync}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   \item Gestión de materias y docentes
   
-  Esta categoría valida los flujos de administración de materias inscritas y la gestión de preferencias de docentes, incluyendo las operaciones de alta, modificación y baja de inscripciones. Se verifica la correcta persistencia de los cambios en la base de datos local y la sincronización de las preferencias con el motor de generación de horarios:
+  Esta categoría se enfoca en la validación de los flujos de administración académica, abarcando la gestión de materias inscritas y la personalización de preferencias de docentes. Se evalúan exhaustivamente las operaciones de alta, modificación y baja de registros para asegurar una experiencia de usuario coherente y sin fricciones durante el ciclo de vida de la inscripción.
+  
+  Se verifica la correcta persistencia de los cambios en la base de datos local y la sincronización de las preferencias con el motor de generación de horarios:
   
   \begin{enumerate}[label=\alph*)]
     \item SUBJ-013 (Agregar materia completa): Valida el flujo AddSubjectFlowScreen desde la selección de carrera hasta la confirmación del grupo. Se verifica la navegación por SelectCareerScreen, SelectLevelScreen, SelectSubjectScreen y SelectGroupScreen. Resultado esperado: materia inscrita correctamente con horarios asociados.
@@ -54,12 +57,14 @@
     \item TEACH-017 (Onboarding de favoritos): Valida TeacherFavoritesIntroScreen para la introducción del sistema de favoritos. Se verifica que el usuario comprenda el impacto de marcar favoritos en la generación de horarios. Resultado esperado: flujo claro y navegación correcta.
   \end{enumerate}
   
+  La ejecución de estos casos de prueba garantiza que las interacciones del usuario con los componentes de gestión académica mantengan la integridad referencial y visual en todo momento. Se presta especial atención a la transición entre pantallas y la persistencia inmediata de las preferencias, elementos fundamentales para que el motor de generación de horarios disponga de datos precisos y actualizados en cada consulta.
+  
   El Cuadro \ref{tab:qa_materias} presenta los resultados obtenidos para esta categoría, donde se valida la correcta integración entre las pantallas de gestión y los repositorios de datos:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -74,9 +79,10 @@
   TEACH-017 & Exitoso. Onboarding claro. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Gestión de materias y docentes.}\label{tab:qa_materias}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Gestión de materias y docentes.}\label{tab:qa_materias}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de duplicación de inscripciones (SUBJ-014), se implementa una validación previa en el caso de uso que verifica si la materia ya está inscrita antes de procesar el cambio de grupo. Esta verificación consulta la base de datos local para determinar el estado actual de la inscripción.
   
@@ -94,12 +100,14 @@
     \item DB-020 (Consultas con relaciones): Valida las queries con JOINs en GroupScheduleRepositoryImpl y SelectedSubjectRepositoryImpl. Resultado esperado: datos relacionados correctamente cargados.
   \end{enumerate}
   
+  La solidez de la capa de persistencia se evalúa mediante la verificación de la atomicidad en las operaciones complejas y la estabilidad de las relaciones de datos. Estos mecanismos de control aseguran que la información académica del estudiante se mantenga íntegra incluso ante fallos inesperados de la aplicación o del sistema operativo, garantizando una recuperación de estado confiable y consistente.
+  
   El Cuadro \ref{tab:qa_db} presenta los resultados obtenidos para esta categoría, donde se verifica la consistencia de los datos ante operaciones concurrentes y fallos simulados:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -110,9 +118,10 @@
   DB-020 & Exitoso. JOINs correctos. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Persistencia y base de datos.}\label{tab:qa_db}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Persistencia y base de datos.}\label{tab:qa_db}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de inconsistencia en transacciones (DB-019), se implementa la anotación @Transaction en los métodos del DAO que realizan operaciones compuestas.
   
@@ -130,12 +139,15 @@
     \item CONF-023 (Días visibles del calendario): Valida la configuración de días visibles en la vista semanal. Resultado esperado: calendario respeta la configuración del usuario.
   \end{enumerate}
   
+  Estas pruebas garantizan que la personalización del sistema, como el tema visual y la configuración del calendario, persista correctamente entre sesiones. El control sobre estos ajustes globales asegura la consistencia operativa y mejora la experiencia del usuario al evitar la reconfiguración manual de la herramienta.
+  
+  
   El Cuadro \ref{tab:qa_config} presenta los resultados obtenidos para esta categoría, confirmando que las preferencias del usuario se mantienen correctamente entre sesiones:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -146,13 +158,12 @@
   CONF-023 & Fallido. No actualizaba vista. & Recomposición forzada del calendario. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Configuración y preferencias.}\label{tab:qa_config}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Configuración y preferencias.}\label{tab:qa_config}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
-  Para resolver el problema de actualización de días visibles (CONF-023), se implementa un mecanismo de recomposición que fuerza la reconstrucción del componente de calendario cuando cambian las preferencias.
-  
-  Este enfoque utiliza un estado observable que notifica a los componentes dependientes cuando hay cambios en la configuración, garantizando que la interfaz refleje inmediatamente las nuevas preferencias.
+  Para resolver el problema de actualización de días visibles (CONF-023), se implementa un mecanismo de recomposición basado en un estado observable que fuerza la reconstrucción del componente de calendario ante cambios en la configuración. Este enfoque notifica a los elementos dependientes para garantizar que la interfaz refleje las nuevas preferencias de forma directa.
   
   \item Asistente inteligente Simon
   
@@ -170,10 +181,10 @@
   
   El Cuadro \ref{tab:qa_simon} presenta los resultados obtenidos para esta categoría, donde se valida la correcta integración entre el modelo de IA y el sistema de notificaciones:
   
-  \begin{table}[H]
-  \small
+  \begin{center}
+  \begin{minipage}{\linewidth}
   \centering
-  \begin{tabularx}{\linewidth}{p{2.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.0cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.8cm}@{}}
   \toprule
   Caso & Resultado Inicial & Acción Correctiva & Estado \\
   \midrule
@@ -186,9 +197,10 @@
   AI-027 & Exitoso. Notificaciones correctas. & Ninguna requerida. & Validado. \\
   \bottomrule
   \end{tabularx}
-  \caption{Resultados de pruebas: Asistente inteligente Simon.}\label{tab:qa_simon}
-  \small{Fuente: Elaboración propia.}
-  \end{table}
+  \captionof{table}{Resultados de pruebas: Asistente inteligente Simon.}\label{tab:qa_simon}
+  Fuente: Elaboración propia.
+  \end{minipage}
+  \end{center}
   
   Para resolver el problema de descarga del modelo (AI-025), se implementa un mecanismo de reintentos con backoff exponencial que maneja automáticamente las fallas de conectividad.
   
