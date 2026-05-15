@@ -189,3 +189,10 @@ El documento debe incluir:
 - Capítulo V: Conclusiones y Recomendaciones
 - Bibliografía
 - Anexos
+
+## Subtítulos y Numeración Manual
+En secciones con excesiva profundidad jerárquica (más de tres niveles, ej. 4.1.1.1), se debe evitar el uso de comandos estructurales como `\subsubsection` si estos no están configurados con la numeración deseada o si exceden el límite permitido.
+
+- **Numeración:** Usar el entorno `enumerate` y comandos `\item` para organizar grupos de evidencia o subsecciones internas. Esto garantiza una alineación y numeración automática (1., 2., 3.) consistente con el resto del documento.
+- **Estilo:** Los títulos de estos elementos (texto junto al `\item`) deben mantenerse en **letra normal** (sin negritas, sin cursivas, sin teletipo).
+- **Consistencia:** Mantener el mismo estilo de lista en todo el capítulo para asegurar la uniformidad visual.

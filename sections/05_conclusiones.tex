@@ -9,7 +9,7 @@
 \noindent En este capítulo se presentan las conclusiones obtenidas a partir del desarrollo del proyecto, en función del objetivo general y los objetivos específicos planteados.
 
 \begin{itemize}
-\setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
+\setlength\itemsep{0.45em}\setlength\parskip{0.45em}\setlength\parsep{0.45em}
 
 \item Al desarrollar el sistema de personalización, se identificó que los estudiantes poseen preferencias de organización contradictorias. Este obstáculo se superó implementando la clase ScheduleGeneratorUseCaseImpl, la cual utiliza un objeto GenerateParams para filtrar opciones basándose en días permitidos, evasión de conflictos y priorización de docentes favoritos, cumpliendo así el objetivo de flexibilidad mediante una configuración granular.
 
@@ -42,7 +42,7 @@ Por esta razón, se optó por reemplazar dicho enfoque con un algoritmo recursiv
 \noindent A partir de las limitaciones identificadas durante el desarrollo y la retroalimentación de los usuarios, se presentan las siguientes recomendaciones como líneas de trabajo futuro orientadas a extender la funcionalidad de TecnoTime, mejorar su utilidad en el contexto académico real y mantener un diseño coherente, escalable y sostenible.
 
 \begin{itemize}
-\setlength\itemsep{0.45em}\setlength\parskip{0pt}\setlength\parsep{0pt}
+\setlength\itemsep{0.45em}\setlength\parskip{0.45em}\setlength\parsep{0.45em}
 
 \item Se recomienda implementar una funcionalidad de edición manual profunda en el repositorio de horarios. Actualmente, la inmutabilidad de los datos generados por ScheduleGeneratorUseCaseImpl impide reflejar cambios informales; permitir la modificación directa de los objetos GroupSchedule aumentaría la utilidad de la aplicación ante cambios de último momento. Esta mejora requeriría adaptar la capa de dominio y persistencia para diferenciar entre horarios generados automáticamente y ajustes realizados por el estudiante.
 

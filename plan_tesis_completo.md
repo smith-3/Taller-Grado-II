@@ -38,7 +38,7 @@ Este documento vincula la estructura académica de la tesis con la implementaci�
 
 **2.3. Algoritmia de Planificación (Timetabling)**
 *   2.3.1. **Problemas de Satisfacción de Restricciones (CSP):** Modelado matemático.
-    *   *Sustento en Código:* Clases `Subject`, `Group`, `Schedule`. Restricciones de "no solape" y "cupos".
+    *   *Sustento en Código:* Clases `Subject`, `Group`, `Schedule`. Restricciones de "no solape" y disponibilidad de grupos publicados.
 *   2.3.2. **Algoritmos de Búsqueda (Backtracking):** Exploración del espacio de soluciones.
     *   *Sustento en Código:* Lógica recursiva en `ScheduleGenerator.kt`.
 *   2.3.3. **Heurísticas de Optimización:** Poda y ordenamiento.
@@ -89,9 +89,10 @@ Este documento vincula la estructura académica de la tesis con la implementaci�
 *   *Objetivo:* Funcionar sin internet.
 *   *Implementación:* `NetworkConnectivityChecker`. Lógica de "Single Source of Truth" en Repositorios. `AutoSyncUseCase`.
 
-**4.6. F5: Interoperabilidad (JSON)**
-*   *Objetivo:* Compartir horarios.
-*   *Implementación:* Serialización JSON (`Kotlin Serialization` o `Gson`). Esquema de intercambio definido en `ShareableScheduleDto`.
+**4.6. F5: Interoperabilidad local y portabilidad JSON**
+*   *Objetivo:* Compartir, importar y respaldar horarios sin depender de una integración transaccional con sistemas institucionales.
+*   *Implementación:* Serialización JSON con `Gson`, esquema de intercambio definido en `ShareableScheduleDto`, validación de versión e importación idempotente mediante `LoadShareableScheduleUseCase` e `ImportSharedScheduleUseCase`.
+*   *Alcance:* La aplicación consume información pública de horarios y mantiene los datos en el dispositivo. No automatiza inscripción en WebSIS ni modifica SAGAA, Cappuchino u otros sistemas institucionales.
 
 **4.7. F6: Experiencia de Usuario (UX) y Navegación**
 *   *Objetivo:* Flujos de usuario fluidos.
