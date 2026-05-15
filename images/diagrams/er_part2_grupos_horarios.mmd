@@ -2,79 +2,49 @@
   "theme": "default",
   "themeVariables": {
     "fontFamily": "Helvetica, Arial, sans-serif",
-    "fontSize": "18px"
+    "fontSize": "24px"
   },
   "er": {
-    "layoutDirection": "TB",
-    "entityPadding": 20,
+    "layoutDirection": "LR",
+    "entityPadding": 24,
     "useMaxWidth": true
   }
 }}%%
 
 erDiagram
-    SUBJECT {
-        varchar code PK
-        varchar name
+    CAREERS {
+        text code PK
+        text name
     }
 
-    LEVEL {
-        int id PK
-        varchar name
+    SUBJECTS {
+        text code PK
+        text name
+        integer is_active
     }
 
-    GRUPO {
-        int id PK
-        varchar subject_code FK
-        int level_id FK
-        int number
-        int size
-        enum modality "TEO | LAB | MIXTO"
-        text notes
-        timestamp created_at
-        timestamp updated_at
+    LEVELS {
+        integer id PK
+        text name
     }
 
-    TEACHER {
-        int id PK
-        varchar staff_code
-        varchar name
-        varchar email UK
-        varchar phone
-        varchar department
-        boolean is_favorite
-        timestamp created_at
-        timestamp updated_at
+    GROUPS {
+        integer id PK
+        text subject_code FK
+        text group_id
+        integer level_id FK
+        text group_name
+        text type
+        integer is_active
+        text modality
     }
 
-    CLASSROOM {
-        int id PK
-        varchar code UK
-        varchar name
-        varchar building
-        int floor
-        int capacity
-        enum room_type "TEO | LAB | SEM"
-        text features
-        timestamp created_at
-        timestamp updated_at
+    CAREER_SUBJECT_GROUPS {
+        text career_code PK
+        integer group_id PK
     }
 
-    GROUP_SCHEDULE {
-        int id PK
-        int group_id FK
-        int teacher_id FK
-        int classroom_id FK
-        int day
-        varchar start_time
-        varchar end_time
-        enum week_parity "all | odd | even"
-        varchar period_label
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    SUBJECT ||--o{ GRUPO : "tiene"
-    LEVEL ||--o{ GRUPO : "contiene"
-    GRUPO ||--o{ GROUP_SCHEDULE : "programa"
-    TEACHER ||--o{ GROUP_SCHEDULE : "dicta"
-    CLASSROOM ||--o{ GROUP_SCHEDULE : "aloja"
+    SUBJECTS ||--o{ GROUPS : agrupa
+    LEVELS ||--o{ GROUPS : clasifica
+    CAREERS ||--o{ CAREER_SUBJECT_GROUPS : oferta
+    GROUPS ||--o{ CAREER_SUBJECT_GROUPS : pertenece

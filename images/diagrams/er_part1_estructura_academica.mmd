@@ -2,58 +2,34 @@
   "theme": "default",
   "themeVariables": {
     "fontFamily": "Helvetica, Arial, sans-serif",
-    "fontSize": "18px"
+    "fontSize": "24px"
   },
   "er": {
-    "layoutDirection": "TB",
-    "entityPadding": 20,
+    "layoutDirection": "LR",
+    "entityPadding": 24,
     "useMaxWidth": true
   }
 }}%%
 
 erDiagram
-    CAREER {
-        varchar code PK
-        varchar name
-        varchar short_name
-        varchar faculty
-        int plan_year
-        timestamp created_at
-        timestamp updated_at
+    CAREERS {
+        text code PK
+        text name UK
+        text pdf_url UK
+        text updated_date
+        text last_sync_time
+        integer is_enabled
     }
 
-    LEVEL {
-        int id PK
-        varchar career_code FK
-        int number
-        varchar name
-        enum shift "M | T | N"
-        enum modality "presencial | virtual | mixta"
-        timestamp created_at
-        timestamp updated_at
+    LEVELS {
+        integer id PK
+        text name UK
     }
 
-    SUBJECT {
-        varchar code PK
-        varchar name
-        varchar acronym
-        int credits
-        int weekly_hours
-        enum status "activa | inactiva"
-        timestamp created_at
-        timestamp updated_at
+    CAREER_LEVELS {
+        text career_code PK
+        integer level_id PK
     }
 
-    CAREER_SUBJECT {
-        int id PK
-        varchar career_code FK
-        varchar subject_code FK
-        int semester
-        boolean is_mandatory
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    CAREER ||--o{ LEVEL : "tiene"
-    CAREER ||--o{ CAREER_SUBJECT : "incluye"
-    SUBJECT ||--o{ CAREER_SUBJECT : "pertenece a"
+    CAREERS ||--o{ CAREER_LEVELS : relaciona
+    LEVELS ||--o{ CAREER_LEVELS : relaciona

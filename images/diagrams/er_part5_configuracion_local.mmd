@@ -1,0 +1,38 @@
+%%{init: {
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "24px"
+  },
+  "er": {
+    "layoutDirection": "LR",
+    "entityPadding": 24,
+    "useMaxWidth": true
+  }
+}}%%
+
+erDiagram
+
+    USER_SETTINGS ||--o| MOTIVATIONAL_SLOT_SCORES : "registro local"
+    USER_SETTINGS {
+        integer id PK
+        text user_name
+        integer use_24_hours
+        integer show_weekend
+        integer is_first_launch
+        integer show_free_days
+        integer theme_dark
+        integer enable_class_notifications
+        integer enable_note_reminders
+        integer enable_ai
+    }
+
+    MOTIVATIONAL_SLOT_SCORES {
+        integer slot_id PK
+        text slot_name
+        integer start_hour
+        integer end_hour
+        integer success_count
+        integer total_attempts
+        integer last_attempt_timestamp
+    }

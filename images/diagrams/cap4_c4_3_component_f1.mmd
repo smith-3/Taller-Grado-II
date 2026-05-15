@@ -9,8 +9,11 @@
 flowchart TB
     %% C4 Nivel 3: Componentes (F1)
 
-    subgraph App["📱 App Android - Componentes"]
+    subgraph App["App Android - Componentes"]
+        direction TB
         vm[[GenerateScheduleViewModel]]:::component
+        net[[NetworkConnectivityChecker]]:::component
+        prefs[[SyncPreferences]]:::component
         sync[[AutoSyncUseCase]]:::component
         scraper[[ScheduleScraper]]:::component
         dl[[PdfDownloader]]:::component
@@ -21,12 +24,14 @@ flowchart TB
     end
 
     %% Relaciones internas
-    vm --> sync
+    vm --> net
+    net --> prefs
+    prefs --> sync
     sync --> scraper
-    sync --> importUc
-    importUc --> dl
+    scraper --> dl
     dl --> ex
     ex --> parser
+    parser --> importUc
     importUc --> repos
 
     %% Estilos

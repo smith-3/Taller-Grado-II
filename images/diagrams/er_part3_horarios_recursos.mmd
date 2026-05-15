@@ -1,0 +1,44 @@
+%%{init: {
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "24px"
+  },
+  "er": {
+    "layoutDirection": "LR",
+    "entityPadding": 24,
+    "useMaxWidth": true
+  }
+}}%%
+
+erDiagram
+    GROUPS {
+        integer id PK
+        text group_name
+    }
+
+    GROUP_SCHEDULES {
+        integer id PK
+        integer group_id FK
+        text day
+        text start_time
+        text end_time
+        text classroom_id FK
+        integer teacher_id FK
+        integer is_active
+    }
+
+    CLASSROOMS {
+        text id PK
+        text name UK
+    }
+
+    TEACHERS {
+        integer id PK
+        text full_name UK
+        integer favorite
+    }
+
+    GROUPS ||--o{ GROUP_SCHEDULES : programa
+    CLASSROOMS ||--o{ GROUP_SCHEDULES : asigna
+    TEACHERS ||--o{ GROUP_SCHEDULES : dicta

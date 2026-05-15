@@ -1,0 +1,37 @@
+flowchart TB
+    subgraph A[Academico]
+        careers[careers]
+        levels[levels]
+        subjects[subjects]
+        career_levels[career_levels]
+        groups[groups]
+        career_subject_groups[career_subject_groups]
+    end
+
+    subgraph B[Horarios]
+        group_schedules[group_schedules]
+        classrooms[classrooms]
+        teachers[teachers]
+    end
+
+    subgraph C[Usuario]
+        selected_subjects[selected_subjects]
+        academic_events[academic_events]
+        user_settings[user_settings]
+        motivational_slot_scores[motivational_slot_scores]
+    end
+
+    careers --> career_levels
+    levels --> career_levels
+    subjects --> groups
+    levels --> groups
+    careers --> career_subject_groups
+    groups --> career_subject_groups
+    groups --> group_schedules
+    classrooms --> group_schedules
+    teachers --> group_schedules
+    groups --> selected_subjects
+    selected_subjects --> academic_events
+
+    user_settings -. configuracion .- selected_subjects
+    motivational_slot_scores -. soporte local .- user_settings

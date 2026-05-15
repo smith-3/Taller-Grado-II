@@ -1,0 +1,44 @@
+%%{init: {
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "24px"
+  },
+  "er": {
+    "layoutDirection": "LR",
+    "entityPadding": 24,
+    "useMaxWidth": true
+  }
+}}%%
+
+erDiagram
+    GROUPS {
+        integer id PK
+        text group_name
+    }
+
+    SELECTED_SUBJECTS {
+        integer id PK
+        integer group_id FK
+        text color
+        text emoji
+        text status
+        integer notify
+        integer notify_before_minutes
+        text links
+    }
+
+    ACADEMIC_EVENTS {
+        integer id PK
+        integer selected_subject_id FK
+        text title
+        text date
+        text start_time
+        text end_time
+        text location
+        text notes
+        text type
+    }
+
+    GROUPS ||--o{ SELECTED_SUBJECTS : selecciona
+    SELECTED_SUBJECTS ||--o{ ACADEMIC_EVENTS : registra
