@@ -1,39 +1,111 @@
 % ============================
 \section{Fase 7: Notificaciones e IA (Simón, opt-in)}
 
-Esta fase se enfoca en enriquecer la experiencia de usuario mediante la incorporación de asistencia proactiva y capacidades de inteligencia artificial generativa. El desarrollo prioriza la privacidad y la autonomía del usuario, implementando un sistema de recordatorios automatizados para la gestión del tiempo académico y un asistente conversacional (``Simón'') basado en modelos de lenguaje grandes (LLMs) ejecutados localmente.
+Esta fase se enfoca en enriquecer la experiencia de usuario mediante la incorporación de asistencia proactiva y capacidades de inteligencia artificial generativa. El desarrollo prioriza la privacidad y la autonomía del usuario, implementando un sistema de recordatorios automatizados para la gestión del tiempo académico y un asistente conversacional (``Simón'') basado en modelos de lenguaje grandes (LLMs) ejecutados en el dispositivo.
 
 Todo el módulo se diseña bajo un estricto principio de ``opt-in'', asegurando que las funcionalidades avanzadas no comprometan el rendimiento base ni generen dependencias externas obligatorias.
 
 \subsection{Objetivo}
-El objetivo central es dotar a la aplicación de capacidades de asistencia inteligente que operen en segundo plano sin interrumpir el flujo principal. Específicamente, se busca garantizar la entrega puntual de notificaciones académicas (clases, exámenes) y ofrecer un asistente de IA capaz de responder consultas contextuales, todo ello ejecutándose exclusivamente en el dispositivo (on-device) para mantener la privacidad de los datos y funcionar sin conexión a internet.
+El objetivo central es dotar a la aplicación de capacidades de asistencia inteligente que operen en segundo plano sin interrumpir el flujo principal. En concreto, se busca garantizar la entrega puntual de notificaciones académicas (clases, exámenes) y ofrecer un asistente de IA capaz de generar mensajes contextuales, todo ello ejecutándose de forma exclusiva en el dispositivo (on-device) para mantener la privacidad de los datos y funcionar sin conexión a internet.
+
+La pertinencia del agente se justifica porque los recordatorios académicos no deben limitarse a indicar una hora fija. En escenarios reales, el mensaje puede variar según el tipo de evento, la cercanía de la clase, la preferencia de mensajes motivacionales y el estado de configuración del estudiante de la facultad.
+
+Un sistema basado exclusivamente en plantillas estáticas cumple con el aviso mínimo requerido, pero limita la personalización del tono y del contenido entregado. Por esta razón, el agente se incorpora como una capa opcional de generación textual sobre el sistema de notificaciones, sin reemplazar las funciones esenciales de planificación o almacenamiento.
 
 \subsection{Implementación de notificaciones e IA}
-La implementación técnica se fundamenta en el uso de WorkManager para la programación robusta de tareas diferidas, garantizando la ejecución de recordatorios incluso si la aplicación no está en primer plano o si el dispositivo se ha reiniciado. Específicamente, la clase NotifyWorker y SimonClassReminderWorker orquestan la lógica de disparo, calculando los tiempos de antelación configurados por el usuario (ej. 15 minutos antes de la clase).
+La implementación técnica se fundamenta en el uso de herramientas para la programación de tareas diferidas, garantizando la ejecución de recordatorios incluso si la aplicación no está en primer plano o si el dispositivo se ha reiniciado. Específicamente, los componentes de gestión de notificaciones orquestan la lógica de disparo, calculando los tiempos de antelación configurados por el estudiante para cada actividad académica.
 
-Para la entrega visual, se utiliza un NotificationChannel con ID ``default'', asegurando compatibilidad con las versiones modernas de Android que requieren categorización de alertas. A diferencia de implementaciones básicas con AlarmManager, esta arquitectura permite una gestión más flexible de los recursos y la integración fluida con componentes de inyección de dependencias.
+Para la entrega visual, se utiliza un canal de notificaciones estandarizado que asegura la compatibilidad con las versiones modernas del sistema operativo móvil. Esta arquitectura permite una gestión eficiente de los recursos del hardware y facilita la integración con el sistema de inyección de dependencias para el acceso a datos locales sin requerir conectividad permanente con internet.
 
-En cuanto a la integración de IA, el sistema emplea una lógica de "fallback" robusta. El worker verifica primero las preferencias del usuario (enableAi y enableAiInClassNotifications). Si la IA está habilitada, se solicita un "lease" al AiModelUsageManager para gestionar la contención de recursos (CPU/RAM) antes de invocar a SimonNotificationUseCase. En caso de fallo en la generación o si el modelo no está disponible, el sistema degrada automáticamente a una notificación estándar generada por createClassReminderNotification, garantizando que el usuario nunca pierda un recordatorio crítico.
+La integración de inteligencia artificial opera bajo una lógica de respaldo que prioriza la puntualidad de los avisos. El gestor verifica las preferencias del usuario y solicita una reserva de recursos computacionales antes de invocar la generación del mensaje para evitar la saturación del hardware. En caso de indisponibilidad del modelo local o fallos en la inferencia, el sistema degrada de forma automática a una notificación estándar, garantizando la entrega de la alerta académica.
 
-El Cuadro \ref{tab:notificaciones_ia} detalla los componentes clave que intervienen en este proceso, destacando su responsabilidad técnica y la implementación específica en el código.
+Para los mensajes motivacionales, el asistente valida el contexto temporal y la carga académica actual, evitando comunicaciones intrusivas durante periodos de descanso activo. El proceso asegura que el tono del mensaje sea oportuno y coherente con la situación del estudiante. Este mecanismo permite al asistente aprender de la respuesta del usuario, ajustando la entrega de futuros mensajes de forma dinámica para optimizar el impacto en el rendimiento.
+
+El sistema registra cada intento mediante identificadores de franja horaria que asocian las acciones de apertura o descarte con el origen del mensaje. Estos identificadores alimentan las métricas estadísticas locales sin comprometer la fluidez de la aplicación ni requerir el envío de información sensible hacia servidores externos. Este flujo de datos permite evaluar la efectividad del agente inteligente preservando el control total del usuario sobre su información.
+
+Este registro se realiza sin exponer datos personales ni acoplar el contenido generado a la identidad del estudiante, garantizando la privacidad por diseño. El agente inteligente opera de forma independiente al núcleo funcional, permitiendo que la base de datos mantenga su integridad estructural ante posibles cambios futuros en los modelos de lenguaje. Esta separación asegura la robustez y escalabilidad de las capacidades cognitivas del sistema.
+
+Los componentes fundamentales que intervienen en la gestión de notificaciones y asistencia por inteligencia artificial se detallan en el Cuadro \ref{tab:f7_notificaciones_ia}, resaltando su responsabilidad técnica y su rol dentro de la arquitectura resiliente del sistema:
 
 \begin{table}[H]
-\small
 \centering
-\begin{tabularx}{\linewidth}{@{}p{3.5cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{4cm}@{}}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{4cm}X@{}}
 \toprule
-Componente & Responsabilidad & Detalle Técnico \\
+Componente & Responsabilidad Técnica \\
 \midrule
-LlamaAndroidClient (IA) & Ejecución de inferencia de modelos de lenguaje en el dispositivo. & Biblioteca llama.cpp vía JNI optimizada para Android. \\
-AiModelUsageManager & Orquestación de concurrencia y gestión de memoria del modelo. & Patrón Mutex con Leases (acquire/release) para carga dinámica. \\
-NotifyWorker / Workers & Ejecución garantizada de tareas diferidas en segundo plano. & WorkManager (CoroutineWorker), persistente ante reinicios. \\
-NotificationChannel & Canal de entrega visual jerarquizado para alertas de usuario. & ID default, compatibilidad con clasificación de alertas. \\
-Estrategia Fallback & Degradación del servicio ante fallos de IA o falta de recursos. & Conmutación automática a plantillas estáticas en caso de error. \\
+NotifyWorker & Programación y disparo de recordatorios académicos ante eventos del calendario. \\
+SimonMotivationalWorker & Orquestación de mensajes motivacionales y validación de franjas horarias. \\
+NotificationStyler & Personalización visual y gestión de la jerarquía de canales de alerta del sistema. \\
+NotificationActionReceiver & Procesamiento de interacciones del usuario y registro de métricas de uso. \\
+AiModelUsageManager & Administración de la concurrencia y memoria para modelos de lenguaje locales. \\
+LlamaAndroidClient & Ejecución de inferencia de modelos de lenguaje mediante bibliotecas optimizadas. \\
 \bottomrule
 \end{tabularx}
-\caption{Componentes de notificaciones e inteligencia artificial.}\label{tab:notificaciones_ia}
-\small{Fuente: Elaboración propia.}
+\caption{Componentes de notificaciones y asistencia inteligente.}\label{tab:f7_notificaciones_ia}
+Fuente: Elaboración propia.
 \end{table}
 
+\subsection{Entrenamiento, datos y enfoque de aprendizaje}
+El sistema utiliza una arquitectura de lenguaje de 350 millones de parámetros, optimizada para hardware móvil mediante un ajuste supervisado de instrucciones con adaptación de bajo rango \cite{liquidai_lfm}. Este enfoque permite especializar el comportamiento del modelo modificando únicamente los módulos de atención y proyección, lo que reduce el costo computacional y la memoria requerida durante la fase de aprendizaje académico \cite{lora_paper, llm_finetuning}.
+
+El proceso de entrenamiento se ejecutó durante 3 épocas con un lote efectivo de 16 ejemplos, empleando un optimizador de 8 bits y técnicas de control de gradientes para operar en hardware de consumo. Se implementó un planificador de tasa de aprendizaje de tipo coseno para asegurar una convergencia estable, garantizando la reproducibilidad del experimento sin requerir infraestructura de alto rendimiento.
+
+El conjunto de datos incluye conversaciones estructuradas con roles de sistema, usuario y asistente, orientadas exclusivamente a recordatorios académicos y apoyo motivacional \cite{simon_dataset}. Un aspecto crítico fue la imposición de un formato de salida JSON parseable mediante el enmascaramiento de las entradas del usuario, lo que asegura que el modelo produzca objetos de datos consistentes durante la interpretación local del dispositivo.
+
+Los resultados se exportan en variantes cuantizadas para el formato de inferencia local, permitiendo un despliegue flexible según la capacidad de memoria del dispositivo móvil del estudiante \cite{simon_model}. Esta metodología facilita la mejora continua del asistente y asegura su interoperabilidad con diversas herramientas tecnológicas, consolidando una base robusta para las capacidades inteligentes del sistema en la facultad.
+
+Los parámetros específicos configurados para la fase de ajuste fino del modelo de lenguaje se resumen en el Cuadro \ref{tab:f7_entrenamiento_ia}, detallando los valores óptimos encontrados para la especialización del asistente:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{4cm}X@{}}
+\toprule
+Parámetro de Entrenamiento & Valor Configurado \\
+\midrule
+Modelo base & LiquidAI LFM 2.5 (350 millones) \\
+Método de adaptación & Ajuste supervisado con LoRA \\
+Rango de adaptación (r) & 16 \\
+Factor de escala (alpha) & 32 \\
+Épocas de entrenamiento & 3 \\
+Tasa de aprendizaje & 2 $\times$ 10$^{-4}$ \\
+Lote efectivo (batch size) & 16 ejemplos \\
+Módulos objetivo & Capas de atención y proyección \\
+\bottomrule
+\end{tabularx}
+\caption{Configuración técnica del entrenamiento de IA.}\label{tab:f7_entrenamiento_ia}
+Fuente: Elaboración propia.
+\end{table}
+
+\subsection{Variante utilizada en la aplicación móvil}
+Para la integración en Android se selecciona la variante LFM2.5-350M.Q4\_K\_M.gguf, con un tamaño aproximado de 229\,MB. Esta elección equilibra la calidad de la respuesta con las restricciones de hardware del entorno móvil. Las características técnicas del modelo y sus requisitos operativos se resumen en el Cuadro \ref{tab:simon_modelo_movil}:
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{4.2cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Característica & Valor documentado \\
+\midrule
+Modelo base & LiquidAI/LFM2.5-350M \\
+Parámetros & 350 millones \\
+Capas & 16 capas: 10 bloques LIV convolucionales doble compuerta y 6 bloques GQA \\
+Longitud de contexto & 32.768 tokens \\
+Vocabulario & 65.536 tokens \\
+Formato de despliegue & GGUF para inferencia local con llama.cpp/JNI \\
+Variante usada en Android & Q4\_K\_M \\
+Tamaño del artefacto usado & Aproximadamente 229\,MB \\
+Memoria esperada & Inferior a 1\,GB según la ficha técnica del modelo base, sujeta al contexto y a la implementación nativa \\
+\bottomrule
+\end{tabularx}
+\caption{Características técnicas del modelo utilizado por Simón en Android.}\label{tab:simon_modelo_movil}
+Fuente: Elaboración propia con base en Liquid AI \cite{liquidai_lfm} y el repositorio del modelo ajustado \cite{simon_model}.
+\end{table}
+
+\subsection{Impacto en recursos del dispositivo}
+El impacto en rendimiento y batería se controla mediante cuatro decisiones de diseño. Primero, la IA permanece desactivada por defecto y solo se utiliza si el usuario la habilita de forma explícita. Segundo, el modelo Q4\_K\_M no forma parte del APK base, sino que se descarga bajo demanda y puede eliminarse desde la configuración. Tercero, la inferencia se ejecuta únicamente ante eventos concretos, como la generación de un recordatorio asistido, evitando procesos permanentes en segundo plano. Cuarto, AiModelUsageManager limita la concurrencia para impedir múltiples cargas simultáneas del modelo.
+
+En términos de batería, la estrategia evita inferencias continuas y delega la programación de recordatorios a WorkManager, que coordina la ejecución con las políticas del sistema operativo. Cuando el dispositivo presenta restricciones de recursos o el modelo no se encuentra disponible, el sistema utiliza plantillas estáticas. De esta forma, el recordatorio académico mantiene su disponibilidad incluso cuando la generación con IA no resulta conveniente para el estado del dispositivo.
+
 \subsection{Resultados y verificación}
-El sistema de notificaciones entrega recordatorios puntuales en los canales configurados, respetando las preferencias del usuario. La integración de IA opera bajo el modelo opt-in estricto, descargando el modelo solo tras la confirmación del usuario y ejecutando inferencias localmente sin impacto negativo en el rendimiento general de la aplicación.
+El sistema de notificaciones entrega recordatorios puntuales en los canales configurados, respetando las preferencias del usuario. La integración de IA opera bajo el modelo opt-in estricto, descargando el modelo solo tras la confirmación del usuario y ejecutando inferencias localmente. La verificación confirma que, ante errores de carga, falta de modelo o restricciones de recursos, el sistema conserva la notificación estándar y mantiene aislado el núcleo funcional de la aplicación.

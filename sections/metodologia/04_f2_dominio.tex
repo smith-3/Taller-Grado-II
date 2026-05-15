@@ -1,43 +1,51 @@
 % ============================
 \section{Fase 2: Modelo de dominio (entidades, reglas, mapeo)}
 
-Esta fase consolida la arquitectura de datos de TecnoTime, estableciendo un modelo de dominio robusto que actúa como el núcleo de la lógica de negocio. Siguiendo los principios de Clean Architecture, este modelo desacopla las reglas académicas de la interfaz de usuario y la persistencia, definiendo las estructuras fundamentales que soportan la generación de horarios, la gestión de preferencias y la interoperabilidad del sistema.
+Esta fase consolida la arquitectura de datos de TecnoTime, estableciendo un modelo de dominio robusto que actúa como el núcleo de la lógica de negocio.
+  
+Siguiendo los principios de Clean Architecture, este modelo desacopla las reglas académicas de la interfaz de usuario y la persistencia. Define las estructuras fundamentales que soportan la generación de horarios, la gestión de preferencias y la interoperabilidad del sistema.
 
 \subsection{Objetivo}
-El objetivo principal es formalizar las reglas de negocio del contexto académico en un esquema de datos estricto. Se busca garantizar la integridad referencial entre materias, grupos y docentes, asegurando que todas las operaciones del sistema, desde la visualización hasta la exportación, operen sobre datos consistentes y validados, independientemente de la fuente de origen (PDF o JSON).
+El objetivo principal es formalizar las reglas de negocio del contexto académico en un esquema de datos estricto. Se busca garantizar la integridad referencial entre materias, grupos y docentes.
+
+Esto asegura que todas las operaciones del sistema, desde la visualización hasta la exportación, operen sobre datos consistentes y validados, independientemente de la fuente de origen (PDF o JSON).
 
 \subsection{Implementación del modelo de dominio}
-La implementación se articula en tres ejes fundamentales derivados del análisis del código. Primero, se definen entidades ricas (Subject, Group, UserSettings) que encapsulan tanto estado como comportamiento. Segundo, se establecen invariantes de integridad mediante índices únicos y claves foráneas en la capa de persistencia (Room). Finalmente, se implementan estrategias de mapeo bidireccional que transforman estos modelos para su transporte (ShareableScheduleDto) y almacenamiento, manteniendo una clara separación de responsabilidades.
+La implementación se articula en tres ejes fundamentales derivados del análisis del código. Primero, se definen entidades ricas (Subject, Group, UserSettings) que encapsulan tanto estado como comportamiento.
+
+Segundo, se establecen invariantes de integridad mediante índices únicos y claves foráneas en la capa de persistencia (Room). Finalmente, se implementan estrategias de mapeo bidireccional que mantienen una clara separación de responsabilidades.
 
 \subsection{Entidades (derivadas del código)}
-El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento. Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real.
+El modelo de dominio de TecnoTime constituye la representación conceptual del problema de gestión de horarios académicos, traducido a entidades de software que encapsulan tanto datos como comportamiento.
+
+Este modelo se deriva directamente del análisis del código fuente implementado, garantizando la trazabilidad entre el diseño conceptual y la implementación real.
 
 Las entidades principales abarcan desde la representación de materias y grupos hasta la gestión de preferencias de usuario y configuraciones del sistema. A continuación se detallan las entidades fundamentales que componen este modelo:
 
 \begin{itemize}
-  \item Subject: domain/model/Subject.kt (code, name, isElective, isApproved, isActive).
-  \item Group: domain/model/Group.kt (id, subjectCode, groupId, levelId, groupName, type, modality, isActive).
-  \item GroupSchedule: domain/model/GroupSchedule.kt (id, groupId, day, startTime, endTime, classroomId, teacherId, isActive).
-  \item UserSettings: domain/model/UserSettings.kt (id, userName, use24Hours, showWeekend, isFirstLaunch, showFreeDays, themeDark, enableClassNotifications, classNotificationAdvanceMinutes, enableNoteReminders, noteReminderAdvanceMinutes, enableAi, enableAiInClassNotifications, enableAiInNoteReminders, enableAiEmotionalMonitoring, enableAiMotivationalMessages).
-  \item ShareableScheduleDto: domain/model/ShareableScheduleDto.kt (meta, careers, entries).
+  \item Subject: Representa la materia académica con atributos para el código, el nombre y los estados de aprobación o vigencia.
+  \item Group: Modela la unidad de cursada vinculada a una materia, identificada por un código de grupo, nivel y modalidad de dictado.
+  \item GroupSchedule: Define los bloques temporales de clase, asociando cada grupo con un día, rango de horas, aula y docente.
+  \item UserSettings: Centraliza las preferencias de personalización, incluyendo opciones de interfaz, notificaciones y funciones de inteligencia artificial.
+  \item ShareableScheduleDto: Estructura de transferencia diseñada para la exportación e importación de horarios mediante metadatos y entradas de agenda.
 \end{itemize}
 
 \subsection{Reglas e invariantes}
-La integridad del modelo de dominio se sustenta en un conjunto de reglas e invariantes que garantizan la consistencia de los datos a lo largo del ciclo de vida de la aplicación. Estas reglas abarcan desde restricciones de unicidad en identificadores hasta validaciones temporales que aseguran la coherencia de los horarios.
+La integridad del modelo de dominio se sustenta en un conjunto de reglas e invariantes que garantizan la consistencia de los datos a lo largo del ciclo de vida de la aplicación. Estas reglas abarcan desde restricciones de unicidad hasta validaciones temporales.
 
-La implementación de estas invariantes se realiza tanto a nivel de base de datos mediante índices y restricciones de integridad referencial, como a nivel de lógica de negocio mediante validaciones en los casos de uso. El cumplimiento estricto de estas reglas previene estados inconsistentes que podrían comprometer la funcionalidad del generador de horarios o la experiencia del usuario. Las reglas establecidas son:
+La implementación se realiza tanto a nivel de base de datos mediante índices, como a nivel de lógica de negocio mediante validaciones en los casos de uso. El cumplimiento de estas reglas previene estados inconsistentes en el generador de horarios. Las reglas establecidas son:
 
 \begin{itemize}
-  \item Unicidad de Materia: SubjectEntity define @Index(value = [\textquotedbl code\textquotedbl], unique = true).
-  \item Unicidad de Grupo: GroupEntity define @Index(value = [\textquotedbl subject\_code\textquotedbl, \textquotedbl group\_id\textquotedbl], unique = true) y claves foráneas hacia LevelEntity y SubjectEntity con borrado en cascada (ForeignKey.CASCADE).
-  \item Integridad de Horario: GroupScheduleEntity define claves foráneas hacia GroupEntity (CASCADE), ClassroomEntity (SET\_NULL) y TeacherEntity (SET\_NULL).
-  \item Validaciones de Negocio: GroupSchedule asegura que startTime sea menor a endTime y que los días correspondan a la enumeración WeekDay.
+  \item Unicidad de Materia: Se define un índice único para el campo de código en la entidad de materias para garantizar su identidad.
+  \item Unicidad de Grupo: Se establece un índice único compuesto para el código de materia e identificador de grupo, con restricciones de integridad.
+  \item Integridad de Horario: Se emplean claves foráneas hacia las entidades de grupos, aulas y docentes con reglas de borrado controlado.
+  \item Validaciones de Negocio: El sistema asegura la coherencia de los rangos horarios y la validez de los días de la semana según el dominio.
 \end{itemize}
 
 \subsection{Mapeos del ingreso al dominio y al almacenamiento}
-La arquitectura de TecnoTime implementa una clara separación entre las capas de ingreso de datos, dominio y persistencia, requiriendo transformaciones explícitas entre las representaciones de cada capa. Los mapeos bidireccionales permiten convertir datos desde formatos externos como PDF y JSON hacia el modelo de dominio, y posteriormente hacia entidades de base de datos para su almacenamiento persistente.
+La arquitectura de TecnoTime implementa una clara separación entre las capas de ingreso de datos, dominio y persistencia. Los mapeos bidireccionales permiten convertir datos desde formatos externos como PDF y JSON hacia el modelo de dominio.
 
-Esta estrategia de mapeo explícito facilita la evolución independiente de cada capa, permite la validación de datos en cada transformación y simplifica las pruebas unitarias al aislar las responsabilidades de cada componente. Los principales componentes de mapeo implementados son:
+Esta estrategia de mapeo facilita la evolución independiente de cada capa, permite la validación de datos en cada transformación y simplifica las pruebas unitarias al aislar las responsabilidades de cada componente. Los principales componentes implementados son:
 
 \begin{itemize}
   \item Ingreso de Datos: GenerateShareableScheduleJsonUseCase orquesta la obtención de información académica (GetAcademicInfoUseCase) y horarios semanales (GetWeeklyEnrolledScheduleUseCase), filtrando por materias seleccionadas.
@@ -57,45 +65,232 @@ Componentes principales del modelo:
   \item ShareableScheduleDto: Estructura de transferencia de datos diseñada para la exportación e importación de horarios. Encapsula una lista de carreras, metadatos de versión y una colección de entradas de horario (entries). Esta clase actúa como un contrato de datos que facilita la interoperabilidad entre diferentes instancias de la aplicación, asegurando que toda la información necesaria para reconstruir un horario esté contenida en un único objeto transferible.
 \end{itemize}
 
-En la capa de persistencia, las entidades definidas en data local entity actúan como espejo del dominio pero enriquecidas con anotaciones de la librería Room. La clase SubjectEntity mapea la tabla subjects y establece un índice único sobre el campo code para asegurar la identidad de cada materia. De manera similar, GroupEntity representa la tabla groups y define un índice compuesto sobre el código de materia y el identificador de grupo para evitar duplicados.
+En la capa de persistencia, las entidades definidas en el paquete de datos local actúan como un espejo del dominio enriquecido con anotaciones de Room. La clase SubjectEntity mapea la tabla de materias y establece un índice único sobre el campo code para asegurar su identidad, mientras que GroupEntity define un índice compuesto sobre el código de materia e identificador de grupo para evitar duplicados, implementando además restricciones de integridad mediante claves foráneas.
 
-Además, la entidad GroupEntity implementa restricciones de integridad referencial mediante claves foráneas hacia las tablas de niveles y materias, configuradas con reglas de borrado en cascada para mantener la consistencia de la base de datos.
+La lógica de negocio se orquesta mediante casos de uso en el paquete domain usecase, destacando el GenerateShareableScheduleJsonUseCase para la exportación de horarios. Este componente coordina la obtención de información académica y horarios semanales, filtrando y transformando los datos en una estructura JSON optimizada que garantiza la coherencia de la información compartida.
 
-La lógica de negocio se orquesta a través de casos de uso ubicados en el paquete domain usecase. Un componente destacado es GenerateShareableScheduleJsonUseCase, el cual encapsula la complejidad de la exportación de horarios. Este caso de uso coordina la obtención de información académica y horarios semanales, filtra los datos según las materias seleccionadas por el usuario y transforma la información resultante en una estructura de transferencia optimizada, asegurando que los datos exportados sean completos y coherentes para su uso externo.
+El modelo ER completo se organiza en una vista general y cinco diagramas relacionales detallados para asegurar la legibilidad en el PDF. Mientras la vista general expone las conexiones entre tablas, los diagramas específicos detallan campos y relaciones. Esta división permite analizar cada bloque funcional de la base de datos Room de manera independiente sin saturar la representación visual con un exceso de atributos en una única figura.
 
-La Figura \ref{fig:f2_er_estructura} presenta la estructura académica base del modelo de dominio. Esta sección define las entidades fundamentales que representan la organización curricular: carreras, niveles o semestres, materias y la relación muchos-a-muchos que vincula materias con carreras específicas.
+\subsection{Modelo lógico relacional}
+El modelo lógico se define sobre SQLite mediante Room y organiza la información en trece tablas registradas en la versión 6 de la base de datos. La implementación actual emplea claves numéricas autogeneradas en las entidades transaccionales principales.
+
+No obstante, algunas entidades maestras conservan identificadores textuales por compatibilidad con la fuente académica original. Para mejorar la eficiencia de comparación, unión e indexación, se establece como criterio de diseño que las claves evolucionen a tipos numéricos internos.
+
+El Cuadro \ref{tab:f2_modelo_logico_academico} resume el bloque académico del modelo lógico. En este bloque se concentran las tablas maestras de carreras, niveles y materias, además de las relaciones que permiten asociar una carrera con sus niveles y con los grupos ofertados.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{4.2cm} p{2.8cm} p{3.4cm} p{3.8cm}@{}}
+\toprule
+Tabla & Clave primaria & Relaciones principales & Criterio lógico \\
+\midrule
+careers & code TEXT & Referenciada por las tablas puente de niveles y grupos. & Debe evolucionar a career\_id numérico; code permanece como código académico único. \\
+levels & id INTEGER & Referenciada por career\_levels y groups. & Mantiene clave numérica autogenerada. \\
+subjects & code TEXT & Referenciada por groups. & Debe evolucionar a subject\_id numérico; code permanece como código de materia único. \\
+career\_levels & career\_code, level\_id & Une carreras con niveles. & Debe usar career\_id y level\_id como clave compuesta numérica. \\
+career\_subject\_groups & career\_code, group\_id & Une carreras con grupos ofertados. & Debe usar career\_id y group\_id; group\_id ya es numérico. \\
+\bottomrule
+\end{tabularx}
+\caption{Modelo lógico del bloque académico.}\label{tab:f2_modelo_logico_academico}
+Fuente: elaboración propia con base en las entidades Room del proyecto.
+\end{table}
+
+\newpage
+El Cuadro \ref{tab:f2_modelo_logico_horarios} describe el bloque de grupos y horarios. Este bloque reúne las tablas que participan directamente en la generación de combinaciones, debido a que conectan cada grupo con sus bloques de clase, aulas y docentes.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{4.2cm} p{2.8cm} p{3.4cm} p{3.8cm}@{}}
+\toprule
+Tabla & Clave primaria & Relaciones principales & Criterio lógico \\
+\midrule
+groups & id INTEGER & Referencia subjects y levels. & Mantiene clave artificial numérica; el grupo visible queda como atributo. \\
+group\_schedules & id INTEGER & Referencia grupo, aula y docente. & Mantiene clave numérica y FKs para búsqueda de bloques. \\
+classrooms & id TEXT & Referenciada por horarios. & Puede evolucionar a classroom\_id numérico; el código de aula permanece único. \\
+teachers & id INTEGER & Referenciada por horarios. & Mantiene clave numérica autogenerada. \\
+\bottomrule
+\end{tabularx}
+\caption{Modelo lógico del bloque de grupos y horarios.}\label{tab:f2_modelo_logico_horarios}
+Fuente: elaboración propia con base en las entidades Room del proyecto.
+\end{table}
+
+El Cuadro \ref{tab:f2_modelo_logico_usuario} presenta el bloque de usuario, eventos y configuración. Estas tablas registran selecciones, eventos académicos y preferencias locales, por lo que complementan la generación de horarios sin formar parte principal de la poda combinatoria.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{4.2cm} p{2.8cm} p{3.4cm} p{3.8cm}@{}}
+\toprule
+Tabla & Clave primaria & Relaciones principales & Criterio lógico \\
+\midrule
+selected\_subjects & id INTEGER & Referencia grupos seleccionados. & Mantiene clave numérica y FK a groups. \\
+academic\_events & id INTEGER & Referencia opcional a materia seleccionada. & Mantiene clave numérica; la FK admite nulos para eventos independientes. \\
+user\_settings & id INTEGER & Registro único de configuración. & Mantiene clave fija numérica. \\
+motivational\_slot\_scores & slot\_id INTEGER & Tabla local de métricas por franja. & Mantiene clave numérica por franja horaria. \\
+\bottomrule
+\end{tabularx}
+\caption{Modelo lógico del bloque de usuario, eventos y configuración.}\label{tab:f2_modelo_logico_usuario}
+Fuente: elaboración propia con base en las entidades Room del proyecto.
+\end{table}
+
+La tabla motivational\_slot\_scores se incorpora como una tabla de métricas locales para las notificaciones motivacionales generadas por Simón. Su clave slot\_id identifica una franja horaria definida por nombre, hora de inicio y hora de fin. Los contadores success\_count y total\_attempts permiten registrar intentos y respuestas asociadas a cada franja, sin modificar las entidades académicas ni el espacio combinatorio del generador de horarios.
+
+\subsection{Diccionario de datos resumido}
+El diccionario de datos identifica los atributos principales, tipos de datos y restricciones aplicadas en las tablas que sostienen la generación y gestión de horarios. En SQLite, Room traduce los tipos Kotlin String, Int, Long, Boolean y enumeraciones a columnas TEXT o INTEGER según corresponda. Las enumeraciones, como WeekDay, GroupType, SubjectStatus y AcademicEventType, se almacenan mediante conversores de tipo.
+
+El Cuadro \ref{tab:f2_diccionario_datos} concentra el diccionario resumido de las tablas críticas para la generación de horarios. Las tablas de configuración y métricas locales se documentan en el modelo lógico porque no modifican el espacio combinatorio del generador.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{4.2cm} p{3.6cm} p{1.8cm} p{4.4cm}@{}}
+\toprule
+Tabla & Campos principales & Tipo base & Restricciones y descripción \\
+\midrule
+careers & code, name, pdf\_url, is\_enabled & TEXT, INTEGER & Catálogo de carreras; name y pdf\_url son únicos. \\
+levels & id, name & INTEGER, TEXT & Catálogo de niveles; id es PK numérica. \\
+subjects & code, name, is\_approved, is\_elective, is\_active & TEXT, INTEGER & Catálogo de materias; is\_active permite excluir materias no vigentes. \\
+groups & id, subject\_code, group\_id, level\_id, group\_name, type, is\_active & INTEGER, TEXT & Oferta grupos por materia y nivel; id es PK numérica; materia y grupo visible son únicos en conjunto. \\
+career\_subject\_groups & career\_code, group\_id & TEXT, INTEGER & Relaciona carrera con grupos disponibles; reduce la oferta antes del algoritmo. \\
+group\_schedules & id, group\_id, day, start\_time, end\_time, classroom\_id, teacher\_id, is\_active & INTEGER, TEXT & Define bloques horarios activos usados para detectar solapamientos. \\
+teachers & id, full\_name, favorite & INTEGER, TEXT & Catálogo de docentes; favorite alimenta la estrategia de priorización. \\
+selected\_subjects & id, group\_id, status, notify & INTEGER, TEXT & Registra grupos inscritos o aprobados por el estudiante. \\
+\bottomrule
+\end{tabularx}
+\caption{Diccionario de datos resumido de tablas críticas del generador.}\label{tab:f2_diccionario_datos}
+Fuente: elaboración propia con base en las entidades Room del proyecto.
+\end{table}
+
+\subsection{Estrategia de indexación}
+La optimización de la capa de persistencia se fundamenta en una estrategia de indexación selectiva, diseñada para minimizar la latencia en las operaciones de lectura que alimentan el motor de generación de horarios. En el entorno móvil, donde los recursos de hardware son limitados, la eficiencia de las consultas impacta en la capacidad de respuesta del sistema.
+
+Por este motivo, se emplean estructuras de datos B-tree que transforman búsquedas secuenciales de complejidad lineal en búsquedas logarítmicas. Esta mejora técnica optimiza el acceso a las entidades con alta frecuencia de consulta mediante el motor de base de datos local.
+
+La arquitectura de índices se organiza en tres categorías principales, orientadas a la integridad, la aceleración de relaciones y la cobertura de filtros complejos:
+
+\begin{enumerate}
+  \item Índices de integridad y unicidad: Se establecen restricciones de unicidad sobre atributos que definen la identidad de los catálogos maestros. Estos índices se aplican en los campos name y pdf\_url de la tabla careers, name en levels y code en subjects.
+  
+  También se incluyen los campos name en classrooms y full\_name en teachers. Asimismo, se define un índice único compuesto sobre la combinación subject\_code y group\_id en la tabla groups para asegurar la identidad de la oferta académica.
+
+  \item Índices de rendimiento para el generador: Constituyen la columna vertebral de la optimización del algoritmo de generación. En la tabla groups, se implementan índices simples sobre level\_id e is\_active, además de índices compuestos para subject\_code e is\_active.
+  
+  En la tabla group\_schedules, se indexan las claves foráneas de grupo, aula y docente. También se incluyen combinaciones de alto impacto para el día y los rangos horarios, lo cual facilita la detección de colisiones horarias de forma eficiente.
+
+  \item Índices de cobertura en selecciones de usuario: En la tabla selected\_subjects, se indexa la combinación del estado y el identificador de grupo. Esta decisión técnica reduce el costo computacional al recuperar materias inscritas o aprobadas vinculadas a grupos específicos.
+\end{enumerate}
+
+La elección de estos índices responde a un análisis de las rutas de ejecución más costosas detectadas en el sistema. Se evita la indexación indiscriminada de todos los campos para prevenir una penalización en las operaciones de escritura y un incremento excesivo en el tamaño del archivo.
+
+El beneficio esperado es una reducción notable en el tiempo de preparación del dominio de búsqueda antes de la fase combinatoria. Al filtrar los datos mediante índices, se entrega un conjunto reducido al algoritmo de generación, lo cual disminuye la carga de trabajo y mejora el consumo de batería.
+
+La Figura \ref{fig:f2_er_general_tablas} presenta una vista general de la base de datos únicamente con tablas y relaciones principales. Esta vista permite identificar la conexión global entre los bloques académico, horario, selección y configuración sin incluir atributos dentro de cada entidad.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/er_part1_estructura_academica.png}
-  \caption{Diagrama ER: estructura académica.}
+  \includegraphics[width=1\linewidth]{images/diagrams/er_general_tablas.png}
+  \caption[Modelo ER general por tablas]{Modelo ER general por tablas.}
+  \label{fig:f2_er_general_tablas}
+  Fuente: elaboración propia.
+\end{figure}
+
+Para complementar la vista general, la Figura \ref{fig:f2_er_estructura} presenta la primera parte del modelo ER relacional, correspondiente a los catálogos académicos de carreras y niveles. Esta sección identifica las claves de careers, levels y la tabla puente career\_levels.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth,height=0.68\textheight,keepaspectratio]{images/diagrams/er_part1_estructura_academica.png}
+  \caption[Diagrama ER relacional: catálogos académicos]{Diagrama ER relacional: catálogos académicos.}
   \label{fig:f2_er_estructura}
-  \small{Fuente: elaboración propia.}
+  Fuente: elaboración propia.
 \end{figure}
 
-En este diagrama, Career representa la carrera académica con su código único, nombre y facultad. Cada carrera contiene múltiples niveles (Level) que corresponden a semestres con turno y modalidad. La entidad Subject almacena las materias con sus créditos y horas semanales. La tabla intermedia Career\_Subject establece la relación muchos-a-muchos, permitiendo que una materia pertenezca a varias carreras y viceversa.
+En este diagrama, careers representa el catálogo oficial de programas de grado de la FCyT, almacenando el código único, el nombre de la carrera y el enlace al documento PDF de horarios publicado por la facultad. Esta tabla constituye la base de la jerarquía académica del sistema, permitiendo diferenciar entre carreras como Ingeniería de Sistemas e Informática.
 
-La Figura \ref{fig:f2_er_grupos} ilustra las entidades relacionadas con la programación de clases. Esta sección modela los grupos de cada materia, los docentes asignados, las aulas disponibles y los bloques horarios que definen cuándo y dónde se imparte cada grupo.
+La entidad career\_levels actúa como un puente relacional que vincula cada carrera con sus niveles o semestres correspondientes. Esta separación permite que el sistema gestione de forma independiente la oferta académica para planes de estudio diversos, asegurando que cada programa mantenga su propia estructura semestral sin interferir con otras áreas de la facultad.
+
+La estructura permite una sincronización eficiente desde las fuentes oficiales de la universidad mediante procesos de extracción automatizados. Al separar las carreras de sus niveles, el sistema garantiza la integridad de los datos durante las actualizaciones periódicas, evitando redundancias innecesarias en la base de datos local del dispositivo móvil del estudiante.
+
+La inclusión del campo pdf\_url en la tabla de carreras garantiza la trazabilidad de la información académica procesada por el asistente virtual. Este atributo permite al usuario contrastar los datos del algoritmo con la fuente oficial de la facultad, asegurando la transparencia y confiabilidad del sistema durante el complejo proceso de selección de horarios.
+
+La tabla de niveles incorpora identificadores numéricos que facilitan el ordenamiento lógico de las materias dentro del plan de estudios. Esta organización es fundamental para que el estudiante pueda visualizar su progreso académico de forma cronológica, identificando rápidamente las asignaturas correspondientes a cada etapa de su formación profesional en la universidad.
+
+La Figura \ref{fig:f2_er_grupos} ilustra la segunda parte del modelo ER relacional, relacionada con materias, grupos y oferta por carrera. Esta sección modela la relación entre subjects, levels, groups y career\_subject\_groups.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/er_part2_grupos_horarios.png}
-  \caption{Diagrama ER: grupos y horarios.}
+  \includegraphics[width=1\linewidth,height=0.68\textheight,keepaspectratio]{images/diagrams/er_part2_grupos_horarios.png}
+  \caption[Diagrama ER relacional: oferta de grupos]{Diagrama ER relacional: oferta de grupos.}
   \label{fig:f2_er_grupos}
-  \small{Fuente: elaboración propia.}
+  Fuente: elaboración propia.
 \end{figure}
 
-En este diagrama, la entidad Group actúa como punto central vinculando materias con niveles específicos. Cada grupo puede tener múltiples horarios definidos en Group\_Schedule, donde se especifica el día, hora de inicio y fin, además de las referencias opcionales al docente y aula asignados. Las relaciones con Teacher y Classroom permiten la planificación detallada de recursos académicos.
+En este diagrama, groups centraliza la oferta académica vinculando materias con niveles específicos. Cada grupo se define por un identificador único y se asocia a una materia del plan de estudios, facilitando la organización de los horarios por semestre de forma estructurada y permitiendo la coexistencia de múltiples paralelos para una misma asignatura académica.
 
-La Figura \ref{fig:f2_er_selecciones} muestra las entidades que gestionan las selecciones del usuario y los eventos generados. Esta sección permite almacenar los grupos elegidos por el estudiante y materializar los horarios resultantes como eventos en el calendario.
+La tabla career\_subject\_groups actúa como un filtro crítico que restringe los grupos disponibles según la carrera seleccionada por el estudiante. Esta estructura permite al sistema reducir drásticamente el dominio de búsqueda antes de iniciar el algoritmo de generación de horarios, eliminando opciones que no pertenecen al programa de grado del usuario.
+
+La optimización lograda mediante estas relaciones es fundamental para garantizar un rendimiento fluido en dispositivos de gama media y baja. Al filtrar los grupos por carrera, el motor de generación procesa únicamente el conjunto candidato relevante, lo cual disminuye significativamente el tiempo de procesamiento y el consumo de energía durante la ejecución.
+
+La relación jerárquica entre materias y niveles mediante la tabla de grupos asegura que el estudiante visualice únicamente las opciones pertinentes a su semestre académico actual. Esta organización lógica facilita la navegación en la interfaz de la aplicación, reduciendo significativamente la carga cognitiva durante la selección de materias y la configuración del perfil.
+
+Cada registro en la tabla de grupos incluye un atributo de tipo que distingue entre clases teóricas, prácticas de laboratorio y auxiliaturas de docencia. Esta categorización permite que el generador respete las reglas de inscripción de la facultad, donde una materia puede requerir la selección obligatoria de diversos componentes para completar la carga horaria semanal.
+
+La Figura \ref{fig:f2_er_horarios_recursos} muestra la tercera parte del modelo ER relacional, destinada a la programación de horarios y recursos académicos. Esta sección vincula los grupos con sus bloques horarios, docentes y aulas.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/er_part3_selecciones_eventos.png}
-  \caption{Diagrama ER: selecciones y eventos.}
-  \label{fig:f2_er_selecciones}
-  \small{Fuente: elaboración propia.}
+  \includegraphics[width=0.7\linewidth,height=0.68\textheight,keepaspectratio]{images/diagrams/er_part3_horarios_recursos.png}
+  \caption[Diagrama ER relacional: horarios y recursos]{Diagrama ER relacional: horarios y recursos.}
+  \label{fig:f2_er_horarios_recursos}
+  Fuente: elaboración propia.
 \end{figure}
+
+En este diagrama, group\_schedules define los bloques horarios activos utilizados por el motor de generación de combinaciones. Cada registro referencia un grupo y, de forma opcional, un aula y un docente, permitiendo una representación detallada y precisa de la agenda semanal del estudiante universitario dentro del entorno de la FCyT.
+
+Esta estructura facilita la detección de solapamientos mediante la comparación algorítmica de los días y los rangos horarios definidos en los documentos oficiales. La vinculación directa con docentes y aulas ofrece información completa sobre el lugar físico y el responsable académico de cada cátedra universitaria, mejorando la orientación del estudiante.
+
+La inclusión de identificadores para aulas y docentes permite gestionar casos donde la información no está definida plenamente al inicio del semestre. El sistema soporta estados temporales para grupos por designar, manteniendo la funcionalidad operativa del generador incluso ante la presencia de datos parciales o incompletos provenientes de las listas académicas oficiales.
+
+La persistencia de estos bloques horarios en la base de datos local permite al motor de generación operar íntegramente en modo desconectado dentro del dispositivo móvil. Una vez sincronizados los datos de la universidad, el estudiante puede explorar múltiples combinaciones de horarios sin depender de una conexión a internet activa o de servidores externos.
+
+El sistema emplea el formato de hora militar para asegurar la precisión en los cálculos de duración y la detección de conflictos de tiempo. Esta estandarización permite manejar las variaciones en la duración de las clases académicas, asegurando que el horario final generado no presente interrupciones ni superposiciones que afecten el desempeño del estudiante.
+
+La Figura \ref{fig:f2_er_selecciones} muestra la cuarta parte del modelo ER relacional, destinada a selecciones del estudiante y eventos académicos. Esta sección separa los datos que representan materias elegidas y actividades asociadas.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth,height=0.72\textheight,keepaspectratio]{images/diagrams/er_part4_usuario_eventos.png}
+  \caption[Diagrama ER relacional: selecciones y eventos]{Diagrama ER relacional: selecciones y eventos.}
+  \label{fig:f2_er_selecciones}
+  Fuente: elaboración propia.
+\end{figure}
+
+En este diagrama, selected\_subjects registra los grupos elegidos por el estudiante para el semestre académico actual. La tabla permite distinguir entre materias inscritas, aprobadas u otros estados definidos por el dominio del sistema, manteniendo un historial local detallado de la progresión y el rendimiento académico del usuario en la facultad.
+
+Por otro lado, academic\_events almacena actividades asociadas de forma opcional a una materia seleccionada previamente. Esta entidad permite gestionar eventos específicos como exámenes parciales, entregas de proyectos o sesiones de estudio, integrándolos de manera fluida en la visualización del horario para ofrecer una gestión académica centralizada y eficiente.
+
+La combinación de estas entidades proporciona al estudiante un panel de control personalizado y dinámico de su semestre. Esta integración mejora la experiencia de usuario al centralizar todas las responsabilidades académicas y los recordatorios automáticos generados por el asistente virtual Simón, basándose en la configuración individual de cada estudiante.
+
+La persistencia de estas selecciones permite además la generación de reportes detallados sobre el avance curricular y el cumplimiento de requisitos. Al registrar el estado de cada materia seleccionada, el sistema puede sugerir componentes pendientes para futuros periodos, actuando como un gestor académico integral que facilita la planificación educativa a largo plazo.
+
+Cada evento académico puede configurarse con niveles de prioridad y estados de cumplimiento para ayudar en la organización del tiempo. Esta funcionalidad permite que el asistente virtual envíe notificaciones inteligentes que alertan sobre fechas críticas, ayudando al estudiante a priorizar sus tareas según la importancia y la proximidad de los plazos establecidos.
+
+La Figura \ref{fig:f2_er_configuracion_local} presenta la quinta parte del modelo ER relacional, correspondiente a configuración local y métricas de apoyo. Estas tablas no participan directamente en la poda combinatoria del generador, pero sostienen preferencias de uso, notificaciones y funcionalidades motivacionales.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth,height=0.72\textheight,keepaspectratio]{images/diagrams/er_part5_configuracion_local.png}
+  \caption[Diagrama ER relacional: configuración local]{Diagrama ER relacional: configuración local.}
+  \label{fig:f2_er_configuracion_local}
+  Fuente: elaboración propia.
+\end{figure}
+
+En este diagrama, user\_settings centraliza las preferencias de interfaz y la activación de funciones de inteligencia artificial. Este registro único permite que las decisiones de personalización persistan localmente, garantizando una experiencia consistente en todos los módulos de la aplicación.
+
+La tabla motivational\_slot\_scores gestiona métricas por franja horaria para optimizar el funcionamiento del asistente Simón. Estos datos permiten evaluar la interacción del estudiante y ajustar dinámicamente la entrega de mensajes motivacionales según su comportamiento real.
+
+El almacenamiento local garantiza la privacidad de la información y la operatividad total en modo desconectado. El sistema procesa los datos conductuales íntegramente en el dispositivo, cumpliendo con los estándares institucionales de seguridad y protección de datos sensibles.
+
+La arquitectura de persistencia desacoplada facilita la evolución del sistema hacia nuevos modelos de interacción. La separación entre configuración y métricas asegura una transición fluida entre versiones de software sin comprometer las preferencias establecidas por el usuario.
+
+Los contadores de éxito permiten identificar los periodos de mayor receptividad académica del estudiante. Mediante este análisis, el asistente optimiza la comunicación para evitar distracciones innecesarias durante los horarios de alta carga lectiva o descanso.
 
 \subsection{Resultados y verificación}
 El modelo de dominio se valida mediante pruebas de integración que confirman la integridad referencial y la unicidad de claves compuestas. Los mapeos bidireccionales entre las capas de datos, dominio y presentación se verifican exhaustivamente, asegurando la consistencia de la información en todo el flujo de la aplicación.

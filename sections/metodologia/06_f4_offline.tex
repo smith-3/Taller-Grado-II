@@ -34,24 +34,56 @@ Se implementa el patrón Repository para mediar entre las fuentes de datos y la 
 \end{itemize}
 
 \subsection{Sincronización y Frescura de Datos}
-La lógica de sincronización se encapsula en el caso de uso AutoSyncUseCase, que orquesta la actualización de datos en segundo plano.
+El mantenimiento de la consistencia y frescura de la información en un entorno desconectado requiere de una lógica de sincronización robusta. En este sentido, la implementación se fundamenta en los pilares estratégicos que se describen a continuación:
 
 \begin{enumerate}
-    \item \textbf{Detección de Cambios}
+    \item Detección de Cambios
     
-    Antes de iniciar una descarga completa, el sistema verifica si existen actualizaciones comparando la fecha de modificación remota (remoteInfo.updatedDate) con la fecha de la última sincronización local (localCareer.lastSyncTime). Si las fechas coinciden, se evita el consumo innecesario de red.
+    Antes de iniciar una descarga completa, el sistema verifica si existen actualizaciones comparando la fecha de modificación remota con la fecha de la última sincronización local almacenada en la carrera. Si los datos temporales coinciden, se evita el consumo innecesario de red y se mantiene la versión actual de la caché.
 
-    \item \textbf{Manejo de Errores y Resiliencia}
+    \item Manejo de Errores y Resiliencia
     
-    Para garantizar la robustez ante fallos de red o indisponibilidad del servidor, se implementan mecanismos de protección:
+    Para garantizar la robustez ante fallos de red o indisponibilidad del servidor, se implementan mecanismos de protección que aseguran la continuidad operativa:
+
+    \begin{itemize}
+        \item Interruptor de circuito: El componente de protección envuelve las llamadas al extractor de datos. Si se detectan fallos consecutivos, el circuito se abre temporalmente para impedir nuevas solicitudes y evitar la saturación del servidor o de la red móvil.
+        \item Espera exponencial: En caso de errores recuperables como tiempos de espera agotados, se programa un reintento automático utilizando una estrategia de espera exponencial. El tiempo de demora se duplica tras cada intento fallido, reduciendo la carga sobre la infraestructura.
+    \end{itemize}
 \end{enumerate}
-\begin{itemize}
-    \item Circuit Breaker: El componente CircuitBreaker envuelve las llamadas al scraper. Si se detectan fallos consecutivos (por ejemplo, 5 errores), el circuito se ``abre'' temporalmente, impidiendo nuevas solicitudes para evitar saturar el servidor o la red.
-    \item Exponential Backoff: En caso de errores recuperables (como timeouts), se programa un reintento automático utilizando una estrategia de espera exponencial (ExponentialBackoff), donde el tiempo de espera se duplica tras cada intento fallido, reduciendo la carga en el servidor.
-\end{itemize}
 
 \subsection{Fallback Manual}
-Como medida de último recurso, cuando no hay conectividad y la base de datos está vacía o desactualizada, se habilita la funcionalidad de ``Ingesta Manual''. El caso de uso SyncCareerFromLocalPdfUseCase permite al usuario seleccionar un archivo PDF oficial descargado previamente. El sistema procesa este archivo localmente para poblar la base de datos Room, asegurando la operatividad total de la aplicación en entornos completamente desconectados.
+Como medida de último recurso, cuando no hay conectividad y la base de datos está vacía o desactualizada, se habilita la funcionalidad de ingesta manual. El caso de uso de sincronización desde documento local permite al usuario seleccionar un archivo PDF oficial descargado previamente. El sistema procesa este archivo íntegramente en el dispositivo para poblar las tablas locales, asegurando la operatividad total de la aplicación en entornos aislados.
+
+\subsection{Notificaciones y Asistencia por Inteligencia Artificial}
+La implementación utiliza herramientas de programación diferida para asegurar la ejecución de recordatorios incluso tras reinicios del sistema o si la aplicación no está en primer plano. Los componentes de gestión orquestan la lógica de disparo calculando los tiempos de antelación configurados por el estudiante para cada actividad académica. Se emplea un canal estandarizado que garantiza la compatibilidad con versiones modernas del sistema operativo sin requerir conectividad permanente.
+
+La integración de inteligencia artificial opera bajo una lógica de respaldo que prioriza la puntualidad de los avisos. El gestor verifica las preferencias del usuario y solicita una reserva de recursos computacionales antes de invocar la generación del mensaje para evitar la saturación del hardware. En caso de indisponibilidad del modelo local o fallos en la inferencia, el sistema degrada de forma automática a una notificación estándar, garantizando la entrega de la alerta académica.
+
+Para los mensajes motivacionales, el asistente valida el contexto temporal y la carga académica actual, evitando comunicaciones intrusivas durante periodos de descanso activo. El proceso asegura que el tono del mensaje sea oportuno y coherente con la situación del estudiante. Este mecanismo permite al asistente aprender de la respuesta del usuario, ajustando la entrega de futuros mensajes de forma dinámica para optimizar el impacto en el rendimiento.
+
+El sistema registra cada intento mediante identificadores de franja horaria que asocian las acciones de apertura o descarte con el origen del mensaje. Estos identificadores alimentan las métricas estadísticas locales sin comprometer la fluidez de la aplicación ni requerir el envío de información sensible hacia servidores externos. Este flujo de datos permite evaluar la efectividad del agente inteligente preservando el control total del usuario sobre su información.
+
+Este registro se realiza sin exponer datos personales ni acoplar el contenido generado a la identidad del estudiante, garantizando la privacidad por diseño. El agente inteligente opera de forma independiente al núcleo funcional, permitiendo que la base de datos mantenga su integridad estructural ante posibles cambios futuros en los modelos de lenguaje. Esta separación asegura la robustez y escalabilidad de las capacidades cognitivas del sistema.
+
+Los componentes fundamentales que intervienen en la gestión de notificaciones y asistencia por inteligencia artificial se detallan en el Cuadro \ref{tab:f4_notificaciones_ia}, resaltando su responsabilidad técnica y su rol dentro de la arquitectura resiliente del sistema:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.5cm}X@{}}
+\toprule
+Componente & Responsabilidad Técnica \\
+\midrule
+Gestor de alertas & Programación y disparo de recordatorios académicos. \\
+Trabajador de Simon & Orquestación de mensajes motivacionales y uso de IA. \\
+Estilo de notificación & Personalización visual y gestión de canales de alerta. \\
+Receptor de acciones & Procesamiento de interacciones y registro de métricas. \\
+Gestor de recursos & Administración del hardware para modelos de IA locales. \\
+\bottomrule
+\end{tabularx}
+\caption{Componentes de notificaciones y asistencia inteligente.}\label{tab:f4_notificaciones_ia}
+Fuente: Elaboración propia.
+\end{table}
 
 \subsection{Resultados y verificación}
 La arquitectura offline-first demuestra su eficacia al permitir la operación continua sin conectividad, sirviendo datos desde la caché local de Room. Las pruebas de estrés confirman que los mecanismos de backoff exponencial y circuit breaker protegen adecuadamente la fuente de datos ante fallos repetidos. El fallback manual mediante PDF local funciona correctamente como medida de último recurso.
@@ -59,23 +91,26 @@ La arquitectura offline-first demuestra su eficacia al permitir la operación co
 \subsection{Evidencias (código)}
 La arquitectura offline-first de TecnoTime se sustenta en un conjunto de componentes que gestionan la sincronización diferida, el almacenamiento local prioritario y las políticas de frescura de datos. La implementación utiliza WorkManager para programar tareas de sincronización en segundo plano que respetan las restricciones de red y batería del dispositivo, mientras que Room proporciona la capa de persistencia local con soporte para observación reactiva de cambios.
 
-Los repositorios implementan el patrón Single Source of Truth, exponiendo siempre los datos locales a la UI y actualizándolos transparentemente cuando la sincronización completa exitosamente. Esta arquitectura garantiza una experiencia de usuario fluida independientemente de la conectividad de red. Los componentes que implementan esta funcionalidad son:
+Los repositorios implementan el patrón Single Source of Truth, exponiendo siempre los datos locales a la UI y actualizándolos transparentemente cuando la sincronización completa exitosamente. Esta arquitectura garantiza una experiencia de usuario fluida independientemente de la conectividad de red. Los componentes del sistema que materializan estas capacidades de resiliencia y persistencia se detallan seguidamente:
 
 \begin{itemize}
-  \item Gate del generador: GenerateScheduleViewModel (bandera isSyncing).
-  \item Chequeo y sincronización: NetworkConnectivityChecker, AutoSyncUseCase, SyncPreferences.
-  \item Fallback manual: SyncCareerFromLocalPdfUseCase.
+  \item Control de sincronización: ViewModel de generación y banderas de estado.
+  \item Detección de red: Verificador de conectividad y preferencias de sincronización.
+  \item Fallback manual: Caso de uso de sincronización desde documento PDF local.
+  \item Gestión de alertas: Trabajadores de notificaciones y gestor de recursos de IA.
 \end{itemize}
 
+\newpage
 El mecanismo de decisión para el uso de datos en caché se ilustra en la Figura \ref{fig:f4_offline}. Este diagrama muestra el ``gate'' de frescura que evalúa si los datos locales son lo suficientemente recientes o si es necesario iniciar una sincronización antes de permitir la generación de horarios.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.45\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
+  \includegraphics[width=0.55\linewidth]{images/diagrams/cap4_f1a_cache_decision.png}
   \caption[Gate de caché y frescura]{Gate de caché y frescura.}
   \label{fig:f4_offline}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
+
 
 El diagrama detalla el flujo de decisión donde la aplicación prioriza siempre la visualización inmediata de datos. Si no hay red o no hay cambios remotos, se utiliza la caché local. Solo se bloquea la generación si es estrictamente necesario actualizar datos críticos para garantizar la consistencia.
 
@@ -86,7 +121,7 @@ Para garantizar la robustez del proceso de actualización, la Figura \ref{fig:f4
   \includegraphics[width=0.7\linewidth]{images/diagrams/offline_first_sync.png}
   \caption[Sincronización con backoff y circuit breaker]{Sincronización con backoff y circuit breaker.}
   \label{fig:f4_offline_sync}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 Este flujo muestra la robustez del proceso de sincronización. El sistema implementa esperas exponenciales para reintentos sin saturar la red y un interruptor de circuito (Circuit Breaker) que detiene las peticiones si detecta fallos continuos en el servidor, protegiendo tanto al cliente como al backend.
@@ -95,10 +130,10 @@ Finalmente, la Figura \ref{fig:f4_offline_pdf} presenta la estrategia de respald
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
+  \includegraphics[width=0.6\linewidth]{images/diagrams/cap4_f4_pdf_fallback.png}
   \caption[Fallback por PDF local]{Fallback por PDF local.}
   \label{fig:f4_offline_pdf}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 El proceso de recuperación manual permite al usuario cargar un horario oficial en formato PDF directamente desde el almacenamiento del dispositivo. El sistema procesa este archivo localmente para actualizar la base de datos interna sin necesidad de conexión a internet, actuando como mecanismo de última instancia.

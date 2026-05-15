@@ -1,19 +1,19 @@
 % ============================
 \section{Fase 3: Generador (restricciones, heurísticas, UI)}
 
-Esta fase se centra en la implementación del núcleo algorítmico de TecnoTime, abordando el problema de la generación automática de horarios como un desafío de satisfacción de restricciones (CSP). El desarrollo abarca desde el diseño del motor de inferencia hasta la integración de una interfaz de usuario reactiva, permitiendo combinar restricciones académicas ineludibles con heurísticas de optimización personalizadas y criterios de preferencia definidos por el estudiante.
+Esta fase se centra en la implementación del núcleo algorítmico de TecnoTime, abordando el problema de la generación automática de horarios como un desafío de satisfacción de restricciones (CSP). El desarrollo abarca desde el diseño del motor de generación hasta la integración de una interfaz de usuario reactiva, permitiendo combinar restricciones académicas ineludibles con heurísticas de optimización personalizadas y criterios de preferencia definidos por el estudiante.
 
 \subsection{Objetivo}
 El objetivo principal es desarrollar un algoritmo capaz de seleccionar automáticamente un grupo por cada materia inscrita, garantizando la ausencia de conflictos horarios (choques) como restricción base. Adicionalmente, se busca optimizar la calidad de las soluciones generadas mediante la minimización de tiempos muertos (huecos) entre clases y la maximización de la afinidad con docentes seleccionados como favoritos, ofreciendo múltiples alternativas viables en tiempos de ejecución reducidos.
 
 \subsection{Desarrollo del generador de horarios}
-El desarrollo se estructura en torno a dos componentes principales: el orquestador de casos de uso (GenerateSchedulesUseCaseImpl) y el motor de backtracking (ScheduleGenerator). El proceso comienza con la preparación de candidatos, donde se recupera la jerarquía de materias mediante GetAddableSubjectsHierarchyUseCase y se aplica un filtrado inicial basado en las preferencias del usuario (materias específicas, grupos fijos).
+El desarrollo se estructura en torno a dos componentes principales: el orquestador de casos de uso (GenerateSchedulesUseCaseImpl) y el motor de backtracking (ScheduleGenerator). El proceso comienza con la preparación de candidatos, donde se recupera la jerarquía de materias mediante GetAddableSubjectsHierarchyUseCase y se aplica un filtrado inicial basado en las preferencias del usuario, las materias seleccionadas y los grupos fijados para una regeneración parcial.
 
 El diseño inicial del motor de generación se basa en un enfoque de coloración de grafos (Graph Coloring). En este modelo, cada grupo de materia se representa como un vértice del grafo, y se traza una arista entre dos vértices cuando sus bloques horarios presentan solapamiento. El objetivo consiste en encontrar una coloración válida donde grupos del mismo color pudieran coexistir sin conflictos, reduciendo el problema de scheduling a la búsqueda de un conjunto independiente máximo.
 
-Sin embargo, durante las pruebas en dispositivos móviles reales, este enfoque presenta limitaciones significativas. La complejidad NP-completa inherente al problema de coloración de grafos genera tiempos de ejecución exponenciales conforme aumenta el número de materias candidatas. Adicionalmente, la construcción explícita del grafo de conflictos y las estructuras auxiliares de búsqueda consumen memoria excesiva en terminales con recursos limitados, provocando excepciones de memoria insuficiente en dispositivos de gama media.
+Sin embargo, este enfoque presenta una limitación práctica para el contexto móvil: requiere construir estructuras adicionales para representar el grafo de conflictos y mantener estados de exploración. Debido a que el problema de coloración de grafos pertenece a la familia de problemas combinatorios complejos, el crecimiento de materias y grupos incrementa el costo de búsqueda y memoria.
 
-Por estas razones, se opta por reemplazar Graph Coloring con un algoritmo de búsqueda en profundidad (DFS) con poda basado en backtracking. Este algoritmo construye combinaciones incrementales, verificando restricciones duras (choques, series) en cada paso sin necesidad de construir el grafo completo en memoria. Las soluciones válidas se evalúan mediante una estrategia de puntuación inyectada (ScheduleEvaluationStrategy), permitiendo mantener únicamente las mejores alternativas.
+Por estas razones, se adopta un algoritmo de búsqueda en profundidad (DFS) con poda basado en backtracking. Este algoritmo construye combinaciones incrementales y verifica restricciones duras en cada paso, sin construir un grafo completo en memoria. Las soluciones válidas se evalúan mediante una estrategia de puntuación (ScheduleEvaluationStrategy), por lo que el resultado corresponde a los mejores horarios encontrados y ordenados según la función de evaluación, no a una garantía de óptimo global.
 
 \subsection{Parámetros reales}
 El generador de horarios opera como un sistema configurable que acepta múltiples parámetros para adaptar su comportamiento a las preferencias específicas de cada estudiante. Estos parámetros controlan aspectos críticos como el número máximo de materias a considerar, la cantidad de soluciones alternativas a generar, y las estrategias de optimización a aplicar.
@@ -32,21 +32,127 @@ La parametrización permite al usuario equilibrar entre la exhaustividad de la b
 \end{enumerate}
 
 \subsection{Estrategia operativa}
-La generación de horarios se ejecuta en un pipeline secuencial implementado en GenerateSchedulesUseCaseImpl. Este flujo transforma los datos crudos en una lista ordenada de horarios óptimos:
+La generación de horarios se ejecuta en un pipeline secuencial implementado en GenerateSchedulesUseCaseImpl. Este flujo transforma los datos recuperados desde la base local en una lista ordenada de horarios candidatos:
 
 \begin{itemize}
 \item Selección de candidatos (buildCandidateSelection): Se construye una lista de objetos SubjectCandidate, que encapsula la materia, sus grupos disponibles y metadatos de prioridad. Aquí se aplica la lógica de prioritizeGroupsByFavoriteTeacher para reordenar los grupos según la preferencia docente.
 \item Filtrado de series (enforceSeriesProgression): Se eliminan los candidatos que violan la correlatividad de series (ej. Inglés I vs Inglés II), asegurando que solo se inscriba el nivel correspondiente.
 \item Promoción de niveles (promoteLowestLevels): Si el usuario no seleccionó suficientes materias obligatorias, el sistema prioriza automáticamente las materias de niveles inferiores para asegurar el avance curricular.
 \item Generación con Backtracking (ScheduleGenerator.generate): El algoritmo recursivo backtrack explora las combinaciones. Utiliza poda temprana para descartar ramas con conflictos de horario (si no están permitidos) o conflictos de serie.
-\item Evaluación y Ranking: Cada horario completo se puntúa mediante computeScore, que suma las penalizaciones por choques, huecos (MinimizeGapsStrategy) y falta de docentes favoritos (PrioritizeTeachersStrategy).
+\item Evaluación y ordenamiento: Cada horario completo se puntúa mediante computeScore. El puntaje combina la estrategia configurada, la penalización por materias preferidas ausentes y la penalización por grupo no favorito cuando existe un grupo preferente para la materia.
 \end{itemize}
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
-\subsection{Interacción de usuario (pantallas reales)}
-La interfaz de usuario del generador de horarios se diseña siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas. El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas.
+\subsection{Reducción del problema mediante consultas SQL}
+Antes de ejecutar el backtracking, el espacio de búsqueda se reduce mediante consultas Room/SQLite y filtros de dominio. Esta reducción es necesaria porque, si existen \(M\) materias y cada una tiene \(G\) grupos posibles, el número de combinaciones puede aproximarse a \(G^M\) en el peor caso. Por lo tanto, el generador no trabaja con toda la base de datos, sino con un subconjunto ya filtrado por carrera, nivel, estado y vigencia.
 
-La implementación utiliza Jetpack Compose para construir interfaces declarativas y reactivas que responden automáticamente a cambios en el estado del generador. Los componentes de UI implementados son:
+La base de datos actúa como una etapa de prepoda. En esta etapa se eliminan materias que no pertenecen a la carrera seleccionada, grupos inactivos, bloques horarios no vigentes y materias que ya forman parte del avance académico del estudiante. Después de esta reducción, el algoritmo heurístico recibe únicamente candidatos relevantes, lo que disminuye el número de ramas que el backtracking debe explorar.
+
+El Cuadro \ref{tab:f3_sql_reduccion} resume las consultas principales que reducen el dominio antes de la generación y los índices que apoyan su ejecución.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.5cm}>{\RaggedRight\arraybackslash}p{3.1cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X@{}}
+\toprule
+Componente & Método & Filtro aplicado & Efecto e índice asociado \\
+\midrule
+SubjectDao & \begin{tabular}[t]{@{}l@{}}getSubjectsFor\\CareerAndLevel\\Flow\end{tabular} & Carrera, nivel y materia activa. & Reduce materias candidatas; se apoya en el índice de materias activas y nombre. \\
+GroupDao & \begin{tabular}[t]{@{}l@{}}getBySubject\\AndCareerFlow\end{tabular} & Carrera, materia y grupo activo. & Reduce paralelos disponibles; se apoya en código de materia, estado activo y nombre de grupo. \\
+\begin{tabular}[t]{@{}l@{}}GroupSchedule\\Dao\end{tabular} & getByGroupFlow & Grupo y bloque horario activo. & Reduce los bloques horarios utilizados para detectar choques. \\
+\begin{tabular}[t]{@{}l@{}}SelectedSubject\\Dao\end{tabular} & \begin{tabular}[t]{@{}l@{}}getApproved\\SubjectsCount\\ForLevel\end{tabular} & Materias con estado aprobado o inscrito. & Evita proponer materias que ya forman parte del avance académico del estudiante. \\
+\bottomrule
+\end{tabularx}
+\caption{Consultas empleadas para reducir el espacio de generación.}\label{tab:f3_sql_reduccion}
+  Fuente: Elaboración propia con base en la implementación del proyecto.
+\end{table}
+
+Luego de estas consultas, la lógica de dominio aplica filtros adicionales en Kotlin. Entre ellos se encuentran la exclusión de materias aprobadas o inscritas, la priorización de niveles inferiores, la progresión de series académicas y el tratamiento de grupos fijados por el usuario. De esta manera, el algoritmo recibe una lista de candidatos acotada y evita evaluar combinaciones que no corresponden al contexto académico seleccionado.
+
+La articulación entre SQL y la heurística se produce en cuatro pasos. Primero, SQLite recupera datos ya filtrados por carrera, nivel, vigencia y relación con el estudiante. Segundo, los DAO entregan al caso de uso grupos con sus bloques horarios activos.
+
+Tercero, el dominio ordena y depura candidatos según reglas académicas y preferencias. Cuarto, el backtracking explora únicamente ese subconjunto y aplica poda temprana cuando aparece un choque horario no permitido. Por este motivo, la base de datos no solo almacena información, sino que reduce el tamaño efectivo del problema antes de la búsqueda combinatoria.
+
+La implementación real no ejecuta una consulta única de generación, sino una cadena de consultas especializadas en los DAO y una composición posterior en el caso de uso GetAddableSubjectsHierarchyUseCase. SubjectDao obtiene materias activas por carrera y nivel mediante la unión de subjects, groups y career\_subject\_groups.
+
+Posteriormente, GroupDao recupera los grupos activos de la carrera y los organiza por código de materia, mientras que GroupScheduleDao entrega los bloques horarios correspondientes. Finalmente, SelectedSubjectRepository permite identificar grupos inscritos o aprobados, con los cuales se excluyen materias que ya no deben proponerse.
+
+Esta separación evita trasladar toda la lógica al motor SQL. SQLite realiza el filtrado relacional eficiente, mientras que el dominio conserva reglas que dependen del estado del estudiante, como conflictos con materias inscritas, avance académico y preferencias.
+
+La versión actual de Room conserva códigos textuales en catálogos como carrera y materia por compatibilidad con la fuente académica. Sin embargo, el modelo lógico propuesto en la Fase 2 establece que estas referencias deben evolucionar a claves numéricas internas, manteniendo los códigos textuales como atributos únicos de negocio.
+
+\subsection{Implementación del backtracking}
+El método principal ScheduleGenerator.generate contiene la función local backtrack(index, selectedCount), encargada de explorar las combinaciones. El parámetro index indica la materia candidata que se está evaluando y selectedCount registra cuántas materias ya fueron incorporadas al horario parcial.
+
+El algoritmo utiliza tres decisiones centrales. Primero, si se alcanza la cantidad requerida de materias, se fusionan los bloques elegidos y se calcula el puntaje con computeScore. Segundo, si no quedan candidatos suficientes para completar el horario, la rama se descarta. Tercero, si existe conflicto de serie con materias ya elegidas o inscritas, la combinación se omite antes de seguir explorando.
+
+La búsqueda crece por multiplicación de alternativas. Si se eligen \(n\) materias y cada materia tiene \(g_i\) grupos disponibles, donde \(i\) representa la posición de la materia dentro de la selección, el número máximo de combinaciones antes de aplicar restricciones se expresa como:
+
+\begin{equation}
+  E = g_1 \times g_2 \times \cdots \times g_n
+\end{equation}
+\addformulaentry{Espacio combinatorio de búsqueda}
+
+En esta expresión, \(E\) representa el espacio de combinaciones a explorar, \(n\) la cantidad de materias seleccionadas y \(g_i\) la cantidad de grupos disponibles para cada materia. Por ejemplo, si se seleccionan cuatro materias y cada una tiene tres grupos disponibles, el generador podría revisar hasta \(3 \times 3 \times 3 \times 3 = 81\) combinaciones antes de aplicar restricciones. Si el número de materias aumenta a seis con el mismo promedio de grupos, el espacio sube a \(729\) combinaciones. Este crecimiento justifica la reducción previa mediante consultas SQL y la poda durante el backtracking.
+
+En la implementación, este espacio se reduce mediante cuatro mecanismos. Las materias obligatorias se priorizan y no se omiten. Las materias opcionales pueden saltarse si todavía quedan suficientes candidatos para completar el objetivo. Las materias sin grupos cancelan la rama si son obligatorias y se omiten si son opcionales. Además, las materias de una misma serie académica no se combinan cuando ya existe una materia equivalente en el horario actual o en la selección parcial.
+
+La evaluación posterior no utiliza una única regla. Se aplica una estrategia compuesta que permite combinar criterios como aceptación de choques, minimización de huecos y priorización de docentes favoritos. Además, el generador incorpora penalizaciones fijas cuando no se satisface una materia preferida o cuando se elige un grupo distinto al favorito existiendo uno disponible. Finalmente, la lista de horarios se ordena por puntaje ascendente y se devuelve la cantidad solicitada por el usuario.
+
+\subsection{Ejemplo controlado de generación}
+Para ilustrar el comportamiento del algoritmo, se considera un caso controlado con dos materias candidatas de una misma carrera y nivel. La base local devuelve dos grupos activos para cada materia, por lo que el espacio inicial contiene cuatro combinaciones posibles: \(2 \times 2 = 4\). Los horarios activos de cada grupo se recuperan desde group\_schedules y se comparan durante la búsqueda.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{p{3cm} p{3cm} p{3.5cm} p{4cm}}
+\toprule
+Materia & Grupo & Bloque horario & Resultado durante la búsqueda \\
+\midrule
+Cálculo I & G1 & Lunes 08:00--10:00 & Candidato inicial. \\
+Cálculo I & G2 & Martes 08:00--10:00 & Alternativa sin choque con Física I G1. \\
+Física I & G1 & Lunes 08:00--10:00 & Se descarta si se combina con Cálculo I G1. \\
+Física I & G2 & Miércoles 08:00--10:00 & Combinación válida con Cálculo I G1 o G2. \\
+\bottomrule
+\end{tabularx}
+\caption{Ejemplo controlado de poda por choque horario.}\label{tab:f3_ejemplo_controlado}
+  Fuente: Elaboración propia con base en la estructura de datos del sistema.
+\end{table}
+
+En este ejemplo, el backtracking selecciona primero un grupo de Cálculo I y luego prueba los grupos de Física I. Si se elige Cálculo I G1, la combinación con Física I G1 se descarta por solapamiento el lunes a las 08:00. Posteriormente se prueba Física I G2 y se obtiene una solución válida.
+
+Al retroceder, el algoritmo evalúa Cálculo I G2 con los grupos restantes. Cada solución válida recibe un puntaje; si la opción de minimizar huecos se encuentra activa, el horario con menor tiempo libre entre bloques queda mejor posicionado.
+
+\subsection{Costo computacional y ejecución en el dispositivo}
+El costo del algoritmo es combinatorio. En un escenario simplificado con \(M\) materias candidatas y \(G\) grupos por materia, el peor caso puede aproximarse a \(O(G^M)\). Si se consideran materias opcionales, también aparecen ramas de omisión, por lo que el costo real depende de la cantidad de candidatos, grupos, restricciones y parámetros de generación.
+
+La ejecución se mantiene viable en el dispositivo mediante cuatro medidas. Primero, las consultas SQL reducen el dominio antes de iniciar la búsqueda. Segundo, la poda evita continuar ramas con choques cuando estos no están permitidos.
+
+Tercero, el ordenamiento de candidatos y grupos favorece explorar antes opciones asociadas a preferencias del usuario. Cuarto, el resultado se limita al número de horarios solicitado, con un valor configurable entre 5 y 25 alternativas.
+
+La generación se ejecuta desde el ViewModel mediante viewModelScope.launch y el caso de uso traslada el procesamiento principal a Dispatchers.Default. Asimismo, la construcción de candidatos utiliza Dispatchers.IO para operaciones de entrada y salida.
+
+Esta separación evita ejecutar la búsqueda combinatoria en el hilo principal de la interfaz. No obstante, no se implementa un tiempo máximo interno de ejecución, por lo que una configuración con demasiadas combinaciones puede incrementar el consumo de CPU.
+
+\subsection{Manejo de ausencia de solución}
+Cuando el generador no encuentra horarios para los parámetros seleccionados, el ViewModel emite un mensaje de error hacia la interfaz. Si la configuración no acepta choques, se informa: ``No se encontraron horarios sin choques con los filtros actuales. Intenta permitir conflictos o modificar las materias/grupos seleccionados.'' Si la opción de aceptar choques ya se encuentra activa, se informa: ``No se pudieron generar horarios con las restricciones actuales. Ajusta los filtros y vuelve a intentar.''
+
+El sistema no relaja automáticamente la restricción de choques. En su lugar, ofrece al usuario la posibilidad de modificar la selección de materias, cambiar grupos o activar la opción de aceptar choques. Esta decisión mantiene la generación bajo control del estudiante y evita producir un horario que contradiga silenciosamente las restricciones esperadas.
+
+\subsection{Factores que pueden causar fallos o resultados subóptimos}
+Los fallos pueden originarse en restricciones demasiado exigentes o en inconsistencias de datos. Un ejemplo del primer caso ocurre cuando todas las combinaciones posibles presentan solapamientos y la opción de aceptar choques permanece desactivada. También puede ocurrir que las materias obligatorias superen la cantidad objetivo o que los grupos fijados por el usuario bloqueen las demás combinaciones.
+
+Las inconsistencias de datos incluyen materias sin grupos, grupos sin bloques horarios y horas con formato inválido. En el caso de materias opcionales sin grupos, el algoritmo puede omitirlas; si la materia es obligatoria, la rama queda imposibilitada.
+
+Los grupos sin bloques no agregan entradas al horario y pueden afectar la calidad del resultado. Las horas inválidas pueden producir una excepción durante la conversión a minutos, situación que se informa al usuario como error de generación.
+
+Un resultado válido puede ser subóptimo cuando la búsqueda se corta desde el orquestador al acumular suficientes horarios, o cuando el conjunto candidato ya fue reducido por filtros previos. Por este motivo, la redacción técnica debe referirse a ``mejores horarios encontrados según la función de evaluación'' y no a una solución óptima global.
+
+\subsection{Interacción de usuario (pantallas reales)}
+La interfaz de usuario del generador de horarios se diseña siguiendo los principios de Material Design 3 y las mejores prácticas de UX móvil, priorizando la claridad en la configuración y la facilidad de comparación entre alternativas generadas.
+
+El flujo de interacción se estructura en dos pantallas principales: una de configuración donde el usuario selecciona materias y ajusta parámetros, y otra de resultados donde puede visualizar, comparar y aplicar las soluciones propuestas.
+
+La implementación utiliza Jetpack Compose para construir interfaces declarativas y reactivas que responden automáticamente a cambios en el estado del generador. En este contexto, el sistema se articula a través de los siguientes componentes de interfaz diseñados para optimizar la experiencia de usuario:
 
 \begin{itemize}
   \item Pantalla de configuración (GenerateScheduleConfigScreen): Esta interfaz orquesta la entrada de datos mediante el GenerateScheduleViewModel, exponiendo selectores reactivos para las materias inscritas y controles deslizantes para los parámetros de optimización. Implementa validaciones en tiempo real que deshabilitan el botón de generación si no se cumplen las precondiciones mínimas (ej. selección de al menos una materia), garantizando que el motor de búsqueda reciba un estado consistente.
@@ -55,6 +161,11 @@ La implementación utiliza Jetpack Compose para construir interfaces declarativa
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
 \subsection{Diagramas}
+La representación visual de los procesos técnicos constituye un pilar fundamental para documentar la complejidad del motor de generación de horarios. Esta subsección presenta los esquemas dinámicos que modelan el comportamiento del sistema, permitiendo observar la coordinación entre la interfaz de usuario, los casos de uso y el algoritmo de búsqueda. La integración de estos recursos gráficos facilita la comprensión de los flujos de control y asegura la integridad de las decisiones técnicas adoptadas durante el desarrollo de la fase.
+
+El modelado dinámico se enfoca en la secuencia cronológica de las interacciones y en la estructura lógica de la toma de decisiones algorítmicas. Se detallan aspectos críticos como la configuración de estrategias de evaluación, el proceso de exploración mediante backtracking y el manejo de los resultados devueltos a la interfaz reactiva. Esta documentación visual complementa las descripciones teóricas previas, proporcionando una visión integral del pipeline de generación y garantizando la trazabilidad entre el diseño de software y la funcionalidad entregada al usuario.
+
+\newpage
 La Figura \ref{fig:f3_secuencia_generacion} ilustra detalladamente la secuencia de interacciones del proceso de generación, iniciando con la captura de parámetros en la interfaz de usuario y su transmisión a través del ViewModel. El flujo continúa hacia el caso de uso, que orquesta la preparación de datos y delega la complejidad algorítmica al motor de generación, culminando con la evaluación de estrategias y el retorno de las mejores alternativas al usuario.
 
 \begin{figure}[H]
@@ -62,19 +173,20 @@ La Figura \ref{fig:f3_secuencia_generacion} ilustra detalladamente la secuencia 
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_f3_secuencia_generacion.png}
 \caption[Secuencia de generación de horarios]{Secuencia de generación de horarios.}
   \label{fig:f3_secuencia_generacion}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
-El diagrama de secuencia detalla el flujo de control desde que el usuario inicia la acción en la interfaz, desglosando el proceso en las siguientes etapas clave:
+El diagrama de secuencia proporciona una visión detallada del flujo de control, abarcando desde la interacción inicial del usuario hasta la entrega de resultados. El proceso se desglosa en las etapas fundamentales que garantizan una ejecución ordenada y eficiente:
 
 \begin{itemize}
-    \item Inicio de la solicitud: El usuario configura los parámetros y solicita la generación. El ViewModel captura esta intención y delega la ejecución al caso de uso GenerateSchedulesUseCase.
-    \item Configuración de estrategia: El caso de uso orquesta la creación de una estrategia compuesta (CompositeStrategy) que integra las reglas seleccionadas, como la priorización de docentes favoritos o la minimización de huecos libres.
-    \item Exploración y evaluación: El motor de generación (ScheduleGenerator) explora el espacio de soluciones utilizando un algoritmo de backtracking con poda. Cada combinación válida es evaluada y puntuada según la estrategia definida.
-    \item Presentación de resultados: Las mejores N soluciones encontradas son devueltas al ViewModel, que actualiza el estado de la UI para mostrar los horarios propuestos al usuario de manera ordenada.
+    \item Inicio de la solicitud: La secuencia se activa cuando el estudiante confirma la selección de materias y los parámetros de optimización en la interfaz móvil. El ViewModel procesa estos datos y solicita la generación al caso de uso correspondiente, iniciando una corrutina que traslada la carga computacional a un hilo secundario para evitar el bloqueo de la experiencia de usuario.
+    \item Preparación de candidatos: Antes de iniciar la exploración, el caso de uso interactúa con los repositorios para recuperar la oferta académica filtrada por carrera y nivel. En esta etapa se construyen los objetos candidatos que contienen la información de grupos, docentes y aulas, organizándolos de manera que la búsqueda sea eficiente desde el inicio del proceso algorítmico.
+    \item Configuración de evaluación: El sistema utiliza una estrategia compuesta para integrar diversos criterios de calidad, como la afinidad con docentes o la densidad del horario. Esta configuración permite que el algoritmo asigne un puntaje cuantitativo a cada combinación válida, facilitando la identificación de las alternativas que mejor se ajustan a las preferencias específicas del estudiante.
+    \item Exploración recursiva: El motor de generación recorre el espacio de búsqueda utilizando una técnica de backtracking que incorpora reglas de poda para descartar conflictos horarios de forma inmediata. Durante este recorrido, el sistema evalúa constantemente la viabilidad de los horarios parciales y conserva únicamente las soluciones que cumplen con las restricciones académicas y las preferencias configuradas.
+    \item Entrega y renderizado: Los resultados finales se transmiten desde la capa de dominio hasta el ViewModel, el cual publica un nuevo estado de interfaz con la colección de horarios generados. La aplicación reacciona a este cambio mostrando las mejores alternativas en una lista organizada, donde el usuario puede previsualizar los detalles de cada bloque antes de confirmar su elección.
 \end{itemize}
 
-\noindent Para facilitar la lectura, la Figura~\ref{fig:f3_decisiones_generador} se organiza en dos paneles: (I) conformación del conjunto candidato (obligatorias, preferencia por docentes y orden de exploración) y (II) evaluación de combinaciones (penalización de huecos, tratamiento de choques y relajación cuando no hay opciones válidas).
+\noindent Para facilitar la lectura, la Figura~\ref{fig:f3_decisiones_generador} se organiza en dos paneles: (I) conformación del conjunto candidato (obligatorias, preferencia por docentes y orden de exploración) y (II) evaluación de combinaciones (penalización de huecos, tratamiento de choques y respuesta cuando no hay opciones válidas).
 
 \begin{figure}[H]
   \centering
@@ -88,15 +200,33 @@ El diagrama de secuencia detalla el flujo de control desde que el usuario inicia
   \end{minipage}
 \caption[Decisiones del generador]{Decisiones del generador.}
   \label{fig:f3_decisiones_generador}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 El panel (I) ilustra el proceso de filtrado inicial donde se seleccionan los grupos candidatos. El algoritmo prioriza las materias obligatorias y, dentro de estas, los grupos asignados a docentes marcados como favoritos, estableciendo un orden de exploración que maximiza la probabilidad de encontrar soluciones preferentes tempranamente.
 
-El panel (II) detalla la lógica de evaluación: cada combinación completa recibe una puntuación que penaliza los huecos temporales entre clases y, si la configuración lo permite, aplica una penalización controlada por solapamientos horarios. En caso de no encontrar soluciones que cumplan todas las restricciones duras, el sistema puede relajar criterios secundarios para ofrecer las mejores alternativas posibles.
+Esta etapa utiliza el componente SubjectCandidateBuilder para transformar las entidades de la base de datos en objetos de dominio enriquecidos. Durante esta conversión, el sistema aplica reglas de ordenamiento que colocan los grupos con mayor afinidad en las primeras posiciones de la lista de búsqueda, optimizando el tiempo de respuesta.
+
+La conformación del conjunto candidato también considera la progresión de series académicas, asegurando que no se propongan materias cuyo requisito previo no haya sido cumplido. Esta validación temprana reduce significativamente el espacio de búsqueda al eliminar ramas del árbol de combinaciones que resultarían inviables.
+
+Asimismo, el algoritmo identifica los grupos que han sido fijados manualmente por el usuario en la interfaz. Estos elementos actúan como restricciones inamovibles durante la exploración, forzando al generador a construir las soluciones alrededor de estas selecciones previas para permitir una regeneración parcial del horario semanal.
+
+La integración con la lógica de niveles académicos permite que el sistema priorice las materias de semestres inferiores cuando el estudiante no ha seleccionado una carga horaria completa. Esta medida asegura un avance curricular equilibrado, alineado con las normativas de inscripción de la facultad y las necesidades de regularización.
+
+El panel (II) detalla la lógica de evaluación: cada combinación completa recibe una puntuación que penaliza los huecos temporales entre clases y, si la configuración lo permite, aplica una penalización controlada por solapamientos horarios. Esta métrica cuantitativa permite comparar objetivamente la calidad de los diferentes horarios generados.
+
+El motor de evaluación utiliza un modelo de puntuación donde los valores menores representan soluciones de mayor calidad. Al finalizar la exploración de una rama, el sistema calcula el costo total de la combinación sumando las penalizaciones de cada estrategia activa, como la presencia de docentes no preferidos o la dispersión de bloques.
+
+En caso de no encontrar soluciones que cumplan las restricciones seleccionadas, el sistema informa el fallo mediante un flujo de error reactivo. Esta notificación permite al estudiante entender por qué no se produjeron resultados y ofrece opciones directas para relajar los filtros, como activar la aceptación de choques o cambiar materias.
+
+La gestión del Top-N asegura que la interfaz únicamente reciba las mejores alternativas encontradas durante el proceso de búsqueda. Esta limitación previene la saturación de información en el dispositivo móvil y garantiza que el usuario pueda tomar una decisión basada en las opciones que mejor satisfacen sus criterios de optimización.
+
+El proceso de evaluación se completa con la verificación de la integridad del horario resultante, asegurando que todos los bloques cumplan con las duraciones académicas estandarizadas. Esta validación final garantiza que las propuestas mostradas al usuario sean realistas y ejecutables dentro del calendario de actividades universitarias.
 
 \subsection{Resultados y verificación}
-El generador de horarios cumple con el objetivo de producir $N=10$ combinaciones válidas con un TTS $\leq$ 3 min para cargas típicas. Asimismo, la regeneración parcial demuestra tiempos de respuesta casi instantáneos ($\leq$ 1 s por cambio), verificándose además la correcta aplicación de las estrategias de ponderación en el ranking de soluciones.
+El generador de horarios cumple con la generación de alternativas válidas para el conjunto de candidatos entregado por la capa de dominio. La verificación funcional se orienta a comprobar que los horarios devueltos respeten la configuración de choques.
+
+Asimismo, se verifica que las preferencias modifiquen el orden de resultados y que la interfaz informe adecuadamente la ausencia de soluciones. El análisis de rendimiento se expresa en términos de complejidad, reducción del dominio y ejecución fuera del hilo principal.
 
 % \begin{figure}[H]
 %   \centering
@@ -106,7 +236,7 @@ El generador de horarios cumple con el objetivo de producir $N=10$ combinaciones
 % \end{figure}
 
 \subsection{Criterios y pesos verificados}
-La evaluación combina tres estrategias y dos penalizaciones fijas. A continuación se describen las estrategias:
+La evaluación de cada solución generada se fundamenta en un modelo de puntuación compuesto que equilibra las restricciones técnicas con las preferencias del estudiante. La estructura de evaluación considera las estrategias y penalizaciones detalladas seguidamente:
 \begin{itemize}
   \item Choques: AcceptConflictsStrategy (peso 1.0). Siempre activo. Si acceptConflicts=false, un choque descarta la combinación (infinito); si true, aplica penalización baja por conflicto.
   \item Huecos (gaps): MinimizeGapsStrategy (peso 1.0). Activo solo con minimizeGaps=true. Puntúa la suma de recesos entre bloques; menor es mejor.
@@ -116,8 +246,9 @@ La evaluación combina tres estrategias y dos penalizaciones fijas. A continuaci
 \end{itemize}
 (Rutas completas en el Anexo \ref{ann:trazabilidad-tecnotime}).
 
+
 \subsection{Evidencias (código)}
-La implementación se basa en una arquitectura limpia que separa la lógica de negocio de la presentación. Los componentes clave identificados en el código fuente son:
+La arquitectura del sistema se basa en principios de diseño limpio, garantizando una separación estricta entre la lógica de negocio y la capa de presentación. Los componentes de software que materializan esta estructura en el código fuente se identifican a continuación:
 
 \begin{itemize}
   \item Orquestación: GenerateSchedulesUseCaseImpl (lógica de preparación y filtrado).

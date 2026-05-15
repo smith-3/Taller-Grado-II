@@ -1,16 +1,69 @@
 % ============================
 \section{Fase 11: Release (parámetros y tamaños)}
 
-Esta fase final del ciclo de desarrollo se centra en la preparación del artefacto de software para su distribución y despliegue en entornos productivos. El proceso abarca la configuración optimizada del entorno de compilación, la aplicación de técnicas de reducción de tamaño y ofuscación de código, y la definición de una estrategia de entrega que garantice la integridad y el rendimiento de la aplicación en los dispositivos de los usuarios finales.
+Esta fase final del ciclo de desarrollo se orienta a la preparación exhaustiva del artefacto de software para su distribución y despliegue en entornos productivos. El proceso contempla la configuración optimizada del entorno de compilación mediante Gradle, asegurando que cada componente del sistema esté debidamente verificado antes de la generación del paquete final para el usuario.
+
+Se aplican técnicas avanzadas de reducción de tamaño a través de herramientas como R8 y ProGuard, lo cual minimiza el peso del archivo binario y proporciona una capa de ofuscación de código esencial para la seguridad del software. Asimismo, se define una estrategia de entrega continua que garantiza la integridad del sistema y un rendimiento óptimo en la amplia variedad de dispositivos móviles de los estudiantes.
 
 \subsection{Objetivo}
 El objetivo principal es generar un paquete de instalación (APK) optimizado, seguro y eficiente, minimizando su huella de almacenamiento sin comprometer la funcionalidad. Se busca establecer un flujo de lanzamiento reproducible que asegure la compatibilidad con una amplia gama de dispositivos (API 24+) y gestione adecuadamente los recursos pesados, como los modelos de inteligencia artificial, fuera del paquete principal.
 
 \subsection{Preparación del lanzamiento y métricas}
-La preparación técnica para el lanzamiento se estructura en torno a la optimización de los scripts de construcción en Gradle y la gestión eficiente de recursos.
+La preparación técnica para el lanzamiento se fundamenta en la optimización de los scripts de construcción desarrollados en Gradle. Este proceso asegura una gestión eficiente de los recursos y establece un entorno de compilación reproducible, garantizando que el artefacto final cumpla con los estándares de calidad exigidos para un entorno productivo real.
 
-Se definen los parámetros de compilación con un minSdk=24 para garantizar compatibilidad con dispositivos modernos y un targetSdk=35 para aprovechar las últimas optimizaciones de Android. Para la variante de producción (release), se activan las herramientas de reducción de código y recursos (R8), habilitando minifyEnabled y shrinkResources para eliminar código muerto y ofuscar la lógica propietaria.
+Se definen parámetros de compilación específicos, estableciendo un minSdk=24 para maximizar la compatibilidad con un amplio espectro de dispositivos modernos utilizados por los estudiantes. Asimismo, se utiliza un targetSdk=35 para aprovechar las últimas optimizaciones de seguridad, privacidad y rendimiento proporcionadas por las versiones más recientes del sistema operativo Android.
 
-En cuanto al tamaño del entregable, se adopta una estrategia de descarga dinámica para el componente de IA. El APK base se mantiene ligero ($<30$\,MB), excluyendo el modelo de lenguaje (Gemma 2B cuantizado, $\sim$229\,MB), el cual se descarga bajo demanda mediante el ModelInitializationService. Finalmente, se establecen canales de distribución controlados para pruebas internas (QA) y despliegue, asegurando que cada versión esté firmada digitalmente y acompañada de sus respectivas notas de cambio.
+Para la versión de producción, se activa el motor R8 con las directivas minifyEnabled y shrinkResources. Estas herramientas eliminan automáticamente el código no utilizado y los recursos redundantes del binario final, aplicando una capa de ofuscación de código propietaria que protege la integridad y la propiedad intelectual del software desarrollado.
 
+El entregable adopta una estrategia de descarga dinámica para el componente de inteligencia artificial, manteniendo el APK base bajo los 30\,MB al excluir el modelo LFM2.5-350M. Este modelo de 229\,MB se gestiona mediante el ModelInitializationService, asegurando una distribución ligera que optimiza el consumo de datos y almacenamiento en los terminales de los usuarios.
 
+\subsection{Publicación y evidencias de distribución}
+La distribución oficial del sistema se realiza mediante Google Play Store, utilizando el formato de paquete de aplicaciones de Android para optimizar la entrega de recursos. Este formato permite que la tienda genere y firme automáticamente los binarios específicos para cada configuración de dispositivo, reduciendo el consumo de datos durante la descarga inicial por parte de los estudiantes.
+
+La gestión del lanzamiento en la consola de desarrollador incluye la validación de la integridad del paquete y la verificación de la firma digital. La Figura \ref{fig:qa_playstore_release_bundle} muestra los detalles técnicos del paquete de aplicación cargado, confirmando la versión del código, el nivel de API objetivo y el tamaño optimizado del entregable para su distribución masiva.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/pruebas/qa_playstore_release_bundle.png}
+\caption[Detalles del paquete de aplicación en Play Store]{Detalles del paquete de aplicación (Android App Bundle) en Google Play Console.}\label{fig:qa_playstore_release_bundle}
+  Fuente: Elaboración propia.
+\end{figure}
+
+Para garantizar la compatibilidad, se utiliza el catálogo de dispositivos de la plataforma, que permite filtrar y validar el rendimiento en miles de modelos certificados. La Figura \ref{fig:qa_playstore_device_catalog} presenta la cobertura de dispositivos alcanzada, asegurando que la aplicación sea accesible para la mayoría de los terminales utilizados por la comunidad universitaria en la actualidad.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/pruebas/qa_playstore_device_catalog.png}
+\caption[Catálogo de dispositivos compatibles]{Catálogo de dispositivos certificados y compatibles en Google Play Console.}\label{fig:qa_playstore_device_catalog}
+  Fuente: Elaboración propia.
+\end{figure}
+
+Este catálogo evidencia la compatibilidad del sistema con más de 18,500 modelos de dispositivos certificados, abarcando una amplia diversidad de fabricantes como Samsung, Honor, POCO y Tecno. La validación confirma que la aplicación soporta versiones de Android desde la 11 hasta la 16 Beta, operando de manera estable en configuraciones de hardware que varían entre 4\,GB y 12\,GB de memoria RAM. Esta cobertura masiva garantiza que la mayoría de los estudiantes universitarios puedan acceder a la herramienta sin restricciones de hardware.
+
+El proceso de lanzamiento se inició con la generación y firma del paquete de aplicación (AAB) mediante Gradle. Posteriormente, el artefacto fue cargado en Google Play Console para una revisión técnica exhaustiva por parte de los servicios de validación de la plataforma, asegurando el cumplimiento de las normativas de seguridad y privacidad exigidas.
+
+Tras la aprobación regulatoria, la aplicación fue habilitada para su distribución oficial en producción. La Figura \ref{fig:qa_playstore_produccion} confirma este estado, indicando que el sistema se encuentra disponible para su descarga masiva, marcando la culminación exitosa del ciclo de validación técnica en el ecosistema Android.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/pruebas/qa_playstore_produccion.png}
+\caption[Aplicación en estado de producción]{Confirmación del estado de producción y disponibilidad de la aplicación en Google Play Store.}\label{fig:qa_playstore_produccion}
+  Fuente: Elaboración propia.
+\end{figure}
+
+La evidencia recopilada confirma que la versión 1.0.9 (código de versión 10) se encuentra en estado plenamente activo y disponible para su descarga oficial en Google Play Store. Esta disponibilidad abarca una amplia gama de factores de forma, garantizando un funcionamiento fluido no solo en teléfonos móviles, sino también en tabletas y dispositivos con Chrome OS, lo cual amplía significativamente las posibilidades de acceso para el estudiante universitario.
+
+Con un registro inicial de 27 instalaciones y la validación técnica de 18,599 modelos de dispositivos compatibles, el sistema demuestra una capacidad de distribución masiva y estable. Estos indicadores cuantitativos respaldan la robustez de la arquitectura implementada y aseguran que la herramienta pueda escalar de forma previsible y sin degradación del rendimiento ante un incremento constante en la base de usuarios activos.
+
+Este hito de publicación definitiva garantiza que el artefacto de software ha alcanzado el nivel de madurez técnica necesario para su despliegue en el entorno productivo real. De este modo, se asegura un uso efectivo y autónomo del sistema dentro del ecosistema universitario boliviano, cumpliendo satisfactoriamente con los requisitos de fiabilidad, seguridad y disponibilidad planteados desde el inicio del proyecto.
+
+Como parte de la validación técnica en un entorno controlado, se realizó un seguimiento de las valoraciones emitidas por los usuarios durante la fase de pruebas internas. La Figura \ref{fig:qa_playstore_reviews} presenta el registro de comentarios recopilados en la consola de Google Play, donde los participantes del grupo de prueba destacan la naturaleza intuitiva de la interfaz. Estas calificaciones tempranas validan los objetivos de usabilidad y permitieron realizar ajustes finales antes del despliegue masivo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/pruebas/qa_playstore_reviews.png}
+\caption[Reseñas y valoraciones en fase de prueba]{Reseñas y valoraciones de usuarios en la consola de pruebas de Google Play.}\label{fig:qa_playstore_reviews}
+  Fuente: Elaboración propia.
+\end{figure}
+
+Es relevante destacar que las evidencias confirman el funcionamiento estable de la aplicación en dispositivos actualizados a Android 15 (SDK 35), asegurando la vigencia tecnológica del sistema. Este nivel de compatibilidad, sumado al feedback cualitativo de la comunidad, permite cerrar la fase de lanzamiento con la certeza de haber entregado una herramienta robusta, escalable y centrada en el usuario.

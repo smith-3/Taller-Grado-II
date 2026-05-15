@@ -3,38 +3,44 @@
 
 Esta fase establece el pipeline fundamental para la adquisición y normalización de datos académicos provenientes de los documentos PDF oficiales de la UMSS. Dada la naturaleza no estructurada y la variabilidad del formato fuente, esta etapa es crítica para garantizar la calidad y consistencia de la información que alimentará al generador de horarios.
 
-Para ello, se implementa un flujo ETL (Extracción, Transformación y Carga) autónomo que se ejecuta íntegramente en el dispositivo del usuario (Edge Computing). Esta estrategia descentralizada no solo optimiza el uso de recursos limitados del servidor, sino que también permite la operatividad del sistema incluso en entornos con conectividad intermitente o nula.
+Para ello, se implementa un flujo ETL (Extracción, Transformación y Carga) autónomo que se ejecuta en su totalidad en el dispositivo del usuario (Edge Computing). Esta estrategia descentralizada no solo optimiza el uso de recursos limitados del servidor, sino que también permite la operatividad del sistema incluso en entornos con conectividad intermitente o nula.
+
+El alcance de esta fase se limita al consumo no invasivo de información pública ya publicada por la facultad. No se establece una integración transaccional con sistemas institucionales ni se modifican sus procesos internos. La aplicación consulta la fuente disponible, descarga el documento de horarios cuando corresponde y transforma su contenido a un modelo local para uso del estudiante.
 
 \subsection{Objetivo}
-El objetivo principal es transformar la información semi-estructurada de los horarios oficiales a un modelo de datos relacional estrictamente tipado y normalizado. Durante este proceso, se valida rigurosamente la integridad referencial de entidades clave como materias, grupos y docentes, asegurando que no existan inconsistencias en la base de datos local.
+El objetivo es transformar la información semi-estructurada de los horarios oficiales a un modelo de datos relacional estrictamente tipado y normalizado. Durante este proceso, se valida de forma rigurosa la integridad referencial de entidades clave como materias, grupos y docentes, asegurando que no existan inconsistencias en la base de datos local.
 
-Asimismo, se minimiza el impacto en la infraestructura tecnológica de la universidad mediante estrategias de caché inteligente y sincronización diferencial, evitando descargas innecesarias. De esta manera, se logra un equilibrio óptimo entre la frescura de los datos y la eficiencia operativa, reduciendo significativamente el consumo de ancho de banda del estudiante.
+Asimismo, se minimiza el impacto en la infraestructura tecnológica de la universidad mediante estrategias de caché inteligente y sincronización diferencial, evitando descargas innecesarias. De esta manera, se logra un equilibrio óptimo entre la frescura de los datos y la eficiencia operativa, reduciendo de forma considerable el consumo de ancho de banda del estudiante.
 
-Al iniciar el generador de horarios, el sistema evalúa inmediatamente la conectividad y la vigencia de los datos locales para decidir la estrategia de obtención de datos más eficiente. Si el contenido almacenado es reciente y válido, se utiliza la caché local para ofrecer una respuesta instantánea; de lo contrario, se inicia una sincronización en segundo plano. Esta lógica de decisión coordina los siguientes componentes especializados:
+Al iniciar el generador de horarios, el sistema evalúa la conectividad y la vigencia de los datos locales para decidir la estrategia de obtención más eficiente. Esta coordinación lógica se materializa a través de los siguientes componentes especializados que aseguran la integridad del flujo:
 
 \begin{itemize}
-  \item Orquestación de UI: El componente GenerateScheduleViewModel actúa como el controlador central de la experiencia, gestionando el estado de la interfaz de usuario. Su función es bloquear las acciones de generación únicamente durante los momentos críticos de sincronización para evitar inconsistencias en los datos, manteniendo al usuario informado del progreso sin interrumpir su flujo de trabajo.
-  \item Diagnóstico de Red: La clase NetworkConnectivityChecker realiza una verificación exhaustiva que va más allá de detectar una conexión activa. Valida la capacidad real de transmisión de datos hacia internet antes de intentar cualquier operación remota, discriminando eficazmente entre estados online y offline para evitar errores de conexión frustrantes.
-  \item Sincronización y Resiliencia: El caso de uso AutoSyncUseCase es el núcleo lógico que determina si es necesaria una actualización, comparando las fechas de modificación de los archivos remotos con los locales. Para garantizar la robustez, incorpora patrones de resiliencia como Circuit Breaker, que previene fallos en cascada interrumpiendo las peticiones si el servidor universitario no responde, y Exponential Backoff, que gestiona reintentos progresivos ante errores transitorios de red.
-  \item Preferencias: El componente SyncPreferences actúa como un regulador de tráfico, controlando la frecuencia de las verificaciones automáticas mediante una ventana de tiempo configurable (por defecto 6 horas). Esto evita consultas redundantes al servidor en sesiones de uso frecuente, optimizando tanto el consumo de batería como el uso de datos móviles del estudiante.
+  \item Orquestación de UI: El componente GenerateScheduleViewModel actúa como el controlador central de la experiencia, gestionando el estado de la interfaz de usuario. Su función es bloquear las acciones de generación únicamente durante los momentos críticos de sincronización.
+  \item Diagnóstico de Red: La clase NetworkConnectivityChecker realiza una verificación exhaustiva que valida la capacidad real de transmisión de datos, discriminando de forma eficaz entre estados online y offline para evitar errores de conexión.
+  \item Sincronización y Resiliencia: El caso de uso AutoSyncUseCase es el núcleo lógico que determina si es necesaria una actualización. Incorpora patrones como Circuit Breaker, que previene fallos en cascada, y Exponential Backoff, que gestiona reintentos progresivos.
+  \item Preferencias: El componente SyncPreferences actúa como un regulador de tráfico, controlando la frecuencia de las verificaciones automáticas mediante una ventana de tiempo configurable para optimizar el consumo de batería y datos.
 \end{itemize}
 
-Para visualizar el entorno en el que opera esta fase, la Figura \ref{fig:c4_context_f1} presenta el diagrama de contexto C4 (Nivel 1). En este diagrama se observa cómo el Sistema de Horarios interactúa con el estudiante y con los sistemas externos de la universidad (Portal Web), destacando los límites del sistema y sus principales dependencias externas para la obtención de datos.
+La orquestación coordinada de estos componentes especializados garantiza que el proceso de adquisición, análisis y normalización de datos se realice bajo condiciones estrictamente controladas de red y almacenamiento local. Este flujo estructurado no solo previene la corrupción de la información durante la descarga, sino que también optimiza el consumo de recursos del dispositivo, asegurando que la transición desde el formato no estructurado del PDF hacia el modelo relacional de la base de datos sea íntegra, trazable y resiliente ante posibles fallos de conectividad.
+
+Para visualizar el entorno operativo de esta fase, la Figura \ref{fig:c4_context_f1} presenta el diagrama de contexto C4 (Nivel 1). En este diagrama se observa cómo el sistema interactúa con el estudiante y con el Portal Web, destacando los límites y dependencias externas para la obtención de datos.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.3\linewidth]{images/diagrams/cap4_c4_1_context.png}
   \caption[C4 Nivel 1: Contexto del sistema para Fase 1]{C4 Nivel 1: Contexto del sistema para Fase 1.}
   \label{fig:c4_context_f1}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 \subsubsection{4.2.2 Ingesta, análisis y persistencia con frescura}
 Ante una actualización, el flujo descarga el PDF oficial y delega el procesamiento al componente PdfParser (ubicado en data.remote.pdf). Este componente implementa una estrategia de análisis sintáctico basada en expresiones regulares (Regex) para estructurar la información no estructurada del documento, manejando la complejidad inherente a los reportes generados por el sistema universitario.
 
-El proceso de análisis se divide en dos etapas principales:
+El procesamiento de los documentos PDF para la extracción de datos académicos requiere una metodología estructurada que garantice la precisión de la información. En este sentido, el proceso de análisis se descompone en las dos etapas fundamentales descritas a continuación:
 \begin{enumerate}
-    \item Fusión de líneas (Merge): Para resolver la fragmentación de nombres de docentes que, debido a su longitud, se distribuyen en múltiples líneas visuales en el PDF, el algoritmo mergeTeacherLines implementa una máquina de estados simple. Acumula secuencialmente en un buffer temporal cualquier línea de texto que no coincida con los patrones estructurales (como cabeceras o líneas de horario completas) ni con patrones de ruido (e.g., ``Procesado CPD'', ``Página X de Y''). Este contenido acumulado se antepone a la siguiente línea de horario válida detectada, reconstruyendo así la fila lógica completa antes de aplicar la extracción por expresiones regulares.
+    \item Fusión de líneas (Merge): Para resolver la fragmentación de nombres de docentes que, debido a su longitud, se distribuyen en múltiples líneas visuales en el PDF, el algoritmo mergeTeacherLines implementa una máquina de estados simple.
+
+    Esta lógica acumula en un buffer temporal cualquier línea de texto que no coincida con los patrones estructurales (como cabeceras o líneas de horario completas) ni con patrones de ruido (e.g., ``Procesado CPD'', ``Página X de Y''). Este contenido acumulado se antepone a la siguiente línea de horario válida detectada, reconstruyendo así la fila lógica completa antes de aplicar la extracción por expresiones regulares.
     
     \item Extracción de patrones: Se implementan dos expresiones regulares principales para la identificación de entidades:
     
@@ -64,14 +70,17 @@ Los datos extraídos se mapean a objetos intermedios SubjectInfo, donde se aplic
     \item Separación de Laboratorios: El caso de uso ImportCareerSchedulesUseCase detecta grupos híbridos (e.g., ``1A'' con tipo ``[P]'') mediante la función shouldSplitAsLab. Estos se separan en una ``materia virtual'' con sufijo \_LAB (e.g., ``FISICA GENERAL\_LAB'') para diferenciar académicamente la carga teórica de la práctica en la persistencia.
 \end{itemize}
 
-La persistencia en la base de datos Room aplica políticas de conflicto (Upsert) para mantener la integridad referencial. Si se detecta un horario existente para un mismo grupo, día y hora, se actualizan únicamente los campos de aula y docente si han cambiado, preservando la identidad del registro.
+La persistencia de la información en la base de datos local Room se rige por políticas de resolución de conflictos mediante el patrón Upsert (Update or Insert), asegurando la integridad referencial de los datos académicos. Este mecanismo garantiza que, ante la detección de un horario preexistente para una misma terna de grupo, día y hora, el sistema realice una actualización selectiva.
 
-Para proteger la estabilidad de la fuente externa y la experiencia del usuario, se aplican patrones de resiliencia:
+Dicha actualización se aplica únicamente sobre los atributos volátiles, como el aula o el docente asignado. Al preservar la clave primaria y la identidad del registro original, se evita la redundancia de datos y se mantiene la consistencia histórica del perfil del estudiante, incluso tras múltiples ciclos de sincronización diferencial.
+
+Para proteger la estabilidad de la fuente externa y garantizar la frescura de la información, el sistema incorpora patrones de resiliencia y gestión de datos que aseguran la disponibilidad del servicio bajo diversas condiciones operativas:
+
 \begin{itemize}
-  \item Descubrimiento/descarga: ScheduleScraper localiza la URL del recurso y PdfDownloader gestiona la descarga segura al almacenamiento local.
-  \item Frescura: Tras una actualización exitosa, se registra el lastSyncTime por carrera y se guarda el instante de la verificación en SyncPreferences, evitando consultas redundantes dentro de una ventana de tiempo configurable (e.g., 6 horas).
-  \item Robustez: ExponentialBackoff gestiona los reintentos ante fallos transitorios de red (e.g., timeouts), mientras que CircuitBreaker previene la saturación del servidor interrumpiendo temporalmente las solicitudes tras detectar una tasa de error elevada.
-  \item Respaldo: En ausencia de conectividad, el sistema permite la importación manual desde un archivo PDF local y opera totalmente en modo offline utilizando los datos en caché.
+  \item Descubrimiento y descarga: ScheduleScraper localiza la URL del recurso y PdfDownloader gestiona la descarga segura al almacenamiento local del dispositivo.
+  \item Gestión de frescura: Tras una actualización exitosa, se registra el instante de verificación en SyncPreferences, evitando consultas redundantes dentro de una ventana de tiempo configurable.
+  \item Mecanismos de robustez: Se implementa ExponentialBackoff para gestionar reintentos ante fallos transitorios y CircuitBreaker para prevenir la saturación del servidor interrumpiendo solicitudes tras errores continuos.
+  \item Estrategia de respaldo: En ausencia de conectividad, el sistema permite la importación manual desde un archivo PDF local, asegurando la operatividad total en modo offline.
 \end{itemize}
 
 Descendiendo al siguiente nivel de abstracción, la Figura \ref{fig:c4_container_f1} (C4 Nivel 2) muestra los contenedores principales. Se destaca la aplicación móvil como el contenedor central que orquesta la lógica, interactuando con la base de datos local (Room) para la persistencia y con el sistema de archivos para la gestión de los PDFs descargados.
@@ -81,36 +90,43 @@ Descendiendo al siguiente nivel de abstracción, la Figura \ref{fig:c4_container
   \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_2_container.png}
   \caption[C4 Nivel 2: Contenedores involucrados en Fase 1]{C4 Nivel 2: Contenedores involucrados en Fase 1.}
   \label{fig:c4_container_f1}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
-Para comprender en profundidad cómo el sistema maneja la complejidad de los datos no estructurados, es necesario descender un nivel más en la arquitectura. A continuación, se explora la descomposición del contenedor de la aplicación móvil, revelando los módulos internos que orquestan la lógica de negocio.
-Adentrándonos en la estructura interna de la aplicación, la Figura \ref{fig:c4_component_f1} (C4 Nivel 3) desglosa
-los componentes específicos de la fase de ingestión. Se pueden identificar el ScheduleScraper
-encargado del descubrimiento de recursos, el PdfDownloader para la descarga segura, y los
-componentes de procesamiento PdfExtractor y PdfParser que transforman el documento en datos
-estructurados.
+Para comprender en profundidad cómo el sistema maneja la complejidad inherente a los datos académicos no estructurados, resulta imperativo descender un nivel más en la jerarquía de la arquitectura C4. Este análisis detallado permite visualizar la organización interna del sistema, identificando las fronteras de responsabilidad entre los distintos módulos que interactúan para garantizar la integridad de la información procesada.
+
+En este sentido, se explora la descomposición del contenedor principal de la aplicación móvil, revelando los componentes internos que orquestan la lógica de negocio y gestionan el ciclo de vida de los datos académicos. Esta vista de componentes expone cómo se desacoplan las tareas de red, el procesamiento de archivos binarios y la persistencia relacional, asegurando un sistema mantenible, modular y altamente eficiente.
+
+\newpage
+Adentrándonos en la estructura operativa, la Figura \ref{fig:c4_component_f1} (C4 Nivel 3) desglosa los componentes específicos que intervienen en la fase de ingestión. Se identifican el ScheduleScraper para el descubrimiento de recursos, el PdfDownloader para la adquisición segura de archivos, y los motores PdfExtractor y PdfParser que transforman finalmente los documentos PDF en datos estructurados listos para su consumo por el sistema.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_3_component_f1.png}
+  \includegraphics[height=0.78\textheight,keepaspectratio]{images/diagrams/cap4_c4_3_component_f1.png}
   \caption[C4 Nivel 3: Componentes de ingesta y normalización (Fase 1)]{C4 Nivel 3: Componentes de ingesta y normalización (Fase 1).}
   \label{fig:c4_component_f1}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
+\newpage
 La Figura \ref{fig:c4_code_f1} (C4 Nivel 4) presenta el diagrama de clases detallado, mostrando las relaciones entre las clases de implementación, los casos de uso como AutoSyncUseCase e ImportCareerSchedulesUseCase, y las entidades de datos, proporcionando una vista técnica precisa de cómo se implementa la lógica de sincronización y persistencia.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\linewidth]{images/diagrams/cap4_c4_4_code_f1.png}
+  \includegraphics[width=1\linewidth]{images/diagrams/cap4_c4_4_code_f1.png}
   \caption[C4 Nivel 4: Clases y casos de uso relevantes (Fase 1)]{C4 Nivel 4: Clases y casos de uso relevantes (Fase 1).}
   \label{fig:c4_code_f1}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 \subsection{Resultados y verificación}
-Esta fase establece los cimientos para la adquisición de datos. Se verifica la consistencia de la base de datos por carrera, nivel, materia y grupo, asegurando que el lastSyncTime se actualice correctamente tras una ingesta exitosa. Las pruebas confirman la robustez del proceso ante fallos de red mediante los mecanismos de backoff y circuit breaker:
+Esta fase establece los cimientos para la adquisición de datos. Se verifica la consistencia de la base de datos por carrera, nivel, materia y grupo, asegurando que el lastSyncTime se actualice correctamente tras una ingesta exitosa.
+
+Las pruebas confirman la robustez del proceso ante fallos de red mediante los mecanismos de backoff y circuit breaker. Estas medidas garantizan que la aplicación sea resiliente en entornos de conectividad inestable.
+
+La integridad semántica de la información se garantiza mediante el uso de enumeraciones de dominio que normalizan los datos extraídos del documento fuente. Estas estructuras permiten transformar representaciones textuales heterogéneas en tipos de datos estrictamente tipados.
+
+Asimismo, aseguran que atributos como los días de la semana y las modalidades de clase sigan un esquema consistente. La validación rigurosa del proceso de ingestión se sustenta en las evidencias técnicas y las métricas de desempeño que se detallan seguidamente:
 
 \begin{enumerate}
   \item Evidencias (código): La implementación integra AutoSyncUseCase y SyncPreferences para la sincronización. Se emplean ScheduleScraper y PdfParser para la ingesta, asegurando resiliencia mediante ExponentialBackoff y CircuitBreaker.

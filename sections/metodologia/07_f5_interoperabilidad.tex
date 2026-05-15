@@ -1,18 +1,44 @@
 % ============================
-\section{Fase 5: Interoperabilidad (JSON + WhatsApp)}
+\section{Fase 5: Interoperabilidad local y portabilidad JSON}
 
-Esta fase se centra en habilitar un mecanismo robusto y estructurado para el intercambio de información académica entre estudiantes. Se implementa un contrato de datos basado en JSON que encapsula la información del horario, permitiendo su portabilidad y validación. Además, se integran flujos de exportación e importación que aprovechan las capacidades de las plataformas de mensajería instantánea modernas, facilitando la difusión de horarios sin depender de una infraestructura de servidor centralizada.
+Esta fase se centra en habilitar un mecanismo robusto y estructurado para el intercambio de información académica administrada en el dispositivo por el estudiante. Se implementa un contrato de datos basado en JSON que encapsula la información del horario, permitiendo su portabilidad, respaldo y validación entre dispositivos. Además, se integran flujos de exportación e importación que aprovechan las capacidades de las plataformas de mensajería instantánea modernas, facilitando la difusión de horarios sin depender de una infraestructura de servidor centralizada.
 
 \subsection{Objetivo}
-El objetivo principal es permitir que los estudiantes compartan e importen sus horarios de manera interoperable, segura y eficiente. Esto implica eliminar la necesidad de transcripción manual, reducir errores en la comunicación de grupos y horarios, y garantizar que la información compartida sea compatible entre diferentes versiones de la aplicación, preservando la integridad de los datos académicos del usuario receptor.
+El objetivo principal es permitir que los estudiantes compartan, importen y respalden sus horarios de manera interoperable, segura y eficiente. Esto implica eliminar la necesidad de transcripción manual dentro del flujo de organización personal, reducir errores en la comunicación de grupos y horarios, y garantizar que la información compartida sea compatible entre diferentes versiones de la aplicación, preservando la integridad de los datos académicos del usuario receptor.
+
+\subsection{Alcance de la interoperabilidad}
+La interoperabilidad implementada no corresponde a una integración transaccional con sistemas institucionales. La aplicación no modifica SAGAA, WebSIS, Cappuchino ni otros sistemas externos; tampoco automatiza la inscripción oficial del estudiante. Su alcance consiste en consumir información académica publicada de forma abierta, transformarla a un modelo local y permitir su intercambio mediante archivos estructurados.
+
+Bajo este criterio, SAGAA se considera una fuente pública de horarios en formato HTML/PDF, WebSIS se mantiene como el sistema oficial donde el estudiante formaliza su inscripción y Cappuchino se reconoce como una herramienta de apoyo usada en el contexto académico. La aplicación se ubica en la capa personal del estudiante, por lo que organiza y transporta datos locales, pero no reemplaza los procesos institucionales.
+
+La información de cupos y prerrequisitos no forma parte del alcance implementado, debido a que no se encuentra disponible en los documentos de horarios consumidos por el sistema ni está modelada en las entidades actuales. Estos datos requerirían acceso institucional adicional y reglas de negocio distintas a las desarrolladas en el proyecto.
 
 \subsection{Implementación de la interoperabilidad}
 La implementación técnica habilita la creación de múltiples formatos de exportación, abarcando representaciones visuales (PNG, PDF) para consumo directo y estructuradas (Excel, JSON) para manipulación de datos. Esta arquitectura flexible permite desacoplar la lógica de generación, delegando la construcción de cada formato a casos de uso especializados que garantizan la fidelidad de la información presentada.
 
-El núcleo de la interoperabilidad se fundamenta en un contrato JSON auto-contenido, generado y validado exclusivamente por la capa de dominio. Para asegurar un intercambio seguro, se integran flujos que utilizan FileProvider de Android, exponiendo los archivos mediante URIs de contenido temporales. Este mecanismo incorpora validaciones estrictas y una lógica de importación idempotente que previene la corrupción o duplicación de datos en el dispositivo destino.
+El núcleo de la interoperabilidad se fundamenta en un contrato JSON auto-contenido, generado y validado en exclusiva por la capa de dominio. Para asegurar un intercambio seguro, se integran flujos que utilizan FileProvider de Android, exponiendo los archivos mediante URIs de contenido temporales. Este mecanismo incorpora validaciones estrictas y una lógica de importación idempotente que previene la corrupción o duplicación de datos en el dispositivo destino.
+
+El intercambio de datos se organiza en diversos escenarios que responden a las necesidades de actualización, normalización y portabilidad del estudiante. Estos contextos de operación se detallan en el Cuadro \ref{tab:f5_escenarios_interoperabilidad}, clasificándolos según el origen de la información y la frecuencia de ejecución esperada:
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{@{}p{3.2cm} p{2.6cm} p{3.1cm} p{2.4cm} p{2.7cm}@{}}
+\toprule
+Escenario & Origen & Información intercambiada & Formato & Frecuencia \\
+\midrule
+Sincronización de oferta & SAGAA & Carreras, enlaces PDF y fecha de actualización & HTML/PDF & Al iniciar, bajo demanda o tras vencer la ventana de caché \\
+Normalización local & PDF oficial & Materias, grupos, docentes, aulas, días y horas & Modelo local Room & Cuando cambia la fuente o se importa un PDF local \\
+Compartir horario & Dispositivo del estudiante & Carreras asociadas y entradas de horario seleccionadas & JSON & Manual, cuando el estudiante decide compartir \\
+Importar horario & Archivo recibido & Materias, grupos y bloques horarios incluidos en el JSON & JSON & Manual, al abrir o seleccionar un archivo compatible \\
+Respaldo personal & Base local & Datos académicos y configuración exportable & JSON & Manual, según necesidad del estudiante \\
+\bottomrule
+\end{tabularx}
+\caption{Escenarios de interoperabilidad local y portabilidad de datos.}\label{tab:f5_escenarios_interoperabilidad}
+Fuente: Elaboración propia con base en los casos de uso implementados.
+\end{table}
 
 \subsection{Exportar}
-La exportación es orquestada por el SettingsSendScheduleViewModel, que gestiona los estados de la interfaz y delega la generación de archivos a casos de uso específicos. Las opciones disponibles incluyen:
+La exportación es orquestada por el SettingsSendScheduleViewModel, que gestiona los estados de la interfaz y delega la generación de archivos a casos de uso especializados. El sistema permite la externalización de la información en los siguientes formatos estándar:
 \begin{itemize}
   \item Imagen (PNG): Generada por GenerateWeeklyScheduleImageUseCase.
   \item PDF: Generado por GenerateWeeklySchedulePdfUseCase.
@@ -23,7 +49,7 @@ La exportación es orquestada por el SettingsSendScheduleViewModel, que gestiona
 El proceso de exportación JSON permite una selección parcial de materias. El GenerateShareableScheduleJsonUseCase recopila la información académica (carreras, materias, grupos, docentes, aulas) y utiliza el ShareableScheduleJsonGenerator para construir el archivo final. La compartición se realiza mediante un Intent.ACTION\_SEND con un FileProvider, asegurando la compatibilidad con aplicaciones de mensajería como WhatsApp.
 
 \subsection{Enviar copia (JSON)}
-El archivo JSON generado sigue un contrato estricto definido en ShareableScheduleJsonGenerator. Este archivo es auto-contenido, lo que significa que incluye todos los catálogos necesarios para reconstruir el horario sin depender de una conexión a internet inmediata. La estructura del JSON incluye:
+El archivo JSON generado sigue un contrato estricto definido en ShareableScheduleJsonGenerator. Este recurso es auto-contenido, permitiendo reconstruir el horario sin depender de una conexión inmediata. La estructura jerárquica del contrato se compone de los siguientes elementos técnicos:
 
 \begin{itemize}
   \item meta: Contiene la versión del contrato (version) y la versión mínima soportada (min\_supported) para garantizar la compatibilidad semántica entre diferentes versiones de la aplicación.
@@ -36,12 +62,12 @@ El archivo JSON generado sigue un contrato estricto definido en ShareableSchedul
 \end{itemize}
 
 \subsection{Importar (desde WhatsApp)}
-Al recibir un archivo JSON, la aplicación utiliza el LoadShareableScheduleUseCase para validar la integridad de la estructura y asegurar el cumplimiento del contrato de versión definido en los metadatos. Posteriormente, el ImportSharedScheduleUseCase orquesta la lógica de importación, la cual comienza verificando y sincronizando automáticamente las carreras faltantes si es necesario.
+Al recibir un archivo JSON, la aplicación utiliza el LoadShareableScheduleUseCase para validar la integridad de la estructura y asegurar el cumplimiento del contrato de versión definido en los metadatos. Posteriormente, el ImportSharedScheduleUseCase orquesta la lógica de importación, la cual comienza verificando y sincronizando de forma automática las carreras faltantes si es necesario.
 
-A continuación, cruza los datos entrantes con el repositorio local (SelectedSubjectRepository) para identificar materias ya aprobadas o inscritas, aplicando una estrategia de fusión inteligente que actualiza los grupos y horarios sin duplicar registros existentes, garantizando así la consistencia de la base de datos académica del usuario. Finalmente, el caso de uso retorna un resultado detallado (ImportResult) que informa a la interfaz sobre el éxito de la operación o la presencia de duplicados omitidos:
+A continuación, cruza los datos entrantes con el repositorio local (SelectedSubjectRepository) para identificar materias ya aprobadas o inscritas. Se aplica una estrategia de fusión inteligente que garantiza la consistencia de la base de datos académica mediante los siguientes procesos de validación:
 
 \begin{itemize}
-  \item Sincronización de Carreras: Si el parámetro autoSyncCareers está activo, se verifica si las carreras del horario compartido están habilitadas en el dispositivo receptor. Si no lo están, se habilitan y sincronizan automáticamente.
+  \item Sincronización de Carreras: Si el parámetro autoSyncCareers está activo, se verifica si las carreras del horario compartido están habilitadas en el dispositivo receptor. Si no lo están, se habilitan y sincronizan de forma automática.
   \item Detección de Duplicados: Se identifica si las materias ya están inscritas o aprobadas (SubjectStatus.APPROVED). Las materias aprobadas se omiten para evitar inconsistencias.
   \item Fusión Inteligente:
   \begin{itemize}
@@ -62,7 +88,7 @@ El proceso de compartir horarios se visualiza en la Figura \ref{fig:f5_flow_expo
   \includegraphics[width=0.35\linewidth]{images/diagrams/cap4_f5_share_import_flow_part1.png}
 \caption[Exportación del horario en la aplicación]{Exportación del horario en la aplicación.}
   \label{fig:f5_flow_export}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 El diagrama ilustra el flujo técnico de exportación orquestado por el GenerateShareableScheduleJsonUseCase. Este componente no solo serializa las materias seleccionadas, sino que construye un paquete de datos completo y auto-contenido.
@@ -78,7 +104,7 @@ El diagrama detalla la lógica de sincronización inteligente que protege la bas
   \includegraphics[width=0.55\linewidth]{images/diagrams/cap4_f5_share_import_flow_part2.png}
 \caption[Importación del horario en la aplicación]{Importación del horario en la aplicación.}
   \label{fig:f5_flow_import}
-  \small{Fuente: Elaboración propia.}
+  Fuente: Elaboración propia.
 \end{figure}
 
 El diagrama de importación detalla cómo el sistema procesa un archivo JSON externo. Incluye pasos críticos de validación de estructura, detección de conflictos (como materias ya aprobadas) y la lógica de sincronización automática de carreras si el horario compartido pertenece a un programa académico no habilitado en el dispositivo receptor.

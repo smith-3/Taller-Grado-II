@@ -7,15 +7,19 @@ Esta fase se dedica a fortalecer la postura de seguridad y privacidad de la apli
 El objetivo primordial es garantizar la confidencialidad e integridad de la información del usuario mediante la adopción de principios de ``privacidad por diseño''. Se busca reducir al mínimo la superficie de ataque limitando los permisos solicitados y eliminando cualquier dependencia de servicios en la nube para el procesamiento de datos críticos, asegurando así un funcionamiento seguro y autónomo.
 
 \subsection{Implementación de medidas de seguridad}
-La implementación de las medidas de seguridad se articula en tres ejes fundamentales. Primero, se aplica el principio de mínimo privilegio en la gestión de permisos, solicitando acceso a recursos sensibles (como notificaciones o almacenamiento) únicamente en el momento exacto de su uso y bajo demanda explícita del usuario.
+La implementación de las medidas de seguridad se articula en tres ejes fundamentales. En primer lugar, se aplica el principio de mínimo privilegio en la gestión de permisos, solicitando acceso a recursos sensibles solo bajo demanda explícita y durante el uso requerido para la funcionalidad específica.
 
-Segundo, se refuerza la persistencia de datos mediante el uso de almacenamiento interno protegido por el sistema operativo, inaccesible para otras aplicaciones. Finalmente, la integración del módulo de inteligencia artificial se diseña para operar en un entorno aislado (sandbox), ejecutando todos los modelos de inferencia localmente y sin emitir telemetría o datos de uso a servidores externos.
+En segundo lugar, se refuerza la persistencia de datos mediante el uso de almacenamiento interno cifrado y protegido por el sistema operativo. Esto garantiza que el mantenimiento de la base de datos local se realice de forma automatizada y sincronizada con la fuente oficial universitaria, protegiendo la integridad de la información académica.
+
+Por último, la integración del módulo de inteligencia artificial se diseña para operar en un entorno aislado (sandbox). Bajo este esquema, se ejecutan todos los modelos de inferencia directamente en el dispositivo, eliminando la emisión de telemetría o datos de uso hacia servidores externos para preservar la privacidad del estudiante.
 
 \subsection{Resultados y verificación}
-La auditoría de seguridad confirma que la aplicación opera con el conjunto mínimo de permisos necesarios. Se verifica que no existe transmisión de telemetría obligatoria y que los datos sensibles permanecen en el almacenamiento local del dispositivo. La funcionalidad de IA respeta estrictamente el protocolo de activación voluntaria (opt-in).
+La auditoría de seguridad confirma que la aplicación opera con el conjunto mínimo de permisos necesarios. Se centra la interacción en el estudiante como actor principal para la generación de propuestas de horario bajo criterios de optimización académica y privacidad absoluta.
 
-Datos mínimos (local). Sólo nombre de usuario y preferencias necesarias (24h, fines de semana, tema, notificaciones, IA). No se recolecta telemetría obligatoria ni se envían datos personales a terceros. Persistencia: Room/SharedPreferences locales, gestionado en UserSettings.
+Se verifica la ausencia de transmisión de telemetría obligatoria hacia servidores externos. Los datos sensibles permanecen en el almacenamiento local cifrado, mientras que la funcionalidad de inteligencia artificial respeta estrictamente el protocolo de activación voluntaria (opt-in).
 
-Permisos mínimos. POST\_NOTIFICATIONS (Android 13+) para recordatorios; permisos de almacenamiento/compartir sólo cuando export/import lo requiere (vía FileProvider e Intent.ACTION\_SEND). Declaración en el AndroidManifest.
+La arquitectura de seguridad se sustenta en tres pilares operativos. Primero, la minimización de datos asegura que solo se almacenen preferencias necesarias como el formato de hora, el tema visual y las notificaciones, evitando cualquier recolección de datos personales no solicitados.
 
-IA on-device (opt-in). Descarga/uso del modelo bajo control del usuario: activar/desactivar IA, elegir medio de descarga (Wi‑Fi/datos), borrar el modelo. Sin telemetría obligatoria; procesamiento local.
+Segundo, la gestión de permisos se realiza bajo demanda mediante FileProvider e intents nativos del sistema operativo. Este enfoque limita el acceso al almacenamiento y otros recursos del hardware solo cuando existe una necesidad estricta para el funcionamiento del sistema.
+
+Por último, la integración de IA opera bajo un modelo de procesamiento local (on-device). Este esquema permite al usuario descargar o eliminar el modelo de inferencia en cualquier momento, garantizando el control total sobre el consumo de recursos y la privacidad.

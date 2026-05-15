@@ -4,7 +4,7 @@
 Los procedimientos operativos documentan los flujos de trabajo principales de la aplicación desde la perspectiva del sistema. Describen las secuencias de acciones, validaciones y transformaciones que se ejecutan para completar cada operación crítica, asegurando la consistencia del estado de la aplicación.
 
 \subsection{PR-001: Ingestión y normalización}
-Este procedimiento es ejecutado automáticamente por el sistema, teniendo como objetivo principal mantener la Base de Datos local vigente y sincronizada con la fuente oficial de la universidad:
+Este procedimiento es ejecutado automáticamente por el sistema, teniendo como objetivo principal mantener la Base de Datos local vigente y sincronizada con la fuente oficial de la universidad. Los estados de control que rigen esta operación son:
 
 \begin{enumerate}
   \item Precondiciones:
@@ -20,7 +20,7 @@ Este procedimiento es ejecutado automáticamente por el sistema, teniendo como o
 \end{enumerate}
 
 \subsection{PR-002: Generar horarios}
-El actor principal de este flujo es el estudiante, quien interactúa con la aplicación con el objetivo de obtener $N$ propuestas de horario óptimas que se ajusten a sus necesidades académicas:
+El actor principal de este flujo es el estudiante, quien interactúa con la aplicación con el objetivo de obtener propuestas de horario óptimas que se ajusten a sus necesidades académicas. Los criterios que gobiernan esta operación se detallan a continuación:
 
 \begin{enumerate}
   \item Precondiciones:

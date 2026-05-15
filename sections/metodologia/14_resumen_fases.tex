@@ -8,7 +8,7 @@ Esta sección consolida la información operativa de cada fase del desarrollo, p
 
 
 \subsection{Fase 1: Ingesta de PDF a BD}
-Los aspectos operativos de esta fase se resumen a continuación:
+Esta etapa representa el punto de entrada de la información al sistema, transformando los horarios oficiales en datos estructurados. Los aspectos operativos de esta fase se resumen a continuación:
 \begin{itemize}
   \item Objetivo (Goal): Transformar horarios oficiales (PDF) a datos locales sin saturar la fuente.
   \item Actividades desarrolladas: Descubrimiento de URLs, descarga con rate limit, parsing tolerante, normalización, persistencia y marcas de freshness.
@@ -18,9 +18,7 @@ Los aspectos operativos de esta fase se resumen a continuación:
 \end{itemize}
 
 \subsection{Fase 2: Modelo de dominio}
-La Fase 2 define el modelo de dominio que representa conceptualmente el problema de gestión de horarios académicos y establece las reglas de integridad que gobiernan las relaciones entre entidades. Este modelo sirve como contrato entre las diferentes capas de la aplicación y como fuente de verdad para la lógica de negocio.
-
-La claridad y completitud del modelo de dominio facilita la comunicación entre desarrolladores, simplifica el mantenimiento del código y reduce la probabilidad de inconsistencias en los datos. Los elementos principales son:
+La Fase 2 define el modelo de dominio que representa conceptualmente el problema de gestión de horarios y establece las reglas de integridad que gobiernan las relaciones entre entidades. Los elementos principales de este modelo son:
 
 \begin{itemize}
   \item Objetivo: Entidades, relaciones y mapeos consistentes para soporte de generador y export.
@@ -31,9 +29,7 @@ La claridad y completitud del modelo de dominio facilita la comunicación entre 
 \end{itemize}
 
 \subsection{Fase 3: Generador de horarios}
-La Fase 3 implementa el núcleo algorítmico de TecnoTime: el generador de horarios optimizados que resuelve el problema de satisfacción de restricciones mediante búsqueda con retroceso y heurísticas de poda. Esta fase representa el mayor desafío técnico del proyecto, requiriendo el balance entre exhaustividad de la búsqueda, tiempo de ejecución y calidad de las soluciones.
-
-El generador debe producir múltiples alternativas viables en tiempos compatibles con la ejecución en dispositivo móvil, considerando restricciones duras como no solapamiento y restricciones blandas como minimización de huecos. Los aspectos clave son:
+Esta fase implementa el núcleo algorítmico de la aplicación, resolviendo el problema de satisfacción de restricciones mediante búsqueda con retroceso. Los aspectos clave de su funcionamiento son:
 
 \begin{itemize}
   \item Objetivo: Producir Top-$N$ horarios sin choques por defecto, optimizando huecos y favoritos.
@@ -44,9 +40,7 @@ El generador debe producir múltiples alternativas viables en tiempos compatible
 \end{itemize}
 
 \subsection{Fase 4: Prioridad sin conexión (offline-first)}
-La Fase 4 establece la arquitectura offline-first que prioriza el almacenamiento local y garantiza la funcionalidad de la aplicación independientemente de la conectividad de red. Esta decisión arquitectónica responde directamente a las necesidades identificadas en la encuesta, donde el 78% de estudiantes valora el funcionamiento sin conexión.
-
-La implementación incluye políticas de frescura de datos, sincronización diferida en segundo plano y mecanismos de recuperación ante fallos de red. Los componentes clave son:
+Se establece una arquitectura que prioriza el almacenamiento local para garantizar la funcionalidad independientemente de la red. Los componentes operativos fundamentales son:
 
 \begin{itemize}
   \item Objetivo: Operación robusta con conectividad intermitente y protección de la fuente.
@@ -57,9 +51,7 @@ La implementación incluye políticas de frescura de datos, sincronización dife
 \end{itemize}
 
 \subsection{Fase 5: Interoperabilidad (JSON + WhatsApp)}
-La Fase 5 habilita la interoperabilidad entre instancias de TecnoTime mediante un contrato JSON estandarizado que permite compartir horarios a través de canales de mensajería como WhatsApp. Esta funcionalidad responde a la necesidad de coordinación social identificada en la encuesta, donde el 80% de estudiantes utiliza WhatsApp para validar cambios en horarios.
-
-El diseño del formato de intercambio balancea completitud de información, compacidad del mensaje y facilidad de validación. Los elementos son:
+Esta funcionalidad habilita el intercambio de horarios mediante un contrato JSON estandarizado, facilitando la coordinación entre estudiantes. Sus elementos principales son:
 
 \begin{itemize}
   \item Objetivo: Compartir e importar horarios de forma confiable entre usuarios.
@@ -70,9 +62,7 @@ El diseño del formato de intercambio balancea completitud de información, comp
 \end{itemize}
 
 \subsection{Fase 6: UX aplicada}
-La Fase 6 refina la experiencia de usuario mediante la implementación de patrones de UX móvil que facilitan la adopción y el uso cotidiano de la aplicación. Esta fase incluye el diseño del flujo de onboarding que guía a nuevos usuarios a través de la configuración inicial, la implementación del widget de pantalla principal que proporciona acceso inmediato al horario actual, y la optimización de la navegación para minimizar el número de toques necesarios para completar tareas comunes.
-
-El diseño de UX se valida mediante pruebas con usuarios piloto que identifican puntos de fricción y oportunidades de mejora. Los aspectos principales son:
+El diseño de la interfaz se enfoca en reducir la carga cognitiva y facilitar la adopción del sistema. Los aspectos principales de la experiencia de usuario son:
 
 \begin{itemize}
   \item Objetivo: Reducir fricción: onboarding, ajustes, agregar/editar, vista semanal, widget.
@@ -83,22 +73,18 @@ El diseño de UX se valida mediante pruebas con usuarios piloto que identifican 
 \end{itemize}
 
 \subsection{Fase 7: Notificaciones e IA (opt-in)}
-La Fase 7 integra dos funcionalidades opcionales que enriquecen la experiencia del usuario sin comprometer la simplicidad de la aplicación base: el sistema de notificaciones programables para recordatorios de clases y el asistente de inteligencia artificial ``Simón'' que opera completamente en el dispositivo. Ambas funcionalidades siguen un modelo opt-in donde el usuario debe activarlas explícitamente, respetando principios de privacidad y control del usuario.
-
-El asistente IA utiliza modelos cuantizados en formato GGUF que permiten la inferencia local sin envío de datos a servidores externos, alineándose con los requisitos de privacidad del proyecto. Los componentes son:
+Se integran capacidades de asistencia proactiva mediante notificaciones y un asistente de IA local desacoplado del núcleo. Los componentes operativos son:
 
 \begin{itemize}
   \item Objetivo: Recordatorios puntuales y mensajería opcional con IA on-device.
-  \item Actividades desarrolladas: Canales separados (clases/mensajes), WorkManager, plantillas; gestión del modelo IA (descarga/borrado; Wi-Fi/datos; sin telemetría).
-  \item Entradas a salidas: De Notif (canales+workers) e IA (local) a avisos y textos opcionales.
-  \item DoD: Notifs antes de clase (10 min por defecto) y configurables; IA desactivada por defecto, activable y reversible.
-  \item Riesgo: Tamaño de modelo/almacenamiento: mitigado con descarga bajo demanda y opción de eliminar.
+  \item Actividades desarrolladas: Canales separados (clases/mensajes), WorkManager, plantillas, entrenamiento SFT + LoRA, exportación GGUF Q4\_K\_M y gestión del modelo IA (descarga/borrado; Wi-Fi/datos; sin telemetría).
+  \item Entradas a salidas: De notificaciones (canales+workers), datos contextuales locales y modelo IA a avisos y textos opcionales en formato estructurado.
+  \item DoD: Notificaciones antes de clase (10 min por defecto) y configurables; IA desactivada por defecto, activable, reversible y desacoplada del núcleo funcional.
+  \item Riesgo: Tamaño de modelo, memoria y batería: mitigado con descarga bajo demanda, opción de eliminar, ejecución puntual y respaldo mediante plantillas estáticas.
 \end{itemize}
 
 \subsection{Fase 8: Exportaciones}
-La Fase 8 implementa las capacidades de exportación de horarios en múltiples formatos (PDF, imagen, Excel) que facilitan la distribución y el uso de los horarios fuera de la aplicación. Esta funcionalidad responde a la necesidad identificada en la encuesta donde el 51% de estudiantes solicita capacidades de compartir horarios.
-
-La generación de cada formato requiere transformaciones específicas: el PDF utiliza bibliotecas de renderizado vectorial, la imagen captura la vista de Compose como bitmap, y el Excel estructura los datos en hojas de cálculo con formato condicional. La implementación garantiza que los horarios exportados sean legibles, completos y mantengan la información de contexto necesaria. Los elementos son:
+La externalización de horarios en formatos PDF, imagen y Excel permite la portabilidad de la información fuera de la aplicación. Sus elementos son:
 
 \begin{itemize}
   \item Objetivo: Compartir horario como imagen, PDF o Excel.
@@ -109,9 +95,7 @@ La generación de cada formato requiere transformaciones específicas: el PDF ut
 \end{itemize}
 
 \subsection{Fase 9: Pruebas y validación}
-La Fase 9 establece el aseguramiento de calidad mediante una batería de pruebas que validan tanto la funcionalidad individual de componentes como los flujos de extremo a extremo que atraviesan múltiples capas de la aplicación. Las pruebas unitarias verifican la lógica de negocio aislada, las pruebas de integración validan la interacción entre repositorios y casos de uso, y las pruebas de UI confirman que los flujos críticos funcionan correctamente desde la perspectiva del usuario.
-
-La cobertura de pruebas se enfoca en los módulos de mayor riesgo: el generador de horarios, los parsers de PDF, y la lógica de sincronización offline. La estructura de pruebas es:
+El aseguramiento de calidad se realiza mediante una batería de pruebas unitarias, de integración y de interfaz. La estructura de validación es:
 
 \begin{itemize}
   \item Objetivo: Asegurar calidad funcional y de flujo extremo a extremo.
@@ -122,9 +106,7 @@ La cobertura de pruebas se enfoca en los módulos de mayor riesgo: el generador 
 \end{itemize}
 
 \subsection{Fase 10: Seguridad y privacidad}
-La Fase 10 endurece la seguridad y privacidad de la aplicación mediante la implementación de principios de minimización de datos, control explícito del usuario y operación local por defecto. La aplicación solicita únicamente los permisos estrictamente necesarios (almacenamiento para PDFs, notificaciones opcionales) y los requiere just-in-time cuando el usuario intenta usar la funcionalidad relacionada.
-
-El asistente de IA opera completamente en el dispositivo sin enviar datos a servidores externos, y el usuario puede desactivarlo y eliminar el modelo en cualquier momento. Estos controles de privacidad se alinean con las mejores prácticas de desarrollo móvil y las expectativas de usuarios conscientes de la privacidad. Los componentes son:
+Se aplican principios de defensa en profundidad para proteger la soberanía de los datos del usuario. Los componentes de seguridad son:
 
 \begin{itemize}
   \item Objetivo: Datos y permisos mínimos; control explícito del usuario.
@@ -135,9 +117,7 @@ El asistente de IA opera completamente en el dispositivo sin enviar datos a serv
 \end{itemize}
 
 \subsection{Fase 11: Release y KPIs}
-La Fase 11 prepara la aplicación para su liberación mediante la optimización del empaquetado, la definición de métricas de adopción y uso, y el establecimiento de procesos de despliegue continuo. La optimización incluye la aplicación de ProGuard/R8 para reducir el tamaño del APK, la separación del modelo de IA en un paquete opcional descargable bajo demanda, y la configuración de splits por densidad de pantalla.
-
-Las métricas definidas permiten evaluar el éxito de la aplicación: tiempo promedio de consulta de horario (TTS), número de huecos por día en horarios generados, porcentaje de notificaciones entregadas a tiempo, y tasa de adopción del formato JSON para compartir. Los elementos finales son:
+La etapa final asegura un artefacto optimizado y define los indicadores de éxito para la evaluación del sistema. Los elementos finales son:
 
 \begin{itemize}
   \item Objetivo: Empaque optimizado y medición de adopción/uso.

@@ -7,7 +7,7 @@ Esta fase refina la experiencia de usuario mediante flujos guiados, navegación 
 Optimizar la interacción para tareas frecuentes con mínima fricción y consistencia visual, aprovechando las capacidades declarativas de Jetpack Compose para crear interfaces reactivas y adaptables a diferentes tamaños de pantalla.
 
 \subsection{Desarrollo de la experiencia de usuario}
-Se diseñan flujos guiados (onboarding, agregar/editar), navegación por días y un widget informativo; se consolidan criterios de entrada/salida:
+El desarrollo de la experiencia de usuario integra flujos dinámicos y herramientas de visualización inmediata que optimizan la gestión de la información académica. Para asegurar una navegación coherente y eficiente, se establecen los siguientes fundamentos técnicos y componentes operativos que rigen el comportamiento de la interfaz:
 
 \begin{enumerate}
     \item \textbf{Arquitectura de Interfaz}
@@ -17,16 +17,13 @@ Se diseñan flujos guiados (onboarding, agregar/editar), navegación por días y
     \item \textbf{Componentes Principales}
     
     El flujo de Onboarding, implementado en WelcomeScreen.kt, utiliza AnimatedEntrance para animaciones escalonadas de entrada y lógica responsiva para adaptar el diseño en dispositivos pequeños.
-
     La navegación principal en HomeScreen.kt implementa un HorizontalPager infinito para el desplazamiento entre días, donde la función getVisibleDayForPage calcula dinámicamente el día visible.
-
     El Widget (ScheduleAppWidgetProvider.kt) proporciona una vista rápida del horario en la pantalla de inicio utilizando RemoteViews, actualizándose mediante eventos del sistema y compartiendo las preferencias de tema con la aplicación principal.
 \end{enumerate}
 
 Para mejorar la legibilidad y evitar secuencias con flechas, el Cuadro \ref{tab:f6_resumen_ux} resume los flujos, comportamientos esperados e implementación de componentes de interfaz asociados a Fase 6.
 
 \begin{table}[H]
-\small
 \centering
 \begin{tabularx}{\linewidth}{@{}p{3.0cm}p{4.5cm}>{\RaggedRight\arraybackslash}X@{}}
 \toprule
@@ -40,7 +37,7 @@ Widget & Vista de solo lectura del horario actual en la pantalla de inicio. & Sc
 \bottomrule
 \end{tabularx}
 \caption{Resumen de flujos y componentes de UX.}\label{tab:f6_resumen_ux}
-\small{Fuente: Elaboración propia.}
+Fuente: Elaboración propia.
 \end{table}
 
 \subsection{Resultados y verificación}
