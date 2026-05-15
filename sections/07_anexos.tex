@@ -27,21 +27,20 @@ TecnoTime está diseñada para ejecutarse en dispositivos Android modernos, apro
 
 \section{Pasos de instalación}
 
-TecnoTime puede instalarse mediante dos métodos principales, dependiendo de la disponibilidad de acceso a tiendas oficiales y las preferencias del usuario.
+TecnoTime puede instalarse mediante dos métodos principales, siendo la descarga desde la tienda oficial la opción recomendada para asegurar la obtención de la versión más reciente y estable.
 
-\subsection{Opción A: desde APK (distribución interna)}
-La instalación de TecnoTime desde el archivo APK permite distribuir la aplicación directamente a estudiantes de la Facultad de Ciencias y Tecnología sin depender de tiendas de aplicaciones externas. Este método de distribución es particularmente útil durante las fases de prueba piloto y para instituciones que prefieren controlar internamente el despliegue de software. El proceso requiere habilitar temporalmente la instalación desde fuentes desconocidas en el dispositivo, una medida de seguridad de Android que protege contra la instalación inadvertida de aplicaciones no verificadas. Los pasos detallados son:
+\subsection{Opción A: desde Google Play Store (recomendado)}
+La instalación oficial se realiza a través de la tienda de aplicaciones de Android, lo que garantiza actualizaciones automáticas y la verificación de seguridad por parte de Google Play Protect. La aplicación se encuentra disponible en el siguiente enlace: \url{https://play.google.com/store/apps/details?id=com.fragmind.tecnotime}.
+
+\subsection{Opción B: desde APK (distribución alternativa)}
+La instalación de TecnoTime desde el archivo APK permite distribuir la aplicación directamente en entornos donde el acceso a la tienda oficial sea limitado o para pruebas internas específicas. El proceso requiere habilitar temporalmente la instalación desde fuentes desconocidas en el dispositivo. Los pasos detallados son:
 
 \begin{enumerate}
-  \item Copiar el archivo TecnoTime.apk al dispositivo (carpeta Descargas).
+  \item Copiar el archivo TecnoTime.apk al dispositivo.
   \item Habilitar Instalar apps desconocidas para el gestor de archivos.
-  \item Abrir el APK y confirmar la instalación.
-  \item Abrir TecnoTime desde el cajón de aplicaciones.
+  \item Ejecutar el APK y confirmar la instalación.
+  \item Iniciar TecnoTime desde el cajón de aplicaciones.
 \end{enumerate}
-
-\subsection{Opción B: desde tienda (si aplica)}
-Buscar TecnoTime en la tienda, verificar editor y permisos, e instalar normalmente.
-Durante el periodo previo a la publicación general (prevista para el 25 de noviembre de 2025), la instalación está disponible mediante el programa de pruebas de Google Play en \url{https://play.google.com/apps/testing/com.fragmind.tecnotime}; el acceso requiere unirse como tester.
 
 \section{Actualización y desinstalación}
 Para actualizar, instalar la nueva versión sobre la existente. Para desinstalar, mantener pulsado el icono y seleccionar Desinstalar.
@@ -64,8 +63,9 @@ TecnoTime es una aplicación móvil diseñada para estudiantes de la Facultad de
 
 El proceso de configuración inicial de TecnoTime guía al usuario a través de una secuencia de pantallas que establecen las preferencias básicas, solicitan los permisos necesarios y sincronizan la información académica requerida para el funcionamiento de la aplicación.
 
+\Needspace{0.58\textheight}
 \subsection{Permisos y pantalla de bienvenida}
-Al iniciar TecnoTime por primera vez, la aplicación solicita los permisos necesarios para su funcionamiento óptimo, incluyendo notificaciones para recordatorios y acceso al almacenamiento para exportar horarios. Posteriormente, se presenta la pantalla de bienvenida que guía al usuario a través del proceso de configuración inicial.
+Al iniciar TecnoTime por primera vez, la aplicación solicita los permisos necesarios para su funcionamiento óptimo, incluyendo notificaciones para recordatorios y acceso al almacenamiento para exportar horarios, como se observa en la Figura \ref{fig:manual_solicitud_permisos}. Posteriormente, se presenta la pantalla de bienvenida que guía al usuario a través del proceso de configuración inicial, como se muestra en la Figura \ref{fig:manual_bienvenida}.
 
 \begin{figure}[H]
     \centering
@@ -73,18 +73,21 @@ Al iniciar TecnoTime por primera vez, la aplicación solicita los permisos neces
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/solicitud_permisos.jpeg}
         \caption{Solicitud de permisos del sistema}
+        \label{fig:manual_solicitud_permisos}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/bienvenida.jpeg}
         \caption{Pantalla de bienvenida inicial}
+        \label{fig:manual_bienvenida}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
 
+\Needspace{0.58\textheight}
 \subsection{Información personal y selección de carrera}
-El usuario debe ingresar su nombre y seleccionar su carrera de la lista disponible. Este paso es fundamental para que la aplicación pueda sincronizar las materias correspondientes al plan de estudios.
+El usuario debe ingresar su nombre en la pantalla de información personal, presentada en la Figura \ref{fig:manual_informacion_personal}, y seleccionar su carrera de la lista disponible, como se muestra en la Figura \ref{fig:manual_lista_carreras}. Este paso es fundamental para que la aplicación pueda sincronizar las materias correspondientes al plan de estudios.
 
 \begin{figure}[H]
     \centering
@@ -92,18 +95,21 @@ El usuario debe ingresar su nombre y seleccionar su carrera de la lista disponib
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/informacion_personal_bienvenida.jpeg}
         \caption{Ingreso de información personal}
+        \label{fig:manual_informacion_personal}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/lista_carreras_bienvenida.jpeg}
         \caption{Selección de carrera}
+        \label{fig:manual_lista_carreras}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
 
+\Needspace{0.58\textheight}
 \subsection{Configuración general y sincronización}
-La aplicación permite configurar preferencias como el formato de hora (12/24 horas), tema visual (claro/oscuro) y otras opciones. La sincronización de carreras descarga la información actualizada de materias, grupos y horarios desde los archivos PDF oficiales.
+La aplicación permite configurar preferencias como el formato de hora (12/24 horas), tema visual (claro/oscuro) y otras opciones desde la pantalla presentada en la Figura \ref{fig:manual_configuracion_inicial}. La sincronización de carreras, mostrada en la Figura \ref{fig:manual_sincronizacion_carreras}, descarga la información actualizada de materias, grupos y horarios desde los archivos PDF oficiales.
 
 \begin{figure}[H]
     \centering
@@ -111,12 +117,14 @@ La aplicación permite configurar preferencias como el formato de hora (12/24 ho
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/configs_bienvenida.jpeg}
         \caption{Pantalla de configuración inicial}
+        \label{fig:manual_configuracion_inicial}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/sincronizar_dialog.jpeg}
         \caption{Diálogo de sincronización de carreras}
+        \label{fig:manual_sincronizacion_carreras}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
@@ -125,8 +133,9 @@ La aplicación permite configurar preferencias como el formato de hora (12/24 ho
 
 La gestión de materias constituye el flujo central de TecnoTime, permitiendo al usuario construir su horario académico mediante la selección guiada de niveles, materias y grupos, con personalización visual y opciones de edición posteriores.
 
+\Needspace{0.58\textheight}
 \subsection{Vista principal y agregar materias}
-La pantalla principal muestra las clases del día actual en formato de tarjetas. Para agregar una nueva materia, el usuario accede al flujo de inscripción mediante el botón flotante de acción.
+La pantalla principal muestra las clases del día actual en formato de tarjetas, como se observa en la Figura \ref{fig:manual_vista_principal}. Para agregar una nueva materia, el usuario accede al flujo de inscripción mediante el botón flotante de acción, cuyas opciones se presentan en la Figura \ref{fig:manual_agregar_materia}.
 
 \begin{figure}[H]
     \centering
@@ -134,18 +143,21 @@ La pantalla principal muestra las clases del día actual en formato de tarjetas.
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/vista_principal.jpeg}
         \caption{Vista principal sin materias}
+        \label{fig:manual_vista_principal}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/agregar_materia_vista.jpeg}
         \caption{Opciones para agregar materia}
+        \label{fig:manual_agregar_materia}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
 
+\Needspace{0.58\textheight}
 \subsection{Proceso de selección: nivel, materia y grupo}
-El proceso de inscripción sigue tres pasos: seleccionar el nivel académico, elegir la materia deseada y por último seleccionar el grupo específico con sus horarios correspondientes.
+El proceso de inscripción sigue tres pasos: seleccionar el nivel académico, elegir la materia deseada y por último seleccionar el grupo específico con sus horarios correspondientes. La Figura \ref{fig:manual_seleccion_nivel} muestra la selección de nivel, mientras que la Figura \ref{fig:manual_seleccion_materia} presenta la elección de materia.
 
 \begin{figure}[H]
     \centering
@@ -153,15 +165,20 @@ El proceso de inscripción sigue tres pasos: seleccionar el nivel académico, el
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/selecion_nivel_vista_agregar_materia.jpeg}
         \caption{Selección de nivel académico}
+        \label{fig:manual_seleccion_nivel}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/seleccion_materia_vista_agregar_materia.jpeg}
         \caption{Selección de materia}
+        \label{fig:manual_seleccion_materia}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
+
+\Needspace{0.46\textheight}
+Después de seleccionar la materia, el usuario elige el grupo específico, como se muestra en la Figura \ref{fig:manual_seleccion_grupo}. Una vez agregado el grupo, la pantalla principal actualiza el horario del estudiante, como se observa en la Figura \ref{fig:manual_vista_principal_materias}.
 
 \begin{figure}[H]
     \centering
@@ -169,12 +186,14 @@ El proceso de inscripción sigue tres pasos: seleccionar el nivel académico, el
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/selecion_grupo_vista_agregar_materia.jpeg}
         \caption{Selección de grupo}
+        \label{fig:manual_seleccion_grupo}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/vista_principal_con_materias.jpeg}
         \caption{Vista principal con materias agregadas}
+        \label{fig:manual_vista_principal_materias}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
@@ -183,8 +202,9 @@ El proceso de inscripción sigue tres pasos: seleccionar el nivel académico, el
 
 El generador automático de horarios representa la funcionalidad distintiva de TecnoTime, permitiendo crear múltiples propuestas de horario sin conflictos mediante la configuración de parámetros, restricciones y preferencias del usuario.
 
+\Needspace{0.58\textheight}
 \subsection{Generador automático de horarios}
-TecnoTime incluye un generador automático que crea combinaciones óptimas de horarios basándose en las materias seleccionadas, minimizando conflictos y ventanas horarias. El usuario puede configurar preferencias como docentes favoritos y estrategias de optimización.
+TecnoTime incluye un generador automático que crea combinaciones óptimas de horarios basándose en las materias seleccionadas, minimizando conflictos y ventanas horarias. El usuario puede configurar preferencias como docentes favoritos y estrategias de optimización en la pantalla mostrada en la Figura \ref{fig:manual_generar_horario}; luego, el resultado generado se presenta como se observa en la Figura \ref{fig:manual_horario_generado}.
 
 \begin{figure}[H]
     \centering
@@ -192,18 +212,21 @@ TecnoTime incluye un generador automático que crea combinaciones óptimas de ho
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/generar_horario_vista.jpeg}
         \caption{Configuración del generador de horarios}
+        \label{fig:manual_generar_horario}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/horario_generado_vista.jpeg}
         \caption{Resultado del horario generado}
+        \label{fig:manual_horario_generado}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
 
+\Needspace{0.58\textheight}
 \subsection{Vista semanal y compartir horario}
-La vista semanal permite visualizar todas las clases de la semana en un formato compacto. La funcionalidad de compartir permite exportar el horario en múltiples formatos: imagen, PDF, Excel o JSON para compartir con otros usuarios de TecnoTime.
+La vista semanal permite visualizar todas las clases de la semana en un formato compacto, como se muestra en la Figura \ref{fig:manual_vista_semanal}. La funcionalidad de compartir, presentada en la Figura \ref{fig:manual_compartir_horario}, permite exportar el horario en múltiples formatos: imagen, PDF, Excel o JSON para compartir con otros usuarios de TecnoTime.
 
 \begin{figure}[H]
     \centering
@@ -211,12 +234,14 @@ La vista semanal permite visualizar todas las clases de la semana en un formato 
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/vista_semanal.jpeg}
         \caption{Vista semanal del horario}
+        \label{fig:manual_vista_semanal}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/vista_compartir_horario.jpeg}
         \caption{Opciones para compartir horario}
+        \label{fig:manual_compartir_horario}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
@@ -225,8 +250,9 @@ La vista semanal permite visualizar todas las clases de la semana en un formato 
 
 TecnoTime incorpora funcionalidades complementarias que enriquecen la experiencia del usuario, incluyendo recordatorios automatizados, asistencia mediante inteligencia artificial y widgets de acceso rápido desde la pantalla principal del dispositivo.
 
+\Needspace{0.58\textheight}
 \subsection{Sistema de recordatorios e inteligencia artificial}
-La aplicación envía notificaciones antes de cada clase con la anticipación configurada por el usuario. El asistente de IA ``Simón'' puede responder preguntas sobre el horario y proporcionar información contextual sobre las clases.
+La aplicación envía notificaciones antes de cada clase con la anticipación configurada por el usuario, como se observa en la Figura \ref{fig:manual_recordatorio_ia}. El asistente de IA ``Simón'' puede responder preguntas sobre el horario y proporcionar información contextual sobre las clases; cuando el modelo local no se encuentra disponible, se muestra el diálogo de descarga presentado en la Figura \ref{fig:manual_descarga_modelo_ia}.
 
 \begin{figure}[H]
     \centering
@@ -234,18 +260,21 @@ La aplicación envía notificaciones antes de cada clase con la anticipación co
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/recordatorio_vista_con_ia.jpeg}
         \caption{Recordatorio con asistente de IA}
+        \label{fig:manual_recordatorio_ia}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/dialog_descarga_modeloai.jpeg}
         \caption{Descarga del modelo de IA}
+        \label{fig:manual_descarga_modelo_ia}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
 
+\Needspace{0.58\textheight}
 \subsection{Asistente Simón y widget de pantalla principal}
-El asistente Simón ofrece una interfaz conversacional para interactuar con la información del horario. El widget permite visualizar las clases del día directamente desde la pantalla principal del dispositivo sin necesidad de abrir la aplicación.
+El asistente Simón ofrece una interfaz conversacional para interactuar con la información del horario, iniciando con la pantalla de bienvenida presentada en la Figura \ref{fig:manual_simon_bienvenida}. El widget permite visualizar las clases del día directamente desde la pantalla principal del dispositivo sin necesidad de abrir la aplicación, como se muestra en la Figura \ref{fig:manual_widget}.
 
 \begin{figure}[H]
     \centering
@@ -253,12 +282,14 @@ El asistente Simón ofrece una interfaz conversacional para interactuar con la i
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/simon_bienvenida.jpeg}
         \caption{Pantalla de bienvenida del asistente Simón}
+        \label{fig:manual_simon_bienvenida}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}\hfill
     \begin{minipage}{0.45\textwidth}
         \centering
         \includegraphics[width=0.5\linewidth]{images/app/widget.jpeg}
         \caption{Widget en la pantalla principal}
+        \label{fig:manual_widget}
         \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
     \end{minipage}
 \end{figure}
@@ -275,20 +306,19 @@ El asistente Simón ofrece una interfaz conversacional para interactuar con la i
 TecnoTime no requiere creación de cuenta ni conexión permanente a internet. Todos los datos se almacenan localmente en el dispositivo. Los archivos JSON exportados no contienen información personal identificable.
 
 \chapter{Instrumento de encuesta: cuestionario completo}\label{ann:instrumento}
-% Presentar el cuestionario en dos columnas para mejor aprovechamiento del espacio
-\begin{multicols}{2}
+% Presentar el cuestionario en dos columnas sin balancear la última página,
+% para conservar el orden vertical de los ítems finales.
+\begin{multicols*}{2}
 \input{sections/anexos/anexoA_instrumento}
-\end{multicols}
+\end{multicols*}
 
 
 
 \chapter{Trazabilidad de componentes de TecnoTime}\label{ann:trazabilidad-tecnotime}
-\href{https://github.com/smith-3/TecnoTime}{TecnoTime}.
+El Cuadro~\ref{tab:trazabilidad-tecnotime} presenta la trazabilidad entre los componentes principales de \href{https://github.com/smith-3/TecnoTime}{TecnoTime} y sus rutas dentro del repositorio del proyecto.
 
 \begin{longtable}{@{}p{7cm}p{9cm}@{}}
-\caption{Trazabilidad de componentes y rutas del proyecto TecnoTime}
-        \small{Fuente: Captura de pantalla de la aplicación TecnoTime}
-\label{tab:trazabilidad-tecnotime}\\
+\caption{Trazabilidad de componentes y rutas del proyecto TecnoTime}\label{tab:trazabilidad-tecnotime}\\
 
 \toprule
 Componente & Ruta \\
@@ -307,6 +337,7 @@ Componente & Ruta \\
 \endfoot
 
 \bottomrule
+\multicolumn{2}{@{}l@{}}{\small Fuente: Elaboración propia con base en el repositorio del proyecto.}\\
 \endlastfoot
 
 % Dominio
